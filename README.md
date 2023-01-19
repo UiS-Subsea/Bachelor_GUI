@@ -2,7 +2,7 @@
 Repo for alle koselige gutter i GUI seksjonen i UiS-Subsea
 
 
-#Viktige ting om installasjon
+# Viktige ting om installasjon
 QT Designer
 Python 3.9
 
