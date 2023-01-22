@@ -8,3 +8,7 @@ Python 3.9
 
 pip install PyQt6
 pip install PyQt6-tools
+
+# Måten prosjektet skal bli såtte opp
+GUI python fil som impoerterer ei UI fil fra QT Designer
+
