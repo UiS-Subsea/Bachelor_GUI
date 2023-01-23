@@ -23,6 +23,16 @@ mest sannsynlig berre å bytte ut D med C p diskane dokka <3
 
 GUI python fil som impoerterer ei UI fil fra QT Designer
 
+# Venv
+
+Powershell:
+python -m venv venv
+venv\Scripts\Activate
+
+Mac/Linux:
+python3 -m venv venv
+source venv/bin/activate
+
 # Requirements !
 
 pip install -r requirements.txt
@@ -30,11 +40,3 @@ pip install -r requirements.txt
 for å oppdatere requirements om du he installert ei ny python pakke i virtual environment (venv)
 
 pip freeze > requirements.txt
-
-# Venv
-
-Powershell:
-venv\Scripts\Activate
-
-Mac/Linux:
-source venv/bin/activate
