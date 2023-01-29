@@ -28,7 +28,7 @@ class TextPrint:
 
 def main():
     # Set the width and height of the screen (width, height), and name the window.
-    screen = pygame.display.set_mode((500, 700))
+    screen = pygame.display.set_mode((1000, 1000))
     pygame.display.set_caption("Joystick example")
 
     # Used to manage how fast the screen updates.
@@ -97,7 +97,12 @@ def main():
             text_print.tprint(screen, f"Joystick name: {name}")
 
             guid = joystick.get_guid()
-            text_print.tprint(screen, f"GUID: {guid}")
+            text_print.tprint(screen, f"GUID GUID GUID GUID: {guid}")
+            ''' if guid=="030000005e040000ff02000000007200":
+                print(" ")
+            elif guid=="030000005e0400008e02000000007200":
+                print("Manipulator Controller") '''
+            
 
             power_level = joystick.get_power_level()
             text_print.tprint(screen, f"Joystick's power level: {power_level}")
