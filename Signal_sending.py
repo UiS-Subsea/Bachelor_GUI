@@ -1,17 +1,18 @@
-#Importe socket først
+# Importe socket først
 import socket
 from struct import *
 import struct
 import sys
-#Bruke socket til å lage en "fresh"/tom socket som vi kan bygge på
+# Bruke socket til å lage en "fresh"/tom socket som vi kan bygge på
 s = socket.socket(socket.AF_INET, socket.SOCK_RAW, socket.IPPROTO_TCP)
-#Bruker AF_INET for IPv4 versjon, kan potensielt bruke AP_INET6 for IPv6
-#men spørs hvor relevant det er. Lage TCP socket for nå. 
+# Bruker AF_INET for IPv4 versjon, kan potensielt bruke AP_INET6 for IPv6
+# men spørs hvor relevant det er. Lage TCP socket for nå.
 
 # Lager while loop som lar oss receive data
-#hile True:
+# hile True:
 #    print(s.recvfrom(65))
-#65565 er bare en buffer size, der 655565 er max buffer size.
+# 65565 er bare en buffer size, der 655565 er max buffer size....
+
 
 def ethernet_head(raw_data):
     dest, src, prototype = struct.unpack('! 6s 6s H', raw_data[:14])
@@ -21,6 +22,7 @@ def ethernet_head(raw_data):
     data = raw_data[14:]
     return dest_mac, src_mac, proto, data
 
+
 def main():
     s = socket.socket(socket.AF_PACKET, socket.SOCK_RAW, socket.ntohs(3))
     while True:
@@ -28,14 +30,14 @@ def main():
         eth = ethernet(raw_data)
         print('\nEthernet Frame:')
         print('Destination: {}, Source: {}, Protocol: {}'.format(eth[0], eth[1],
-        eth[2]))
+                                                                 eth[2]))
         if eth[2] == 8:
             ipv4 = ipv4(ethp[4])
-            print( '\t - ' + 'IPv4 Packet:')
+            print('\t - ' + 'IPv4 Packet:')
             print('\t\t - ' + 'Version: {}, Header Length: {}, TTL:
-            {},'.format(ipv4[1], ipv4[2], ipv4[3]))
+                  {}, '.format(ipv4[1], ipv4[2], ipv4[3]))
             print('\t\t - ' + 'Protocol: {}, Source: {}, Target:
-            {}'.format(ipv4[4], ipv4[5], ipv4[6]))
+                  {}'.format(ipv4[4], ipv4[5], ipv4[6]))
 
 
 def ipv4_head(raw_data):
@@ -45,4 +47,6 @@ def ipv4_head(raw_data):
     ttl, proto, src, target = struct.unpack('! 8x B B 2x 4s 4s', raw_data[:20])
     data = raw_data[header_length:]
     return version, header_length, ttl, proto, src, target, data
+
+
 main()
