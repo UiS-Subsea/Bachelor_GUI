@@ -10,11 +10,13 @@ import time
 #import serial
 import json
 import socket
-import can
 
+#lag en egen klasse som har oversikt over alle packets. 
 
+# Test function for socket connection
 def venus(ip, port, meld):
     network_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    # network_socket.settimeout(5)
     network_socket.connect((ip, port))
     print("connected")
     for __ in range(10):
@@ -40,14 +42,15 @@ def network_thread(network_socket, network_callback, flag):
     network_socket.close()
     print(f'Thread stopped')
 
-def CAN_thread(bus, CAN_callback, flag):
+# Reads serial data
+def USB_thread(h_serial, USB_callback, flag):
     while flag[1]:
         try:
-            CAN_callback(message)
-            message = bus.readline().decode("utf8").strip("\n")
+            melding = h_serial.readline().decode("utf8").strip("\n")
+            USB_callback(melding)
         except:
             pass
-    print("CAN thread stopped")
+    print("USB thread stopped")
 
 class Callbacks:
     def __init__(self) -> None:
@@ -108,8 +111,8 @@ if __name__ == "__main__":
     port = 6900
     venus_trad = threading.Thread(name="venus", target=venus, args=(ip, port, meld))
     venus_trad.start()
-    a = Callbacks()
-    a.toggle_network()
+    # a = Callbacks()
+    # a.toggle_network()
     print("For loop started")
     for __ in range(4):
         time.sleep(1)
