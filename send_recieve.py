@@ -6,6 +6,16 @@ from Thread_info import Threadwatcher
 import multiprocessing
 import time
 #from logger import Logger
+ID_DIRECTIONCOMMAND_PARAMETERS = 71
+ID_DIRECTIONCOMMAND = 70
+
+# takes a python object and prepares it for sending over network
+
+
+def network_format(data) -> bytes:
+    """Formats the data for sending to network handler"""
+    packet_seperator = json.dumps("*")
+    return bytes(packet_seperator+json.dumps(data)+packet_seperator, "utf-8")
 
 
 class Rov_state:
@@ -18,6 +28,7 @@ class Rov_state:
         self.gui_pipe = gui_pipe
         # Network handler that sends data to rov (and recieves)
         self.network_handler: Network = network_handler
+        self.packets_to_send = []
 
     def recieve_data_from_rov(self, network: Network, t_watch: Threadwatcher, id: int):
         incomplete_packet = ""
@@ -47,6 +58,14 @@ class Rov_state:
 
     # Decodes the tcp packet/s recieved from the rov
     #
+
+    def send_startup_commands(self):
+        self.packets_to_send.append(
+            [200, {"tilt": self.camera_tilt[0], "on": True}])
+        self.packets_to_send.append(
+            [201, {"tilt": self.camera_tilt[1], "on": True}])
+        self.packets_to_send.append([64,  []])
+        self.packets_to_send.append([96,  []])
 
     def decode_packets(tcp_data: bytes, end_not_complete_packet="") -> list:
         end_not_complete_packet = ""
@@ -119,6 +138,43 @@ class Rov_state:
         packet_seperator = json.dumps("*")
         return bytes(packet_seperator+json.dumps(data)+packet_seperator, "utf-8")
 
+    def craft_packet(self, t_watch: Threadwatcher, id):
+        while t_watch.should_run(id):
+            userinput = input(
+                "Packet: [parameter_id of type int, value of type float or int]: ")
+            var = []
+            try:
+                var = json.loads(userinput)
+                if not isinstance(var[0], int):
+                    print("Error: parameter id was not an int! try again.")
+                    continue
+                # if not isinstance(var[1], int) or not isinstance(var[1], float):
+                #     print("Error: parameter id was not an int or float! try again.")
+                #     continue
+                if len(var) != 2:
+                    print("Error: list was not length 2")
+                    continue
+            except Exception as e:
+                print(f"Error when parsing input\n {e}")
+                continue
+
+            self.packets_to_send.append([ID_DIRECTIONCOMMAND_PARAMETERS, var])
+
+    def send_packets(self):
+        """Sends the created network packets and clears it"""
+
+        copied_packets = self.packets_to_send
+        self.packets_to_send = []
+        for packet in copied_packets:
+            if packet[0] != ID_DIRECTIONCOMMAND:
+                pass
+                print(f"{packet = }")
+        if run_network:
+            self.logger.sensor_logger.info(copied_packets)
+        if self.network_handler is None:
+            return
+        self.network_handler.send(network_format(copied_packets))
+
 
 def run(network_handler: Network, t_watch: Threadwatcher, id: int, queue_for_rov: multiprocessing.Queue, gui_pipe):
     print("run thread")
@@ -129,6 +185,9 @@ def run(network_handler: Network, t_watch: Threadwatcher, id: int, queue_for_rov
         id = t_watch.add_thread()
         threading.Thread(target=rov_state.recieve_data_from_rov, args=(
             network_handler, t_watch, id), daemon=True).start()
+
+    while t_watch.should_run(id):
+        rov_state.send_packets()
 
 
 if __name__ == "__main__":
