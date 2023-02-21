@@ -17,6 +17,11 @@ can_types = {
     "uint64": ">Q",
     "float": ">f"
 }
+#lage skjema med manip.
+
+#[id,[x,y,z]] <-- eksempel på en pakke vi kan sendte (x frem fra rov perspektiv), y opp, z ned
+#[54,[]]
+#[55,[20]] <- bruker 20% kraft av manipula.
 
 
 def get_byte(can_format: str, number):
@@ -60,7 +65,8 @@ def packetBuild(tags):
 
 # decodes packs
 
-
+#sendte samme id, ikkje som canbus, men som lite. 
+#der første tallet høyrte til canbus id'en.
 def packetDecode(msg):
     canID = msg.arbitration_id
     dataByte = msg.data
