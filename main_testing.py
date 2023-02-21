@@ -147,7 +147,8 @@ if __name__ == "__main__":
     global run_network
     run_network = False
     t_watch = Threadwatcher()
-    main_driver_loop = threading.Thread(target=run, args=(network, t_watch, id, queue_for_rov, gui_parent_pipe), daemon=True)
+    main_driver_loop = threading.Thread(target=run, args=(
+        network, t_watch, id, queue_for_rov, gui_parent_pipe), daemon=True)
     main_driver_loop.start()
 
     print("starting send to rov")
@@ -158,7 +159,9 @@ if __name__ == "__main__":
         network, t_watch, id, queue_for_rov, gui_parent_pipe), daemon=True)
     main_driver_loop.start() """
 
-    #dummy_data1 = json.loads(r'[{"id": 1}, {"id": 2}]')
+    #dummy_data1 = json.loads(r'[{"""" id": 1}, {"id": 2}]')
+
+""" 
     data = b'*{"key1": "value1"}*{"key2": "value2"}*'
     dummy_data = b'"*"{"key1": "value1"}*"{"key2": "value2"}*"\n'
     decode_items, end_not_complete_packet = decode_packets(data)
@@ -166,3 +169,4 @@ if __name__ == "__main__":
     # print(data)
     print(decode_items)
     print(end_not_complete_packet)
+ """
