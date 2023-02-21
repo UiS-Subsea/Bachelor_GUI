@@ -5,10 +5,12 @@ import json
 from Thread_info import Threadwatcher
 import multiprocessing
 import time
+#from logger import Logger
 
 
 class Rov_state:
     def __init__(self, queue, network_handler, gui_pipe, t_watch: Threadwatcher) -> None:
+        print("rov state thread")
         self.t_watch: Threadwatcher = t_watch
         self.data: dict = {}
         self.queue: multiprocessing.Queue = queue
@@ -19,17 +21,20 @@ class Rov_state:
 
     def recieve_data_from_rov(self, network: Network, t_watch: Threadwatcher, id: int):
         incomplete_packet = ""
+        print("recive data thread")
         while t_watch.should_run(id):
             try:
                 data = network.receive()
-                print(data)
-                if data is None:
+                if data == b"" or data is None:
                     continue
-                decoded, incomplete_packet = Rov_state.decode_packets(
-                    data, incomplete_packet)
+                else:
+                    print(data)
+                # if data is None:
+                #    continue
+                    decoded, incomplete_packet = Rov_state.decode_packets(
+                        data, incomplete_packet)
                 if decoded == []:
                     continue
-
                 for message in decoded:
                     # print(message)
                     self.handle_data_from_rov(message)
@@ -87,8 +92,8 @@ class Rov_state:
 
     def handle_data_from_rov(self, message: dict):
         if run_network:
-            self.logger.sensor_logger.info(message)
-        print(f"{message =}")
+            # self.logger.sensor_logger.info(message)
+            print(f"{message =}")
         message_name = ""
         if not isinstance(message, dict):
             try:
@@ -116,10 +121,11 @@ class Rov_state:
 
 
 def run(network_handler: Network, t_watch: Threadwatcher, id: int, queue_for_rov: multiprocessing.Queue, gui_pipe):
+    print("run thread")
     print(f"{network_handler = }")
     rov_state = Rov_state(queue_for_rov, network_handler, gui_pipe, t_watch)
     print(f"{network_handler = }")
-    if network_handler != None:
+    if not network_handler == None:
         id = t_watch.add_thread()
         threading.Thread(target=rov_state.recieve_data_from_rov, args=(
             network_handler, t_watch, id), daemon=True).start()
@@ -139,10 +145,11 @@ if __name__ == "__main__":
         gui_parent_pipe, gui_child_pipe = Pipe()
 
         network = None
-        if run_network:
-            network = Network(is_server=False, port=6900,
+        if not run_network:
+            network = Network(is_server=False, port=6900, bind_addr="0.0.0.0",
                               connect_addr="10.0.0.2")
             print("network started")
+            run_network = True
 
         print("starting send to rov")
         id = t_watch.add_thread()
