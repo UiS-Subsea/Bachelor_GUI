@@ -8,6 +8,8 @@ import time
 #from logger import Logger
 ID_DIRECTIONCOMMAND_PARAMETERS = 71
 ID_DIRECTIONCOMMAND = 70
+ID_camera_tilt_upwards = 200
+ID_camera_tilt_downwards = 201
 
 # takes a python object and prepares it for sending over network
 
