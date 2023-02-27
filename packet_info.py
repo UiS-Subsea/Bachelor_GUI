@@ -17,14 +17,12 @@ class Logger:
 
         # Bruker INFO level som er høyere enn DEBUG for å få mer detaljert informasjon,
         # men under warning, error og critical levelene som indikerer alvorlighetsgraden.
-        log_format = logging.Formatter(
-            '%(asctime)s %(levelname)s: %(message)s')
+        log_format = logging.Formatter('%(asctime)s %(levelname)s: %(message)s')
 
         # logging.Formatter is a class that is used to specify the format of log messages.
         # logging.basicConfig is a convenience function that sets up a basic configuration
         # for the logging system.
-        data_handler = logging.FileHandler(
-            f"{self.packet_folder}{packet_date} data.log")
+        data_handler = logging.FileHandler(f"{self.packet_folder}{packet_date} data.log")
 
         data_handler.setFormatter(log_format)
         # can potentially use error_filehandler.setFormatter(packet_date) to test errors/warnings
