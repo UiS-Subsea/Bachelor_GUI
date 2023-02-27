@@ -39,9 +39,9 @@ class Rov_state:
                 if data == b"" or data is None:
                     continue
                 else:
-                    print(data)
-                # if data is None:
-                #    continue
+                    # print(data)
+                    # if data is None:
+                    #    continue
                     decoded, incomplete_packet = Rov_state.decode_packets(
                         data, incomplete_packet)
                 if decoded == []:
@@ -72,7 +72,7 @@ class Rov_state:
         try:
             json_strings = end_not_complete_packet + \
                 bytes.decode(tcp_data, "utf-8")
-            print(json_strings)
+            # print(json_strings)
             # pakken er ikke hel. Dette skal aldri skje sÃ¥ pakken burde bli forkasta
             if not json_strings.startswith('"*"'):
                 # print(f"Packet did not start with '*' something is wrong. {end_not_complete_packet}")
@@ -139,6 +139,7 @@ class Rov_state:
         return bytes(packet_seperator+json.dumps(data)+packet_seperator, "utf-8")
 
     def craft_packet(self, t_watch: Threadwatcher, id):
+        print("CraftPack Thread")
         while t_watch.should_run(id):
             userinput = input(
                 "Packet: [parameter_id of type int, value of type float or int]: ")
@@ -157,21 +158,23 @@ class Rov_state:
             except Exception as e:
                 print(f"Error when parsing input\n {e}")
                 continue
-
-            self.packets_to_send.append([ID_DIRECTIONCOMMAND_PARAMETERS, var])
+            print(var)
+            #self.packets_to_send.append([ID_DIRECTIONCOMMAND_PARAMETERS, var])
+            self.packets_to_send.append([var[0], var[1]])
 
     def send_packets(self):
         """Sends the created network packets and clears it"""
 
         copied_packets = self.packets_to_send
         self.packets_to_send = []
+        # [print(copied_packets)
         for packet in copied_packets:
             if packet[0] != ID_DIRECTIONCOMMAND:
                 pass
                 print(f"{packet = }")
-        if run_network:
-            self.logger.sensor_logger.info(copied_packets)
-        if self.network_handler is None:
+        # if run_network:
+            # self.logger.sensor_logger.info(copied_packets)
+        if self.network_handler is None or not copied_packets:
             return
         self.network_handler.send(network_format(copied_packets))
 
@@ -185,9 +188,13 @@ def run(network_handler: Network, t_watch: Threadwatcher, id: int, queue_for_rov
         id = t_watch.add_thread()
         threading.Thread(target=rov_state.recieve_data_from_rov, args=(
             network_handler, t_watch, id), daemon=True).start()
-
+    if run_craft_pakcet:
+        id = t_watch.add_thread()
+        threading.Thread(target=rov_state.craft_packet,
+                         args=(t_watch, id), daemon=True).start()
     while t_watch.should_run(id):
         rov_state.send_packets()
+        rov_state.data = {}
 
 
 if __name__ == "__main__":
@@ -195,10 +202,11 @@ if __name__ == "__main__":
     try:
         global run_network
         global network
+        global run_craft_packet
+        run_craft_pakcet = True
         run_network = False
 
         queue_for_rov = multiprocessing.Queue()
-
         t_watch = Threadwatcher()
 
         gui_parent_pipe, gui_child_pipe = Pipe()
