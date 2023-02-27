@@ -22,7 +22,7 @@ class Rov_state:
     def __init__(self, queue, network_handler, gui_pipe, t_watch: Threadwatcher) -> None:
         print("rov state thread")
         self.t_watch: Threadwatcher = t_watch
-        self.data: dict = {}
+        self.data:dict = {}
         self.queue: multiprocessing.Queue = queue
         # Pipe to send sensordata back to the gui
         self.gui_pipe = gui_pipe
@@ -39,9 +39,9 @@ class Rov_state:
                 if data == b"" or data is None:
                     continue
                 else:
-                    # print(data)
-                    # if data is None:
-                    #    continue
+                    #print(data)
+                # if data is None:
+                #    continue
                     decoded, incomplete_packet = Rov_state.decode_packets(
                         data, incomplete_packet)
                 if decoded == []:
@@ -72,7 +72,7 @@ class Rov_state:
         try:
             json_strings = end_not_complete_packet + \
                 bytes.decode(tcp_data, "utf-8")
-            # print(json_strings)
+            #print(json_strings)
             # pakken er ikke hel. Dette skal aldri skje sÃ¥ pakken burde bli forkasta
             if not json_strings.startswith('"*"'):
                 # print(f"Packet did not start with '*' something is wrong. {end_not_complete_packet}")
@@ -167,13 +167,13 @@ class Rov_state:
 
         copied_packets = self.packets_to_send
         self.packets_to_send = []
-        # [print(copied_packets)
+        #[print(copied_packets)
         for packet in copied_packets:
             if packet[0] != ID_DIRECTIONCOMMAND:
                 pass
                 print(f"{packet = }")
-        # if run_network:
-            # self.logger.sensor_logger.info(copied_packets)
+        #if run_network:
+            #self.logger.sensor_logger.info(copied_packets)
         if self.network_handler is None or not copied_packets:
             return
         self.network_handler.send(network_format(copied_packets))
@@ -190,8 +190,7 @@ def run(network_handler: Network, t_watch: Threadwatcher, id: int, queue_for_rov
             network_handler, t_watch, id), daemon=True).start()
     if run_craft_pakcet:
         id = t_watch.add_thread()
-        threading.Thread(target=rov_state.craft_packet,
-                         args=(t_watch, id), daemon=True).start()
+        threading.Thread(target=rov_state.craft_packet, args=(t_watch, id), daemon=True).start()
     while t_watch.should_run(id):
         rov_state.send_packets()
         rov_state.data = {}
