@@ -1945,7 +1945,7 @@ QSizeGrip
          <string/>
         </property>
         <property name="pixmap">
-         <pixmap resource="../schoolrepos/uis-subsea/Subsea_QT_GUI/resources.qrc">:/images/images/motorpaadrag.png</pixmap>
+         <pixmap>:/images/images/motorpaadrag.png</pixmap>
         </property>
         <property name="scaledContents">
          <bool>true</bool>
@@ -2862,7 +2862,7 @@ QSizeGrip
          <string/>
         </property>
         <property name="pixmap">
-         <pixmap resource="../schoolrepos/uis-subsea/Subsea_QT_GUI/resources.qrc">:/images/images/manipulator.png</pixmap>
+         <pixmap>:/images/images/manipulator.png</pixmap>
         </property>
         <property name="scaledContents">
          <bool>true</bool>
@@ -3078,9 +3078,9 @@ QSizeGrip
   </customwidget>
  </customwidgets>
  <resources>
-  <include location="../schoolrepos/uis-subsea/Subsea_QT_GUI/resources.qrc"/>
   <include location="C:/schoolrepos/uis-subsea/Subsea_QT_GUI/resources.qrc"/>
   <include location="C:/Program Files (x86)/Qt Designer/resources.qrc"/>
+  <include location="../schoolrepos/uis-subsea/Subsea_QT_GUI/resources.qrc"/>
  </resources>
  <connections/>
 </ui>
