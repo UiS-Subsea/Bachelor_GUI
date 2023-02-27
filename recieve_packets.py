@@ -5,6 +5,7 @@ import socket
 import threading
 import time
 
+#HUSK Å LEGGE TIL COMMENTS!
 # Er en Network klasse om representere en connection, Klassen har en init metoden
 # som initialize flere parametere som blir brukt senere.
 class Network:

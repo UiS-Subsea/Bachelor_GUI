@@ -11,6 +11,7 @@ ID_DIRECTIONCOMMAND = 70
 
 # takes a python object and prepares it for sending over network
 
+# HUSK Å LEGGE TIL COMMENTS!
 
 def network_format(data) -> bytes:
     """Formats the data for sending to network handler"""
