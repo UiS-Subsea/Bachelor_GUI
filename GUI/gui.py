@@ -1,27 +1,25 @@
-from PyQt6 import QtWidgets, uic
-from pyqtgraph import PlotWidget, plot
-import pyqtgraph as pg
-import sys  # We need sys so that we can pass argv to QApplication
-import os
+from PyQt5 import QtWidgets, uic
+from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QLineEdit, QVBoxLayout, QWidget, QPushButton
+import sys
 
-class MainWindow(QtWidgets.QMainWindow):
 
-    def __init__(self, *args, **kwargs):
-        super(MainWindow, self).__init__(*args, **kwargs)
+class MyWindow(QMainWindow):
+    def __init__(self):#Everything that goes in the window goes into this function
+        super(MyWindow, self).__init__() #Think about self as the window 
+        uic.loadUi("gui.ui", self)
+        self.connectFunctions()
+    
+    def connectFunctions(self):    
+        self.button1.clicked.connect(self.buttonClick)
+    
+    def buttonClick(self):
+        self.label1.setText("You pressed the button")
+        
 
-        #Load the UI Page
-        uic.loadUi('mainwindow.ui', self)
-
-        self.plot([1,2,3,4,5,6,7,8,9,10], [30,32,34,32,33,31,29,32,35,45])
-
-    def plot(self, hour, temperature):
-        self.graphWidget.plot(hour, temperature)
-
-def main():
-    app = QtWidgets.QApplication(sys.argv)
-    main = MainWindow()
-    main.show()
+def window():
+    app = QApplication(sys.argv)
+    win = MyWindow()
+    win.show()
     sys.exit(app.exec_())
 
-if __name__ == '__main__':
-    main()
+window()
