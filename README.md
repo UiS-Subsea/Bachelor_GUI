@@ -2,29 +2,13 @@
 
 Repo for alle koselige gutter i GUI seksjonen i UiS-Subsea
 
-# Måten prosjektet skal bli såtte opp
+# Viktige ting om installasjon
 
-GUI python fil som impoerterer ei UI fil fra QT Designer
+QT Designer
+Python 3.9
 
-# Venv
-
-Husk å ta select interpreter og bytt til python 3.9
-
-Powershell:
-python -m venv venv
-venv\Scripts\Activate
-
-Mac/Linux:
-python3 -m venv venv
-source venv/bin/activate
-
-# Requirements !
-
-pip install -r requirements.txt
-
-for å oppdatere requirements om du he installert ei ny python pakke i virtual environment (venv)
-
-pip freeze > requirements.txt
+pip install PyQt6
+pip install PyQt6-tools
 
 # Formatering av filer
 
@@ -34,3 +18,32 @@ eksempel:
 black D:\Bachelor_GUI
 
 mest sannsynlig berre å bytte ut D med C p diskane dokka <3
+
+# Måten prosjektet skal bli såtte opp
+
+GUI python fil som impoerterer ei UI fil fra QT Designer
+
+# Requirements !
+
+pip install -r requirements.txt
+
+for å oppdatere requirements om du he installert ei ny python pakke i virtual environment (venv)
+
+pip freeze > requirements.txt
+
+# Venv
+
+Powershell:
+venv\Scripts\Activate
+
+Mac/Linux:
+source venv/bin/activate
+
+
+# Mac
+
+For å endre venv versjon:
+virtualenv -p /path/to/python3.9.6 venv
+Brukte:
+pip install virtualenv
+virtualenv -p /usr/bin/python3 venv
