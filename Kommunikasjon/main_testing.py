@@ -13,6 +13,7 @@ def recieve_data_from_rov(self, network: Network, t_watch: Threadwatcher, id: in
             print(data)
             if data is None:
                 continue
+            
             decoded, incomplete_packet = decode_packets(
                 data, incomplete_packet)
             if decoded == []:

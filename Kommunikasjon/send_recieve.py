@@ -29,9 +29,20 @@ class Rov_state:
         self.queue: multiprocessing.Queue = queue
         # Pipe to send sensordata back to the gui
         self.gui_pipe = gui_pipe
+        self.camera_tilt: float[list] = [0, 0]
         # Network handler that sends data to rov (and recieves)
         self.network_handler: Network = network_handler
         self.packets_to_send = []
+
+    def sending_startup_ids(self):
+        self.packets_to_send.append([200, {"camera_tilt_upwards": self.camera_tilt[0]}])
+        self.packets_to_send.append([201, {"camera_tilt_downwards": self.camera_tilt[1]}])
+
+    def setting_up_canbus_ids(self):
+        self.canbus_id = {
+            "camera_tilts_up": 200,
+            "camera_tilts_down": 201
+        }
 
     def recieve_data_from_rov(self, network: Network, t_watch: Threadwatcher, id: int):
         incomplete_packet = ""
@@ -174,6 +185,8 @@ class Rov_state:
         for packet in copied_packets:
             if packet[0] != ID_DIRECTIONCOMMAND:
                 pass
+            elif packet[0] != "*heartbeat*":
+                pass 
                 print(f"{packet = }")
         #if run_network:
             #self.logger.sensor_logger.info(copied_packets)

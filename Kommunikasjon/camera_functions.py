@@ -1,4 +1,4 @@
-from send_recieve import Rov_state
+from Kommunikasjon.send_recieve import Rov_state
 
 ID_camera_upwards = 200
 ID_camera_downwards = 201
