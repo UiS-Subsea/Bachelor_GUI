@@ -4,6 +4,7 @@ import time
 import pygame
 
 import os
+#Hides "Hello from pygame community" when running
 os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
 
 ### Variable names for numbers equal to their description ###
@@ -22,7 +23,7 @@ BUTTON_Y = 3
 class Controller:
     def __init__(self, queue_to_rov: multiprocessing.Queue, joystick_deadzone=15) -> None:
         #Queue that is recieved in main
-        self.queue_ro_rov = queue_to_rov
+        self.queue_to_rov = queue_to_rov
         self.id = id
         #Variable that stops the controller from sending small values when the stick is idle
         self.joystick_deadzone = joystick_deadzone
@@ -231,9 +232,9 @@ class Controller:
                                 print(f"Roboten går ned med {self.normalize_joysticks(event)}% kraft")
                         elif event.axis == 5:
                                 print(f"Roboten går opp med {self.normalize_joysticks(event)}% kraft")
-                if self.queue_ro_rov is not None: #Means we send values to main (not None=Har data?)
+                if self.queue_to_rov is not None: #Means we send values to main (not None=Har data?)
                     #1 represents id that tells main that this data is from the controller
-                    self.queue_ro_rov.put(1, self.pack_controller_values())
+                    self.queue_to_rov.put(1, self.pack_controller_values())
 
                 ### Connection ? ### Spør Vebjørn !
 
@@ -247,5 +248,18 @@ def run(queue_to_rov, debug=True, debug_all=False):
     c = Controller(queue_to_rov)
     c.get_events_loop(debug=debug, debug_all=debug_all)
 
+def test_controller_output():
+    queue = multiprocessing.Queue()
+    controller = Controller(queue_to_rov=queue)
+    while True:
+        # This is just to see the output
+        print(controller.pack_controller_values())
+        # Let's stop the test after 5 seconds
+        if pygame.time.get_ticks() > 1000:
+            break
+        # Sleep for a bit before the next update
+        time.sleep(0.1)
+    
 if __name__ == "__main__":
-    pass
+    # pass
+    test_controller_output()
