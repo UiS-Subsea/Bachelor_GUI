@@ -14,7 +14,6 @@ class MyWindow(QMainWindow):
     
     def buttonClick(self):
         self.label1.setText("You pressed the button")
-        
 
 def window():
     app = QApplication(sys.argv)

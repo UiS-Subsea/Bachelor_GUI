@@ -1,4 +1,4 @@
-# Form implementation generated from reading ui file 'd:\Bachelor_GUI\mainwindow.ui'
+# Form implementation generated from reading ui file 'd:\Bachelor_GUI\GUI\mainwindow.ui'
 #
 # Created by: PyQt6 UI code generator 6.4.0
 #
