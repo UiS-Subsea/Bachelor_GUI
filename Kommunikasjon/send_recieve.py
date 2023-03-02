@@ -183,10 +183,8 @@ class Rov_state:
         self.packets_to_send = []
         #[print(copied_packets)
         for packet in copied_packets:
-            if packet[0] != ID_DIRECTIONCOMMAND:
+            if packet[0] == ID_DIRECTIONCOMMAND or packet[0] == "*heartbeat*":
                 pass
-            elif packet[0] != "*heartbeat*":
-                pass 
                 print(f"{packet = }")
         #if run_network:
             #self.logger.sensor_logger.info(copied_packets)
