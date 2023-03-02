@@ -16,6 +16,7 @@ class MyWindow(QMainWindow):
         self.connectFunctions()
         self.gir_verdier = [0,0,0,0,0,0,0,0,0,0]
         self.run_count = 0
+        self.lekkasje_varsel_is_running=False
     
     def connectFunctions(self):    
         #self.button1.clicked.connect(self.buttonClick)
@@ -27,6 +28,7 @@ class MyWindow(QMainWindow):
         self.tid.setText(str(data["tid"]))
         self.spenning.setText(str(round(data["spenning"],4)))
         self.label_temp_ROV_hovedkort.setText(str(round(data["temp_rov"],4)))
+        self.print_data(data)
 
     def receive_sensordata(self,conn):
         self.communicate=Communicate()
@@ -42,7 +44,7 @@ class MyWindow(QMainWindow):
 
     def decide_gui_update(self, sensordata):
         self.sensor_update_function = {
-        #"lekk_temp": self.gui_lekk_temp_update,
+        "lekk_temp": self.gui_lekk_temp_update,
         "thrust" : self.gui_thrust_update,
         #"accel": self.gui_acceleration_update,
         #"gyro": self.gui_gyro_update,
@@ -57,6 +59,7 @@ class MyWindow(QMainWindow):
         for key in sensordata.keys():
             if key in self.sensor_update_function:
                 self.sensor_update_function[key](sensordata[key])
+                print(f"updating {key} with {sensordata[key]}")
             
     def print_data(self, sensordata):
         print(sensordata)
@@ -111,6 +114,7 @@ class MyWindow(QMainWindow):
         tid_string = f"{'0'+str(hours) if len(str(hours)) == 1 else str(hours)}:{'0'+str(minutes) if len(str(minutes)) == 1 else str(minutes)}:{'0'+str(seconds) if len(str(seconds)) == 1 else str(seconds)}"
 
         self.label_tid.setText(tid_string)
+    
     def gui_manipulator_update(self, sensordata):
         self.update_round_percent_visualizer(0, self.label_percentage_mani_1, self.frame_mani_1)
         self.update_round_percent_visualizer(0, self.label_percentage_mani_2, self.frame_mani_2)
@@ -137,7 +141,41 @@ class MyWindow(QMainWindow):
         self.update_round_percent_visualizer(sensordata[6], self.label_percentage_VVB, self.frame_VVB)
         self.update_round_percent_visualizer(sensordata[7], self.label_percentage_VVF, self.frame_VVF)
 
+    def gui_lekk_temp_update(self, sensordata):
+        # self.check_data_types(sensordata["lekk_temp"], (int, float, float, float))
+        # print(f"ran gui_lekk_temp_update {sensordata = }")
+        # print(f"{sensordata =}")
+        temp_label_list:list[QLabel] = [self.label_temp_ROV_hovedkort, self.label_temp_ROV_kraftkort,
+         self.label_temp_ROV_sensorkort, self.label_gjsnitt_temp_ROV]
+        lekkasje_liste: list[bool] = [sensordata[0], sensordata[1], sensordata[2]]
+        if not isinstance(lekkasje_liste[0], bool):
+            raise TypeError(f"Lekkasje sensor 1 has wrong type. {type(lekkasje_liste[0]) = }, {lekkasje_liste[0]} ")
+        average_temp =  round(sum((sensordata[3:6]))/3)
+        sensordata.append(average_temp)
+        for i in range(4):
+            temp_label_list[i].setText(str(sensordata[i+3]))
+        if sensordata[3] > 61: # Høyeste temp sett ved kjøring i bassenget på skolen | Hovedkort
+            temp_label_list[i].setStyleSheet("background-color: #ff0000; border-radius: 5px; border: 1px solid rgb(30, 30, 30);")
+        else:
+            temp_label_list[i].setStyleSheet("background-color: rgb(30, 33, 38); border-radius: 5px; border: 1px solid rgb(30, 30, 30);")
+        if sensordata[4] > 51: # Høyeste temp sett ved kjøring i bassenget på skolen | Kraftkort
+            temp_label_list[i].setStyleSheet("background-color: #ff0000; border-radius: 5px; border: 1px solid rgb(30, 30, 30);")
+        else:
+            temp_label_list[i].setStyleSheet("background-color: rgb(30, 33, 38); border-radius: 5px; border: 1px solid rgb(30, 30, 30);")
+        if sensordata[5] > 46: # Høyeste temp sett ved kjøring i bassenget på skolen | Sensorkort
+            temp_label_list[i].setStyleSheet("background-color: #ff0000; border-radius: 5px; border: 1px solid rgb(30, 30, 30);")
+        else:
+            temp_label_list[i].setStyleSheet("background-color: rgb(30, 33, 38); border-radius: 5px; border: 1px solid rgb(30, 30, 30);")
 
+        id_with_lekkasje = []
+        for lekkasje_nr, is_lekkasje in enumerate(lekkasje_liste):
+            if not is_lekkasje:
+                id_with_lekkasje.append(lekkasje_nr+1)
+        if not self.lekkasje_varsel_is_running and len(id_with_lekkasje)>0:
+            self.lekkasje_varsel_is_running = True
+            threading.Thread(target=lambda: self.lekkasje_varsel(id_with_lekkasje)).start()
+                
+                # self.update_round_percent_visualizer(sensordata[0], self.label_percentage_HHB, self.frame_HHB)
     def gui_watt_update(self, sensordata):
         effekt_liste: list[QLabel] = [self.label_effekt_thrustere, self.label_effekt_manipulator, self.label_effekt_elektronikk]
         color_list = ["rgb(30, 33, 38);"]*3
@@ -165,5 +203,4 @@ def window(conn):
 
 if __name__ == "__main__":
     #import SUBSEAGUI
-
     window()
