@@ -4,12 +4,13 @@ import sys
 import multiprocessing
 import threading
 import time
-
+COMMAND_TO_ROV_ID = 3
 
 class MyWindow(QMainWindow):
     def __init__(self,pipe_conn_only_rcv):#Everything that goes in the window goes into this function
         super(MyWindow, self).__init__() #Think about self as the window 
         uic.loadUi("GUI\SUBSEAGUI.ui", self)
+        #self.queue : multiprocessing.Queue = queue
         self.pipe_conn_only_rcv = pipe_conn_only_rcv
         self.receive = threading.Thread(target=self.receive_sensordata, daemon=True, args=(self.pipe_conn_only_rcv,))
         self.receive.start()
@@ -17,6 +18,7 @@ class MyWindow(QMainWindow):
         self.gir_verdier = [0,0,0,0,0,0,0,0,0,0]
         self.run_count = 0
         self.lekkasje_varsel_is_running=False
+        self.create_and_connect_controls()
     
     def connectFunctions(self):    
         #self.button1.clicked.connect(self.buttonClick)
@@ -49,7 +51,7 @@ class MyWindow(QMainWindow):
         #"accel": self.gui_acceleration_update,
         #"gyro": self.gui_gyro_update,
         "time": self.gui_time_update,
-        "manipulator": self.gui_manipulator_update,
+        #"manipulator": self.gui_manipulator_update,
         "power_consumption": self.gui_watt_update,
         "manipulator_toggled": self.gui_manipulator_state_update,
         #"regulator_strom_status": self.regulator_strom_status,
@@ -192,14 +194,40 @@ class MyWindow(QMainWindow):
 
         # self.label_effekt_manipulator_2.setText(str(round(sensordata[1])) + " W")
         # self.label_effekt_elektronikk_2.setText(str(round(sensordata[2])) +" W")
-class Communicate(QtCore.QObject):
-    data_signal = QtCore.pyqtSignal(dict)
-
+    
+    def send_data_to_main(self, data, id):
+        """Sends data to the main thread. Data is a dict with id and data"""
+        if self.queue is not None:
+            self.queue.put((id, data))
+        else:
+            raise TypeError("Queue is None")
+        
+    def send_command_to_rov(self, command):
+        """Sends at command to the rov eg. turn on lights at 60% power"""
+        self.send_data_to_main(command, COMMAND_TO_ROV_ID)
+    
+    def create_and_connect_controls(self):
+        self.btn_avslutt_stitching.clicked.connect(self.stop_stich)
+    
+    def stop_stich(self):
+        self.send_command_to_rov("[stop_stitching]")
+        print("hei mr dominykas i think i am sending data now")
+    
 def window(conn):
     app = QApplication(sys.argv)
     win = MyWindow(conn)
     win.show()
     sys.exit(app.exec_())
+
+    
+class Communicate(QtCore.QObject):
+    data_signal = QtCore.pyqtSignal(dict)
+
+#def window(conn, queue_for_rov):
+#    app = QApplication(sys.argv)
+#    win = MyWindow(conn,queue_for_rov)
+#    win.show()
+#    sys.exit(app.exec_())
 
 if __name__ == "__main__":
     #import SUBSEAGUI
