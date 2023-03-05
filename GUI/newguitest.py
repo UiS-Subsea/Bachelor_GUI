@@ -4,12 +4,13 @@ import sys
 import multiprocessing
 import threading
 import time
-
+COMMAND_TO_ROV_ID = 3
 
 class MyWindow(QMainWindow):
     def __init__(self,pipe_conn_only_rcv):#Everything that goes in the window goes into this function
         super(MyWindow, self).__init__() #Think about self as the window 
-        uic.loadUi("GUI\SUBSEAGUI.ui", self)
+        uic.loadUi("GUI\SubseaTest.ui", self)
+        #self.queue : multiprocessing.Queue = queue
         self.pipe_conn_only_rcv = pipe_conn_only_rcv
         self.receive = threading.Thread(target=self.receive_sensordata, daemon=True, args=(self.pipe_conn_only_rcv,))
         self.receive.start()
@@ -17,8 +18,9 @@ class MyWindow(QMainWindow):
         self.gir_verdier = [0,0,0,0,0,0,0,0,0,0]
         self.run_count = 0
         self.lekkasje_varsel_is_running=False
+        self.create_and_connect_controls()
     
-    def connectFunctions(self):    
+    def connectFunctions(self):
         #self.button1.clicked.connect(self.buttonClick)
         pass
     
@@ -48,8 +50,8 @@ class MyWindow(QMainWindow):
         "thrust" : self.gui_thrust_update,
         #"accel": self.gui_acceleration_update,
         #"gyro": self.gui_gyro_update,
-        "time": self.gui_time_update,
-        "manipulator": self.gui_manipulator_update,
+        #"time": self.gui_time_update,
+        #"manipulator": self.gui_manipulator_update,
         "power_consumption": self.gui_watt_update,
         "manipulator_toggled": self.gui_manipulator_state_update,
         #"regulator_strom_status": self.regulator_strom_status,
@@ -66,7 +68,7 @@ class MyWindow(QMainWindow):
     
     def update_round_percent_visualizer(self, value, text_label, round_frame):
         """This function will update the various circles with a progress bar around and percent in the middle"""
-        blue = "rgba(85, 170, 255, 255)"
+        ''' blue = "rgba(85, 170, 255, 255)"
         red = "rgb(226, 47, 53)"
         progress = (100 - value) / 100.0
         stop_1 = str(progress - 0.001)
@@ -84,25 +86,26 @@ class MyWindow(QMainWindow):
         text_label.setText(htmlText)
         styleSheet = """QFrame{ border-radius: 30px; background-color: qconicalgradient(cx:0.5, cy:0.5, angle:90, stop:{STOP_1} rgba(77, 77, 127, 100), stop:{STOP_2} {COLOR}); }"""
         styleSheet = styleSheet.replace("{STOP_1}", str(stop_1)).replace("{STOP_2}", str(stop_2)).replace("{COLOR}", color)
-        round_frame.setStyleSheet(styleSheet)
+        round_frame.setStyleSheet(styleSheet) '''
+        pass
         
     def gui_manipulator_state_update(self, sensordata):
         self.toggle_mani.setChecked(sensordata[0])
     def gui_thrust_update(self, sensordata):
-    # print(f"ran gui_thrust_update {sensordata = }")
+        print(f"ran gui_thrust_update {sensordata = }")
         for i in range(len(sensordata)):
             if sensordata[i] > 100:
                 sensordata[i] = 100
-        self.update_round_percent_visualizer(sensordata[0], self.label_percentage_HHF, self.frame_HHF)
-        self.update_round_percent_visualizer(sensordata[1], self.label_percentage_HHB, self.frame_HHB)
-        self.update_round_percent_visualizer(sensordata[2], self.label_percentage_HVB, self.frame_HVB)
-        self.update_round_percent_visualizer(sensordata[3], self.label_percentage_HVF, self.frame_HVF)
-        self.update_round_percent_visualizer(sensordata[4], self.label_percentage_VHF, self.frame_VHF)
-        self.update_round_percent_visualizer(sensordata[5], self.label_percentage_VHB, self.frame_VHB)
-        self.update_round_percent_visualizer(sensordata[6], self.label_percentage_VVB, self.frame_VVB)
-        self.update_round_percent_visualizer(sensordata[7], self.label_percentage_VVF, self.frame_VVF)
+        self.update_round_percent_visualizer(sensordata[0], self.label_percentage_HHF,self.frame_HHF)
+        self.update_round_percent_visualizer(sensordata[1], self.label_percentage_HHB,self.frame_HHB)
+        self.update_round_percent_visualizer(sensordata[2], self.label_percentage_HVB,self.frame_HVB)
+        self.update_round_percent_visualizer(sensordata[3], self.label_percentage_HVF,self.frame_HVF)
+        self.update_round_percent_visualizer(sensordata[4], self.label_percentage_VHF,self.frame_VHF)
+        self.update_round_percent_visualizer(sensordata[5], self.label_percentage_VHB,self.frame_VHB)
+        self.update_round_percent_visualizer(sensordata[6], self.label_percentage_VVB,self.frame_VVB)
+        self.update_round_percent_visualizer(sensordata[7], self.label_percentage_VVF,self.frame_VVF)
 
-    def gui_time_update(self, sensordata):
+    ''' def gui_time_update(self, sensordata):
         tid = round(sensordata[0])
         hours = tid//3600
         tid -= hours*3600
@@ -113,7 +116,7 @@ class MyWindow(QMainWindow):
 
         tid_string = f"{'0'+str(hours) if len(str(hours)) == 1 else str(hours)}:{'0'+str(minutes) if len(str(minutes)) == 1 else str(minutes)}:{'0'+str(seconds) if len(str(seconds)) == 1 else str(seconds)}"
 
-        self.label_tid.setText(tid_string)
+        self.label_tid.setText(tid_string) '''
     
     def gui_manipulator_update(self, sensordata):
         self.update_round_percent_visualizer(0, self.label_percentage_mani_1, self.frame_mani_1)
@@ -133,14 +136,13 @@ class MyWindow(QMainWindow):
             if sensordata[i] > 100:
                 sensordata[i] = 100
         self.update_round_percent_visualizer(sensordata[0], self.label_percentage_HHF, self.frame_HHF)
-        self.update_round_percent_visualizer(sensordata[1], self.label_percentage_HHB, self.frame_HHB)
-        self.update_round_percent_visualizer(sensordata[2], self.label_percentage_HVB, self.frame_HVB)
-        self.update_round_percent_visualizer(sensordata[3], self.label_percentage_HVF, self.frame_HVF)
-        self.update_round_percent_visualizer(sensordata[4], self.label_percentage_VHF, self.frame_VHF)
-        self.update_round_percent_visualizer(sensordata[5], self.label_percentage_VHB, self.frame_VHB)
-        self.update_round_percent_visualizer(sensordata[6], self.label_percentage_VVB, self.frame_VVB)
-        self.update_round_percent_visualizer(sensordata[7], self.label_percentage_VVF, self.frame_VVF)
-
+        self.update_round_percent_visualizer(sensordata[1], self.label_percentage_HHB_3, self.frame_HHB)
+        self.update_round_percent_visualizer(sensordata[2], self.label_percentage_HVB, self.frame_HVB_2)
+        self.update_round_percent_visualizer(sensordata[3], self.label_percentage_HVF, self.frame_HVF_2)
+        self.update_round_percent_visualizer(sensordata[4], self.label_percentage_VHF, self.frame_VHF_2)
+        self.update_round_percent_visualizer(sensordata[5], self.label_percentage_VHB_2, self.frame_VHB)
+        self.update_round_percent_visualizer(sensordata[6], self.label_percentage_VVB_4, self.frame_VVB)
+        self.update_round_percent_visualizer(sensordata[7], self.label_percentage_VVF, self.frame_VVF_circle_2)
     def gui_lekk_temp_update(self, sensordata):
         # self.check_data_types(sensordata["lekk_temp"], (int, float, float, float))
         # print(f"ran gui_lekk_temp_update {sensordata = }")
@@ -155,17 +157,23 @@ class MyWindow(QMainWindow):
         for i in range(4):
             temp_label_list[i].setText(str(sensordata[i+3]))
         if sensordata[3] > 61: # Høyeste temp sett ved kjøring i bassenget på skolen | Hovedkort
-            temp_label_list[i].setStyleSheet("background-color: #ff0000; border-radius: 5px; border: 1px solid rgb(30, 30, 30);")
+            pass
+            #temp_label_list[i].setStyleSheet("background-color: #ff0000; border-radius: 5px; border: 1px solid rgb(30, 30, 30);")
         else:
-            temp_label_list[i].setStyleSheet("background-color: rgb(30, 33, 38); border-radius: 5px; border: 1px solid rgb(30, 30, 30);")
+            pass
+            #temp_label_list[i].setStyleSheet("background-color: rgb(30, 33, 38); border-radius: 5px; border: 1px solid rgb(30, 30, 30);")
         if sensordata[4] > 51: # Høyeste temp sett ved kjøring i bassenget på skolen | Kraftkort
-            temp_label_list[i].setStyleSheet("background-color: #ff0000; border-radius: 5px; border: 1px solid rgb(30, 30, 30);")
+            pass
+            #temp_label_list[i].setStyleSheet("background-color: #ff0000; border-radius: 5px; border: 1px solid rgb(30, 30, 30);")
         else:
-            temp_label_list[i].setStyleSheet("background-color: rgb(30, 33, 38); border-radius: 5px; border: 1px solid rgb(30, 30, 30);")
+            #temp_label_list[i].setStyleSheet("background-color: rgb(30, 33, 38); border-radius: 5px; border: 1px solid rgb(30, 30, 30);")
+            pass
         if sensordata[5] > 46: # Høyeste temp sett ved kjøring i bassenget på skolen | Sensorkort
-            temp_label_list[i].setStyleSheet("background-color: #ff0000; border-radius: 5px; border: 1px solid rgb(30, 30, 30);")
+            pass
+            #temp_label_list[i].setStyleSheet("background-color: #ff0000; border-radius: 5px; border: 1px solid rgb(30, 30, 30);")
         else:
-            temp_label_list[i].setStyleSheet("background-color: rgb(30, 33, 38); border-radius: 5px; border: 1px solid rgb(30, 30, 30);")
+            pass
+            #temp_label_list[i].setStyleSheet("background-color: rgb(30, 33, 38); border-radius: 5px; border: 1px solid rgb(30, 30, 30);")
 
         id_with_lekkasje = []
         for lekkasje_nr, is_lekkasje in enumerate(lekkasje_liste):
@@ -188,19 +196,47 @@ class MyWindow(QMainWindow):
 
         for index, label in enumerate(effekt_liste):
             label.setText(str(round(sensordata[index])) + " W")
-            label.setStyleSheet(f"background-color: {color_list[index]}; border-radius: 5px; border: 1px solid rgb(30, 30, 30);")
+            #label.setStyleSheet(f"background-color: {color_list[index]}; border-radius: 5px; border: 1px solid rgb(30, 30, 30);")
 
         # self.label_effekt_manipulator_2.setText(str(round(sensordata[1])) + " W")
         # self.label_effekt_elektronikk_2.setText(str(round(sensordata[2])) +" W")
-class Communicate(QtCore.QObject):
-    data_signal = QtCore.pyqtSignal(dict)
-
+    
+    def send_data_to_main(self, data, id):
+        """Sends data to the main thread. Data is a dict with id and data"""
+        if self.queue is not None:
+            self.queue.put((id, data))
+        else:
+            raise TypeError("Queue is None")
+        
+    def send_command_to_rov(self, command):
+        """Sends at command to the rov eg. turn on lights at 60% power"""
+        self.send_data_to_main(command, COMMAND_TO_ROV_ID)
+    
+    def create_and_connect_controls(self):
+        pass
+        #self.btn_avslutt_stitching.clicked.connect(self.stop_stich)
+    
+    def stop_stich(self):
+        self.send_command_to_rov("[stop_stitching]")
+        print("hei mr dominykas i think i am sending data now")
+    
 def window(conn):
     app = QApplication(sys.argv)
     win = MyWindow(conn)
     win.show()
     sys.exit(app.exec_())
 
+    
+class Communicate(QtCore.QObject):
+    data_signal = QtCore.pyqtSignal(dict)
+
+#def window(conn, queue_for_rov):
+#    app = QApplication(sys.argv)
+#    win = MyWindow(conn,queue_for_rov)
+#    win.show()
+#    sys.exit(app.exec_())
+
 if __name__ == "__main__":
     #import SUBSEAGUI
-    window()
+    #window()
+    pass

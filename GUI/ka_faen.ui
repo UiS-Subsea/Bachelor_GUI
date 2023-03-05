@@ -2168,8 +2168,8 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
   <widget class="QLabel" name="text_manipulator">
    <property name="geometry">
     <rect>
-     <x>10</x>
-     <y>410</y>
+     <x>30</x>
+     <y>390</y>
      <width>376</width>
      <height>34</height>
     </rect>
@@ -2193,99 +2193,6 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
    </property>
    <property name="margin">
     <number>10</number>
-   </property>
-   <property name="colorStyle" stdset="0">
-    <string>subTitle</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_gjsnitt_temp_ROV">
-   <property name="geometry">
-    <rect>
-     <x>150</x>
-     <y>370</y>
-     <width>58</width>
-     <height>38</height>
-    </rect>
-   </property>
-   <property name="minimumSize">
-    <size>
-     <width>0</width>
-     <height>0</height>
-    </size>
-   </property>
-   <property name="maximumSize">
-    <size>
-     <width>16777215</width>
-     <height>16777215</height>
-    </size>
-   </property>
-   <property name="font">
-    <font>
-     <pointsize>10</pointsize>
-     <weight>50</weight>
-     <italic>false</italic>
-     <bold>false</bold>
-    </font>
-   </property>
-   <property name="frameShape">
-    <enum>QFrame::NoFrame</enum>
-   </property>
-   <property name="lineWidth">
-    <number>0</number>
-   </property>
-   <property name="midLineWidth">
-    <number>0</number>
-   </property>
-   <property name="text">
-    <string>---</string>
-   </property>
-   <property name="alignment">
-    <set>Qt::AlignCenter</set>
-   </property>
-   <property name="margin">
-    <number>0</number>
-   </property>
-   <property name="labelStyle" stdset="0">
-    <string>blackBg</string>
-   </property>
-   <property name="labelStyle2" stdset="0">
-    <string>whiteBg</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="text_gjsnitttemp">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>370</y>
-     <width>113</width>
-     <height>42</height>
-    </rect>
-   </property>
-   <property name="minimumSize">
-    <size>
-     <width>0</width>
-     <height>0</height>
-    </size>
-   </property>
-   <property name="maximumSize">
-    <size>
-     <width>16777215</width>
-     <height>16777215</height>
-    </size>
-   </property>
-   <property name="font">
-    <font>
-     <pointsize>10</pointsize>
-     <weight>50</weight>
-     <italic>false</italic>
-     <bold>false</bold>
-    </font>
-   </property>
-   <property name="text">
-    <string>Gjennomsnitt:</string>
-   </property>
-   <property name="textFormat">
-    <enum>Qt::RichText</enum>
    </property>
    <property name="colorStyle" stdset="0">
     <string>subTitle</string>

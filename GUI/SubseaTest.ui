@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>815</width>
+    <width>985</width>
     <height>661</height>
    </rect>
   </property>
@@ -1146,267 +1146,6 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
     <number>0</number>
    </property>
   </widget>
-  <widget class="QLabel" name="label_percentage_VVF">
-   <property name="geometry">
-    <rect>
-     <x>480</x>
-     <y>80</y>
-     <width>50</width>
-     <height>30</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <pointsize>9</pointsize>
-    </font>
-   </property>
-   <property name="autoFillBackground">
-    <bool>false</bool>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">background: transparent;</string>
-   </property>
-   <property name="text">
-    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;span&gt;0&lt;/span&gt;&lt;span style=&quot;vertical-align:super;&quot;&gt;%&lt;/span&gt;&lt;/body&gt;&lt;/html&gt;</string>
-   </property>
-   <property name="scaledContents">
-    <bool>false</bool>
-   </property>
-   <property name="alignment">
-    <set>Qt::AlignCenter</set>
-   </property>
-   <property name="wordWrap">
-    <bool>false</bool>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_percentage_VHF">
-   <property name="geometry">
-    <rect>
-     <x>750</x>
-     <y>80</y>
-     <width>50</width>
-     <height>30</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <pointsize>9</pointsize>
-    </font>
-   </property>
-   <property name="autoFillBackground">
-    <bool>false</bool>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">background: transparent;</string>
-   </property>
-   <property name="text">
-    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;span&gt;0&lt;/span&gt;&lt;span style=&quot;vertical-align:super;&quot;&gt;%&lt;/span&gt;&lt;/body&gt;&lt;/html&gt;</string>
-   </property>
-   <property name="scaledContents">
-    <bool>false</bool>
-   </property>
-   <property name="alignment">
-    <set>Qt::AlignCenter</set>
-   </property>
-   <property name="wordWrap">
-    <bool>false</bool>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_percentage_HVF">
-   <property name="geometry">
-    <rect>
-     <x>510</x>
-     <y>170</y>
-     <width>41</width>
-     <height>30</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <pointsize>9</pointsize>
-    </font>
-   </property>
-   <property name="autoFillBackground">
-    <bool>false</bool>
-   </property>
-   <property name="text">
-    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;span&gt;0&lt;/span&gt;&lt;span style=&quot;vertical-align:super;&quot;&gt;%&lt;/span&gt;&lt;/body&gt;&lt;/html&gt;</string>
-   </property>
-   <property name="scaledContents">
-    <bool>false</bool>
-   </property>
-   <property name="alignment">
-    <set>Qt::AlignCenter</set>
-   </property>
-   <property name="wordWrap">
-    <bool>false</bool>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_percentage_HHF">
-   <property name="geometry">
-    <rect>
-     <x>730</x>
-     <y>170</y>
-     <width>50</width>
-     <height>30</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <pointsize>9</pointsize>
-    </font>
-   </property>
-   <property name="autoFillBackground">
-    <bool>false</bool>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">background: transparent;</string>
-   </property>
-   <property name="text">
-    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;span&gt;0&lt;/span&gt;&lt;span style=&quot;vertical-align:super;&quot;&gt;%&lt;/span&gt;&lt;/body&gt;&lt;/html&gt;</string>
-   </property>
-   <property name="scaledContents">
-    <bool>false</bool>
-   </property>
-   <property name="alignment">
-    <set>Qt::AlignCenter</set>
-   </property>
-   <property name="wordWrap">
-    <bool>false</bool>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_percentage_HVB">
-   <property name="geometry">
-    <rect>
-     <x>510</x>
-     <y>270</y>
-     <width>50</width>
-     <height>30</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <pointsize>9</pointsize>
-    </font>
-   </property>
-   <property name="autoFillBackground">
-    <bool>false</bool>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">background: transparent;</string>
-   </property>
-   <property name="text">
-    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;span&gt;0&lt;/span&gt;&lt;span style=&quot;vertical-align:super;&quot;&gt;%&lt;/span&gt;&lt;/body&gt;&lt;/html&gt;</string>
-   </property>
-   <property name="scaledContents">
-    <bool>false</bool>
-   </property>
-   <property name="alignment">
-    <set>Qt::AlignCenter</set>
-   </property>
-   <property name="wordWrap">
-    <bool>false</bool>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_percentage_HHB">
-   <property name="geometry">
-    <rect>
-     <x>740</x>
-     <y>270</y>
-     <width>50</width>
-     <height>30</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <pointsize>9</pointsize>
-    </font>
-   </property>
-   <property name="autoFillBackground">
-    <bool>false</bool>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">background: transparent;</string>
-   </property>
-   <property name="text">
-    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;span&gt;0&lt;/span&gt;&lt;span style=&quot;vertical-align:super;&quot;&gt;%&lt;/span&gt;&lt;/body&gt;&lt;/html&gt;</string>
-   </property>
-   <property name="scaledContents">
-    <bool>false</bool>
-   </property>
-   <property name="alignment">
-    <set>Qt::AlignCenter</set>
-   </property>
-   <property name="wordWrap">
-    <bool>false</bool>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_percentage_VVB_2">
-   <property name="geometry">
-    <rect>
-     <x>470</x>
-     <y>330</y>
-     <width>50</width>
-     <height>30</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <pointsize>9</pointsize>
-    </font>
-   </property>
-   <property name="autoFillBackground">
-    <bool>false</bool>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">background: transparent;</string>
-   </property>
-   <property name="text">
-    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;span&gt;0&lt;/span&gt;&lt;span style=&quot;vertical-align:super;&quot;&gt;%&lt;/span&gt;&lt;/body&gt;&lt;/html&gt;</string>
-   </property>
-   <property name="scaledContents">
-    <bool>false</bool>
-   </property>
-   <property name="alignment">
-    <set>Qt::AlignCenter</set>
-   </property>
-   <property name="wordWrap">
-    <bool>false</bool>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_percentage_VHB">
-   <property name="geometry">
-    <rect>
-     <x>760</x>
-     <y>330</y>
-     <width>50</width>
-     <height>30</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <pointsize>9</pointsize>
-    </font>
-   </property>
-   <property name="autoFillBackground">
-    <bool>false</bool>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">background: transparent;</string>
-   </property>
-   <property name="text">
-    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;span&gt;0&lt;/span&gt;&lt;span style=&quot;vertical-align:super;&quot;&gt;%&lt;/span&gt;&lt;/body&gt;&lt;/html&gt;</string>
-   </property>
-   <property name="scaledContents">
-    <bool>false</bool>
-   </property>
-   <property name="alignment">
-    <set>Qt::AlignCenter</set>
-   </property>
-   <property name="wordWrap">
-    <bool>false</bool>
-   </property>
-  </widget>
   <widget class="QLabel" name="title_kjoremodus">
    <property name="geometry">
     <rect>
@@ -2202,7 +1941,7 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
    <property name="geometry">
     <rect>
      <x>150</x>
-     <y>370</y>
+     <y>360</y>
      <width>58</width>
      <height>38</height>
     </rect>
@@ -2256,9 +1995,9 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>370</y>
-     <width>113</width>
-     <height>42</height>
+     <y>360</y>
+     <width>58</width>
+     <height>38</height>
     </rect>
    </property>
    <property name="minimumSize">
@@ -2282,19 +2021,541 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
     </font>
    </property>
    <property name="text">
-    <string>Gjennomsnitt:</string>
+    <string>Gj.snitt:</string>
    </property>
    <property name="textFormat">
-    <enum>Qt::RichText</enum>
+    <enum>Qt::PlainText</enum>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
    </property>
    <property name="colorStyle" stdset="0">
     <string>subTitle</string>
    </property>
   </widget>
+  <widget class="QFrame" name="frame_VVF_circle_2">
+   <property name="geometry">
+    <rect>
+     <x>490</x>
+     <y>80</y>
+     <width>50</width>
+     <height>50</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QFrame { border-radius: 25px; background-color: rgba(77, 77, 127, 255); }</string>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::NoFrame</enum>
+   </property>
+   <property name="frameShadow">
+    <enum>QFrame::Raised</enum>
+   </property>
+   <property name="frameStyle" stdset="0">
+    <string>innerCircle</string>
+   </property>
+   <widget class="QLabel" name="label_percentage_VVF">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>10</y>
+      <width>50</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>9</pointsize>
+     </font>
+    </property>
+    <property name="autoFillBackground">
+     <bool>false</bool>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background: transparent;</string>
+    </property>
+    <property name="text">
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;span&gt;0&lt;/span&gt;&lt;span style=&quot;vertical-align:super;&quot;&gt;%&lt;/span&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    </property>
+    <property name="scaledContents">
+     <bool>false</bool>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+    <property name="wordWrap">
+     <bool>false</bool>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QFrame" name="frame_VHF_2">
+   <property name="geometry">
+    <rect>
+     <x>760</x>
+     <y>80</y>
+     <width>50</width>
+     <height>50</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QFrame { border-radius: 25px; background-color: rgba(77, 77, 127, 255); }</string>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::NoFrame</enum>
+   </property>
+   <property name="frameShadow">
+    <enum>QFrame::Raised</enum>
+   </property>
+   <property name="frameStyle" stdset="0">
+    <string>innerCircle</string>
+   </property>
+   <widget class="QLabel" name="label_percentage_VHF">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>10</y>
+      <width>50</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>9</pointsize>
+     </font>
+    </property>
+    <property name="autoFillBackground">
+     <bool>false</bool>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background: transparent;</string>
+    </property>
+    <property name="text">
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;span&gt;0&lt;/span&gt;&lt;span style=&quot;vertical-align:super;&quot;&gt;%&lt;/span&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    </property>
+    <property name="scaledContents">
+     <bool>false</bool>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+    <property name="wordWrap">
+     <bool>false</bool>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QFrame" name="frame_HHF">
+   <property name="geometry">
+    <rect>
+     <x>670</x>
+     <y>140</y>
+     <width>60</width>
+     <height>60</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QFrame { 	border-radius: 30px; background-color: rgba(77, 77, 127, 100); }</string>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::NoFrame</enum>
+   </property>
+   <property name="frameShadow">
+    <enum>QFrame::Raised</enum>
+   </property>
+   <widget class="QFrame" name="frame_HHF_circle">
+    <property name="geometry">
+     <rect>
+      <x>5</x>
+      <y>5</y>
+      <width>50</width>
+      <height>50</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QFrame { border-radius: 25px; background-color: rgba(77, 77, 127, 255); }</string>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::NoFrame</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Raised</enum>
+    </property>
+    <property name="frameStyle" stdset="0">
+     <string>innerCircle</string>
+    </property>
+    <widget class="QLabel" name="label_percentage_HHF">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>10</y>
+       <width>50</width>
+       <height>30</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>9</pointsize>
+      </font>
+     </property>
+     <property name="autoFillBackground">
+      <bool>false</bool>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background: transparent;</string>
+     </property>
+     <property name="text">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;span&gt;0&lt;/span&gt;&lt;span style=&quot;vertical-align:super;&quot;&gt;%&lt;/span&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+     <property name="scaledContents">
+      <bool>false</bool>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+     <property name="wordWrap">
+      <bool>false</bool>
+     </property>
+    </widget>
+   </widget>
+  </widget>
+  <widget class="QFrame" name="frame_HVF_2">
+   <property name="geometry">
+    <rect>
+     <x>570</x>
+     <y>140</y>
+     <width>50</width>
+     <height>50</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QFrame { border-radius: 25px; background-color: rgba(77, 77, 127, 255); }</string>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::NoFrame</enum>
+   </property>
+   <property name="frameShadow">
+    <enum>QFrame::Raised</enum>
+   </property>
+   <property name="frameStyle" stdset="0">
+    <string>innerCircle</string>
+   </property>
+   <widget class="QLabel" name="label_percentage_HVF">
+    <property name="geometry">
+     <rect>
+      <x>6</x>
+      <y>10</y>
+      <width>41</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>9</pointsize>
+     </font>
+    </property>
+    <property name="autoFillBackground">
+     <bool>false</bool>
+    </property>
+    <property name="text">
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;span&gt;0&lt;/span&gt;&lt;span style=&quot;vertical-align:super;&quot;&gt;%&lt;/span&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    </property>
+    <property name="scaledContents">
+     <bool>false</bool>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+    <property name="wordWrap">
+     <bool>false</bool>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QFrame" name="frame_HVB_2">
+   <property name="geometry">
+    <rect>
+     <x>570</x>
+     <y>260</y>
+     <width>50</width>
+     <height>50</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QFrame { border-radius: 25px; background-color: rgba(77, 77, 127, 255); }</string>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::NoFrame</enum>
+   </property>
+   <property name="frameShadow">
+    <enum>QFrame::Raised</enum>
+   </property>
+   <property name="frameStyle" stdset="0">
+    <string>innerCircle</string>
+   </property>
+   <widget class="QLabel" name="label_percentage_HVB">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>10</y>
+      <width>50</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>9</pointsize>
+     </font>
+    </property>
+    <property name="autoFillBackground">
+     <bool>false</bool>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background: transparent;</string>
+    </property>
+    <property name="text">
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;span&gt;0&lt;/span&gt;&lt;span style=&quot;vertical-align:super;&quot;&gt;%&lt;/span&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    </property>
+    <property name="scaledContents">
+     <bool>false</bool>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+    <property name="wordWrap">
+     <bool>false</bool>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QFrame" name="frame_HHB">
+   <property name="geometry">
+    <rect>
+     <x>670</x>
+     <y>250</y>
+     <width>60</width>
+     <height>60</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QFrame { 	border-radius: 30px; background-color: rgba(77, 77, 127, 100); }</string>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::NoFrame</enum>
+   </property>
+   <property name="frameShadow">
+    <enum>QFrame::Raised</enum>
+   </property>
+   <widget class="QFrame" name="frame_HHB_circle_">
+    <property name="geometry">
+     <rect>
+      <x>5</x>
+      <y>5</y>
+      <width>50</width>
+      <height>50</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QFrame { border-radius: 25px; background-color: rgba(77, 77, 127, 255); }</string>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::NoFrame</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Raised</enum>
+    </property>
+    <property name="frameStyle" stdset="0">
+     <string>innerCircle</string>
+    </property>
+    <widget class="QLabel" name="label_percentage_HHB_3">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>10</y>
+       <width>50</width>
+       <height>30</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>9</pointsize>
+      </font>
+     </property>
+     <property name="autoFillBackground">
+      <bool>false</bool>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background: transparent;</string>
+     </property>
+     <property name="text">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;span&gt;0&lt;/span&gt;&lt;span style=&quot;vertical-align:super;&quot;&gt;%&lt;/span&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+     <property name="scaledContents">
+      <bool>false</bool>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+     <property name="wordWrap">
+      <bool>false</bool>
+     </property>
+    </widget>
+   </widget>
+  </widget>
+  <widget class="QFrame" name="frame_VVB">
+   <property name="geometry">
+    <rect>
+     <x>490</x>
+     <y>310</y>
+     <width>60</width>
+     <height>60</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QFrame { 	border-radius: 30px; background-color: rgba(77, 77, 127, 100); }</string>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::NoFrame</enum>
+   </property>
+   <property name="frameShadow">
+    <enum>QFrame::Raised</enum>
+   </property>
+   <widget class="QFrame" name="frame_VVB_circle_3">
+    <property name="geometry">
+     <rect>
+      <x>5</x>
+      <y>5</y>
+      <width>50</width>
+      <height>50</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QFrame { border-radius: 25px; background-color: rgba(77, 77, 127, 255); }</string>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::NoFrame</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Raised</enum>
+    </property>
+    <property name="frameStyle" stdset="0">
+     <string>innerCircle</string>
+    </property>
+    <widget class="QLabel" name="label_percentage_VVB_4">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>10</y>
+       <width>50</width>
+       <height>30</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>9</pointsize>
+      </font>
+     </property>
+     <property name="autoFillBackground">
+      <bool>false</bool>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background: transparent;</string>
+     </property>
+     <property name="text">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;span&gt;0&lt;/span&gt;&lt;span style=&quot;vertical-align:super;&quot;&gt;%&lt;/span&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+     <property name="scaledContents">
+      <bool>false</bool>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+     <property name="wordWrap">
+      <bool>false</bool>
+     </property>
+    </widget>
+   </widget>
+  </widget>
+  <widget class="QFrame" name="frame_VHB">
+   <property name="geometry">
+    <rect>
+     <x>740</x>
+     <y>320</y>
+     <width>61</width>
+     <height>60</height>
+    </rect>
+   </property>
+   <property name="autoFillBackground">
+    <bool>false</bool>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QFrame { 	border-radius: 30px; background-color: rgba(77, 77, 127, 100); }</string>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::NoFrame</enum>
+   </property>
+   <property name="frameShadow">
+    <enum>QFrame::Raised</enum>
+   </property>
+   <widget class="QFrame" name="frame_VHB_circle">
+    <property name="geometry">
+     <rect>
+      <x>5</x>
+      <y>5</y>
+      <width>50</width>
+      <height>50</height>
+     </rect>
+    </property>
+    <property name="autoFillBackground">
+     <bool>false</bool>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QFrame { border-radius: 25px; background-color: rgba(77, 77, 127, 255); }</string>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::NoFrame</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Raised</enum>
+    </property>
+    <property name="frameStyle" stdset="0">
+     <string>innerCircle</string>
+    </property>
+    <widget class="QLabel" name="label_percentage_VHB_2">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>10</y>
+       <width>50</width>
+       <height>30</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>9</pointsize>
+      </font>
+     </property>
+     <property name="autoFillBackground">
+      <bool>false</bool>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background: transparent;</string>
+     </property>
+     <property name="text">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;span&gt;0&lt;/span&gt;&lt;span style=&quot;vertical-align:super;&quot;&gt;%&lt;/span&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+     <property name="scaledContents">
+      <bool>false</bool>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+     <property name="wordWrap">
+      <bool>false</bool>
+     </property>
+    </widget>
+   </widget>
+  </widget>
  </widget>
  <resources>
   <include location="../../uis-subsea/Subsea_QT_GUI/resources.qrc"/>
-  <include location="C:/Program Files (x86)/Qt Designer/resources.qrc"/>
+  <include location="resources.qrc"/>
  </resources>
  <connections/>
 </ui>
