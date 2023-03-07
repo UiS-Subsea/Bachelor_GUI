@@ -64,7 +64,7 @@ class Rov_state:
                     # print(message)
                     self.handle_data_from_rov(message)
 
-                    # potentially for the future: send_to_gui(Rov_state, message)
+                    # potentially for the future to get information to the GUI : send_to_gui(Rov_state, message)
 
             except json.JSONDecodeError as e:
                 print(f"{data = }, {e = }")
