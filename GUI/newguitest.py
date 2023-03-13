@@ -91,9 +91,9 @@ class MyWindow(QMainWindow):
         
     def gui_manipulator_state_update(self, sensordata):
         self.toggle_mani.setChecked(sensordata[0])
-    def gui_thrust_update(self, sensordata):
-        print(f"ran gui_thrust_update {sensordata = }")
-        for i in range(len(sensordata)):
+    def gui_thrust_update(self, sensordata):        
+        print(f"ran gui_thrust_update {sensordata = }")                     
+        for i in range(len(sensordata)):                    
             if sensordata[i] > 100:
                 sensordata[i] = 100
         self.update_round_percent_visualizer(sensordata[0], self.label_percentage_HHF,self.frame_HHF)
