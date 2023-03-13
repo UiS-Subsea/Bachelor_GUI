@@ -1,6 +1,6 @@
 import time
 from multiprocessing import Process, Pipe
-from GUI import gui_loop_test,gui
+from GUI import gui_loop_test
 import threading
 import multiprocessing
 import atexit
