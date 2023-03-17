@@ -11,6 +11,7 @@ from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout
 from PyQt5.QtCore import Qt, QEvent
 from PyQt5.QtGui import QCloseEvent
 
+
 Gst.init(None)
 
 class VideoPlayer(QWidget):
