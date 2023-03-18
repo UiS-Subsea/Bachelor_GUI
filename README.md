@@ -6,9 +6,7 @@ Repo for alle koselige gutter i GUI seksjonen i UiS-Subsea
 
 QT Designer
 Python 3.9
-
-pip install PyQt6
-pip install PyQt6-tools
+Pyqt5
 
 # Formatering av filer
 
@@ -38,7 +36,6 @@ venv\Scripts\Activate
 
 Mac/Linux:
 source venv/bin/activate
-
 
 # Mac
 
