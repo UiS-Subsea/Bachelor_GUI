@@ -34,7 +34,7 @@ class Controller:
         #tuple for dpad control. Goes from -1 to 1 on both first and second variable
         self.dpad = (0,0)
         #controller stop point can be used to normalize the max value on controller to 1
-        #self.controller_stop_point = ""   
+        self.controller_stop_point = 1.04     #1.000030518509476 
         self.camera_motor = 0
         #Variable used if controller needs to reset before trying to connect. First run does not need reset
         self.first_run = True
@@ -232,19 +232,19 @@ class Controller:
                                 print(f"Roboten går ned med {self.normalize_joysticks(event)}% kraft")
                         elif event.axis == 5:
                                 print(f"Roboten går opp med {self.normalize_joysticks(event)}% kraft")
-                if self.queue_to_rov is not None: #Means we send values to main (not None=Har data?)
+                # if self.queue_to_rov is not None: #Means we send values to main (not None=Har data?)
                     #1 represents id that tells main that this data is from the controller
-                    self.queue_to_rov.put(1, self.pack_controller_values())
+                    # self.queue_to_rov.put(1, self.pack_controller_values())
 
                 ### Connection ? ### Spør Vebjørn !
 
-                elif debug and self.connection is None:
-                    self.write_controller_values(local=True)
-            print("closed connection")
+                # if debug and self.connection is None:
+                    # self.write_controller_values(local=True)
+            # print("closed connection")
 
 # Entry point that main.py calls
 def run(queue_to_rov, debug=True, debug_all=False):
-    debug_all = False
+    # debug_all = False
     c = Controller(queue_to_rov)
     c.get_events_loop(debug=debug, debug_all=debug_all)
 
@@ -254,8 +254,8 @@ def test_controller_output():
     while True:
         # This is just to see the output
         print(controller.pack_controller_values())
-        # Let's stop the test after 5 seconds
-        if pygame.time.get_ticks() > 1000:
+        # Let's stop the test after one output
+        if pygame.time.get_ticks() > 50:
             break
         # Sleep for a bit before the next update
         time.sleep(0.1)
@@ -263,3 +263,7 @@ def test_controller_output():
 if __name__ == "__main__":
     # pass
     test_controller_output()
+    queue = multiprocessing.Queue()
+    #Runs run() with debug_all = true
+    run(queue, False, True)
+    
