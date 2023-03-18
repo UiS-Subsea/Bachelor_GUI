@@ -1,0 +1,99 @@
+[33mFactory Details:[0m
+  [94mRank                     [0msecondary (128)[0m
+  [94mLong-name                [0mRTP H264 depayloader[0m
+  [94mKlass                    [0mCodec/Depayloader/Network/RTP[0m
+  [94mDescription              [0mExtracts H264 video from RTP packets (RFC 3984)[0m
+  [94mAuthor                   [0mWim Taymans <wim.taymans@gmail.com>[0m
+
+[33mPlugin Details[0m:
+  [94mName                     [0m[0mrtp[0m
+  [94mDescription              [0m[0mReal-time protocol plugins[0m
+  [94mFilename                 [0m[0m/usr/lib/x86_64-linux-gnu/gstreamer-1.0/libgstrtp.so[0m
+  [94mVersion                  [0m[0m1.20.3[0m
+  [94mLicense                  [0m[0mLGPL[0m
+  [94mSource module            [0m[0mgst-plugins-good[0m
+  [94mSource release date      [0m[0m2022-06-15[0m
+  [94mBinary package           [0m[0mGStreamer Good Plugins (Ubuntu)[0m
+  [94mOrigin URL               [0m[0mhttps://launchpad.net/distros/ubuntu/+source/gst-plugins-good1.0[0m
+
+[32mGObject[0m
+ [95m+----[0m[32mGInitiallyUnowned[0m
+       [95m+----[0m[32mGstObject[0m
+             [95m+----[0m[32mGstElement[0m
+                   [95m+----[0m[32mGstRTPBaseDepayload[0m
+                         [95m+----[0m[32mGstRtpH264Depay[0m
+
+[33mPad Templates[0m:
+  [94mSINK template[0m: [0m'sink'[0m
+    [94mAvailability[0m: [0mAlways[0m
+    [94mCapabilities[0m:
+      [33mapplication/x-rtp[0m
+        [36m          media[0m: [94mvideo[0m
+        [36m     clock-rate[0m: [94m90000[0m
+        [36m  encoding-name[0m: [94mH264[0m
+  
+  [94mSRC template[0m: [0m'src'[0m
+    [94mAvailability[0m: [0mAlways[0m
+    [94mCapabilities[0m:
+      [33mvideo/x-h264[0m
+        [36m  stream-format[0m: [94mavc[0m
+        [36m      alignment[0m: [94mau[0m
+      [33mvideo/x-h264[0m
+        [36m  stream-format[0m: [94mbyte-stream[0m
+        [36m      alignment[0m: [94m{ (string)nal, (string)au }[0m
+
+[0mElement has no clocking capabilities.[0m
+[0mElement has no URI handling capabilities.[0m
+
+[33mPads:[0m
+  [94mSINK[0m: [0m'sink'[0m
+    [94mPad Template[0m: [0m'sink'[0m
+  [94mSRC[0m: [0m'src'[0m
+    [94mPad Template[0m: [0m'src'[0m
+
+[33mElement Properties[0m:
+  [94mauto-header-extension[0m: [0mWhether RTP header extensions should be automatically enabled, if an implementation is available[0m
+                        [33mflags[0m: [36mreadable[0m, [36mwritable[0m
+                        [32mBoolean[0m. [33mDefault[0m: [36mtrue[0m
+  [94mmax-reorder         [0m: [0mMax seqnum reorder before assuming sender has restarted[0m
+                        [33mflags[0m: [36mreadable[0m, [36mwritable[0m
+                        [32mInteger[0m. [33mRange[0m: [36m0 - 2147483647[0m [33mDefault[0m: [36m100[0m 
+  [94mname                [0m: [0mThe name of the object[0m
+                        [33mflags[0m: [36mreadable[0m, [36mwritable[0m, 0x[36m2000[0m
+                        [32mString[0m. [33mDefault[0m: [36m"rtph264depay0"[0m
+  [94mparent              [0m: [0mThe parent of the object[0m
+                        [33mflags[0m: [36mreadable[0m, [36mwritable[0m, 0x[36m2000[0m
+                        [0mObject of type[0m [32m"GstObject"[0m
+  [94mrequest-keyframe    [0m: [0mRequest new keyframe when packet loss is detected[0m
+                        [33mflags[0m: [36mreadable[0m, [36mwritable[0m
+                        [32mBoolean[0m. [33mDefault[0m: [36mfalse[0m
+  [94msource-info         [0m: [0mAdd RTP source information as buffer meta[0m
+                        [33mflags[0m: [36mreadable[0m, [36mwritable[0m
+                        [32mBoolean[0m. [33mDefault[0m: [36mfalse[0m
+  [94mstats               [0m: [0mVarious statistics[0m
+                        [33mflags[0m: [36mreadable[0m
+                        [0mBoxed pointer of type[0m [32m"GstStructure"[0m
+                                                     [36m     clock_rate[0m: [94m0[0m
+                                                     [36m      npt-start[0m: [94m0[0m
+                                                     [36m       npt-stop[0m: [94m18446744073709551615[0m
+                                                     [36m     play-speed[0m: [94m1[0m
+                                                     [36m     play-scale[0m: [94m1[0m
+                                                     [36mrunning-time-dts[0m: [94m18446744073709551615[0m
+                                                     [36mrunning-time-pts[0m: [94m18446744073709551615[0m
+                                                     [36m         seqnum[0m: [94m0[0m
+                                                     [36m      timestamp[0m: [94m0[0m
+
+  [94mwait-for-keyframe   [0m: [0mWait for the next keyframe after packet loss, meaningful only when outputting access units[0m
+                        [33mflags[0m: [36mreadable[0m, [36mwritable[0m
+                        [32mBoolean[0m. [33mDefault[0m: [36mfalse[0m
+
+[33mElement Signals[0m:
+  [94m"request-extension"[0m :  [32mGstRTPHeaderExtension[0m* user_function[0m ([32mGstElement[0m* object[0m,
+                                                                [32mguint[0m arg0[0m,
+                                                                [32mgchararray[0m arg1[0m,
+                                                                [32mgpointer [0muser_data[0m);
+
+[33mElement Actions[0m:
+  [94m"add-extension"[0m :  [32mvoid[0m user_function[0m ([32mGstElement[0m* object[0m,
+                                         [32mGstRTPHeaderExtension[0m* arg0[0m);
+  [94m"clear-extensions"[0m :  [32mvoid[0m user_function[0m ([32mGstElement[0m* object[0m);
