@@ -8,316 +8,351 @@
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
 
-from PySide6.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
-    QMetaObject, QObject, QPoint, QRect,
-    QSize, QTime, QUrl, Qt)
-from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
-    QFont, QFontDatabase, QGradient, QIcon,
-    QImage, QKeySequence, QLinearGradient, QPainter,
-    QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QFrame, QLabel, QPushButton,
-    QSizePolicy, QSlider, QWidget)
+from PySide6.QtCore import (
+    QCoreApplication,
+    QDate,
+    QDateTime,
+    QLocale,
+    QMetaObject,
+    QObject,
+    QPoint,
+    QRect,
+    QSize,
+    QTime,
+    QUrl,
+    Qt,
+)
+from PySide6.QtGui import (
+    QBrush,
+    QColor,
+    QConicalGradient,
+    QCursor,
+    QFont,
+    QFontDatabase,
+    QGradient,
+    QIcon,
+    QImage,
+    QKeySequence,
+    QLinearGradient,
+    QPainter,
+    QPalette,
+    QPixmap,
+    QRadialGradient,
+    QTransform,
+)
+from PySide6.QtWidgets import (
+    QApplication,
+    QFrame,
+    QLabel,
+    QPushButton,
+    QSizePolicy,
+    QSlider,
+    QWidget,
+)
 import resources_rc
 import resources_rc
+
 
 class Ui_Form(object):
     def setupUi(self, Form):
         if not Form.objectName():
             Form.setObjectName(u"Form")
         Form.resize(985, 661)
-        Form.setStyleSheet(u"/*Copyright (c) DevSec Studio. All rights reserved.\n"
-"\n"
-"MIT License\n"
-"\n"
-"Permission is hereby granted, free of charge, to any person obtaining a copy\n"
-"of this software and associated documentation files (the \"Software\"), to deal\n"
-"in the Software without restriction, including without limitation the rights\n"
-"to use, copy, modify, merge, publish, distribute, sublicense, and/or sell\n"
-"copies of the Software, and to permit persons to whom the Software is\n"
-"furnished to do so, subject to the following conditions:\n"
-"\n"
-"The above copyright notice and this permission notice shall be included in all\n"
-"copies or substantial portions of the Software.\n"
-"\n"
-"THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\n"
-"IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\n"
-"FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\n"
-"AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\n"
-"LIABILITY, WHETHER IN AN ACT"
-                        "ION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\n"
-"OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n"
-"*/\n"
-"\n"
-"/*-----QWidget-----*/\n"
-"QWidget\n"
-"{\n"
-"    color: #aaa;\n"
-"    background-color: qlineargradient(spread:repeat, x1:1, y1:0, x2:1, y2:1, stop:0 rgba(57, 49, 68, 255),stop:1 rgba(110, 105, 118, 255));\n"
-"\n"
-"}\n"
-"\n"
-"\n"
-"/*-----QLabel-----*/\n"
-"QLabel\n"
-"{\n"
-"	background-color: transparent;\n"
-"	color: #fff;\n"
-"	\n"
-"}\n"
-"\n"
-"\n"
-"/*-----QMenuBar-----*/\n"
-"QMenuBar \n"
-"{\n"
-"    background-color: qlineargradient(spread:repeat, x1:1, y1:0, x2:1, y2:1, stop:0 rgba(110, 105, 118, 255),stop:1 rgba(57, 49, 68, 255));\n"
-"	color: #fff;\n"
-"\n"
-"}\n"
-"\n"
-"\n"
-"QMenuBar::item\n"
-"{\n"
-"    background-color: transparent;\n"
-"\n"
-"}\n"
-"\n"
-"\n"
-"QMenuBar::item:selected\n"
-"{\n"
-"    background-color: #444;\n"
-"\n"
-"}\n"
-"\n"
-"\n"
-"QMenuBar::item:pressed\n"
-"{\n"
-"    border: 1px solid #000;\n"
-"    background-color: #444;\n"
-"    margin-bottom:-1"
-                        "px;\n"
-"    padding-bottom:1px;\n"
-"\n"
-"}\n"
-"\n"
-"\n"
-"/*-----QMenu-----*/\n"
-"QMenu\n"
-"{\n"
-"    background-color: #444;\n"
-"    border: 1px solid #222;\n"
-"    padding: 4px;\n"
-"    padding-right: 0px;\n"
-"\n"
-"}\n"
-"\n"
-"\n"
-"QMenu::item\n"
-"{\n"
-"    background-color: transparent;\n"
-"    padding: 2px 20px 2px 20px;\n"
-"\n"
-"}\n"
-"\n"
-"\n"
-"QMenu::item:disabled\n"
-"{\n"
-"    color: #555;\n"
-"    background-color: transparent;\n"
-"    padding: 2px 20px 2px 20px;\n"
-"\n"
-"}\n"
-"\n"
-"\n"
-"QMenu::item:selected\n"
-"{\n"
-"    background-color: #55aaff;\n"
-"    color: #fff;\n"
-"\n"
-"}\n"
-"\n"
-"\n"
-"/*-----QToolTip-----*/\n"
-"QToolBar\n"
-"{\n"
-"	background-color: qlineargradient(spread:repeat, x1:1, y1:0, x2:1, y2:1, stop:0 rgba(57, 49, 68, 255),stop:1 rgba(110, 105, 118, 255));\n"
-"\n"
-"}\n"
-"\n"
-"\n"
-"/*-----QToolTip-----*/\n"
-"QToolTip\n"
-"{\n"
-"    border: 1px solid #222;\n"
-"    background-color: #333;\n"
-"    color: #aaa;\n"
-"\n"
-"}\n"
-"\n"
-"\n"
-"/*-----QToolButton-----*/\n"
-"QToolButton\n"
-"{\n"
-"    col"
-                        "or: #b1b1b1;\n"
-"    background-color: qlineargradient(spread:repeat, x1:1, y1:0, x2:1, y2:1, stop:0 rgba(75, 165, 255, 255),stop:0.509615 rgba(119, 187, 255, 255),stop:1 rgba(72, 164, 255, 255));\n"
-"    border-width: 1px;\n"
-"    border-color: #1e1e1e;\n"
-"    border-style: solid;\n"
-"	margin-right: 2px;\n"
-"	padding: 3px;\n"
-"\n"
-"}\n"
-"\n"
-"\n"
-"QToolButton:pressed\n"
-"{\n"
-"    background-color: qlineargradient(spread:repeat, x1:1, y1:0, x2:1, y2:1, stop:0 rgba(65, 155, 245, 255),stop:0.509615 rgba(109, 177, 245, 255),stop:1 rgba(72, 164, 255, 255));\n"
-"\n"
-"}\n"
-"\n"
-"\n"
-"QToolButton:checked\n"
-"{\n"
-"    background-color: #9999ff;\n"
-"	border: none;\n"
-"\n"
-"}\n"
-"\n"
-"\n"
-"/*-----QLineEdit-----*/\n"
-"QLineEdit{\n"
-"	background-color: #fff;\n"
-"	color: #000;\n"
-"	selection-color: #fff;\n"
-"	selection-background-color: #507098;\n"
-"\n"
-"}\n"
-"\n"
-"\n"
-"/*-----QTreeView-----*/\n"
-"QTreeView\n"
-"{\n"
-"	background-color: #242526;\n"
-"   	show-decoration-selected: 0;\n"
-"   	selection-background-color: tra"
-                        "nsparent; /* Used on Mac */\n"
-"	alternate-background-color: #404040;\n"
-"	selection-color: #fff; /* Used on Mac */\n"
-"	font: 8pt;\n"
-"	color: #fff;\n"
-"	outline : 0;\n"
-"\n"
-"}\n"
-"\n"
-"QTreeView::item\n"
-"{\n"
-"	border-top-color: transparent;\n"
-"	border-bottom-color: transparent;\n"
-"\n"
-"}\n"
-"\n"
-"QTreeView::item:hover\n"
-"{\n"
-"	background-color: #1a1b1c;\n"
-"	show-decoration-selected: 1;\n"
-"	color: #fff;\n"
-"\n"
-"}\n"
-"\n"
-"QTreeView::item:selected\n"
-"{\n"
-"	background-color: #41cd52;\n"
-"	color: #fff;\n"
-"\n"
-"}\n"
-"\n"
-"QTreeView::item:selected:active\n"
-"{\n"
-"	background-color: rgba(57, 49, 68, 255);\n"
-"	color: #fff;\n"
-"\n"
-"}\n"
-"\n"
-"QTreeView::item:selected:!active\n"
-"{\n"
-"	background-color: rgba(57, 49, 68, 255);\n"
-"	color: #fff;\n"
-"\n"
-"}\n"
-"\n"
-"QTreeView::branch:has-children:!has-siblings:closed,\n"
-"QTreeView::branch:closed:has-children:has-siblings\n"
-"{\n"
-"	border-image: none;\n"
-"	image: url(://tree-closed.png); /*To replace*/\n"
-"\n"
-"}\n"
-"\n"
-"QTreeView::branch:open:has-chil"
-                        "dren:!has-siblings,\n"
-"QTreeView::branch:open:has-children:has-siblings\n"
-"{\n"
-"	border-image: none;\n"
-"	image: url(://tree-open.png); /*To replace*/\n"
-"\n"
-"}\n"
-"\n"
-"\n"
-"/*-----QScrollBar-----*/\n"
-"QScrollBar:horizontal \n"
-"{\n"
-"    background-color: #333;\n"
-"    height: 8px;\n"
-"    margin: 0px;\n"
-"    padding: 0px;\n"
-"\n"
-"}\n"
-"\n"
-"\n"
-"QScrollBar::handle:horizontal \n"
-"{\n"
-"    border: 1px solid #111;\n"
-"    background-color: #535353;\n"
-"\n"
-"}\n"
-"\n"
-"\n"
-"QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal,\n"
-"QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal \n"
-"{\n"
-"    width: 0px;\n"
-"    background-color: transparent;\n"
-"\n"
-"}\n"
-"\n"
-"\n"
-"QScrollBar:vertical \n"
-"{\n"
-"    background-color: #333;\n"
-"    width: 8px;\n"
-"    margin: 0;\n"
-"\n"
-"}\n"
-"\n"
-"\n"
-"QScrollBar::handle:vertical \n"
-"{\n"
-"    border: 1px solid #111;\n"
-"    background-color: #535353;\n"
-"\n"
-"}\n"
-"\n"
-"\n"
-"QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical,\n"
-""
-                        "QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical \n"
-"{\n"
-"    height: 0px;\n"
-"    background-color: transparent;\n"
-"\n"
-"}\n"
-"\n"
-"")
+        Form.setStyleSheet(
+            u"/*Copyright (c) DevSec Studio. All rights reserved.\n"
+            "\n"
+            "MIT License\n"
+            "\n"
+            "Permission is hereby granted, free of charge, to any person obtaining a copy\n"
+            'of this software and associated documentation files (the "Software"), to deal\n'
+            "in the Software without restriction, including without limitation the rights\n"
+            "to use, copy, modify, merge, publish, distribute, sublicense, and/or sell\n"
+            "copies of the Software, and to permit persons to whom the Software is\n"
+            "furnished to do so, subject to the following conditions:\n"
+            "\n"
+            "The above copyright notice and this permission notice shall be included in all\n"
+            "copies or substantial portions of the Software.\n"
+            "\n"
+            "THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\n"
+            "IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\n"
+            "FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\n"
+            "AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\n"
+            "LIABILITY, WHETHER IN AN ACT"
+            "ION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\n"
+            "OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n"
+            "*/\n"
+            "\n"
+            "/*-----QWidget-----*/\n"
+            "QWidget\n"
+            "{\n"
+            "    color: #aaa;\n"
+            "    background-color: qlineargradient(spread:repeat, x1:1, y1:0, x2:1, y2:1, stop:0 rgba(57, 49, 68, 255),stop:1 rgba(110, 105, 118, 255));\n"
+            "\n"
+            "}\n"
+            "\n"
+            "\n"
+            "/*-----QLabel-----*/\n"
+            "QLabel\n"
+            "{\n"
+            "	background-color: transparent;\n"
+            "	color: #fff;\n"
+            "	\n"
+            "}\n"
+            "\n"
+            "\n"
+            "/*-----QMenuBar-----*/\n"
+            "QMenuBar \n"
+            "{\n"
+            "    background-color: qlineargradient(spread:repeat, x1:1, y1:0, x2:1, y2:1, stop:0 rgba(110, 105, 118, 255),stop:1 rgba(57, 49, 68, 255));\n"
+            "	color: #fff;\n"
+            "\n"
+            "}\n"
+            "\n"
+            "\n"
+            "QMenuBar::item\n"
+            "{\n"
+            "    background-color: transparent;\n"
+            "\n"
+            "}\n"
+            "\n"
+            "\n"
+            "QMenuBar::item:selected\n"
+            "{\n"
+            "    background-color: #444;\n"
+            "\n"
+            "}\n"
+            "\n"
+            "\n"
+            "QMenuBar::item:pressed\n"
+            "{\n"
+            "    border: 1px solid #000;\n"
+            "    background-color: #444;\n"
+            "    margin-bottom:-1"
+            "px;\n"
+            "    padding-bottom:1px;\n"
+            "\n"
+            "}\n"
+            "\n"
+            "\n"
+            "/*-----QMenu-----*/\n"
+            "QMenu\n"
+            "{\n"
+            "    background-color: #444;\n"
+            "    border: 1px solid #222;\n"
+            "    padding: 4px;\n"
+            "    padding-right: 0px;\n"
+            "\n"
+            "}\n"
+            "\n"
+            "\n"
+            "QMenu::item\n"
+            "{\n"
+            "    background-color: transparent;\n"
+            "    padding: 2px 20px 2px 20px;\n"
+            "\n"
+            "}\n"
+            "\n"
+            "\n"
+            "QMenu::item:disabled\n"
+            "{\n"
+            "    color: #555;\n"
+            "    background-color: transparent;\n"
+            "    padding: 2px 20px 2px 20px;\n"
+            "\n"
+            "}\n"
+            "\n"
+            "\n"
+            "QMenu::item:selected\n"
+            "{\n"
+            "    background-color: #55aaff;\n"
+            "    color: #fff;\n"
+            "\n"
+            "}\n"
+            "\n"
+            "\n"
+            "/*-----QToolTip-----*/\n"
+            "QToolBar\n"
+            "{\n"
+            "	background-color: qlineargradient(spread:repeat, x1:1, y1:0, x2:1, y2:1, stop:0 rgba(57, 49, 68, 255),stop:1 rgba(110, 105, 118, 255));\n"
+            "\n"
+            "}\n"
+            "\n"
+            "\n"
+            "/*-----QToolTip-----*/\n"
+            "QToolTip\n"
+            "{\n"
+            "    border: 1px solid #222;\n"
+            "    background-color: #333;\n"
+            "    color: #aaa;\n"
+            "\n"
+            "}\n"
+            "\n"
+            "\n"
+            "/*-----QToolButton-----*/\n"
+            "QToolButton\n"
+            "{\n"
+            "    col"
+            "or: #b1b1b1;\n"
+            "    background-color: qlineargradient(spread:repeat, x1:1, y1:0, x2:1, y2:1, stop:0 rgba(75, 165, 255, 255),stop:0.509615 rgba(119, 187, 255, 255),stop:1 rgba(72, 164, 255, 255));\n"
+            "    border-width: 1px;\n"
+            "    border-color: #1e1e1e;\n"
+            "    border-style: solid;\n"
+            "	margin-right: 2px;\n"
+            "	padding: 3px;\n"
+            "\n"
+            "}\n"
+            "\n"
+            "\n"
+            "QToolButton:pressed\n"
+            "{\n"
+            "    background-color: qlineargradient(spread:repeat, x1:1, y1:0, x2:1, y2:1, stop:0 rgba(65, 155, 245, 255),stop:0.509615 rgba(109, 177, 245, 255),stop:1 rgba(72, 164, 255, 255));\n"
+            "\n"
+            "}\n"
+            "\n"
+            "\n"
+            "QToolButton:checked\n"
+            "{\n"
+            "    background-color: #9999ff;\n"
+            "	border: none;\n"
+            "\n"
+            "}\n"
+            "\n"
+            "\n"
+            "/*-----QLineEdit-----*/\n"
+            "QLineEdit{\n"
+            "	background-color: #fff;\n"
+            "	color: #000;\n"
+            "	selection-color: #fff;\n"
+            "	selection-background-color: #507098;\n"
+            "\n"
+            "}\n"
+            "\n"
+            "\n"
+            "/*-----QTreeView-----*/\n"
+            "QTreeView\n"
+            "{\n"
+            "	background-color: #242526;\n"
+            "   	show-decoration-selected: 0;\n"
+            "   	selection-background-color: tra"
+            "nsparent; /* Used on Mac */\n"
+            "	alternate-background-color: #404040;\n"
+            "	selection-color: #fff; /* Used on Mac */\n"
+            "	font: 8pt;\n"
+            "	color: #fff;\n"
+            "	outline : 0;\n"
+            "\n"
+            "}\n"
+            "\n"
+            "QTreeView::item\n"
+            "{\n"
+            "	border-top-color: transparent;\n"
+            "	border-bottom-color: transparent;\n"
+            "\n"
+            "}\n"
+            "\n"
+            "QTreeView::item:hover\n"
+            "{\n"
+            "	background-color: #1a1b1c;\n"
+            "	show-decoration-selected: 1;\n"
+            "	color: #fff;\n"
+            "\n"
+            "}\n"
+            "\n"
+            "QTreeView::item:selected\n"
+            "{\n"
+            "	background-color: #41cd52;\n"
+            "	color: #fff;\n"
+            "\n"
+            "}\n"
+            "\n"
+            "QTreeView::item:selected:active\n"
+            "{\n"
+            "	background-color: rgba(57, 49, 68, 255);\n"
+            "	color: #fff;\n"
+            "\n"
+            "}\n"
+            "\n"
+            "QTreeView::item:selected:!active\n"
+            "{\n"
+            "	background-color: rgba(57, 49, 68, 255);\n"
+            "	color: #fff;\n"
+            "\n"
+            "}\n"
+            "\n"
+            "QTreeView::branch:has-children:!has-siblings:closed,\n"
+            "QTreeView::branch:closed:has-children:has-siblings\n"
+            "{\n"
+            "	border-image: none;\n"
+            "	image: url(://tree-closed.png); /*To replace*/\n"
+            "\n"
+            "}\n"
+            "\n"
+            "QTreeView::branch:open:has-chil"
+            "dren:!has-siblings,\n"
+            "QTreeView::branch:open:has-children:has-siblings\n"
+            "{\n"
+            "	border-image: none;\n"
+            "	image: url(://tree-open.png); /*To replace*/\n"
+            "\n"
+            "}\n"
+            "\n"
+            "\n"
+            "/*-----QScrollBar-----*/\n"
+            "QScrollBar:horizontal \n"
+            "{\n"
+            "    background-color: #333;\n"
+            "    height: 8px;\n"
+            "    margin: 0px;\n"
+            "    padding: 0px;\n"
+            "\n"
+            "}\n"
+            "\n"
+            "\n"
+            "QScrollBar::handle:horizontal \n"
+            "{\n"
+            "    border: 1px solid #111;\n"
+            "    background-color: #535353;\n"
+            "\n"
+            "}\n"
+            "\n"
+            "\n"
+            "QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal,\n"
+            "QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal \n"
+            "{\n"
+            "    width: 0px;\n"
+            "    background-color: transparent;\n"
+            "\n"
+            "}\n"
+            "\n"
+            "\n"
+            "QScrollBar:vertical \n"
+            "{\n"
+            "    background-color: #333;\n"
+            "    width: 8px;\n"
+            "    margin: 0;\n"
+            "\n"
+            "}\n"
+            "\n"
+            "\n"
+            "QScrollBar::handle:vertical \n"
+            "{\n"
+            "    border: 1px solid #111;\n"
+            "    background-color: #535353;\n"
+            "\n"
+            "}\n"
+            "\n"
+            "\n"
+            "QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical,\n"
+            ""
+            "QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical \n"
+            "{\n"
+            "    height: 0px;\n"
+            "    background-color: transparent;\n"
+            "\n"
+            "}\n"
+            "\n"
+            ""
+        )
         self.btn1 = QPushButton(Form)
         self.btn1.setObjectName(u"btn1")
         self.btn1.setEnabled(True)
@@ -341,7 +376,9 @@ class Ui_Form(object):
         self.btn_autonom_docking = QPushButton(Form)
         self.btn_autonom_docking.setObjectName(u"btn_autonom_docking")
         self.btn_autonom_docking.setGeometry(QRect(10, 110, 431, 46))
-        sizePolicy.setHeightForWidth(self.btn_autonom_docking.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.btn_autonom_docking.sizePolicy().hasHeightForWidth()
+        )
         self.btn_autonom_docking.setSizePolicy(sizePolicy)
         self.btn_autonom_docking.setMinimumSize(QSize(0, 0))
         self.btn_autonom_docking.setFont(font)
@@ -349,7 +386,9 @@ class Ui_Form(object):
         self.start_transect = QPushButton(Form)
         self.start_transect.setObjectName(u"start_transect")
         self.start_transect.setGeometry(QRect(10, 160, 431, 47))
-        sizePolicy.setHeightForWidth(self.start_transect.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.start_transect.sizePolicy().hasHeightForWidth()
+        )
         self.start_transect.setSizePolicy(sizePolicy)
         self.start_transect.setMinimumSize(QSize(0, 0))
         self.start_transect.setFont(font)
@@ -428,7 +467,9 @@ class Ui_Form(object):
         self.text_hovedkort.setMaximumSize(QSize(16777215, 16777215))
         self.text_hovedkort.setFont(font)
         self.text_hovedkort.setTextFormat(Qt.PlainText)
-        self.text_hovedkort.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignVCenter)
+        self.text_hovedkort.setAlignment(
+            Qt.AlignLeading | Qt.AlignLeft | Qt.AlignVCenter
+        )
         self.label_temp_ROV_hovedkort = QLabel(Form)
         self.label_temp_ROV_hovedkort.setObjectName(u"label_temp_ROV_hovedkort")
         self.label_temp_ROV_hovedkort.setGeometry(QRect(380, 240, 74, 38))
@@ -486,11 +527,13 @@ class Ui_Form(object):
         self.text_rov.setFont(font1)
         self.text_rov.setStyleSheet(u"color: rgb(113, 126, 149);")
         self.text_rov.setLineWidth(1)
-        self.text_rov.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignVCenter)
+        self.text_rov.setAlignment(Qt.AlignLeading | Qt.AlignLeft | Qt.AlignVCenter)
         self.img_manipulator_2 = QLabel(Form)
         self.img_manipulator_2.setObjectName(u"img_manipulator_2")
         self.img_manipulator_2.setGeometry(QRect(500, 50, 280, 330))
-        sizePolicy.setHeightForWidth(self.img_manipulator_2.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.img_manipulator_2.sizePolicy().hasHeightForWidth()
+        )
         self.img_manipulator_2.setSizePolicy(sizePolicy)
         self.img_manipulator_2.setMinimumSize(QSize(0, 0))
         self.img_manipulator_2.setMaximumSize(QSize(16777215, 16777215))
@@ -534,7 +577,9 @@ class Ui_Form(object):
         self.slider_lys_forward = QSlider(Form)
         self.slider_lys_forward.setObjectName(u"slider_lys_forward")
         self.slider_lys_forward.setGeometry(QRect(600, 400, 124, 68))
-        sizePolicy.setHeightForWidth(self.slider_lys_forward.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.slider_lys_forward.sizePolicy().hasHeightForWidth()
+        )
         self.slider_lys_forward.setSizePolicy(sizePolicy)
         self.slider_lys_forward.setMinimumSize(QSize(0, 68))
         self.slider_lys_forward.setMaximumSize(QSize(16777215, 68))
@@ -563,304 +608,308 @@ class Ui_Form(object):
         self.text_lys_down.setMinimumSize(QSize(0, 0))
         self.text_lys_down.setMaximumSize(QSize(16777215, 16777215))
         self.text_lys_down.setFont(font)
-        self.text_lys_down.setStyleSheet(u"/*Copyright (c) DevSec Studio. All rights reserved.\n"
-"\n"
-"MIT License\n"
-"\n"
-"Permission is hereby granted, free of charge, to any person obtaining a copy\n"
-"of this software and associated documentation files (the \"Software\"), to deal\n"
-"in the Software without restriction, including without limitation the rights\n"
-"to use, copy, modify, merge, publish, distribute, sublicense, and/or sell\n"
-"copies of the Software, and to permit persons to whom the Software is\n"
-"furnished to do so, subject to the following conditions:\n"
-"\n"
-"The above copyright notice and this permission notice shall be included in all\n"
-"copies or substantial portions of the Software.\n"
-"\n"
-"THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\n"
-"IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\n"
-"FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\n"
-"AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\n"
-"LIABILITY, WHETHER IN AN ACT"
-                        "ION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\n"
-"OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n"
-"*/\n"
-"\n"
-"/*-----QWidget-----*/\n"
-"QWidget\n"
-"{\n"
-"    color: #aaa;\n"
-"    background-color: qlineargradient(spread:repeat, x1:1, y1:0, x2:1, y2:1, stop:0 rgba(57, 49, 68, 255),stop:1 rgba(110, 105, 118, 255));\n"
-"\n"
-"}\n"
-"\n"
-"\n"
-"/*-----QLabel-----*/\n"
-"QLabel\n"
-"{\n"
-"	background-color: transparent;\n"
-"	color: #fff;\n"
-"	\n"
-"}\n"
-"\n"
-"\n"
-"/*-----QMenuBar-----*/\n"
-"QMenuBar \n"
-"{\n"
-"    background-color: qlineargradient(spread:repeat, x1:1, y1:0, x2:1, y2:1, stop:0 rgba(110, 105, 118, 255),stop:1 rgba(57, 49, 68, 255));\n"
-"	color: #fff;\n"
-"\n"
-"}\n"
-"\n"
-"\n"
-"QMenuBar::item\n"
-"{\n"
-"    background-color: transparent;\n"
-"\n"
-"}\n"
-"\n"
-"\n"
-"QMenuBar::item:selected\n"
-"{\n"
-"    background-color: #444;\n"
-"\n"
-"}\n"
-"\n"
-"\n"
-"QMenuBar::item:pressed\n"
-"{\n"
-"    border: 1px solid #000;\n"
-"    background-color: #444;\n"
-"    margin-bottom:-1"
-                        "px;\n"
-"    padding-bottom:1px;\n"
-"\n"
-"}\n"
-"\n"
-"\n"
-"/*-----QMenu-----*/\n"
-"QMenu\n"
-"{\n"
-"    background-color: #444;\n"
-"    border: 1px solid #222;\n"
-"    padding: 4px;\n"
-"    padding-right: 0px;\n"
-"\n"
-"}\n"
-"\n"
-"\n"
-"QMenu::item\n"
-"{\n"
-"    background-color: transparent;\n"
-"    padding: 2px 20px 2px 20px;\n"
-"\n"
-"}\n"
-"\n"
-"\n"
-"QMenu::item:disabled\n"
-"{\n"
-"    color: #555;\n"
-"    background-color: transparent;\n"
-"    padding: 2px 20px 2px 20px;\n"
-"\n"
-"}\n"
-"\n"
-"\n"
-"QMenu::item:selected\n"
-"{\n"
-"    background-color: #55aaff;\n"
-"    color: #fff;\n"
-"\n"
-"}\n"
-"\n"
-"\n"
-"/*-----QToolTip-----*/\n"
-"QToolBar\n"
-"{\n"
-"	background-color: qlineargradient(spread:repeat, x1:1, y1:0, x2:1, y2:1, stop:0 rgba(57, 49, 68, 255),stop:1 rgba(110, 105, 118, 255));\n"
-"\n"
-"}\n"
-"\n"
-"\n"
-"/*-----QToolTip-----*/\n"
-"QToolTip\n"
-"{\n"
-"    border: 1px solid #222;\n"
-"    background-color: #333;\n"
-"    color: #aaa;\n"
-"\n"
-"}\n"
-"\n"
-"\n"
-"/*-----QToolButton-----*/\n"
-"QToolButton\n"
-"{\n"
-"    col"
-                        "or: #b1b1b1;\n"
-"    background-color: qlineargradient(spread:repeat, x1:1, y1:0, x2:1, y2:1, stop:0 rgba(75, 165, 255, 255),stop:0.509615 rgba(119, 187, 255, 255),stop:1 rgba(72, 164, 255, 255));\n"
-"    border-width: 1px;\n"
-"    border-color: #1e1e1e;\n"
-"    border-style: solid;\n"
-"	margin-right: 2px;\n"
-"	padding: 3px;\n"
-"\n"
-"}\n"
-"\n"
-"\n"
-"QToolButton:pressed\n"
-"{\n"
-"    background-color: qlineargradient(spread:repeat, x1:1, y1:0, x2:1, y2:1, stop:0 rgba(65, 155, 245, 255),stop:0.509615 rgba(109, 177, 245, 255),stop:1 rgba(72, 164, 255, 255));\n"
-"\n"
-"}\n"
-"\n"
-"\n"
-"QToolButton:checked\n"
-"{\n"
-"    background-color: #9999ff;\n"
-"	border: none;\n"
-"\n"
-"}\n"
-"\n"
-"\n"
-"/*-----QLineEdit-----*/\n"
-"QLineEdit{\n"
-"	background-color: #fff;\n"
-"	color: #000;\n"
-"	selection-color: #fff;\n"
-"	selection-background-color: #507098;\n"
-"\n"
-"}\n"
-"\n"
-"\n"
-"/*-----QTreeView-----*/\n"
-"QTreeView\n"
-"{\n"
-"	background-color: #242526;\n"
-"   	show-decoration-selected: 0;\n"
-"   	selection-background-color: tra"
-                        "nsparent; /* Used on Mac */\n"
-"	alternate-background-color: #404040;\n"
-"	selection-color: #fff; /* Used on Mac */\n"
-"	font: 8pt;\n"
-"	color: #fff;\n"
-"	outline : 0;\n"
-"\n"
-"}\n"
-"\n"
-"QTreeView::item\n"
-"{\n"
-"	border-top-color: transparent;\n"
-"	border-bottom-color: transparent;\n"
-"\n"
-"}\n"
-"\n"
-"QTreeView::item:hover\n"
-"{\n"
-"	background-color: #1a1b1c;\n"
-"	show-decoration-selected: 1;\n"
-"	color: #fff;\n"
-"\n"
-"}\n"
-"\n"
-"QTreeView::item:selected\n"
-"{\n"
-"	background-color: #41cd52;\n"
-"	color: #fff;\n"
-"\n"
-"}\n"
-"\n"
-"QTreeView::item:selected:active\n"
-"{\n"
-"	background-color: rgba(57, 49, 68, 255);\n"
-"	color: #fff;\n"
-"\n"
-"}\n"
-"\n"
-"QTreeView::item:selected:!active\n"
-"{\n"
-"	background-color: rgba(57, 49, 68, 255);\n"
-"	color: #fff;\n"
-"\n"
-"}\n"
-"\n"
-"QTreeView::branch:has-children:!has-siblings:closed,\n"
-"QTreeView::branch:closed:has-children:has-siblings\n"
-"{\n"
-"	border-image: none;\n"
-"	image: url(://tree-closed.png); /*To replace*/\n"
-"\n"
-"}\n"
-"\n"
-"QTreeView::branch:open:has-chil"
-                        "dren:!has-siblings,\n"
-"QTreeView::branch:open:has-children:has-siblings\n"
-"{\n"
-"	border-image: none;\n"
-"	image: url(://tree-open.png); /*To replace*/\n"
-"\n"
-"}\n"
-"\n"
-"\n"
-"/*-----QScrollBar-----*/\n"
-"QScrollBar:horizontal \n"
-"{\n"
-"    background-color: #333;\n"
-"    height: 8px;\n"
-"    margin: 0px;\n"
-"    padding: 0px;\n"
-"\n"
-"}\n"
-"\n"
-"\n"
-"QScrollBar::handle:horizontal \n"
-"{\n"
-"    border: 1px solid #111;\n"
-"    background-color: #535353;\n"
-"\n"
-"}\n"
-"\n"
-"\n"
-"QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal,\n"
-"QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal \n"
-"{\n"
-"    width: 0px;\n"
-"    background-color: transparent;\n"
-"\n"
-"}\n"
-"\n"
-"\n"
-"QScrollBar:vertical \n"
-"{\n"
-"    background-color: #333;\n"
-"    width: 8px;\n"
-"    margin: 0;\n"
-"\n"
-"}\n"
-"\n"
-"\n"
-"QScrollBar::handle:vertical \n"
-"{\n"
-"    border: 1px solid #111;\n"
-"    background-color: #535353;\n"
-"\n"
-"}\n"
-"\n"
-"\n"
-"QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical,\n"
-""
-                        "QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical \n"
-"{\n"
-"    height: 0px;\n"
-"    background-color: transparent;\n"
-"\n"
-"}\n"
-"\n"
-"")
+        self.text_lys_down.setStyleSheet(
+            u"/*Copyright (c) DevSec Studio. All rights reserved.\n"
+            "\n"
+            "MIT License\n"
+            "\n"
+            "Permission is hereby granted, free of charge, to any person obtaining a copy\n"
+            'of this software and associated documentation files (the "Software"), to deal\n'
+            "in the Software without restriction, including without limitation the rights\n"
+            "to use, copy, modify, merge, publish, distribute, sublicense, and/or sell\n"
+            "copies of the Software, and to permit persons to whom the Software is\n"
+            "furnished to do so, subject to the following conditions:\n"
+            "\n"
+            "The above copyright notice and this permission notice shall be included in all\n"
+            "copies or substantial portions of the Software.\n"
+            "\n"
+            "THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\n"
+            "IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\n"
+            "FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\n"
+            "AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\n"
+            "LIABILITY, WHETHER IN AN ACT"
+            "ION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\n"
+            "OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n"
+            "*/\n"
+            "\n"
+            "/*-----QWidget-----*/\n"
+            "QWidget\n"
+            "{\n"
+            "    color: #aaa;\n"
+            "    background-color: qlineargradient(spread:repeat, x1:1, y1:0, x2:1, y2:1, stop:0 rgba(57, 49, 68, 255),stop:1 rgba(110, 105, 118, 255));\n"
+            "\n"
+            "}\n"
+            "\n"
+            "\n"
+            "/*-----QLabel-----*/\n"
+            "QLabel\n"
+            "{\n"
+            "	background-color: transparent;\n"
+            "	color: #fff;\n"
+            "	\n"
+            "}\n"
+            "\n"
+            "\n"
+            "/*-----QMenuBar-----*/\n"
+            "QMenuBar \n"
+            "{\n"
+            "    background-color: qlineargradient(spread:repeat, x1:1, y1:0, x2:1, y2:1, stop:0 rgba(110, 105, 118, 255),stop:1 rgba(57, 49, 68, 255));\n"
+            "	color: #fff;\n"
+            "\n"
+            "}\n"
+            "\n"
+            "\n"
+            "QMenuBar::item\n"
+            "{\n"
+            "    background-color: transparent;\n"
+            "\n"
+            "}\n"
+            "\n"
+            "\n"
+            "QMenuBar::item:selected\n"
+            "{\n"
+            "    background-color: #444;\n"
+            "\n"
+            "}\n"
+            "\n"
+            "\n"
+            "QMenuBar::item:pressed\n"
+            "{\n"
+            "    border: 1px solid #000;\n"
+            "    background-color: #444;\n"
+            "    margin-bottom:-1"
+            "px;\n"
+            "    padding-bottom:1px;\n"
+            "\n"
+            "}\n"
+            "\n"
+            "\n"
+            "/*-----QMenu-----*/\n"
+            "QMenu\n"
+            "{\n"
+            "    background-color: #444;\n"
+            "    border: 1px solid #222;\n"
+            "    padding: 4px;\n"
+            "    padding-right: 0px;\n"
+            "\n"
+            "}\n"
+            "\n"
+            "\n"
+            "QMenu::item\n"
+            "{\n"
+            "    background-color: transparent;\n"
+            "    padding: 2px 20px 2px 20px;\n"
+            "\n"
+            "}\n"
+            "\n"
+            "\n"
+            "QMenu::item:disabled\n"
+            "{\n"
+            "    color: #555;\n"
+            "    background-color: transparent;\n"
+            "    padding: 2px 20px 2px 20px;\n"
+            "\n"
+            "}\n"
+            "\n"
+            "\n"
+            "QMenu::item:selected\n"
+            "{\n"
+            "    background-color: #55aaff;\n"
+            "    color: #fff;\n"
+            "\n"
+            "}\n"
+            "\n"
+            "\n"
+            "/*-----QToolTip-----*/\n"
+            "QToolBar\n"
+            "{\n"
+            "	background-color: qlineargradient(spread:repeat, x1:1, y1:0, x2:1, y2:1, stop:0 rgba(57, 49, 68, 255),stop:1 rgba(110, 105, 118, 255));\n"
+            "\n"
+            "}\n"
+            "\n"
+            "\n"
+            "/*-----QToolTip-----*/\n"
+            "QToolTip\n"
+            "{\n"
+            "    border: 1px solid #222;\n"
+            "    background-color: #333;\n"
+            "    color: #aaa;\n"
+            "\n"
+            "}\n"
+            "\n"
+            "\n"
+            "/*-----QToolButton-----*/\n"
+            "QToolButton\n"
+            "{\n"
+            "    col"
+            "or: #b1b1b1;\n"
+            "    background-color: qlineargradient(spread:repeat, x1:1, y1:0, x2:1, y2:1, stop:0 rgba(75, 165, 255, 255),stop:0.509615 rgba(119, 187, 255, 255),stop:1 rgba(72, 164, 255, 255));\n"
+            "    border-width: 1px;\n"
+            "    border-color: #1e1e1e;\n"
+            "    border-style: solid;\n"
+            "	margin-right: 2px;\n"
+            "	padding: 3px;\n"
+            "\n"
+            "}\n"
+            "\n"
+            "\n"
+            "QToolButton:pressed\n"
+            "{\n"
+            "    background-color: qlineargradient(spread:repeat, x1:1, y1:0, x2:1, y2:1, stop:0 rgba(65, 155, 245, 255),stop:0.509615 rgba(109, 177, 245, 255),stop:1 rgba(72, 164, 255, 255));\n"
+            "\n"
+            "}\n"
+            "\n"
+            "\n"
+            "QToolButton:checked\n"
+            "{\n"
+            "    background-color: #9999ff;\n"
+            "	border: none;\n"
+            "\n"
+            "}\n"
+            "\n"
+            "\n"
+            "/*-----QLineEdit-----*/\n"
+            "QLineEdit{\n"
+            "	background-color: #fff;\n"
+            "	color: #000;\n"
+            "	selection-color: #fff;\n"
+            "	selection-background-color: #507098;\n"
+            "\n"
+            "}\n"
+            "\n"
+            "\n"
+            "/*-----QTreeView-----*/\n"
+            "QTreeView\n"
+            "{\n"
+            "	background-color: #242526;\n"
+            "   	show-decoration-selected: 0;\n"
+            "   	selection-background-color: tra"
+            "nsparent; /* Used on Mac */\n"
+            "	alternate-background-color: #404040;\n"
+            "	selection-color: #fff; /* Used on Mac */\n"
+            "	font: 8pt;\n"
+            "	color: #fff;\n"
+            "	outline : 0;\n"
+            "\n"
+            "}\n"
+            "\n"
+            "QTreeView::item\n"
+            "{\n"
+            "	border-top-color: transparent;\n"
+            "	border-bottom-color: transparent;\n"
+            "\n"
+            "}\n"
+            "\n"
+            "QTreeView::item:hover\n"
+            "{\n"
+            "	background-color: #1a1b1c;\n"
+            "	show-decoration-selected: 1;\n"
+            "	color: #fff;\n"
+            "\n"
+            "}\n"
+            "\n"
+            "QTreeView::item:selected\n"
+            "{\n"
+            "	background-color: #41cd52;\n"
+            "	color: #fff;\n"
+            "\n"
+            "}\n"
+            "\n"
+            "QTreeView::item:selected:active\n"
+            "{\n"
+            "	background-color: rgba(57, 49, 68, 255);\n"
+            "	color: #fff;\n"
+            "\n"
+            "}\n"
+            "\n"
+            "QTreeView::item:selected:!active\n"
+            "{\n"
+            "	background-color: rgba(57, 49, 68, 255);\n"
+            "	color: #fff;\n"
+            "\n"
+            "}\n"
+            "\n"
+            "QTreeView::branch:has-children:!has-siblings:closed,\n"
+            "QTreeView::branch:closed:has-children:has-siblings\n"
+            "{\n"
+            "	border-image: none;\n"
+            "	image: url(://tree-closed.png); /*To replace*/\n"
+            "\n"
+            "}\n"
+            "\n"
+            "QTreeView::branch:open:has-chil"
+            "dren:!has-siblings,\n"
+            "QTreeView::branch:open:has-children:has-siblings\n"
+            "{\n"
+            "	border-image: none;\n"
+            "	image: url(://tree-open.png); /*To replace*/\n"
+            "\n"
+            "}\n"
+            "\n"
+            "\n"
+            "/*-----QScrollBar-----*/\n"
+            "QScrollBar:horizontal \n"
+            "{\n"
+            "    background-color: #333;\n"
+            "    height: 8px;\n"
+            "    margin: 0px;\n"
+            "    padding: 0px;\n"
+            "\n"
+            "}\n"
+            "\n"
+            "\n"
+            "QScrollBar::handle:horizontal \n"
+            "{\n"
+            "    border: 1px solid #111;\n"
+            "    background-color: #535353;\n"
+            "\n"
+            "}\n"
+            "\n"
+            "\n"
+            "QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal,\n"
+            "QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal \n"
+            "{\n"
+            "    width: 0px;\n"
+            "    background-color: transparent;\n"
+            "\n"
+            "}\n"
+            "\n"
+            "\n"
+            "QScrollBar:vertical \n"
+            "{\n"
+            "    background-color: #333;\n"
+            "    width: 8px;\n"
+            "    margin: 0;\n"
+            "\n"
+            "}\n"
+            "\n"
+            "\n"
+            "QScrollBar::handle:vertical \n"
+            "{\n"
+            "    border: 1px solid #111;\n"
+            "    background-color: #535353;\n"
+            "\n"
+            "}\n"
+            "\n"
+            "\n"
+            "QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical,\n"
+            ""
+            "QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical \n"
+            "{\n"
+            "    height: 0px;\n"
+            "    background-color: transparent;\n"
+            "\n"
+            "}\n"
+            "\n"
+            ""
+        )
         self.text_lys_down.setTextFormat(Qt.RichText)
         self.slider_lys_down = QSlider(Form)
         self.slider_lys_down.setObjectName(u"slider_lys_down")
         self.slider_lys_down.setGeometry(QRect(600, 470, 124, 68))
-        sizePolicy.setHeightForWidth(self.slider_lys_down.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.slider_lys_down.sizePolicy().hasHeightForWidth()
+        )
         self.slider_lys_down.setSizePolicy(sizePolicy)
         self.slider_lys_down.setMinimumSize(QSize(0, 68))
         self.slider_lys_down.setMaximumSize(QSize(16777215, 68))
@@ -914,7 +963,9 @@ class Ui_Form(object):
         self.text_manipulator.setFont(font1)
         self.text_manipulator.setStyleSheet(u"color: rgb(113, 126, 149);")
         self.text_manipulator.setLineWidth(1)
-        self.text_manipulator.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignVCenter)
+        self.text_manipulator.setAlignment(
+            Qt.AlignLeading | Qt.AlignLeft | Qt.AlignVCenter
+        )
         self.text_manipulator.setMargin(10)
         self.label_gjsnitt_temp_ROV = QLabel(Form)
         self.label_gjsnitt_temp_ROV.setObjectName(u"label_gjsnitt_temp_ROV")
@@ -934,7 +985,9 @@ class Ui_Form(object):
         self.text_gjsnitttemp.setMaximumSize(QSize(16777215, 16777215))
         self.text_gjsnitttemp.setFont(font)
         self.text_gjsnitttemp.setTextFormat(Qt.PlainText)
-        self.text_gjsnitttemp.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignVCenter)
+        self.text_gjsnitttemp.setAlignment(
+            Qt.AlignLeading | Qt.AlignLeft | Qt.AlignVCenter
+        )
         self.thrust_label_1 = QLabel(Form)
         self.thrust_label_1.setObjectName(u"thrust_label_1")
         self.thrust_label_1.setGeometry(QRect(550, 60, 61, 51))
@@ -966,76 +1019,221 @@ class Ui_Form(object):
         self.retranslateUi(Form)
 
         QMetaObject.connectSlotsByName(Form)
+
     # setupUi
 
     def retranslateUi(self, Form):
         Form.setWindowTitle(QCoreApplication.translate("Form", u"Form", None))
-        self.btn1.setText(QCoreApplication.translate("Form", u"Manuell kj\u00f8ring", None))
-        self.btn_autonom_docking.setText(QCoreApplication.translate("Form", u"Autonom docking", None))
-        self.start_transect.setText(QCoreApplication.translate("Form", u"Start transect", None))
-        self.title_effektforbruk.setText(QCoreApplication.translate("Form", u"EFFEKTFORBRUK", None))
-        self.text_effekt_elektronikk.setText(QCoreApplication.translate("Form", u"Elektronikk:", None))
-        self.text_effekt_elektronikk.setProperty("colorStyle", QCoreApplication.translate("Form", u"subTitle", None))
-        self.text_effekt_thrustere.setText(QCoreApplication.translate("Form", u"Thrustere:", None))
-        self.text_effekt_thrustere.setProperty("colorStyle", QCoreApplication.translate("Form", u"subTitle", None))
-        self.text_effekt_manipulator.setText(QCoreApplication.translate("Form", u"Manipulator:", None))
-        self.text_effekt_manipulator.setProperty("colorStyle", QCoreApplication.translate("Form", u"subTitle", None))
-        self.label_effekt_elektronikk.setText(QCoreApplication.translate("Form", u"---", None))
-        self.label_effekt_elektronikk.setProperty("labelStyle", QCoreApplication.translate("Form", u"blackBg", None))
-        self.label_effekt_elektronikk.setProperty("labelStyle2", QCoreApplication.translate("Form", u"whiteBg", None))
-        self.label_effekt_thrustere.setText(QCoreApplication.translate("Form", u"---", None))
-        self.label_effekt_thrustere.setProperty("labelStyle", QCoreApplication.translate("Form", u"blackBg", None))
-        self.label_effekt_thrustere.setProperty("labelStyle2", QCoreApplication.translate("Form", u"whiteBg", None))
-        self.label_effekt_manipulator.setText(QCoreApplication.translate("Form", u"---", None))
-        self.label_effekt_manipulator.setProperty("labelStyle", QCoreApplication.translate("Form", u"blackBg", None))
-        self.label_effekt_manipulator.setProperty("labelStyle2", QCoreApplication.translate("Form", u"whiteBg", None))
-        self.title_temp_ROV.setText(QCoreApplication.translate("Form", u"TEMPERATUR I ROV", None))
-        self.text_hovedkort.setText(QCoreApplication.translate("Form", u"Hovedkort:", None))
-        self.text_hovedkort.setProperty("colorStyle", QCoreApplication.translate("Form", u"subTitle", None))
-        self.label_temp_ROV_hovedkort.setText(QCoreApplication.translate("Form", u"---", None))
-        self.label_temp_ROV_hovedkort.setProperty("labelStyle", QCoreApplication.translate("Form", u"blackBg", None))
-        self.label_temp_ROV_hovedkort.setProperty("labelStyle2", QCoreApplication.translate("Form", u"whiteBg", None))
-        self.text_kraftkort.setText(QCoreApplication.translate("Form", u"Kraftkort:", None))
-        self.text_kraftkort.setProperty("colorStyle", QCoreApplication.translate("Form", u"subTitle", None))
-        self.text_sensorkort.setText(QCoreApplication.translate("Form", u"Sensorkort:", None))
-        self.text_sensorkort.setProperty("colorStyle", QCoreApplication.translate("Form", u"subTitle", None))
-        self.label_temp_ROV_kraftkort.setText(QCoreApplication.translate("Form", u"---", None))
-        self.label_temp_ROV_kraftkort.setProperty("labelStyle", QCoreApplication.translate("Form", u"blackBg", None))
-        self.label_temp_ROV_kraftkort.setProperty("labelStyle2", QCoreApplication.translate("Form", u"whiteBg", None))
-        self.label_temp_ROV_sensorkort.setText(QCoreApplication.translate("Form", u"---", None))
-        self.label_temp_ROV_sensorkort.setProperty("labelStyle", QCoreApplication.translate("Form", u"blackBg", None))
-        self.label_temp_ROV_sensorkort.setProperty("labelStyle2", QCoreApplication.translate("Form", u"whiteBg", None))
-        self.title_motor.setText(QCoreApplication.translate("Form", u"MOTORP\u00c5DRAG", None))
+        self.btn1.setText(
+            QCoreApplication.translate("Form", u"Manuell kj\u00f8ring", None)
+        )
+        self.btn_autonom_docking.setText(
+            QCoreApplication.translate("Form", u"Autonom docking", None)
+        )
+        self.start_transect.setText(
+            QCoreApplication.translate("Form", u"Start transect", None)
+        )
+        self.title_effektforbruk.setText(
+            QCoreApplication.translate("Form", u"EFFEKTFORBRUK", None)
+        )
+        self.text_effekt_elektronikk.setText(
+            QCoreApplication.translate("Form", u"Elektronikk:", None)
+        )
+        self.text_effekt_elektronikk.setProperty(
+            "colorStyle", QCoreApplication.translate("Form", u"subTitle", None)
+        )
+        self.text_effekt_thrustere.setText(
+            QCoreApplication.translate("Form", u"Thrustere:", None)
+        )
+        self.text_effekt_thrustere.setProperty(
+            "colorStyle", QCoreApplication.translate("Form", u"subTitle", None)
+        )
+        self.text_effekt_manipulator.setText(
+            QCoreApplication.translate("Form", u"Manipulator:", None)
+        )
+        self.text_effekt_manipulator.setProperty(
+            "colorStyle", QCoreApplication.translate("Form", u"subTitle", None)
+        )
+        self.label_effekt_elektronikk.setText(
+            QCoreApplication.translate("Form", u"---", None)
+        )
+        self.label_effekt_elektronikk.setProperty(
+            "labelStyle", QCoreApplication.translate("Form", u"blackBg", None)
+        )
+        self.label_effekt_elektronikk.setProperty(
+            "labelStyle2", QCoreApplication.translate("Form", u"whiteBg", None)
+        )
+        self.label_effekt_thrustere.setText(
+            QCoreApplication.translate("Form", u"---", None)
+        )
+        self.label_effekt_thrustere.setProperty(
+            "labelStyle", QCoreApplication.translate("Form", u"blackBg", None)
+        )
+        self.label_effekt_thrustere.setProperty(
+            "labelStyle2", QCoreApplication.translate("Form", u"whiteBg", None)
+        )
+        self.label_effekt_manipulator.setText(
+            QCoreApplication.translate("Form", u"---", None)
+        )
+        self.label_effekt_manipulator.setProperty(
+            "labelStyle", QCoreApplication.translate("Form", u"blackBg", None)
+        )
+        self.label_effekt_manipulator.setProperty(
+            "labelStyle2", QCoreApplication.translate("Form", u"whiteBg", None)
+        )
+        self.title_temp_ROV.setText(
+            QCoreApplication.translate("Form", u"TEMPERATUR I ROV", None)
+        )
+        self.text_hovedkort.setText(
+            QCoreApplication.translate("Form", u"Hovedkort:", None)
+        )
+        self.text_hovedkort.setProperty(
+            "colorStyle", QCoreApplication.translate("Form", u"subTitle", None)
+        )
+        self.label_temp_ROV_hovedkort.setText(
+            QCoreApplication.translate("Form", u"---", None)
+        )
+        self.label_temp_ROV_hovedkort.setProperty(
+            "labelStyle", QCoreApplication.translate("Form", u"blackBg", None)
+        )
+        self.label_temp_ROV_hovedkort.setProperty(
+            "labelStyle2", QCoreApplication.translate("Form", u"whiteBg", None)
+        )
+        self.text_kraftkort.setText(
+            QCoreApplication.translate("Form", u"Kraftkort:", None)
+        )
+        self.text_kraftkort.setProperty(
+            "colorStyle", QCoreApplication.translate("Form", u"subTitle", None)
+        )
+        self.text_sensorkort.setText(
+            QCoreApplication.translate("Form", u"Sensorkort:", None)
+        )
+        self.text_sensorkort.setProperty(
+            "colorStyle", QCoreApplication.translate("Form", u"subTitle", None)
+        )
+        self.label_temp_ROV_kraftkort.setText(
+            QCoreApplication.translate("Form", u"---", None)
+        )
+        self.label_temp_ROV_kraftkort.setProperty(
+            "labelStyle", QCoreApplication.translate("Form", u"blackBg", None)
+        )
+        self.label_temp_ROV_kraftkort.setProperty(
+            "labelStyle2", QCoreApplication.translate("Form", u"whiteBg", None)
+        )
+        self.label_temp_ROV_sensorkort.setText(
+            QCoreApplication.translate("Form", u"---", None)
+        )
+        self.label_temp_ROV_sensorkort.setProperty(
+            "labelStyle", QCoreApplication.translate("Form", u"blackBg", None)
+        )
+        self.label_temp_ROV_sensorkort.setProperty(
+            "labelStyle2", QCoreApplication.translate("Form", u"whiteBg", None)
+        )
+        self.title_motor.setText(
+            QCoreApplication.translate("Form", u"MOTORP\u00c5DRAG", None)
+        )
         self.text_rov.setText(QCoreApplication.translate("Form", u"ROV", None))
-        self.text_rov.setProperty("colorStyle", QCoreApplication.translate("Form", u"subTitle", None))
+        self.text_rov.setProperty(
+            "colorStyle", QCoreApplication.translate("Form", u"subTitle", None)
+        )
         self.img_manipulator_2.setText("")
-        self.title_kjoremodus.setText(QCoreApplication.translate("Form", u"KJ\u00d8REMODUS", None))
+        self.title_kjoremodus.setText(
+            QCoreApplication.translate("Form", u"KJ\u00d8REMODUS", None)
+        )
         self.img_manipulator.setText("")
         self.lys_title.setText(QCoreApplication.translate("Form", u"LYS", None))
-        self.text_lys_forward.setText(QCoreApplication.translate("Form", u"Frontlys:", None))
-        self.text_lys_forward.setProperty("colorStyle", QCoreApplication.translate("Form", u"subTitle", None))
-        self.label_percentage_lys_forward.setText(QCoreApplication.translate("Form", u"<html><head/><body><span>0</span><span style=\"vertical-align:super;\">%</span></body></html>", None))
-        self.text_lys_down.setText(QCoreApplication.translate("Form", u"Havbunnslys:", None))
-        self.text_lys_down.setProperty("colorStyle", QCoreApplication.translate("Form", u"subTitle", None))
-        self.label_percentage_lys_down.setText(QCoreApplication.translate("Form", u"<html><head/><body><span>0</span><span style=\"vertical-align:super;\">%</span></body></html>", None))
-        self.label_percentage_mani_1.setText(QCoreApplication.translate("Form", u"<html><head/><body><span>0</span><span style=\"vertical-align:super;\">%</span></body></html>", None))
-        self.label_percentage_mani_3.setText(QCoreApplication.translate("Form", u"<html><head/><body><span>0</span><span style=\"vertical-align:super;\">%</span></body></html>", None))
-        self.label_percentage_mani_2.setText(QCoreApplication.translate("Form", u"<html><head/><body><span>0</span><span style=\"vertical-align:super;\">%</span></body></html>", None))
-        self.text_manipulator.setText(QCoreApplication.translate("Form", u"MANIPULATOR", None))
-        self.text_manipulator.setProperty("colorStyle", QCoreApplication.translate("Form", u"subTitle", None))
-        self.label_gjsnitt_temp_ROV.setText(QCoreApplication.translate("Form", u"---", None))
-        self.label_gjsnitt_temp_ROV.setProperty("labelStyle", QCoreApplication.translate("Form", u"blackBg", None))
-        self.label_gjsnitt_temp_ROV.setProperty("labelStyle2", QCoreApplication.translate("Form", u"whiteBg", None))
-        self.text_gjsnitttemp.setText(QCoreApplication.translate("Form", u"Gj.snitt:", None))
-        self.text_gjsnitttemp.setProperty("colorStyle", QCoreApplication.translate("Form", u"subTitle", None))
-        self.thrust_label_1.setText(QCoreApplication.translate("Form", u"----------", None))
-        self.thrust_label_5.setText(QCoreApplication.translate("Form", u"----------", None))
-        self.thrust_label_8.setText(QCoreApplication.translate("Form", u"----------", None))
-        self.thrust_label_2.setText(QCoreApplication.translate("Form", u"----------", None))
-        self.thrust_label_6.setText(QCoreApplication.translate("Form", u"----------", None))
-        self.thrust_label_7.setText(QCoreApplication.translate("Form", u"----------", None))
-        self.thrust_label_3.setText(QCoreApplication.translate("Form", u"----------", None))
-        self.thrust_label_4.setText(QCoreApplication.translate("Form", u"----------", None))
+        self.text_lys_forward.setText(
+            QCoreApplication.translate("Form", u"Frontlys:", None)
+        )
+        self.text_lys_forward.setProperty(
+            "colorStyle", QCoreApplication.translate("Form", u"subTitle", None)
+        )
+        self.label_percentage_lys_forward.setText(
+            QCoreApplication.translate(
+                "Form",
+                u'<html><head/><body><span>0</span><span style="vertical-align:super;">%</span></body></html>',
+                None,
+            )
+        )
+        self.text_lys_down.setText(
+            QCoreApplication.translate("Form", u"Havbunnslys:", None)
+        )
+        self.text_lys_down.setProperty(
+            "colorStyle", QCoreApplication.translate("Form", u"subTitle", None)
+        )
+        self.label_percentage_lys_down.setText(
+            QCoreApplication.translate(
+                "Form",
+                u'<html><head/><body><span>0</span><span style="vertical-align:super;">%</span></body></html>',
+                None,
+            )
+        )
+        self.label_percentage_mani_1.setText(
+            QCoreApplication.translate(
+                "Form",
+                u'<html><head/><body><span>0</span><span style="vertical-align:super;">%</span></body></html>',
+                None,
+            )
+        )
+        self.label_percentage_mani_3.setText(
+            QCoreApplication.translate(
+                "Form",
+                u'<html><head/><body><span>0</span><span style="vertical-align:super;">%</span></body></html>',
+                None,
+            )
+        )
+        self.label_percentage_mani_2.setText(
+            QCoreApplication.translate(
+                "Form",
+                u'<html><head/><body><span>0</span><span style="vertical-align:super;">%</span></body></html>',
+                None,
+            )
+        )
+        self.text_manipulator.setText(
+            QCoreApplication.translate("Form", u"MANIPULATOR", None)
+        )
+        self.text_manipulator.setProperty(
+            "colorStyle", QCoreApplication.translate("Form", u"subTitle", None)
+        )
+        self.label_gjsnitt_temp_ROV.setText(
+            QCoreApplication.translate("Form", u"---", None)
+        )
+        self.label_gjsnitt_temp_ROV.setProperty(
+            "labelStyle", QCoreApplication.translate("Form", u"blackBg", None)
+        )
+        self.label_gjsnitt_temp_ROV.setProperty(
+            "labelStyle2", QCoreApplication.translate("Form", u"whiteBg", None)
+        )
+        self.text_gjsnitttemp.setText(
+            QCoreApplication.translate("Form", u"Gj.snitt:", None)
+        )
+        self.text_gjsnitttemp.setProperty(
+            "colorStyle", QCoreApplication.translate("Form", u"subTitle", None)
+        )
+        self.thrust_label_1.setText(
+            QCoreApplication.translate("Form", u"----------", None)
+        )
+        self.thrust_label_5.setText(
+            QCoreApplication.translate("Form", u"----------", None)
+        )
+        self.thrust_label_8.setText(
+            QCoreApplication.translate("Form", u"----------", None)
+        )
+        self.thrust_label_2.setText(
+            QCoreApplication.translate("Form", u"----------", None)
+        )
+        self.thrust_label_6.setText(
+            QCoreApplication.translate("Form", u"----------", None)
+        )
+        self.thrust_label_7.setText(
+            QCoreApplication.translate("Form", u"----------", None)
+        )
+        self.thrust_label_3.setText(
+            QCoreApplication.translate("Form", u"----------", None)
+        )
+        self.thrust_label_4.setText(
+            QCoreApplication.translate("Form", u"----------", None)
+        )
         self.knappen.setText(QCoreApplication.translate("Form", u"PushButton", None))
-    # retranslateUi
 
+    # retranslateUi

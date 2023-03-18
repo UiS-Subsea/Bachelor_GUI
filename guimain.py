@@ -35,6 +35,7 @@ def send_fake_sensordata(t_watch: Threadwatcher, gui_pipe: multiprocessing.Pipe)
         gui_pipe.send(sensordata)
         time.sleep(1)
 
+    
 
 class Rov_state:
     def __init__(self,queue,gui_pipe, t_watch: Threadwatcher) -> None:
@@ -49,8 +50,9 @@ class Rov_state:
     def send_sensordata_to_gui(self, data):
         print(f"sending data from main to gui: {data =}")
         self.gui_pipe.send(data)
-
-         
+        
+        
+ 
 def send_fake_sensordata(t_watch: Threadwatcher, gui_pipe: multiprocessing.Pipe):
     thrust_list = [num for num in range(-100,101)]
     power_list = [num for num in range(0, 101)]
@@ -69,6 +71,7 @@ def send_fake_sensordata(t_watch: Threadwatcher, gui_pipe: multiprocessing.Pipe)
         gui_pipe.send(sensordata)
         time.sleep(1)
 #TODO: bruh what
+
 def test_gui_leak_response(gui_pipe: multiprocessing.Pipe):
     sensordata = {"lekk_temp": [False,  False, False, -1, -1, -1]}
     gui_pipe.send(sensordata)

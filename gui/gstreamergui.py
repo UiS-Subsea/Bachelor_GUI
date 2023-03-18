@@ -14,6 +14,7 @@ from PyQt5.QtGui import QCloseEvent
 
 Gst.init(None)
 
+
 class VideoPlayer(QWidget):
     def __init__(self):
         super().__init__()
@@ -26,7 +27,9 @@ class VideoPlayer(QWidget):
 
         self.installEventFilter(self)
 
-        self.pipeline = Gst.parse_launch("udpsrc multicast-group=224.1.1.1 auto-multicast=true port=5000 ! application/x-rtp, media=video, clock-rate=90000, encoding-name=H264, payload=96 ! rtph264depay ! h264parse ! decodebin ! videoconvert ! glupload ! glcolorconvert ! qtvideosink sync=false")
+        self.pipeline = Gst.parse_launch(
+            "udpsrc multicast-group=224.1.1.1 auto-multicast=true port=5000 ! application/x-rtp, media=video, clock-rate=90000, encoding-name=H264, payload=96 ! rtph264depay ! h264parse ! decodebin ! videoconvert ! glupload ! glcolorconvert ! qtvideosink sync=false"
+        )
 
         self.sink = self.pipeline.get_by_interface(GstVideo.VideoOverlay)
         self.widget = QWidget(self)
@@ -45,6 +48,7 @@ class VideoPlayer(QWidget):
 
     def stop_pipeline(self):
         self.pipeline.set_state(Gst.State.NULL)
+
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
