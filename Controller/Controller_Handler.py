@@ -16,6 +16,9 @@ BUTTON_B = 1
 BUTTON_X = 2
 BUTTON_Y = 3
 
+ROV_CONTROLLER_ID = 0
+MANIPULATOR_CONTROLLER_ID = 1
+
 
 def clear_screen():
     pass
@@ -155,19 +158,26 @@ class Controller:
     def get_events_loop(self, t_watch: Threadwatcher, id: int, debug=False, debug_all=False):
         """get_events_loop collects all the events and updates the buttons, dpad, and joystick values. It then sends it to the queue if it is not local"""
         while t_watch.should_run(id):
-            if pygame.joystick.get_count() < 1:
+            if pygame.joystick.get_count() < 2:
                 self.wait_for_controller()
             self.duration = self.clock.tick(20)
             # print(duration)
             for event in pygame.event.get():
                 # print("entered event check")
                 if event.type == DPAD: #dpad (both up and down)
-                    self.dpad = event.value
+                    if event.joy == ROV_CONTROLLER_ID:
+                        self.rov_dpad = event.value # BLIR DET BRUKT ELLER ER DET KNAPP?
+                    if event.joy == MANIPULATOR_CONTROLLER_ID:
+                        self.mani_dpad = event.value # BLIR DET BRUKT ELLER ER DET KNAPP?
                     # self.dpad = [val*100 for val in event.value]
 
                 if event.type == BUTTON_DOWN: #button down
-                    self.rov_buttons[event.button] = 1
-                    self.mani_buttons[event.button] = 1
+                    if event.joy == ROV_CONTROLLER_ID:
+                        self.rov_buttons[event.button] = 1
+                        print(f"BUTTON DOWN ROV!")
+                    elif event.joy == MANIPULATOR_CONTROLLER_ID:
+                        self.mani_buttons[event.button] = 1
+                        print(f"BUTTON DOWN MANI!")
 
                     #Trenger sikkert ikke denne, skal nok bruke andre funksjoner !!!
                     if self.rov_buttons[BUTTON_Y] == 1:
@@ -227,8 +237,6 @@ class Controller:
                             elif event.button == 14:
                                 print("MANIPULATOR: DPAD - Right")
                         
-
-
                     # print(event.button)
                 if event.type == BUTTON_UP: #button up
                     self.reset_button(event)
@@ -264,15 +272,15 @@ class Controller:
                 # this is "solved" by the fact that the other joystick reduces the value of the first joystick that was pressed. Since we add up the
                 # joystick values to get total trust. Example: axis 4: -50, axis 5: 100. Value we get is 50. With bug: axis 4: 0, axis 5: 50.
                 if event.type == JOYSTICK: #joystick movement JOYSTICK
-                    self.rov_joysticks[event.axis] = self.normalize_joysticks(event)
-                    self.rov_joysticks[6] = self.rov_joysticks[4] + self.rov_joysticks[5]
+                    if event.joy == 0:
+                        self.rov_joysticks[event.axis] = self.normalize_joysticks(event)
+                        self.rov_joysticks[6] = self.rov_joysticks[4] + self.rov_joysticks[5]
+                    elif event.joy == 1:
+                        self.mani_joysticks[event.axis] = self.normalize_joysticks(event)
+                        self.mani_joysticks[6] = self.mani_joysticks[4] + self.mani_joysticks[5]
 
-                    self.mani_joysticks[event.axis] = self.normalize_joysticks(event)
-                    self.mani_joysticks[6] = self.mani_joysticks[4] + self.mani_joysticks[5]
-
-                    deadzone = 0.07 #To prevent sensitive output in console
-                    
                     if debug_all:
+                        deadzone = 0.07 #To prevent sensitive output in console
                         if event.joy == 0:
                             if event.axis == 0:
                                 if event.value > deadzone:
@@ -391,4 +399,4 @@ if __name__ == "__main__":
     t_watch = Threadwatcher()
     id = t_watch.add_thread()
     c = Controller(queue, t_watch, id)
-    c.get_events_loop(t_watch, id,debug=True, debug_all=True)
+    c.get_events_loop(t_watch, id,debug=True, debug_all=False)
