@@ -32,9 +32,9 @@ class Controller:
         #Variable that decides when we set the controller to be in the center. Used for stopping the controller sending small values when the stick is let go
         self.joystick_deadzone = joystick_deadzone  # deadzone in percent
         # list of all buttons that can be clicked. 1 means it is clicked and 0 is not clicked
-        self.rov_buttons = [0]*10
+        self.rov_buttons = [0]*15
 
-        self.mani_buttons = [0]*10
+        self.mani_buttons = [0]*15
         # values for all axes of the joysticks (and one "virtual joystick" that combines axes)
         self.rov_joysticks = [0]*7
 
@@ -52,7 +52,10 @@ class Controller:
         # Variable that is used to see if the controller needs to be reset before trying to connect. On first run we do not need to reset it
         self.first_run = True
         # Map for knowing the name of the button in the self.buttons list 
-        self.button_names = {0: "A", 1: "B", 2: "X", 3: "Y", 4: "Left button back", 5: "Right button back", 6: "Back", 7: "Start", 8: "Thumb button left", 9: "Thumb button right"}
+        self.button_names = {0: "A", 1: "B", 2: "X", 3: "Y", 
+                            7: "Left Joystick Press", 8: "Right Joystick Press",
+                            9: "LB", 10: "RB",
+                            11: "DPAD UP", 12: "DPAD DOWN", 13:"DPAD LEFT",14:"DPAD RIGHT"}
         # Initialize the duration timer which says how long since last time the .tick metod was called
         self.duration = -1
         pygame.init()
@@ -84,7 +87,7 @@ class Controller:
                 pygame.joystick.init()
                 global rov_joystick
                 global mani_joystick
-                print(f"Found {pygame.joystick.get_count()}controllers.")
+                print(f"Found {pygame.joystick.get_count()} controllers.")
                 #Kan legge til if statements for om = 1 eller = 2
                 rov_joystick = pygame.joystick.Joystick(0)
                 mani_joystick = pygame.joystick.Joystick(1)
@@ -168,30 +171,62 @@ class Controller:
 
                     #Trenger sikkert ikke denne, skal nok bruke andre funksjoner !!!
                     if self.rov_buttons[BUTTON_Y] == 1:
-                        self.camera_motor = (self.camera_motor+1)%2
+                        # self.camera_motor = (self.camera_motor+1)%2
+                        print("CAMERA BUTTON! ONLY ROV?")
                         # threading.Thread(target=self.lekkasje).start()
 
                     if debug_all:
-                        if event.button == BUTTON_A:
-                            print("A")
-                        if event.button == BUTTON_B:
-                            print("B")
-                        if event.button == BUTTON_X:
-                            print("X")
-                        if event.button == BUTTON_Y:
-                            print("Y")
-                        if event.button == 4:
-                            print("Left button")
-                        if event.button == 5:
-                            print("Right button")
-                        if event.button == 6:
-                            print("Back")
-                        if event.button == 7:
-                            print("Start")
-                        if event.button == 8:
-                            print("Thumb button left")
-                        if event.button == 9:
-                            print("Thumb button right")
+                        if event.joy == 0:
+                            if event.button == BUTTON_A:
+                                print("ROV: A")
+                            elif event.button == BUTTON_B:
+                                print("ROV: B")
+                            elif event.button == BUTTON_X:
+                                print("ROV: X")
+                            elif event.button == BUTTON_Y:
+                                print("ROV: Y")
+                            elif event.button == 7:
+                                print("ROV: Left Joystick Press")
+                            elif event.button == 8:
+                                print("ROV: Right Joystick Press")
+                            elif event.button == 9:
+                                print("ROV: LB")
+                            elif event.button == 10:
+                                print("ROV: RB")
+                            elif event.button == 11:
+                                print("ROV: DPAD - Up")
+                            elif event.button == 12:
+                                print("ROV: DPAD - Down")
+                            elif event.button == 13:
+                                print("ROV: DPAD - Left")
+                            elif event.button == 14:
+                                print("ROV: DPAD - Right")
+                        if event.joy == 1:
+                            if event.button == BUTTON_A:
+                                print("MANIPULATOR: A")
+                            elif event.button == BUTTON_B:
+                                print("MANIPULATOR: B")
+                            elif event.button == BUTTON_X:
+                                print("MANIPULATOR: X")
+                            elif event.button == BUTTON_Y:
+                                print("MANIPULATOR: Y")
+                            elif event.button == 7:
+                                print("MANIPULATOR: Left Joystick Press")
+                            elif event.button == 8:
+                                print("MANIPULATOR: Right Joystick Press")
+                            elif event.button == 9:
+                                print("MANIPULATOR: LB")
+                            elif event.button == 10:
+                                print("MANIPULATOR: RB")
+                            elif event.button == 11:
+                                print("MANIPULATOR: DPAD - Up")
+                            elif event.button == 12:
+                                print("MANIPULATOR: DPAD - Down")
+                            elif event.button == 13:
+                                print("MANIPULATOR: DPAD - Left")
+                            elif event.button == 14:
+                                print("MANIPULATOR: DPAD - Right")
+                        
 
 
                     # print(event.button)
@@ -200,7 +235,6 @@ class Controller:
 
                     if debug_all:
                         if event.button == 0:
-                            # pygame.joystick.Joystick.stop_rumble()
                             print("A up")
                         if event.button == 1:
                             print("B up")
@@ -208,64 +242,141 @@ class Controller:
                             print("X up")
                         if event.button == 3:
                             print("Y up")
-                        if event.button == 4:
-                            print("Left button up")
-                        if event.button == 5:
-                            print("Right button up")
-                        if event.button == 6:
-                            print("Back up")
                         if event.button == 7:
-                            print("Start up")
+                            print("Left Joystick Press UP")
                         if event.button == 8:
-                            print("Thumb button left up")
+                            print("Right Joystick Press UP")
                         if event.button == 9:
-                            print("Thumb button right up")
+                            print("LB UP")
+                        if event.button == 10:
+                            print("RB UP")
+                        if event.button == 11:
+                            print("DPAD - Up UP")
+                        if event.button == 12:
+                            print("DPAD - Down UP")
+                        if event.button == 13:
+                            print("DPAD - Left UP")
+                        if event.button == 14:
+                            print("DPAD - Right UP")
                     self.reset_button(event)
 
                 # There is a bug where only one joystick is registered if the program has been started, but no buttons or dpad has been pressed yet.
                 # this is "solved" by the fact that the other joystick reduces the value of the first joystick that was pressed. Since we add up the
                 # joystick values to get total trust. Example: axis 4: -50, axis 5: 100. Value we get is 50. With bug: axis 4: 0, axis 5: 50.
-                if event.type == JOYSTICK: #joystick movement
+                if event.type == JOYSTICK: #joystick movement JOYSTICK
                     self.rov_joysticks[event.axis] = self.normalize_joysticks(event)
                     self.rov_joysticks[6] = self.rov_joysticks[4] + self.rov_joysticks[5]
 
                     self.mani_joysticks[event.axis] = self.normalize_joysticks(event)
                     self.mani_joysticks[6] = self.mani_joysticks[4] + self.mani_joysticks[5]
 
+                    deadzone = 0.07 #To prevent sensitive output in console
                     
                     if debug_all:
-                        if event.axis == 0:
-                            if event.value > 0:
-                                print(f"Roboten kjører mot høyre med {self.normalize_joysticks(event)}% kraft")
-                            else:
-                                print(f"Roboten kjører mot venstre med {self.normalize_joysticks(event)}% kraft")
-                        if event.axis == 4 or event.axis == 5:
-                            print(f"{event.axis} signal: {event.value}, normalized: {self.normalize_joysticks(event)}")
-                            if event.value > 0:
-                                print(f"Roboten kjører framover med {self.normalize_joysticks(event)}% kraft")
-                            else:
-                                print(f"Roboten kjører bakover med {self.normalize_joysticks(event)}% kraft")
-                        elif event.axis == 2:
-                            if event.value > 0:
-                                print(f"Roboten roterer mot klokka med {self.normalize_joysticks(event)}% kraft")
-                            else:
-                                print(f"Roboten roterer med klokka med {self.normalize_joysticks(event)}% kraft")
-                        elif event.axis == 3:
-                            if event.value > 0:
-                                print(f"Roboten tilter kamera med {self.normalize_joysticks(event)}% kraft")
-                            else:
-                                print(f"Roboten tilter kamera med {self.normalize_joysticks(event)}% kraft")
-                        elif event.axis == 4:
-                                print(f"Roboten går ned med {self.normalize_joysticks(event)}% kraft")
-                        elif event.axis == 5:
-                                print(f"Roboten går opp med {self.normalize_joysticks(event)}% kraft")
+                        if event.joy == 0:
+                            if event.axis == 0:
+                                if event.value > deadzone:
+                                    print(f"ROV til HØYRE med {self.normalize_joysticks(event)}% kraft")
+                                elif event.value < -deadzone:
+                                    print(f"ROV til VENSTRE med {self.normalize_joysticks(event)}% kraft")
+                            if event.axis == 4 or event.axis == 5:
+                                print(f"{event.axis} signal: {event.value}, normalized: {self.normalize_joysticks(event)}")
+                            if event.axis == 1:
+                                if event.value > deadzone:
+                                    print(f"ROV BAKOVER med {self.normalize_joysticks(event)}% kraft")
+                                elif event.value < -deadzone:
+                                    print(f"ROV FREMOVER med {self.normalize_joysticks(event)}% kraft")
+                            elif event.axis == 2:
+                                if event.value > deadzone:
+                                    print(f"ROV roterer MED klokka med {self.normalize_joysticks(event)}% kraft")
+                                elif event.value < -deadzone:
+                                    print(f"ROV roterer MOT klokka med {self.normalize_joysticks(event)}% kraft")
+                            elif event.axis == 3:
+                                if event.value > deadzone:
+                                    print(f"ROV tilter kamera med {self.normalize_joysticks(event)}% kraft")
+                                elif event.value < -deadzone:
+                                    print(f"ROV tilter kamera med {self.normalize_joysticks(event)}% kraft")
+                            elif event.axis == 4:
+                                    print(f"ROV NEDOVER med {self.normalize_joysticks(event)}% kraft")
+                            elif event.axis == 5:
+                                    print(f"ROV OPPOVER med {self.normalize_joysticks(event)}% kraft")
+                        elif event.joy == 1:
+                                if event.axis == 0:
+                                    if event.value > deadzone:
+                                        print(f"MANIPULATOR til HØYRE med {self.normalize_joysticks(event)}% kraft")
+                                    elif event.value < -deadzone:
+                                        print(f"MANIPULATOR til VENSTRE med {self.normalize_joysticks(event)}% kraft")
+                                if event.axis == 4 or event.axis == 5:
+                                    print(f"{event.axis} signal: {event.value}, normalized: {self.normalize_joysticks(event)}")
+                                if event.axis == 1:
+                                    if event.value > deadzone:
+                                        print(f"MANIPULATOR BAKOVER med {self.normalize_joysticks(event)}% kraft")
+                                    elif event.value < -deadzone:
+                                        print(f"MANIPULATOR FREMOVER med {self.normalize_joysticks(event)}% kraft")
+                                elif event.axis == 2:
+                                    if event.value > deadzone:
+                                        print(f"MANIPULATOR roterer MED klokka med {self.normalize_joysticks(event)}% kraft")
+                                    elif event.value < -deadzone:
+                                        print(f"MANIPULATOR roterer MOT klokka med {self.normalize_joysticks(event)}% kraft")
+                                elif event.axis == 3:
+                                    if event.value > deadzone:
+                                        print(f"MANIPULATOR tilter kamera med {self.normalize_joysticks(event)}% kraft")
+                                    elif event.value < -deadzone:
+                                        print(f"MANIPULATOR tilter kamera med {self.normalize_joysticks(event)}% kraft")
+                                elif event.axis == 4:
+                                        print(f"MANIPULATOR NEDOVER med {self.normalize_joysticks(event)}% kraft")
+                                elif event.axis == 5:
+                                        print(f"MANIPULATOR OPPOVER med {self.normalize_joysticks(event)}% kraft")
             if self.queue_to_rov is not None: # Means we send the values to main
                 self.queue_to_rov.put((1, self.pack_controller_values())) # 1 here is the id that tells main that this is from the controller and not a gui command or profile update
                 # print(self.buttons)
             elif debug and self.connection is None: 
                 self.write_controller_values(local=True)
         print("closed connection")
-        # self.connection.close()            
+        # self.connection.close() 
+
+def debug():
+    pygame.joystick.init()
+    pygame.joystick.Joystick(0).init()
+    pygame.joystick.Joystick(1).init()
+
+    if pygame.joystick.Joystick(0) is not None:
+        print(f"Controller 2 connected! ID:{pygame.joystick.Joystick(0).get_id()}")
+    if pygame.joystick.Joystick(1) is not None:
+        print(f"Controller 2 connected! ID:{pygame.joystick.Joystick(1).get_id()}")
+
+    # rov_con = pygame.joystick.Joystick(0)
+    # mani_con = pygame.joystick.Joystick(1)
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == BUTTON_DOWN:
+                print(event.button)
+                if event.joy == 0:
+                    print("ROV: ", event.button, " pressed.")
+                elif event.joy == 1:
+                    print("Manipulator: ", event.button, " pressed.")
+            if event.type == pygame.JOYAXISMOTION:
+                if event.joy == 1:
+                    if abs(event.value) > 0.07:
+                        if event.axis == 0:
+                            print("ROV: Left Joystick X-axis movement: ", event.value)
+                        elif event.axis == 1:
+                            print("ROV: Left Joystick Y-axis movement: ", event.value)
+                        elif event.axis == 2:
+                            print("ROV: Right Joystick X-axis movement: ", event.value)
+                        elif event.axis == 3:
+                            print("ROV: Right Joystick Y-axis movement: ", event.value)
+                elif event.joy == 1:
+                    if abs(event.value) > 0.07:
+                        if event.axis == 0:
+                            print("Manipulator: Left Joystick X-axis movement: ", event.value)
+                        elif event.axis == 1:
+                            print("Manipulator: Left Joystick Y-axis movement: ", event.value)
+                        elif event.axis == 2:
+                            print("Manipulator: Right Joystick X-axis movement: ", event.value)
+                        elif event.axis == 3:
+                            print("Manipulator: Right Joystick Y-axis movement: ", event.value)
 
 # This is the entry point that main calls
 def run(queue_to_rov, t_watch: Threadwatcher, id, debug=True, debug_all=False):
@@ -274,7 +385,10 @@ def run(queue_to_rov, t_watch: Threadwatcher, id, debug=True, debug_all=False):
     c.get_events_loop(t_watch, id, debug=debug, debug_all=debug_all)
 
 if __name__ == "__main__":
-    pass
-    # c = Controller(None)
-    # run(None, True, False)
-    # c.get_events_loop(debug=True, debug_all=False)
+    # pass
+
+    queue = multiprocessing.Queue()
+    t_watch = Threadwatcher()
+    id = t_watch.add_thread()
+    c = Controller(queue, t_watch, id)
+    c.get_events_loop(t_watch, id,debug=True, debug_all=True)
