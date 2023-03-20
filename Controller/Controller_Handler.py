@@ -86,12 +86,16 @@ class Controller:
         """wait_for_controller will attempt to connect until it finds a controller."""
         while True:   
             try:
-                print("Attempting to Connect to controller")
+                print("Attempting to Connect to Controllers!")
                 pygame.joystick.init()
                 global rov_joystick
                 global mani_joystick
                 print(f"Found {pygame.joystick.get_count()} controllers.")
-                #Kan legge til if statements for om = 1 eller = 2
+                if pygame.joystick.get_count() == 0 | 1:
+                    for sec in range(5,0,-1):
+                        sys.stdout.write("\r" + f"Only {pygame.joystick.get_count()} controllers connected! Need 2! Retrying in {sec} seconds")
+                        time.sleep(1)
+                        sys.stdout.flush()
                 rov_joystick = pygame.joystick.Joystick(0)
                 mani_joystick = pygame.joystick.Joystick(1)
                 print(f"Connected to {rov_joystick.get_name()}")
@@ -116,7 +120,6 @@ class Controller:
 
         if event.axis == 3:
             return self.deadzone_adjustment(-round((2*(event.value--self.controller_stop_point)/(self.controller_stop_point--self.controller_stop_point)-1)*100))
-
 
         if event.axis == 4:
             return self.deadzone_adjustment(-round(self.get_new_range(event.value,-self.controller_stop_point, self.controller_stop_point))) # opp og ned på roboten har range fra 0 til 100 og 0 til -100
