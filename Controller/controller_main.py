@@ -114,7 +114,7 @@ if __name__ == "__main__":
         if run_get_controllerdata:
                 id = t_watch.add_thread()
                 # takes in controller data and sends it into child_conn
-                controller_process = multiprocessing.Process(target=controller.run, args=(queue_for_rov, t_watch, id,True, False,), daemon=True)
+                controller_process = multiprocessing.Process(target=controller.run, args=(queue_for_rov, t_watch, id,True, True,), daemon=True)
                 controller_process.start()
         
         print("starting send to rov")

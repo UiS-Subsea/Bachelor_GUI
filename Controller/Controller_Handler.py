@@ -177,15 +177,13 @@ class Controller:
                 if event.type == BUTTON_DOWN: #button down
                     if event.joy == ROV_CONTROLLER_ID:
                         self.rov_buttons[event.button] = 1
-                        print(f"BUTTON DOWN ROV!")
                     elif event.joy == MANIPULATOR_CONTROLLER_ID:
                         self.mani_buttons[event.button] = 1
-                        print(f"BUTTON DOWN MANI!")
 
                     #Trenger sikkert ikke denne, skal nok bruke andre funksjoner !!!
-                    if self.rov_buttons[BUTTON_Y] == 1:
+                    # if self.rov_buttons[BUTTON_Y] == 1:
                         # self.camera_motor = (self.camera_motor+1)%2
-                        print("CAMERA BUTTON! ONLY ROV?")
+                        # print("CAMERA BUTTON! ONLY ROV?")
                         # threading.Thread(target=self.lekkasje).start()
 
                     if debug_all:
@@ -391,7 +389,7 @@ def debug():
 
 # This is the entry point that main calls
 def run(queue_to_rov, t_watch: Threadwatcher, id, debug=True, debug_all=False):
-    debug_all = False
+    debug_all = True
     c = Controller(queue_to_rov, t_watch, id)
     c.get_events_loop(t_watch, id, debug=debug, debug_all=debug_all)
 
