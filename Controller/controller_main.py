@@ -1,5 +1,6 @@
 import json
 import multiprocessing
+from multiprocessing import Process
 import threading
 import time
 from Threadwatch import Threadwatcher
@@ -33,6 +34,7 @@ class Rov_state:
         data[2] = self.data["mani_joysticks"][MANIPULATOR_TILT]
         data[3] = self.data["mani_joysticks"][MANIPULATOR_GRAB_RELEASE]
         self.packets_to_send.append([41, data])
+        print(self.packets_to_send)
 
     #KAN OGSÅ GJØRES SLIK VED Å LEGGE TIL I LISTEN:
     def build_rov_packet(self):
@@ -42,6 +44,7 @@ class Rov_state:
         data[2] = self.data["rov_joysticks"][Z_AXIS]
         data[3] = self.data["rov_joysticks"][ROTATION_AXIS]
         self.packets_to_send.append([40, data])
+        print(self.packets_to_send)
 
 
     def craft_packet(self, t_watch: Threadwatcher, id):
@@ -83,9 +86,6 @@ class Rov_state:
 
 def run(t_watch: Threadwatcher, id: int, queue_for_rov: multiprocessing.Queue):
     rov_state = Rov_state(queue_for_rov, t_watch)
-    if run_craft_packet:
-        id = t_watch.add_thread()
-        threading.Thread(target=rov_state.craft_packet, args=(t_watch, id), daemon=True).start()
 
     while t_watch.should_run(id):
         rov_state.get_from_queue()
@@ -97,25 +97,33 @@ def run(t_watch: Threadwatcher, id: int, queue_for_rov: multiprocessing.Queue):
 
 if __name__ == "__main__":
 
+    # queue = multiprocessing.Queue()
+    # t_watch = Threadwatcher()
+    # id = t_watch.add_thread()
+    # controller_process = Process(target=controller.run, args=(queue, t_watch, id, True, True), daemon=True)
+    # controller_process.start()
+
+    # #PREVENTS SCRIPT TO QUIT
+    # input("Press Enter to exit...")
+    # controller_process.terminate()
+
+    # c = controller.Controller(queue, t_watch, id)
+    # c.get_events_loop(t_watch, id,debug=True, debug_all=True)
+    # rov_state = Rov_state(queue, t_watch)
+    # rov_state.build_rov_packet()
+
     try:
-        global time_since_start
-        global start_time_sec
-        global run_gui
-        global manual_input_rotation
-        global run_network
-        global run_craft_packet
-        start_time_sec = time.time()
         run_get_controllerdata = True
-        run_craft_packet = True
-        
         queue_for_rov = multiprocessing.Queue()
         t_watch = Threadwatcher()
 
         if run_get_controllerdata:
                 id = t_watch.add_thread()
                 # takes in controller data and sends it into child_conn
-                controller_process = multiprocessing.Process(target=controller.run, args=(queue_for_rov, t_watch, id,True, True,), daemon=True)
+                controller_process = Process(target=controller.run, args=(queue_for_rov, t_watch, id, True, True), daemon=True)
                 controller_process.start()
+                input("Press Enter to exit...")
+                controller_process.terminate()
         
         print("starting send to rov")
         id = t_watch.add_thread()

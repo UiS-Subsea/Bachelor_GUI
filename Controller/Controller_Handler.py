@@ -388,8 +388,8 @@ def debug():
                             print("Manipulator: Right Joystick Y-axis movement: ", event.value)
 
 # This is the entry point that main calls
-def run(queue_to_rov, t_watch: Threadwatcher, id, debug=True, debug_all=False):
-    debug_all = True
+def run(queue_to_rov, t_watch: Threadwatcher, id, debug=True, debug_all=True):
+    # debug_all = True
     c = Controller(queue_to_rov, t_watch, id)
     c.get_events_loop(t_watch, id, debug=debug, debug_all=debug_all)
 
