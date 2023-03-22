@@ -8,6 +8,7 @@ import time
 from packet_info import Logger
 
 #from logger import Logger
+# ID_DIR 40, 41
 ID_DIRECTIONCOMMAND_PARAMETERS = 71
 ID_DIRECTIONCOMMAND = 70
 ID_camera_tilt_upwards = 200
@@ -248,6 +249,31 @@ class Rov_state:
             fuse_reset_signal.append(item)
         
         self.packets_to_send.append([99, fuse_reset_signal])
+
+
+    # Test1
+    def set_zero_point_depth(self, sensordata=None):
+        print("1")
+        zero_point_packet = bytes([66, 0b10000000])
+        print("2")
+        print(zero_point_packet)
+        self.packets_to_send.append([zero_point_packet, []])
+        print("3")
+        print(self.packets_to_send)
+
+    # Test2 
+    def set_zero_point_depth2(self, sensordata=None):
+        ID_RESET_DEPTH = 66
+        BYTE0_INIT_FLAG = 0b00000010
+        print(BYTE0_INIT_FLAG)
+        self.packets_to_send.append([ID_RESET_DEPTH, [BYTE0_INIT_FLAG]])
+        print(self.packets_to_send)
+        print([ID_RESET_DEPTH, [BYTE0_INIT_FLAG]])
+
+    # Test 3
+    def set_zero_point_depth3(self, sensordata = None):
+        zero_point_packet = bytes([66, 0b10000000])
+        self.packets_to_send.append([zero_point_packet, []])
 
 
     def update_light_value(self, light_intensity_forward: int, ligth_forward_is_on: bool, light_intensity_down: int, ligth_down_is_on: bool):
