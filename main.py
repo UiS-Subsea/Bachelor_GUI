@@ -91,7 +91,8 @@ if __name__ == "__main__":
         run_get_controllerdata = True
         queue_for_rov = multiprocessing.Queue()
         t_watch = Threadwatcher()
-        debug_all = False #Sett til True om du vil se input fra controllers
+        #HUSK Å ENDRE TICK HVIS INPUT OPPDATERES SENT!
+        debug_all = True #Sett til True om du vil se input fra controllers
 
         if run_get_controllerdata:
             id = t_watch.add_thread()

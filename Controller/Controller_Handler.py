@@ -166,7 +166,7 @@ class Controller:
         while t_watch.should_run(id):
             if pygame.joystick.get_count() < 2:
                 self.wait_for_controller()
-            self.duration = self.clock.tick(0.2)
+            self.duration = self.clock.tick(20)
             # print(duration)
             for event in pygame.event.get():
                 # print("entered event check")

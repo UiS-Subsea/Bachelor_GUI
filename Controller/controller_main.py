@@ -5,19 +5,20 @@ import threading
 import time
 from Threadwatch import Threadwatcher
 import Controller_Handler as controller
+from Build_data import *
 
 # VALUES: (0-7) -> index i: [0,0,0,0,0,0,0,0]
 #MANIPULATOR
-MANIPULATOR_IN_OUT = 0
-MANIPULATOR_ROTATION = 1
-MANIPULATOR_TILT = 2
-MANIPULATOR_GRAB_RELEASE = 3
+# MANIPULATOR_IN_OUT = 0
+# MANIPULATOR_ROTATION = 1
+# MANIPULATOR_TILT = 2
+# MANIPULATOR_GRAB_RELEASE = 3
 
-#ROV
-X_AXIS = 1
-Y_AXIS = 0
-Z_AXIS = 6
-ROTATION_AXIS = 2
+# #ROV
+# X_AXIS = 1
+# Y_AXIS = 0
+# Z_AXIS = 6
+# ROTATION_AXIS = 2
 
 class Rov_state:
     def __init__(self, queue, t_watch: Threadwatcher) -> None:
@@ -27,27 +28,27 @@ class Rov_state:
         self.queue: multiprocessing.Queue = queue
 
 
-    def build_rov_packet(self):
-        if self.data == {}:
-            return
-        data = [0,0,0,0,0,0,0,0]
-        data[0] = self.data["rov_joysticks"][X_AXIS]
-        data[1] = self.data["rov_joysticks"][Y_AXIS]
-        data[2] = self.data["rov_joysticks"][Z_AXIS]
-        data[3] = self.data["rov_joysticks"][ROTATION_AXIS]
-        self.packets_to_send.append([40, data])
-        print(self.packets_to_send)
+    # def build_rov_packet(self):
+    #     if self.data == {}:
+    #         return
+    #     data = [0,0,0,0,0,0,0,0]
+    #     data[0] = self.data["rov_joysticks"][X_AXIS]
+    #     data[1] = self.data["rov_joysticks"][Y_AXIS]
+    #     data[2] = self.data["rov_joysticks"][Z_AXIS]
+    #     data[3] = self.data["rov_joysticks"][ROTATION_AXIS]
+    #     self.packets_to_send.append([40, data])
+    #     print(self.packets_to_send)
 
-    def build_manipulator_packet(self):
-        if self.data == {}:
-            return
-        data = [0,0,0,0,0,0,0,0]
-        data[0] = self.data["mani_joysticks"][MANIPULATOR_IN_OUT]
-        data[1] = self.data["mani_joysticks"][MANIPULATOR_ROTATION]
-        data[2] = self.data["mani_joysticks"][MANIPULATOR_TILT]
-        data[3] = self.data["mani_joysticks"][MANIPULATOR_GRAB_RELEASE]
-        self.packets_to_send.append([41, data])
-        print(self.packets_to_send)
+    # def build_manipulator_packet(self):
+    #     if self.data == {}:
+    #         return
+    #     data = [0,0,0,0,0,0,0,0]
+    #     data[0] = self.data["mani_joysticks"][MANIPULATOR_IN_OUT]
+    #     data[1] = self.data["mani_joysticks"][MANIPULATOR_ROTATION]
+    #     data[2] = self.data["mani_joysticks"][MANIPULATOR_TILT]
+    #     data[3] = self.data["mani_joysticks"][MANIPULATOR_GRAB_RELEASE]
+    #     self.packets_to_send.append([41, data])
+    #     print(self.packets_to_send)
 
     def button_handling(self):
         rov_buttons = self.data.get("rov_buttons")
@@ -66,10 +67,10 @@ class Rov_state:
         if id == 1: # controller data update
             self.data = packet
     
-    def check_controls(self):
-        self.button_handling()
-        self.build_rov_packet()
-        self.build_manipulator_packet()
+    # def check_controls(self):
+        # self.button_handling()
+        # self.build_rov_packet()
+        # self.build_manipulator_packet()
 
 def run(t_watch: Threadwatcher, id: int, queue_for_rov: multiprocessing.Queue):
     rov_state = Rov_state(queue_for_rov, t_watch)
@@ -77,7 +78,10 @@ def run(t_watch: Threadwatcher, id: int, queue_for_rov: multiprocessing.Queue):
     while t_watch.should_run(id):
         rov_state.get_from_queue()
         if run_get_controllerdata and rov_state.data != {}:
-            rov_state.check_controls()
+            # rov_state.check_controls()
+            build_rov_packet_test()
+            rov_state.packets_to_send.append(build_rov_packet_test)
+
         rov_state.data = {}
 
 
@@ -92,7 +96,7 @@ if __name__ == "__main__":
         if run_get_controllerdata:
             id = t_watch.add_thread()
             # takes in controller data and sends it into child_conn
-            controller_process = Process(target=controller.run, args=(queue_for_rov, t_watch, id, True, False), daemon=True)
+            controller_process = Process(target=controller.run, args=(queue_for_rov, t_watch, id, True, True), daemon=True)
             controller_process.start()
             input("Press Enter to exit...")
             # controller_process.terminate()
