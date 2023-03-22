@@ -39,7 +39,7 @@ class Rov_state:
         data[2] = self.data["rov_joysticks"][Z_AXIS]
         data[3] = self.data["rov_joysticks"][ROTATION_AXIS]
         self.packets_to_send.append([40, data])
-        print(self.packets_to_send)
+        # print(self.packets_to_send)
 
     def build_manipulator_packet(self):
         if self.data == {}:
@@ -50,12 +50,12 @@ class Rov_state:
         data[2] = self.data["mani_joysticks"][MANIPULATOR_TILT]
         data[3] = self.data["mani_joysticks"][MANIPULATOR_GRAB_RELEASE]
         self.packets_to_send.append([41, data])
-        print(self.packets_to_send)
+        # print(self.packets_to_send)
 
     def button_handling(self):
         rov_buttons = self.data.get("rov_buttons")
         mani_buttons = self.data.get("mani_buttons")
-        print(f"KNAPPER {rov_buttons} : {mani_buttons}")
+        # print(f"KNAPPER {rov_buttons} : {mani_buttons}")
 
     def get_from_queue(self):
         """Takes data from the queue and sends it to the correct handler"""
