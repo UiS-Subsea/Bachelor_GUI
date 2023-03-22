@@ -2,7 +2,7 @@ import time
 from Thread_info import Threadwatcher
 import multiprocessing
 from multiprocessing import Pipe, Process, Queue
-from gui import test_loop
+from gui import gui
 import threading
 
 
@@ -174,7 +174,7 @@ if __name__ == "__main__":
         if run_gui:
             id = t_watch.add_thread()
             gui_loop = Process(
-                target=test_loop.run,
+                target=gui.run,
                 args=(gui_child_pipe, queue_for_rov, t_watch, id),
                 daemon=True,
             )  # and should recieve commands from the gui
