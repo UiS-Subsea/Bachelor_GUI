@@ -98,7 +98,7 @@ if __name__ == "__main__":
             # takes in controller data and sends it into child_conn
             controller_process = Process(target=controller.run, args=(queue_for_rov, t_watch, id, True, debug_all), daemon=True)
             controller_process.start()
-            input("Press Enter to exit...")
+            input("Press Enter to start sending!")
             # controller_process.terminate()
         
         print("starting send to rov")
