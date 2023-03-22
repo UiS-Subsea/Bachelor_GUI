@@ -1,5 +1,5 @@
 import multiprocessing
-from Threadwatch import Threadwatcher
+from Thread_info import Threadwatcher
 import threading
 import os
 os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
@@ -85,16 +85,16 @@ class Controller:
         """wait_for_controller will attempt to connect until it finds a controller."""
         while True:   
             try:
+                # if pygame.joystick.get_count() == 0 | 1:
+                #     for sec in range(5,0,-1):
+                #         sys.stdout.write("\r" + f"Only {pygame.joystick.get_count()} controllers connected! Need 2! Retrying in {sec} seconds")
+                #         time.sleep(1)
+                #         sys.stdout.flush()
                 print("Attempting to Connect to Controllers!")
                 pygame.joystick.init()
                 global rov_joystick
                 global mani_joystick
                 print(f"Found {pygame.joystick.get_count()} controllers.")
-                if pygame.joystick.get_count() == 0 | 1:
-                    for sec in range(5,0,-1):
-                        sys.stdout.write("\r" + f"Only {pygame.joystick.get_count()} controllers connected! Need 2! Retrying in {sec} seconds")
-                        time.sleep(1)
-                        sys.stdout.flush()
                 rov_joystick = pygame.joystick.Joystick(0)
                 mani_joystick = pygame.joystick.Joystick(1)
                 print(f"Connected to {rov_joystick.get_name()}")
@@ -102,6 +102,10 @@ class Controller:
                 break
             except Exception as e:
                 print(e)
+                for sec in range(5,0,-1):
+                        sys.stdout.write("\r" + f"Only {pygame.joystick.get_count()} controllers connected! Need 2! Retrying in {sec} seconds")
+                        time.sleep(1)
+                        sys.stdout.flush()
 
         rov_joystick.init()
         mani_joystick.init()
