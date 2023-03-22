@@ -73,7 +73,7 @@ class Controller:
                 # "camera_to_control": self.camera_motor,
                 # "camera_movement": self.rov_joysticks[3] #Kan endres til annen akse!
                 # , "time_between_updates": self.duration}
-        print(values)
+        # print(values)
         return values
     # Says that button is no longer held in
     def reset_button(self, event) -> None:
@@ -397,10 +397,10 @@ def run(queue_to_rov, t_watch: Threadwatcher, id, debug=True, debug_all=True):
     c.get_events_loop(t_watch, id, debug=debug, debug_all=debug_all)
 
 if __name__ == "__main__":
-    # pass
+    pass
 
-    queue = multiprocessing.Queue()
-    t_watch = Threadwatcher()
-    id = t_watch.add_thread()
-    c = Controller(queue, t_watch, id)
-    c.get_events_loop(t_watch, id,debug=True, debug_all=False)
+    # queue = multiprocessing.Queue()
+    # t_watch = Threadwatcher()
+    # id = t_watch.add_thread()
+    # c = Controller(queue, t_watch, id)
+    # c.get_events_loop(t_watch, id,debug=True, debug_all=False)
