@@ -1,3 +1,28 @@
+<<<<<<< HEAD
+class Threadwatcher:
+    def __init__(self) -> None:
+        self.id = -1
+        self.threads = {}
+
+    def add_thread(self) -> int:
+        self.id += 1
+        self.threads[self.id] = True
+        return self.id
+
+    def should_run(self, id) -> bool:
+        if id in self.threads:
+            return self.threads[id]
+        return True
+
+    def stop_thread(self, id):
+        self.threads[id] = False
+
+    def stop_all_threads(self):
+        print("ThreadWatch: attempting to stop all threads")
+        for i in range(len(self.threads)):
+            self.stop_thread(i)
+        print(self.threads)
+=======
 class Threadwatcher:
     def __init__(self) -> None:
         self.id = -1
@@ -22,3 +47,4 @@ class Threadwatcher:
             self.stop_thread(i)
         print(self.threads)
 
+>>>>>>> 8b0a37bdeaa5ec635c2b64289018a7e074b85793
