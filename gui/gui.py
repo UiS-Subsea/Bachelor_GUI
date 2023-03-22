@@ -1,14 +1,12 @@
 import multiprocessing
 import subprocess
 from PyQt5 import QtCore, QtGui, QtWidgets, Qt, uic
-from PyQt5.QtWidgets import QMainWindow, QWidget, QCheckBox, QLabel
+from PyQt5.QtWidgets import QMainWindow, QWidget, QCheckBox, QLabel, QMessageBox
 import sys
 import threading
 from . import guiFunctions as f
 from Thread_info import Threadwatcher
 import time
-from PyQt5.QtWidgets import QLabel, QVBoxLayout, QWidget
-from PyQt5.QtCore import pyqtSignal
 
 class Window(QMainWindow):
     def __init__(
@@ -244,7 +242,13 @@ class Window(QMainWindow):
             threading.Thread(
                 target=lambda: self.lekkasje_varsel(id_with_lekkasje)
             ).start()  # Start the leak alert in a separate thread
-
+    
+    def lekkasje_varsel(self, sensor_nr_liste):
+        self.label_lekkasje_varsel.setMaximumSize(16777215,150)
+        self.label_lekkasje_varsel.setMinimumSize(16777215,150)
+        self.label_lekkasje_varsel.raise_()
+        
+        
     def gui_manipulator_update(self, sensordata):
         self.update_round_percent_visualizer(0, self.label_percentage_mani_1)
         self.update_round_percent_visualizer(0, self.label_percentage_mani_2)
