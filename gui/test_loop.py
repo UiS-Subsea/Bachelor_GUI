@@ -31,7 +31,8 @@ class Window(QMainWindow):
         self.queue: multiprocessing.Queue = (
             queue  # queue is a queue that only receives data
         )
-        self.pipe_conn_only_rcv = pipe_conn_only_rcv  # pipe_conn_only_rcv is a pipe connection that only receives data
+        # pipe_conn_only_rcv is a pipe connection that only receives data
+        self.pipe_conn_only_rcv = pipe_conn_only_rcv
 
         # Threadwatcher
         self.t_watch: Threadwatcher = t_watch  # t_watch is a threadwatcher object
@@ -139,14 +140,22 @@ class Window(QMainWindow):
                 sensordata[i] = 100  # Set the value to 100
 
         # Update the labels
-        self.update_round_percent_visualizer(sensordata[0], self.thrust_label_1)
-        self.update_round_percent_visualizer(sensordata[1], self.thrust_label_2)
-        self.update_round_percent_visualizer(sensordata[2], self.thrust_label_3)
-        self.update_round_percent_visualizer(sensordata[3], self.thrust_label_4)
-        self.update_round_percent_visualizer(sensordata[4], self.thrust_label_5)
-        self.update_round_percent_visualizer(sensordata[5], self.thrust_label_6)
-        self.update_round_percent_visualizer(sensordata[6], self.thrust_label_7)
-        self.update_round_percent_visualizer(sensordata[7], self.thrust_label_8)
+        self.update_round_percent_visualizer(
+            sensordata[0], self.thrust_label_1)
+        self.update_round_percent_visualizer(
+            sensordata[1], self.thrust_label_2)
+        self.update_round_percent_visualizer(
+            sensordata[2], self.thrust_label_3)
+        self.update_round_percent_visualizer(
+            sensordata[3], self.thrust_label_4)
+        self.update_round_percent_visualizer(
+            sensordata[4], self.thrust_label_5)
+        self.update_round_percent_visualizer(
+            sensordata[5], self.thrust_label_6)
+        self.update_round_percent_visualizer(
+            sensordata[6], self.thrust_label_7)
+        self.update_round_percent_visualizer(
+            sensordata[7], self.thrust_label_8)
 
     def gui_lekk_temp_update(self, sensordata):
         # self.check_data_types(sensordata["lekk_temp"], (int, float, float, float))
@@ -160,7 +169,8 @@ class Window(QMainWindow):
             self.label_gjsnitt_temp_ROV,
         ]
 
-        lekkasje_liste: list[bool] = [sensordata[0], sensordata[1], sensordata[2]]
+        lekkasje_liste: list[bool] = [
+            sensordata[0], sensordata[1], sensordata[2]]
         if not isinstance(lekkasje_liste[0], bool):
             raise TypeError(
                 f"Lekkasje sensor 1 has wrong type. {type(lekkasje_liste[0]) = }, {lekkasje_liste[0]} "
@@ -250,7 +260,8 @@ def run(conn, queue_for_rov, t_watch: Threadwatcher, id):
         sys.argv
     )  # Create an instance of QtWidgets.QApplication
 
-    win = Window(conn, queue_for_rov, t_watch, id)  # Create an instance of our class
+    # Create an instance of our class
+    win = Window(conn, queue_for_rov, t_watch, id)
 
     GLOBAL_STATE = False
     win.show()  # Show the form
