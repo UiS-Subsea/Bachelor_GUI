@@ -1,5 +1,5 @@
 import multiprocessing
-from Thread_info import Threadwatcher
+from Threadwatch import Threadwatcher
 import threading
 import os
 os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
@@ -190,7 +190,7 @@ class Controller:
                         # threading.Thread(target=self.lekkasje).start()
 
                     if debug_all:
-                        if event.joy == 0:
+                        if event.joy == ROV_CONTROLLER_ID:
                             if event.button == BUTTON_A:
                                 print("ROV: A")
                             elif event.button == BUTTON_B:
@@ -215,7 +215,7 @@ class Controller:
                                 print("ROV: DPAD - Left")
                             elif event.button == 14:
                                 print("ROV: DPAD - Right")
-                        if event.joy == 1:
+                        if event.joy == MANIPULATOR_CONTROLLER_ID:
                             if event.button == BUTTON_A:
                                 print("MANIPULATOR: A")
                             elif event.button == BUTTON_B:
@@ -276,16 +276,16 @@ class Controller:
                 # this is "solved" by the fact that the other joystick reduces the value of the first joystick that was pressed. Since we add up the
                 # joystick values to get total trust. Example: axis 4: -50, axis 5: 100. Value we get is 50. With bug: axis 4: 0, axis 5: 50.
                 if event.type == JOYSTICK: #joystick movement JOYSTICK
-                    if event.joy == 0:
+                    if event.joy == ROV_CONTROLLER_ID:
                         self.rov_joysticks[event.axis] = self.normalize_joysticks(event)
                         self.rov_joysticks[6] = self.rov_joysticks[4] + self.rov_joysticks[5]
-                    elif event.joy == 1:
+                    elif event.joy == MANIPULATOR_CONTROLLER_ID:
                         self.mani_joysticks[event.axis] = self.normalize_joysticks(event)
                         self.mani_joysticks[6] = self.mani_joysticks[4] + self.mani_joysticks[5]
 
                     if debug_all:
                         deadzone = 0.07 #To prevent sensitive output in console
-                        if event.joy == 0:
+                        if event.joy == ROV_CONTROLLER_ID:
                             if event.axis == 0:
                                 if event.value > deadzone:
                                     print(f"ROV til HØYRE med {self.normalize_joysticks(event)}% kraft")
@@ -312,7 +312,7 @@ class Controller:
                                     print(f"ROV NEDOVER med {self.normalize_joysticks(event)}% kraft")
                             elif event.axis == 5:
                                     print(f"ROV OPPOVER med {self.normalize_joysticks(event)}% kraft")
-                        elif event.joy == 1:
+                        elif event.joy == MANIPULATOR_CONTROLLER_ID:
                                 if event.axis == 0:
                                     if event.value > deadzone:
                                         print(f"MANIPULATOR til HØYRE med {self.normalize_joysticks(event)}% kraft")
