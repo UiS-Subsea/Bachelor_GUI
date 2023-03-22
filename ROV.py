@@ -5,7 +5,7 @@ import time
 import json
 import threading
 from Kommunikasjon.network_handler import Network
-from Kommunikasjon.Thread_info import Threadwatcher
+from Thread_info import Threadwatcher
 
 class Rov_status:
     def __init__(self, queue, network_handler, gui_pipe, t_watch: Threadwatcher) -> None:
