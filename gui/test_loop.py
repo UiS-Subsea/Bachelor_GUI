@@ -31,6 +31,7 @@ class Window(QMainWindow):
         self.queue: multiprocessing.Queue = (
             queue  # queue is a queue that only receives data
         )
+        
         self.pipe_conn_only_rcv = pipe_conn_only_rcv  # pipe_conn_only_rcv is a pipe connection that only receives data
 
         # Threadwatcher
@@ -43,6 +44,7 @@ class Window(QMainWindow):
         self.receive = threading.Thread(
             target=self.receive_sensordata, daemon=True, args=(self.pipe_conn_only_rcv,)
         )
+        
         self.receive.start()
 
         # Buttons
@@ -57,16 +59,20 @@ class Window(QMainWindow):
 
     def receive_sensordata(
         self, conn
-    ):  # conn is a pipe connection that only receives data
+    ): 
+        # conn is a pipe connection that only receives data
         self.communicate = (
             Communicate()
         )  # Create a new instance of the class Communicate
+        
         self.communicate.data_signal.connect(
             self.decide_gui_update
         )  # Connect the signal to the function that decides what to do with the sensordata
+        
         while self.t_watch.should_run(
             self.id
         ):  # While the threadwatcher says that the thread should run
+            
             print("Waiting for sensordata")
             data_is_ready = conn.recv()  # Wait for sensordata
             # if self.regulering_status_wait_counter > 0: #Wait for regulering_status to be sent
@@ -75,6 +81,7 @@ class Window(QMainWindow):
                 sensordata: dict = (
                     conn.recv()
                 )  # "sensordata" is a dictionary with all the sensordata
+                
                 self.communicate.data_signal.emit(
                     sensordata
                 )  # Emit sensordata to the gui
@@ -110,6 +117,7 @@ class Window(QMainWindow):
             self.label_effekt_manipulator,
             self.label_effekt_elektronikk,
         ]
+        
         color_list = ["rgb(30, 33, 38);"] * 3
         if sensordata[0] > 1000:
             color_list[0] = "#ff0000"
@@ -165,6 +173,7 @@ class Window(QMainWindow):
             raise TypeError(
                 f"Lekkasje sensor 1 has wrong type. {type(lekkasje_liste[0]) = }, {lekkasje_liste[0]} "
             )
+        
         average_temp = round(sum((sensordata[3:6])) / 3)
         sensordata.append(average_temp)
 
@@ -173,29 +182,35 @@ class Window(QMainWindow):
         if (
             sensordata[3] > 61
         ):  # Høyeste temp sett ved kjøring i bassenget på skolen | Hovedkort
+            
             temp_label_list[i].setStyleSheet(
                 "background-color: #ff0000; border-radius: 5px; border: 1px solid rgb(30, 30, 30);"
             )
+            
         else:
             temp_label_list[i].setStyleSheet(
                 "background-color: rgb(30, 33, 38); border-radius: 5px; border: 1px solid rgb(30, 30, 30);"
             )
+            
         if (
             sensordata[4] > 51
         ):  # Høyeste temp sett ved kjøring i bassenget på skolen | Kraftkort
             temp_label_list[i].setStyleSheet(
                 "background-color: #ff0000; border-radius: 5px; border: 1px solid rgb(30, 30, 30);"
             )
+            
         else:
             temp_label_list[i].setStyleSheet(
                 "background-color: rgb(30, 33, 38); border-radius: 5px; border: 1px solid rgb(30, 30, 30);"
             )
+            
         if (
             sensordata[5] > 46
         ):  # Høyeste temp sett ved kjøring i bassenget på skolen | Sensorkort
             temp_label_list[i].setStyleSheet(
                 "background-color: #ff0000; border-radius: 5px; border: 1px solid rgb(30, 30, 30);"
             )
+            
         else:
             temp_label_list[i].setStyleSheet(
                 "background-color: rgb(30, 33, 38); border-radius: 5px; border: 1px solid rgb(30, 30, 30);"
@@ -205,10 +220,12 @@ class Window(QMainWindow):
         for lekkasje_nr, is_lekkasje in enumerate(
             lekkasje_liste
         ):  # For each sensor in the list of leaks
+            
             if not is_lekkasje:  # If the sensor doesn't have a leak
                 id_with_lekkasje.append(
                     lekkasje_nr + 1
                 )  # Add the sensor's ID to id_with_lekkasje
+                
         if (
             not self.lekkasje_varsel_is_running and len(id_with_lekkasje) > 0
         ):  # If there is no leak alert running and there is a sensor with a leak
