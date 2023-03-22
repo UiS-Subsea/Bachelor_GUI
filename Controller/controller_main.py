@@ -54,27 +54,6 @@ class Rov_state:
         mani_buttons = self.data.get("mani_buttons")
         print(f"KNAPPER {rov_buttons} : {mani_buttons}")
 
-    def craft_packet(self, t_watch: Threadwatcher, id):
-        while t_watch.should_run(id):
-            userinput = input("Packet: [parameter_id of type int, value of type float or int]: ")
-            var = []
-            try:
-                var = json.loads(userinput)
-                if not isinstance(var[0], int):
-                    print("Error: parameter id was not an int! try again.")
-                    continue
-                # if not isinstance(var[1], int) or not isinstance(var[1], float):
-                #     print("Error: parameter id was not an int or float! try again.")
-                #     continue
-                if len(var) != 2:
-                    print("Error: list was not length 2")
-                    continue
-            except Exception as e:
-                print(f"Error when parsing input\n {e}")
-                continue
-
-            self.packets_to_send.append([201, var])
-
     def get_from_queue(self):
         """Takes data from the queue and sends it to the correct handler"""
         id = -1
@@ -104,21 +83,6 @@ def run(t_watch: Threadwatcher, id: int, queue_for_rov: multiprocessing.Queue):
 
 
 if __name__ == "__main__":
-
-    # queue = multiprocessing.Queue()
-    # t_watch = Threadwatcher()
-    # id = t_watch.add_thread()
-    # controller_process = Process(target=controller.run, args=(queue, t_watch, id, True, True), daemon=True)
-    # controller_process.start()
-
-    # #PREVENTS SCRIPT TO QUIT
-    # input("Press Enter to exit...")
-    # controller_process.terminate()
-
-    # c = controller.Controller(queue, t_watch, id)
-    # c.get_events_loop(t_watch, id,debug=True, debug_all=True)
-    # rov_state = Rov_state(queue, t_watch)
-    # rov_state.build_rov_packet()
 
     try:
         run_get_controllerdata = True
