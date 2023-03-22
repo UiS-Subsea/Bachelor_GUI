@@ -43,9 +43,9 @@ class Controller:
 
         self.mani_joysticks = [0]*7
         # tuple for dpad controll. Goes from -1 to 1 on both first and second variable
-        self.rov_dpad = (0, 0)
+        # self.rov_dpad = (0, 0)
 
-        self.mani_dpad = (0, 0)
+        # self.mani_dpad = (0, 0)
         # This is the max value that the controller gives out. Used for normalizing the axis to 1.
         self.controller_stop_point = 1.000030518509476
         # Decides which camera should be moved.
@@ -69,12 +69,11 @@ class Controller:
     # Creates the default data packet that is sent to main
     def pack_controller_values(self):
         values = {"rov_joysticks": self.rov_joysticks, "mani_joysticks": self.mani_joysticks,
-                "rov_buttons": self.rov_buttons, "mani_buttons": self.mani_buttons, 
-                "rov_dpad": self.rov_dpad, "mani_dpad": self.mani_dpad,
-                "camera_to_control": self.camera_motor,
-                "camera_movement": self.rov_joysticks[3] #Kan endres til annen akse!
-                , "time_between_updates": self.duration}
-        # print(values)
+                "rov_buttons": self.rov_buttons, "mani_buttons": self.mani_buttons}
+                # "camera_to_control": self.camera_motor,
+                # "camera_movement": self.rov_joysticks[3] #Kan endres til annen akse!
+                # , "time_between_updates": self.duration}
+        print(values)
         return values
     # Says that button is no longer held in
     def reset_button(self, event) -> None:
@@ -163,7 +162,7 @@ class Controller:
         while t_watch.should_run(id):
             if pygame.joystick.get_count() < 2:
                 self.wait_for_controller()
-            self.duration = self.clock.tick(20)
+            self.duration = self.clock.tick(0.2)
             # print(duration)
             for event in pygame.event.get():
                 # print("entered event check")

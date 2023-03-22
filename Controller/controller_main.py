@@ -27,17 +27,9 @@ class Rov_state:
         self.queue: multiprocessing.Queue = queue
 
 
-    def build_manipulator_packet(self):
-        data = [0,0,0,0,0,0,0,0]
-        data[0] = self.data["mani_joysticks"][MANIPULATOR_IN_OUT]
-        data[1] = self.data["mani_joysticks"][MANIPULATOR_ROTATION]
-        data[2] = self.data["mani_joysticks"][MANIPULATOR_TILT]
-        data[3] = self.data["mani_joysticks"][MANIPULATOR_GRAB_RELEASE]
-        self.packets_to_send.append([41, data])
-        print(self.packets_to_send)
-
-    #KAN OGSÅ GJØRES SLIK VED Å LEGGE TIL I LISTEN:
     def build_rov_packet(self):
+        if self.data == {}:
+            return
         data = [0,0,0,0,0,0,0,0]
         data[0] = self.data["rov_joysticks"][X_AXIS]
         data[1] = self.data["rov_joysticks"][Y_AXIS]
@@ -46,6 +38,21 @@ class Rov_state:
         self.packets_to_send.append([40, data])
         print(self.packets_to_send)
 
+    def build_manipulator_packet(self):
+        if self.data == {}:
+            return
+        data = [0,0,0,0,0,0,0,0]
+        data[0] = self.data["mani_joysticks"][MANIPULATOR_IN_OUT]
+        data[1] = self.data["mani_joysticks"][MANIPULATOR_ROTATION]
+        data[2] = self.data["mani_joysticks"][MANIPULATOR_TILT]
+        data[3] = self.data["mani_joysticks"][MANIPULATOR_GRAB_RELEASE]
+        self.packets_to_send.append([41, data])
+        print(self.packets_to_send)
+
+    def button_handling(self):
+        rov_buttons = self.data.get("rov_buttons")
+        mani_buttons = self.data.get("mani_buttons")
+        print(f"KNAPPER {rov_buttons} : {mani_buttons}")
 
     def craft_packet(self, t_watch: Threadwatcher, id):
         while t_watch.should_run(id):
@@ -81,6 +88,7 @@ class Rov_state:
             self.data = packet
     
     def check_controls(self):
+        self.button_handling()
         self.build_rov_packet()
         self.build_manipulator_packet()
 
@@ -118,12 +126,12 @@ if __name__ == "__main__":
         t_watch = Threadwatcher()
 
         if run_get_controllerdata:
-                id = t_watch.add_thread()
-                # takes in controller data and sends it into child_conn
-                controller_process = Process(target=controller.run, args=(queue_for_rov, t_watch, id, True, True), daemon=True)
-                controller_process.start()
-                input("Press Enter to exit...")
-                controller_process.terminate()
+            id = t_watch.add_thread()
+            # takes in controller data and sends it into child_conn
+            controller_process = Process(target=controller.run, args=(queue_for_rov, t_watch, id, True, False), daemon=True)
+            controller_process.start()
+            input("Press Enter to exit...")
+            # controller_process.terminate()
         
         print("starting send to rov")
         id = t_watch.add_thread()
