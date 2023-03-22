@@ -98,7 +98,7 @@ class Rov_state:
             self.data = packet
 
     def check_controls(self):
-        self.button_handling()
+        # self.button_handling()
         self.build_rov_packet()
         self.build_manipulator_packet()
 
@@ -143,6 +143,7 @@ if __name__ == "__main__":
         run_get_controllerdata = True
         queue_for_rov = multiprocessing.Queue()
         t_watch = Threadwatcher()
+        debug_all = False #Sett til True om du vil se input fra controllers
 
         network = False
         if not run_network:
@@ -162,10 +163,14 @@ if __name__ == "__main__":
         if run_get_controllerdata:
             id = t_watch.add_thread()
             # takes in controller data and sends it into child_conn
+<<<<<<< HEAD
             controller_process = Process(target=controller.run, args=(
                 queue_for_rov, t_watch, id, True, False), daemon=True)
+=======
+            controller_process = Process(target=controller.run, args=(queue_for_rov, t_watch, id, True, debug_all), daemon=True)
+>>>>>>> 8b0a37bdeaa5ec635c2b64289018a7e074b85793
             controller_process.start()
-            input("Press Enter to exit...")
+            input("Press Enter to start sending!")
             # controller_process.terminate()
 
         print("starting send to rov")
@@ -175,5 +180,10 @@ if __name__ == "__main__":
         main_driver_loop.start()
 
     except KeyboardInterrupt:
+<<<<<<< HEAD
         t_watch.stop_all_threads()
         print("stopped all threads")
+=======
+            t_watch.stop_all_threads()
+            print("stopped all threads")
+>>>>>>> 8b0a37bdeaa5ec635c2b64289018a7e074b85793
