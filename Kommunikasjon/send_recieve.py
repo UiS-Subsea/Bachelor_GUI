@@ -5,7 +5,10 @@ import json
 from Thread_info import Threadwatcher
 import multiprocessing
 import time
+from packet_info import Logger
+
 #from logger import Logger
+# ID_DIR 40, 41
 ID_DIRECTIONCOMMAND_PARAMETERS = 71
 ID_DIRECTIONCOMMAND = 70
 ID_camera_tilt_upwards = 200
@@ -14,6 +17,7 @@ ID_camera_tilt_downwards = 201
 # takes a python object and prepares it for sending over network
 
 # HUSK Å LEGGE TIL COMMENTS!
+
 
 def network_format(data) -> bytes:
     """Formats the data for sending to network handler"""
@@ -25,18 +29,37 @@ class Rov_state:
     def __init__(self, queue, network_handler, gui_pipe, t_watch: Threadwatcher) -> None:
         print("rov state thread")
         self.t_watch: Threadwatcher = t_watch
-        self.data:dict = {}
+        self.data: dict = {}
+        self.logger = Logger()
         self.queue: multiprocessing.Queue = queue
         # Pipe to send sensordata back to the gui
         self.gui_pipe = gui_pipe
+        # Prevents the tilt toggle from toggling back again immediately if we hold the button down
+        self.camera_toggle_wait_counter: int = 0
+        # Tilt in degrees of the camera servo motors.
         self.camera_tilt: float[list] = [0, 0]
+        # Turn the ability to change camera tilt, when camera processing is happening on the camera.
+        self.camera_tilt_allowed = [True, True]  # [cam 0, cam 1]
+        # Toggles between controlling rotation or camera tilt on right joystick
+        self.camera_tilt_control_false = False
         # Network handler that sends data to rov (and recieves)
         self.network_handler: Network = network_handler
+
+        self.camera_is_on = [True, True]
+        self.camera_command: list[list[int, dict]] = None
+        self.regulator_active: list[bool] = [True, True, True]
+        self.joystick_moves_camera = False
+        self.camera_mode = [0, 1, 2, 3, 4, 5]
+        self.active_camera = 0
+        self_hud_camera_status = False
+
         self.packets_to_send = []
 
     def sending_startup_ids(self):
-        self.packets_to_send.append([200, {"camera_tilt_upwards": self.camera_tilt[0]}])
-        self.packets_to_send.append([201, {"camera_tilt_downwards": self.camera_tilt[1]}])
+        self.packets_to_send.append(
+            [200, {"camera_tilt_upwards": self.camera_tilt[0]}])
+        self.packets_to_send.append(
+            [201, {"camera_tilt_downwards": self.camera_tilt[1]}])
 
     def setting_up_canbus_ids(self):
         self.canbus_id = {
@@ -53,9 +76,9 @@ class Rov_state:
                 if data == b"" or data is None:
                     continue
                 else:
-                    #print(data)
-                # if data is None:
-                #    continue
+                    # print(data)
+                    # if data is None:
+                    #    continue
                     decoded, incomplete_packet = Rov_state.decode_packets(
                         data, incomplete_packet)
                 if decoded == []:
@@ -64,14 +87,13 @@ class Rov_state:
                     # print(message)
                     self.handle_data_from_rov(message)
 
-                    # potentially for the future: send_to_gui(Rov_state, message)
+                    # potentially for the future to get information to the GUI : send_to_gui(Rov_state, message)
 
             except json.JSONDecodeError as e:
                 print(f"{data = }, {e = }")
                 pass
 
     # Decodes the tcp packet/s recieved from the rov
-    #
 
     def send_startup_commands(self):
         self.packets_to_send.append(
@@ -81,12 +103,13 @@ class Rov_state:
         self.packets_to_send.append([64,  []])
         self.packets_to_send.append([96,  []])
 
+
     def decode_packets(tcp_data: bytes, end_not_complete_packet="") -> list:
         end_not_complete_packet = ""
         try:
             json_strings = end_not_complete_packet + \
                 bytes.decode(tcp_data, "utf-8")
-            #print(json_strings)
+            # print(json_strings)
             # pakken er ikke hel. Dette skal aldri skje sÃ¥ pakken burde bli forkasta
             if not json_strings.startswith('"*"'):
                 # print(f"Packet did not start with '*' something is wrong. {end_not_complete_packet}")
@@ -125,7 +148,7 @@ class Rov_state:
 
     def handle_data_from_rov(self, message: dict):
         if run_network:
-            # self.logger.sensor_logger.info(message)
+            self.logger.sensor_logger.info(message)
             print(f"{message =}")
         message_name = ""
         if not isinstance(message, dict):
@@ -135,9 +158,11 @@ class Rov_state:
             except Exception as e:
                 print(e)
                 return
-        if "ERROR" in message or "info" in message:
+        if "Error" in message or "info" in message:  # den og
             print(message)
             return
+        if "Alarm" in message:
+            print(message)      # få meldingen inn i GUI'en
         try:
             message_name = list(message.keys())[0]
         except Exception as e:
@@ -181,18 +206,115 @@ class Rov_state:
 
         copied_packets = self.packets_to_send
         self.packets_to_send = []
-        #[print(copied_packets)
+        # [print(copied_packets)
         for packet in copied_packets:
-            if packet[0] != ID_DIRECTIONCOMMAND:
+            if packet[0] == ID_DIRECTIONCOMMAND or packet[0] == "*heartbeat*":
                 pass
-            elif packet[0] != "*heartbeat*":
-                pass 
                 print(f"{packet = }")
-        #if run_network:
-            #self.logger.sensor_logger.info(copied_packets)
+        if run_network:
+            self.logger.sensor_logger.info(copied_packets)
         if self.network_handler is None or not copied_packets:
             return
         self.network_handler.send(network_format(copied_packets))
+
+    def reset_5V_fuse(self, fuse_number):
+        """reset_5V_fuse creates and adds
+        packets for resetting a fuse on the ROV"""
+        byte0 = 0b10000000 | (fuse_number << 1)
+        fuse_reset_signal = [byte0]
+
+        for item in self.regulator_active:
+            fuse_reset_signal.append(item)
+        
+        self.packets_to_send.append(97, fuse_reset_signal)
+
+    def reset_12V_thruster_fuse(self, fuse_number):
+        """reset_fuse_on_power_supply creates and adds
+        packets for resetting a fuse on the ROV"""
+        byte0 = 0b10000000 | (fuse_number << 1)
+        fuse_reset_signal = [byte0]
+
+        for item in self.regulator_active:
+            fuse_reset_signal.append(item)
+
+        self.packets_to_send.append([98, fuse_reset_signal])
+
+    def reset_12V_manipulator_fuse(self, fuse_number):
+        """reset_12V_manipulator_fuse creates and adds
+        packets for resetting a fuse on the ROV"""
+        byte0 = 0b10000000 | (fuse_number << 1)
+        fuse_reset_signal = [byte0]
+
+        for item in self.regulator_active:
+            fuse_reset_signal.append(item)
+        
+        self.packets_to_send.append([99, fuse_reset_signal])
+
+
+    # Test1
+    def set_zero_point_depth(self, sensordata=None):
+        print("1")
+        zero_point_packet = bytes([66, 0b10000000])
+        print("2")
+        print(zero_point_packet)
+        self.packets_to_send.append([zero_point_packet, []])
+        print("3")
+        print(self.packets_to_send)
+
+    # Test2 
+    def set_zero_point_depth2(self, sensordata=None):
+        ID_RESET_DEPTH = 66
+        BYTE0_INIT_FLAG = 0b00000010
+        print(BYTE0_INIT_FLAG)
+        self.packets_to_send.append([ID_RESET_DEPTH, [BYTE0_INIT_FLAG]])
+        print(self.packets_to_send)
+        print([ID_RESET_DEPTH, [BYTE0_INIT_FLAG]])
+
+    # Test 3
+    def set_zero_point_depth3(self, sensordata = None):
+        zero_point_packet = bytes([66, 0b10000000])
+        self.packets_to_send.append([zero_point_packet, []])
+
+
+    def update_light_value(self, light_intensity_forward: int, ligth_forward_is_on: bool, light_intensity_down: int, ligth_down_is_on: bool):
+        self.light_intensity_forward = light_intensity_forward
+        self.ligth_forward_is_on = ligth_forward_is_on
+
+        self.light_intensity_down = light_intensity_down
+        self.ligth_down_is_on = ligth_down_is_on
+
+        ligth_down = self.light_intensity_down * self.ligth_down_is_on
+        ligth_forward = self.light_intensity_forward * self.ligth_forward_is_on
+        # print(f"Lys oppdatert. verdien vi sender er {[142, ligth_forward, ligth_down]}")
+        self.packets_to_send.append([ID_LIGHTS, [ligth_forward, ligth_down]])
+        #send id også light_dim_value
+
+
+    # def reset_12V_manipulator_fuse(self, fuse_number):
+    #     """reset_12V_manipulator_fuse creates and adds
+    #     packets for resetting a fuse on the ROV"""
+    #     byte0 = 0b01000000 | (fuse_number << 1)
+    #     fuse_reset_signal = [byte0]
+    #     for item in self.regulator_active:
+    #         fuse_reset_signal.append(item)
+    #     self.packets_to_send.append([139, fuse_reset_signal])
+
+    # def reset_12V_manipulator_fuse(self):
+    #     """reset_12V_manipulator_fuse creates and adds
+    #     packets for resetting a fuse on the ROV"""
+    # #      fuset_reset_signal = [True] + [False] * 7 
+    # #      self.packets_to_send.append([99, fuse_reset_signal])
+    #     fuse_reset_signal = [False] * 8
+    #     fuse_reset_signal[0] = True
+
+        
+
+    # def reset_12V_thruster_fuse(self, fuse_number):
+    #     """reset_12V_thruster_fuse creates and adds
+    #     packets for resetting a fuse on the ROV"""
+    #     byte,
+    # # def reset_12V_thruster_fuse(self, fuse_number):
+    #     # Resets 12V thruster fuse using 98 id
 
 
 def run(network_handler: Network, t_watch: Threadwatcher, id: int, queue_for_rov: multiprocessing.Queue, gui_pipe):
@@ -206,7 +328,8 @@ def run(network_handler: Network, t_watch: Threadwatcher, id: int, queue_for_rov
             network_handler, t_watch, id), daemon=True).start()
     if run_craft_pakcet:
         id = t_watch.add_thread()
-        threading.Thread(target=rov_state.craft_packet, args=(t_watch, id), daemon=True).start()
+        threading.Thread(target=rov_state.craft_packet,
+                         args=(t_watch, id), daemon=True).start()
     while t_watch.should_run(id):
         rov_state.send_packets()
         rov_state.data = {}
@@ -245,3 +368,8 @@ if __name__ == "__main__":
     except KeyboardInterrupt:
         t_watch.stop_all_threads()
         print("stopped all threads")
+
+
+# Pakke Oppsett
+# [id, [f, o, n]] # Pakke for styring, f-frem, o-opp, n-ned
+# [50, [20]] <-- Hvor mye kraft manipulatoren skal bruke
