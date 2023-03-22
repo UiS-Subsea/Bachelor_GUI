@@ -18,7 +18,6 @@ class Window(QMainWindow):
         t_watch: Threadwatcher,
         id: int,
         parent=None,
-        
     ):
 
         super().__init__(parent)
@@ -30,8 +29,9 @@ class Window(QMainWindow):
 
         # Queue and pipe
         self.queue: multiprocessing.Queue = (
-            queue  # queue is a queue that only receives data
+            queue  
         )
+        
         self.pipe_conn_only_rcv = pipe_conn_only_rcv  # pipe_conn_only_rcv is a pipe connection that only receives data
 
         # Threadwatcher
@@ -40,14 +40,14 @@ class Window(QMainWindow):
 
         self.gir_verdier = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
-        # fix
+
         self.receive = threading.Thread(
             target=self.receive_sensordata, daemon=True, args=(self.pipe_conn_only_rcv,)
         )
         self.receive.start()
         
 
-        self.w=None#SecondWindow()
+        self.w=None#SecondWindow() #
 
 
         # Buttons
