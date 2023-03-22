@@ -1,3 +1,4 @@
+
 #Generere Testdata
 def create_test_sensordata(delta, old_sensordata=None):
     #TODO: don't use this later its a test function
@@ -36,8 +37,14 @@ def kalibrerIMU(window):
     print("Kalibrer IMU")
 
 #Dybde
-def nullpunktDybde(window):
-    print("Nullpunkt Dybde")
+def nullpunktDybde(window, sensordata=None):
+    listen = []
+    ID_RESET_DEPTH = 66
+    BYTE0_INIT_FLAG = 0b00000010
+    print(BYTE0_INIT_FLAG)
+    window.packets_to_send.append([ID_RESET_DEPTH, [BYTE0_INIT_FLAG]])
+    print(window.packets_to_send)
+    print([ID_RESET_DEPTH, [BYTE0_INIT_FLAG]])
 
 #Vinkler
 def nullpunktVinkler(window):

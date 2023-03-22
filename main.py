@@ -23,11 +23,13 @@ Z_AXIS = 6
 ROTATION_AXIS = 2
 
 class Rov_state:
-    def __init__(self, queue, t_watch: Threadwatcher) -> None:
+    def __init__(self, queue,gui_pipe, t_watch: Threadwatcher) -> None:
         self.t_watch: Threadwatcher = t_watch
         self.data:dict = {}
         self.packets_to_send = []
         self.queue: multiprocessing.Queue = queue
+        self.gui_pipe = gui_pipe # pipe to gui
+        
 
 
     def build_rov_packet(self):

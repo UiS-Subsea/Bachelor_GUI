@@ -24,14 +24,13 @@ class Window(QMainWindow):
 
         regulering_status_wait_counter = 0
         self.lekkasje_varsel_is_running = False
-
+        self.ID_RESET_DEPTH = 66
         # Queue and pipe
         self.queue: multiprocessing.Queue = (
             queue  
         )
         
         self.pipe_conn_only_rcv = pipe_conn_only_rcv  # pipe_conn_only_rcv is a pipe connection that only receives data
-
         # Threadwatcher
         self.t_watch: Threadwatcher = t_watch  # t_watch is a threadwatcher object
         self.id = id  # id is an id that is used to identify the thread
@@ -56,7 +55,7 @@ class Window(QMainWindow):
         else:
             print("window already open")
 
-    def connectFunctions(self):
+    def connectFunctions(self,ID_RESET_DEPTH=66):
         #window2
         self.showNewWindowButton.clicked.connect(self.show_new_window)
     
