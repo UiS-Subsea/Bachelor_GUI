@@ -1,15 +1,12 @@
 import multiprocessing
 import subprocess
 from PyQt5 import QtCore, QtGui, QtWidgets, Qt, uic
-from PyQt5.QtWidgets import QMainWindow, QWidget, QCheckBox, QLabel
+from PyQt5.QtWidgets import QMainWindow, QWidget, QCheckBox, QLabel, QMessageBox
 import sys
 import threading
-
-# import numpy as np
+from . import guiFunctions as f
 from Thread_info import Threadwatcher
 import time
-from PyQt5.QtWidgets import QLabel
-
 
 class Window(QMainWindow):
     def __init__(
@@ -20,42 +17,67 @@ class Window(QMainWindow):
         id: int,
         parent=None,
     ):
+
         super().__init__(parent)
         uic.loadUi("gui/SubseaTest.ui", self)
         self.connectFunctions()
 
         regulering_status_wait_counter = 0
         self.lekkasje_varsel_is_running = False
-
+        self.ID_RESET_DEPTH = 66
         # Queue and pipe
         self.queue: multiprocessing.Queue = (
-            queue  # queue is a queue that only receives data
+            queue  
         )
-        # pipe_conn_only_rcv is a pipe connection that only receives data
-        self.pipe_conn_only_rcv = pipe_conn_only_rcv
-
+        
+        self.pipe_conn_only_rcv = pipe_conn_only_rcv  # pipe_conn_only_rcv is a pipe connection that only receives data
         # Threadwatcher
         self.t_watch: Threadwatcher = t_watch  # t_watch is a threadwatcher object
         self.id = id  # id is an id that is used to identify the thread
 
         self.gir_verdier = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
-        # fix
+
         self.receive = threading.Thread(
             target=self.receive_sensordata, daemon=True, args=(self.pipe_conn_only_rcv,)
         )
         self.receive.start()
+        
+
+        self.w=None#SecondWindow() #
+
 
         # Buttons
+    def show_new_window(self, checked):
+        if self.w is None:
+            self.w = SecondWindow(self)
+            self.w.show()
+        else:
+            print("window already open")
 
-    def connectFunctions(self):
-        self.btn1.clicked.connect(self.buttonClick)
-
-    def buttonClick(self):
-        print("_____________________________________________")
-
-        # fix communicate
-
+    def connectFunctions(self,ID_RESET_DEPTH=66):
+        #window2
+        self.showNewWindowButton.clicked.connect(self.show_new_window)
+    
+        #Kjøremodus
+        self.btnManuell.clicked.connect(lambda: f.manuellKjoring(self))
+        self.btnAutonom.clicked.connect(lambda: f.autonomDocking(self))
+        self.btnFrogCount.clicked.connect(lambda: f.frogCount(self))
+        
+        #Sikringer
+        self.btnReset5V.clicked.connect(lambda: f.reset5V(self))
+        self.btnResetThruster.clicked.connect(lambda: f.resetThruster(self))
+        self.btnResetManipulator.clicked.connect(lambda :f.resetManipulator(self))
+        
+        #IMU
+        self.btnKalibrerIMU.clicked.connect(lambda: f.kalibrerIMU(self))
+        
+        #Dybde
+        self.btnNullpunktDybde.clicked.connect(lambda: f.nullpunktDybde(self))
+        
+        #Vinkler
+        self.btnNullpunktVinkler.clicked.connect(lambda: f.nullpunktVinkler(self))
+        
     def receive_sensordata(
         self, conn
     ):  # conn is a pipe connection that only receives data
@@ -107,9 +129,9 @@ class Window(QMainWindow):
 
     def gui_watt_update(self, sensordata):
         effekt_liste: list[QLabel] = [
-            self.label_effekt_thrustere,
-            self.label_effekt_manipulator,
-            self.label_effekt_elektronikk,
+            self.labelEffektThrustere,
+            self.labelEffektManipulator,
+            self.labelEffektElektronikk,
         ]
         color_list = ["rgb(30, 33, 38);"] * 3
         if sensordata[0] > 1000:
@@ -140,22 +162,14 @@ class Window(QMainWindow):
                 sensordata[i] = 100  # Set the value to 100
 
         # Update the labels
-        self.update_round_percent_visualizer(
-            sensordata[0], self.thrust_label_1)
-        self.update_round_percent_visualizer(
-            sensordata[1], self.thrust_label_2)
-        self.update_round_percent_visualizer(
-            sensordata[2], self.thrust_label_3)
-        self.update_round_percent_visualizer(
-            sensordata[3], self.thrust_label_4)
-        self.update_round_percent_visualizer(
-            sensordata[4], self.thrust_label_5)
-        self.update_round_percent_visualizer(
-            sensordata[5], self.thrust_label_6)
-        self.update_round_percent_visualizer(
-            sensordata[6], self.thrust_label_7)
-        self.update_round_percent_visualizer(
-            sensordata[7], self.thrust_label_8)
+        self.update_round_percent_visualizer(sensordata[0], self.thrust_label_1)
+        self.update_round_percent_visualizer(sensordata[1], self.thrust_label_2)
+        self.update_round_percent_visualizer(sensordata[2], self.thrust_label_3)
+        self.update_round_percent_visualizer(sensordata[3], self.thrust_label_4)
+        self.update_round_percent_visualizer(sensordata[4], self.thrust_label_5)
+        self.update_round_percent_visualizer(sensordata[5], self.thrust_label_6)
+        self.update_round_percent_visualizer(sensordata[6], self.thrust_label_7)
+        self.update_round_percent_visualizer(sensordata[7], self.thrust_label_8)
 
     def gui_lekk_temp_update(self, sensordata):
         # self.check_data_types(sensordata["lekk_temp"], (int, float, float, float))
@@ -163,14 +177,13 @@ class Window(QMainWindow):
         print(f"{sensordata =}")
 
         temp_label_list: list[QLabel] = [
-            self.label_temp_ROV_hovedkort,
-            self.label_temp_ROV_kraftkort,
-            self.label_temp_ROV_sensorkort,
-            self.label_gjsnitt_temp_ROV,
+            self.labelTempHovedkort,
+            self.labelTempKraftkort,
+            self.labelTempSensorkort,
+            self.labelGjSnittROV,
         ]
 
-        lekkasje_liste: list[bool] = [
-            sensordata[0], sensordata[1], sensordata[2]]
+        lekkasje_liste: list[bool] = [sensordata[0], sensordata[1], sensordata[2]]
         if not isinstance(lekkasje_liste[0], bool):
             raise TypeError(
                 f"Lekkasje sensor 1 has wrong type. {type(lekkasje_liste[0]) = }, {lekkasje_liste[0]} "
@@ -228,7 +241,13 @@ class Window(QMainWindow):
             threading.Thread(
                 target=lambda: self.lekkasje_varsel(id_with_lekkasje)
             ).start()  # Start the leak alert in a separate thread
-
+    
+    def lekkasje_varsel(self, sensor_nr_liste):
+        self.label_lekkasje_varsel.setMaximumSize(16777215,150)
+        self.label_lekkasje_varsel.setMinimumSize(16777215,150)
+        self.label_lekkasje_varsel.raise_()
+        
+        
     def gui_manipulator_update(self, sensordata):
         self.update_round_percent_visualizer(0, self.label_percentage_mani_1)
         self.update_round_percent_visualizer(0, self.label_percentage_mani_2)
@@ -249,8 +268,6 @@ class Window(QMainWindow):
 
     # TODO: fiks lekkasje varsel seinare
 
-    def button_test(self):
-        print("Funksjonen funker")
 
 
 def run(conn, queue_for_rov, t_watch: Threadwatcher, id):
@@ -260,14 +277,31 @@ def run(conn, queue_for_rov, t_watch: Threadwatcher, id):
         sys.argv
     )  # Create an instance of QtWidgets.QApplication
 
-    # Create an instance of our class
-    win = Window(conn, queue_for_rov, t_watch, id)
-
+    win = Window(conn, queue_for_rov, t_watch, id)  # Create an instance of our class
     GLOBAL_STATE = False
     win.show()  # Show the form
 
-    sys.exit(app.exec())
+    app.exec()
+    #sys.exit(app.exec())
 
+class SecondWindow(QWidget):
+    def __init__(self,main_window,parent=None,):
+        super().__init__()
+        uic.loadUi("gui/window2.ui", self)
+        self.label = QLabel("Camera Window")
+        self.main_window = main_window
+        self.connectFunctions()
+
+    def closeEvent(self, event):
+        self.main_window.w = None
+        event.accept()
+    
+    def connectFunctions(self):
+        #Kamera
+        self.btnTiltUp.clicked.connect(lambda: f.tiltUp(self))
+        self.btnTiltDown.clicked.connect(lambda: f.tiltDown(self))
+        self.btnTakePic.clicked.connect(lambda: f.takePic(self))
+        self.btnSavePic.clicked.connect(lambda: f.savePic(self))
 
 class Communicate(QtCore.QObject):
     data_signal = QtCore.pyqtSignal(dict)
@@ -275,3 +309,4 @@ class Communicate(QtCore.QObject):
 
 if __name__ == "__main__":
     run()
+    

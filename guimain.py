@@ -30,8 +30,7 @@ class Rov_state:
         self.queue = multiprocessing.Queue = queue # queue to rov
         self.gui_pipe = gui_pipe # pipe to gui
         self.t_watch : Threadwatcher = t_watch # threadwatcher to control threads
-        self.sensordata = None
-        self.time_since_packet_update = []
+        self.sensordata = None #
         self.send_sensordata_to_gui()
         self.main_loop
         
