@@ -302,7 +302,7 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
 
 </string>
   </property>
-  <widget class="QPushButton" name="btn1">
+  <widget class="QPushButton" name="btnManuell">
    <property name="enabled">
     <bool>true</bool>
    </property>
@@ -356,7 +356,7 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
     <bool>false</bool>
    </property>
   </widget>
-  <widget class="QPushButton" name="btn_autonom_docking">
+  <widget class="QPushButton" name="btnAutonom">
    <property name="geometry">
     <rect>
      <x>10</x>
@@ -392,7 +392,7 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
     <string>Autonom docking</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="start_transect">
+  <widget class="QPushButton" name="btnFrogCount">
    <property name="geometry">
     <rect>
      <x>10</x>
@@ -425,14 +425,14 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
     <cursorShape>PointingHandCursor</cursorShape>
    </property>
    <property name="text">
-    <string>Start transect</string>
+    <string>Start Frog Count</string>
    </property>
   </widget>
-  <widget class="QLabel" name="title_effektforbruk">
+  <widget class="QLabel" name="titleEffekt">
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>220</y>
+     <y>360</y>
      <width>191</width>
      <height>18</height>
     </rect>
@@ -468,7 +468,7 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>240</y>
+     <y>380</y>
      <width>113</width>
      <height>42</height>
     </rect>
@@ -507,7 +507,7 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>280</y>
+     <y>420</y>
      <width>113</width>
      <height>42</height>
     </rect>
@@ -546,7 +546,7 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>320</y>
+     <y>460</y>
      <width>113</width>
      <height>42</height>
     </rect>
@@ -581,11 +581,11 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
     <string>subTitle</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_effekt_elektronikk">
+  <widget class="QLabel" name="labelEffektElektronikk">
    <property name="geometry">
     <rect>
      <x>140</x>
-     <y>240</y>
+     <y>380</y>
      <width>74</width>
      <height>42</height>
     </rect>
@@ -635,11 +635,11 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
     <string>whiteBg</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_effekt_thrustere">
+  <widget class="QLabel" name="labelEffektThrustere">
    <property name="geometry">
     <rect>
      <x>140</x>
-     <y>280</y>
+     <y>420</y>
      <width>74</width>
      <height>42</height>
     </rect>
@@ -689,11 +689,11 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
     <string>whiteBg</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_effekt_manipulator">
+  <widget class="QLabel" name="labelEffektManipulator">
    <property name="geometry">
     <rect>
      <x>140</x>
-     <y>320</y>
+     <y>460</y>
      <width>74</width>
      <height>42</height>
     </rect>
@@ -747,7 +747,7 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>380</y>
+     <y>550</y>
      <width>171</width>
      <height>18</height>
     </rect>
@@ -777,7 +777,7 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>400</y>
+     <y>570</y>
      <width>113</width>
      <height>38</height>
     </rect>
@@ -815,11 +815,11 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
     <string>subTitle</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_temp_ROV_hovedkort">
+  <widget class="QLabel" name="labelTempHovedkort">
    <property name="geometry">
     <rect>
      <x>140</x>
-     <y>400</y>
+     <y>570</y>
      <width>74</width>
      <height>38</height>
     </rect>
@@ -873,7 +873,7 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>440</y>
+     <y>610</y>
      <width>113</width>
      <height>38</height>
     </rect>
@@ -906,7 +906,7 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>480</y>
+     <y>650</y>
      <width>113</width>
      <height>38</height>
     </rect>
@@ -935,11 +935,11 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
     <string>subTitle</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_temp_ROV_kraftkort">
+  <widget class="QLabel" name="labelTempKraftkort">
    <property name="geometry">
     <rect>
      <x>140</x>
-     <y>440</y>
+     <y>610</y>
      <width>74</width>
      <height>38</height>
     </rect>
@@ -989,11 +989,11 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
     <string>whiteBg</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_temp_ROV_sensorkort">
+  <widget class="QLabel" name="labelTempSensorkort">
    <property name="geometry">
     <rect>
      <x>140</x>
-     <y>480</y>
+     <y>650</y>
      <width>74</width>
      <height>38</height>
     </rect>
@@ -1046,7 +1046,7 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
   <widget class="QLabel" name="title_motor">
    <property name="geometry">
     <rect>
-     <x>220</x>
+     <x>210</x>
      <y>220</y>
      <width>421</width>
      <height>18</height>
@@ -1067,7 +1067,7 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
   <widget class="QLabel" name="text_rov">
    <property name="geometry">
     <rect>
-     <x>220</x>
+     <x>210</x>
      <y>240</y>
      <width>357</width>
      <height>14</height>
@@ -1130,11 +1130,11 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
     <string>KJØREMODUS</string>
    </property>
   </widget>
-  <widget class="QLabel" name="lys_title">
+  <widget class="QLabel" name="titleLys">
    <property name="geometry">
     <rect>
-     <x>530</x>
-     <y>630</y>
+     <x>550</x>
+     <y>580</y>
      <width>123</width>
      <height>18</height>
     </rect>
@@ -1169,8 +1169,8 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
   <widget class="QLabel" name="text_lys_forward">
    <property name="geometry">
     <rect>
-     <x>540</x>
-     <y>650</y>
+     <x>560</x>
+     <y>600</y>
      <width>123</width>
      <height>68</height>
     </rect>
@@ -1211,8 +1211,8 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
   <widget class="QSlider" name="slider_lys_forward">
    <property name="geometry">
     <rect>
-     <x>640</x>
-     <y>650</y>
+     <x>660</x>
+     <y>600</y>
      <width>124</width>
      <height>68</height>
     </rect>
@@ -1268,8 +1268,8 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
   <widget class="QLabel" name="label_percentage_lys_forward">
    <property name="geometry">
     <rect>
-     <x>780</x>
-     <y>670</y>
+     <x>800</x>
+     <y>620</y>
      <width>50</width>
      <height>30</height>
     </rect>
@@ -1301,8 +1301,8 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
   <widget class="QLabel" name="text_lys_down">
    <property name="geometry">
     <rect>
-     <x>540</x>
-     <y>710</y>
+     <x>560</x>
+     <y>660</y>
      <width>123</width>
      <height>68</height>
     </rect>
@@ -1629,8 +1629,8 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
   <widget class="QSlider" name="slider_lys_down">
    <property name="geometry">
     <rect>
-     <x>640</x>
-     <y>720</y>
+     <x>660</x>
+     <y>670</y>
      <width>124</width>
      <height>68</height>
     </rect>
@@ -1686,8 +1686,8 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
   <widget class="QLabel" name="label_percentage_lys_down">
    <property name="geometry">
     <rect>
-     <x>780</x>
-     <y>730</y>
+     <x>800</x>
+     <y>680</y>
      <width>50</width>
      <height>30</height>
     </rect>
@@ -1716,11 +1716,11 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
     <bool>false</bool>
    </property>
   </widget>
-  <widget class="QLabel" name="label_gjsnitt_temp_ROV">
+  <widget class="QLabel" name="labelGjSnittROV">
    <property name="geometry">
     <rect>
      <x>150</x>
-     <y>520</y>
+     <y>690</y>
      <width>58</width>
      <height>38</height>
     </rect>
@@ -1774,7 +1774,7 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>520</y>
+     <y>690</y>
      <width>58</width>
      <height>38</height>
     </rect>
@@ -1815,7 +1815,7 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
   <widget class="QLabel" name="thrust_label_1">
    <property name="geometry">
     <rect>
-     <x>290</x>
+     <x>280</x>
      <y>290</y>
      <width>61</width>
      <height>51</height>
@@ -1828,7 +1828,7 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
   <widget class="QLabel" name="thrust_label_5">
    <property name="geometry">
     <rect>
-     <x>290</x>
+     <x>280</x>
      <y>340</y>
      <width>61</width>
      <height>51</height>
@@ -1841,7 +1841,7 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
   <widget class="QLabel" name="thrust_label_8">
    <property name="geometry">
     <rect>
-     <x>370</x>
+     <x>360</x>
      <y>490</y>
      <width>61</width>
      <height>51</height>
@@ -1854,7 +1854,7 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
   <widget class="QLabel" name="thrust_label_2">
    <property name="geometry">
     <rect>
-     <x>370</x>
+     <x>360</x>
      <y>290</y>
      <width>61</width>
      <height>51</height>
@@ -1867,7 +1867,7 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
   <widget class="QLabel" name="thrust_label_6">
    <property name="geometry">
     <rect>
-     <x>370</x>
+     <x>360</x>
      <y>340</y>
      <width>61</width>
      <height>51</height>
@@ -1880,7 +1880,7 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
   <widget class="QLabel" name="thrust_label_7">
    <property name="geometry">
     <rect>
-     <x>290</x>
+     <x>280</x>
      <y>490</y>
      <width>61</width>
      <height>51</height>
@@ -1893,7 +1893,7 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
   <widget class="QLabel" name="thrust_label_3">
    <property name="geometry">
     <rect>
-     <x>290</x>
+     <x>280</x>
      <y>440</y>
      <width>61</width>
      <height>51</height>
@@ -1906,7 +1906,7 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
   <widget class="QLabel" name="thrust_label_4">
    <property name="geometry">
     <rect>
-     <x>370</x>
+     <x>360</x>
      <y>440</y>
      <width>61</width>
      <height>51</height>
@@ -1916,7 +1916,7 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
     <string>----------</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton_5">
+  <widget class="QPushButton" name="btnNullpunktVinkler">
    <property name="geometry">
     <rect>
      <x>750</x>
@@ -1929,7 +1929,7 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
     <string>Nullpunkt Vinkler</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton_6">
+  <widget class="QPushButton" name="btnKalibrerIMU">
    <property name="geometry">
     <rect>
      <x>750</x>
@@ -1942,7 +1942,7 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
     <string>Kalibrer IMU</string>
    </property>
   </widget>
-  <widget class="QLabel" name="title_effektforbruk_3">
+  <widget class="QLabel" name="titleDybde">
    <property name="geometry">
     <rect>
      <x>550</x>
@@ -1978,7 +1978,7 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
     <string>Dybde</string>
    </property>
   </widget>
-  <widget class="QLabel" name="title_effektforbruk_5">
+  <widget class="QLabel" name="titleGyro">
    <property name="geometry">
     <rect>
      <x>550</x>
@@ -2014,7 +2014,7 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
     <string>Gyro:</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="start_transect_2">
+  <widget class="QPushButton" name="btnResetManipulator">
    <property name="geometry">
     <rect>
      <x>560</x>
@@ -2050,7 +2050,7 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
     <string>Reset Manipulator </string>
    </property>
   </widget>
-  <widget class="QPushButton" name="start_transect_3">
+  <widget class="QPushButton" name="btnResetThruster">
    <property name="geometry">
     <rect>
      <x>560</x>
@@ -2086,7 +2086,7 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
     <string>Reset Thruster</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="start_transect_4">
+  <widget class="QPushButton" name="btnReset5V">
    <property name="geometry">
     <rect>
      <x>560</x>
@@ -2155,10 +2155,10 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
     <string notr="true"/>
    </property>
    <property name="text">
-    <string>Sikringer</string>
+    <string>SIKRINGER</string>
    </property>
   </widget>
-  <widget class="QLabel" name="title_motor_2">
+  <widget class="QLabel" name="titleVinkler">
    <property name="geometry">
     <rect>
      <x>550</x>
@@ -2179,7 +2179,7 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
     <string>Vinkler:</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_2">
+  <widget class="QLabel" name="vinkel1">
    <property name="geometry">
     <rect>
      <x>550</x>
@@ -2192,7 +2192,7 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
     <string>Vinkel 1:</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_3">
+  <widget class="QLabel" name="Vinkel2">
    <property name="geometry">
     <rect>
      <x>550</x>
@@ -2205,7 +2205,7 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
     <string>Vinkel 2:</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_4">
+  <widget class="QLabel" name="Vinkel3">
    <property name="geometry">
     <rect>
      <x>550</x>
@@ -2218,11 +2218,11 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
     <string>Vinkel 3:</string>
    </property>
   </widget>
-  <widget class="QLabel" name="title_motor_3">
+  <widget class="QLabel" name="titleAkselerasjon">
    <property name="geometry">
     <rect>
-     <x>550</x>
-     <y>580</y>
+     <x>20</x>
+     <y>760</y>
      <width>121</width>
      <height>20</height>
     </rect>
@@ -2347,7 +2347,7 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
     <string>whiteBg</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton_8">
+  <widget class="QPushButton" name="btnNullpunktDybde">
    <property name="geometry">
     <rect>
      <x>750</x>
@@ -2360,7 +2360,7 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
     <string>Nullpunkt Dybde</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_effekt_elektronikk_4">
+  <widget class="QLabel" name="labelVinkel1">
    <property name="geometry">
     <rect>
      <x>650</x>
@@ -2414,7 +2414,7 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
     <string>whiteBg</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_effekt_elektronikk_5">
+  <widget class="QLabel" name="labelVinkel2">
    <property name="geometry">
     <rect>
      <x>650</x>
@@ -2468,7 +2468,7 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
     <string>whiteBg</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_effekt_elektronikk_6">
+  <widget class="QLabel" name="labelVinkel3">
    <property name="geometry">
     <rect>
      <x>650</x>
@@ -2522,11 +2522,11 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
     <string>whiteBg</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_effekt_elektronikk_7">
+  <widget class="QLabel" name="labelAkelerasjon">
    <property name="geometry">
     <rect>
-     <x>650</x>
-     <y>570</y>
+     <x>120</x>
+     <y>750</y>
      <width>74</width>
      <height>42</height>
     </rect>
@@ -2576,92 +2576,76 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
     <string>whiteBg</string>
    </property>
   </widget>
-  <widget class="QOpenGLWidget" name="openGLWidget">
+  <widget class="QLabel" name="titleNewWindow">
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>600</y>
-     <width>300</width>
-     <height>200</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="pushButton">
-   <property name="geometry">
-    <rect>
-     <x>340</x>
-     <y>630</y>
-     <width>51</width>
+     <y>205</y>
+     <width>371</width>
      <height>61</height>
     </rect>
    </property>
+   <property name="minimumSize">
+    <size>
+     <width>0</width>
+     <height>0</height>
+    </size>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>16777215</width>
+     <height>16777215</height>
+    </size>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>10</pointsize>
+     <weight>50</weight>
+     <italic>false</italic>
+     <bold>false</bold>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true"/>
+   </property>
    <property name="text">
-    <string>/\</string>
+    <string>NYTT VINDU</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label">
+  <widget class="QPushButton" name="showNewWindowButton">
    <property name="geometry">
     <rect>
-     <x>340</x>
-     <y>600</y>
-     <width>71</width>
-     <height>16</height>
+     <x>10</x>
+     <y>260</y>
+     <width>181</width>
+     <height>47</height>
     </rect>
    </property>
-   <property name="text">
-    <string>Camera Tilt :</string>
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
    </property>
-  </widget>
-  <widget class="QPushButton" name="pushButton_2">
-   <property name="geometry">
-    <rect>
-     <x>340</x>
-     <y>690</y>
-     <width>51</width>
-     <height>61</height>
-    </rect>
+   <property name="minimumSize">
+    <size>
+     <width>0</width>
+     <height>0</height>
+    </size>
    </property>
-   <property name="text">
-    <string>V</string>
+   <property name="font">
+    <font>
+     <pointsize>10</pointsize>
+     <weight>50</weight>
+     <italic>false</italic>
+     <bold>false</bold>
+    </font>
    </property>
-  </widget>
-  <widget class="QPushButton" name="pushButton_3">
-   <property name="geometry">
-    <rect>
-     <x>420</x>
-     <y>630</y>
-     <width>75</width>
-     <height>61</height>
-    </rect>
+   <property name="cursor">
+    <cursorShape>PointingHandCursor</cursorShape>
    </property>
    <property name="text">
-    <string>Take</string>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="pushButton_4">
-   <property name="geometry">
-    <rect>
-     <x>420</x>
-     <y>692</y>
-     <width>75</width>
-     <height>61</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Save</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_5">
-   <property name="geometry">
-    <rect>
-     <x>420</x>
-     <y>600</y>
-     <width>47</width>
-     <height>13</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Picture :</string>
+    <string>Show New Window</string>
    </property>
   </widget>
  </widget>

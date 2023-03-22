@@ -2,20 +2,8 @@ import time
 from Thread_info import Threadwatcher
 import multiprocessing
 from multiprocessing import Pipe, Process, Queue
-from gui import test_loop
+from gui import *
 import threading
-
-def create_test_sensordata(delta, old_sensordata=None):
-    #TODO: don't use this later its a test function
-    sensordata = {}
-    if old_sensordata is None:
-        sensordata = {"dybde": -2500.0, "spenning": 48.0, "temp_rov": 26.0}
-    else:
-        #sensordata["tid"] = int(time.time()-start_time_sec)
-        sensordata["dybde"] = old_sensordata["dybde"] + 10*delta
-        sensordata["spenning"] = old_sensordata["spenning"] + 0.4*delta
-        sensordata["temp_rov"] = old_sensordata["temp_rov"] + 0.3*delta
-    return sensordata
 
 def send_fake_sensordata(t_watch: Threadwatcher, gui_pipe: multiprocessing.Pipe):
     thrust_list = [num for num in range(-100,101)]
@@ -35,7 +23,7 @@ def send_fake_sensordata(t_watch: Threadwatcher, gui_pipe: multiprocessing.Pipe)
         gui_pipe.send(sensordata)
         time.sleep(1)
 
-    
+
 
 class Rov_state:
     def __init__(self,queue,gui_pipe, t_watch: Threadwatcher) -> None:
@@ -100,7 +88,7 @@ if __name__ == "__main__":
         gui_parent_pipe, gui_child_pipe = Pipe() # starts the gui program. gui_parent_pipe should get the sensor data
         if run_gui:
             id = t_watch.add_thread()
-            gui_loop = Process(target=test_loop.run, args=(gui_child_pipe, queue_for_rov, t_watch, id), daemon=True) # and should recieve commands from the gui
+            gui_loop = Process(target=gui.run, args=(gui_child_pipe, queue_for_rov, t_watch, id), daemon=True) # and should recieve commands from the gui
             gui_loop.start()
 
         #TODO: add controller
