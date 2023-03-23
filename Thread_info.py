@@ -8,7 +8,7 @@ class Threadwatcher:
         self.threads[self.id] = True
         return self.id
 
-    def should_run(self, id) -> bool:
+    def should_run(self, id)-> bool:
         if id in self.threads:
             return self.threads[id]
         return True
