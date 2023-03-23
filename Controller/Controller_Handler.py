@@ -342,48 +342,6 @@ class Controller:
         print("closed connection")
         # self.connection.close() 
 
-def debug():
-    pygame.joystick.init()
-    pygame.joystick.Joystick(0).init()
-    pygame.joystick.Joystick(1).init()
-
-    if pygame.joystick.Joystick(0) is not None:
-        print(f"Controller 2 connected! ID:{pygame.joystick.Joystick(0).get_id()}")
-    if pygame.joystick.Joystick(1) is not None:
-        print(f"Controller 2 connected! ID:{pygame.joystick.Joystick(1).get_id()}")
-
-    # rov_con = pygame.joystick.Joystick(0)
-    # mani_con = pygame.joystick.Joystick(1)
-
-    while True:
-        for event in pygame.event.get():
-            if event.type == BUTTON_DOWN:
-                print(event.button)
-                if event.joy == 0:
-                    print("ROV: ", event.button, " pressed.")
-                elif event.joy == 1:
-                    print("Manipulator: ", event.button, " pressed.")
-            if event.type == pygame.JOYAXISMOTION:
-                if event.joy == 1:
-                    if abs(event.value) > 0.07:
-                        if event.axis == 0:
-                            print("ROV: Left Joystick X-axis movement: ", event.value)
-                        elif event.axis == 1:
-                            print("ROV: Left Joystick Y-axis movement: ", event.value)
-                        elif event.axis == 2:
-                            print("ROV: Right Joystick X-axis movement: ", event.value)
-                        elif event.axis == 3:
-                            print("ROV: Right Joystick Y-axis movement: ", event.value)
-                elif event.joy == 1:
-                    if abs(event.value) > 0.07:
-                        if event.axis == 0:
-                            print("Manipulator: Left Joystick X-axis movement: ", event.value)
-                        elif event.axis == 1:
-                            print("Manipulator: Left Joystick Y-axis movement: ", event.value)
-                        elif event.axis == 2:
-                            print("Manipulator: Right Joystick X-axis movement: ", event.value)
-                        elif event.axis == 3:
-                            print("Manipulator: Right Joystick Y-axis movement: ", event.value)
 
 # This is the entry point that main calls
 def run(queue_to_rov, t_watch: Threadwatcher, id, debug=True, debug_all=True):
