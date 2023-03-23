@@ -7,6 +7,7 @@ from Kommunikasjon.network_handler import Network
 from multiprocessing import Process
 import threading
 import time
+from Kommunikasjon.packet_info import Logger
 from Thread_info import Threadwatcher
 from Controller import Controller_Handler as controller
 
@@ -24,6 +25,12 @@ Z_AXIS = 6
 ROTATION_AXIS = 2
 
 
+ID_DIRECTIONCOMMAND_PARAMETERS = 71
+ID_DIRECTIONCOMMAND = 70
+ID_camera_tilt_upwards = 200
+ID_camera_tilt_downwards = 201
+
+
 def network_format(data) -> bytes:
     """Formats the data for sending to network handler"""
     packet_seperator = json.dumps("*")
@@ -31,7 +38,7 @@ def network_format(data) -> bytes:
 
 
 class Rov_state:
-    def __init__(self, queue, t_watch: Threadwatcher) -> None:
+    def __init__(self, queue, network_handler, t_watch: Threadwatcher) -> None:
         self.t_watch: Threadwatcher = t_watch
         self.data: dict = {}
         self.logger = Logger()
@@ -57,6 +64,200 @@ class Rov_state:
         self_hud_camera_status = False
 
         self.packets_to_send = []
+
+    def sending_startup_ids(self):
+        self.packets_to_send.append(
+            [200, {"camera_tilt_upwards": self.camera_tilt[0]}])
+        self.packets_to_send.append(
+            [201, {"camera_tilt_downwards": self.camera_tilt[1]}])
+
+    def setting_up_canbus_ids(self):
+        self.canbus_id = {
+            "camera_tilts_up": 200,
+            "camera_tilts_down": 201
+        }
+
+    def recieve_data_from_rov(self, network: Network, t_watch: Threadwatcher, id: int):
+        incomplete_packet = ""
+        print("recive data thread")
+        while t_watch.should_run(id):
+            try:
+                data = network.receive()
+                if data == b"" or data is None:
+                    continue
+                else:
+                    # print(data)
+                    # if data is None:
+                    #    continue
+                    decoded, incomplete_packet = Rov_state.decode_packets(
+                        data, incomplete_packet)
+                if decoded == []:
+                    continue
+                for message in decoded:
+                    # print(message)
+                    self.handle_data_from_rov(message)
+
+                    # potentially for the future to get information to the GUI : send_to_gui(Rov_state, message)
+
+            except json.JSONDecodeError as e:
+                print(f"{data = }, {e = }")
+                pass
+
+    # Decodes the tcp packet/s recieved from the rov
+
+    def send_startup_commands(self):
+        self.packets_to_send.append(
+            [200, {"tilt": self.camera_tilt[0], "on": True}])
+        self.packets_to_send.append(
+            [201, {"tilt": self.camera_tilt[1], "on": True}])
+        self.packets_to_send.append([64,  []])
+        self.packets_to_send.append([96,  []])
+
+    def decode_packets(tcp_data: bytes, end_not_complete_packet="") -> list:
+        end_not_complete_packet = ""
+        try:
+            json_strings = end_not_complete_packet + \
+                bytes.decode(tcp_data, "utf-8")
+            # print(json_strings)
+            # pakken er ikke hel. Dette skal aldri skje sÃ¥ pakken burde bli forkasta
+            if not json_strings.startswith('"*"'):
+                # print(f"Packet did not start with '*' something is wrong. {end_not_complete_packet}")
+                return [], ""
+            if not json_strings.endswith('"*"'):  # pakken er ikke hel
+                end_not_complete_packet = json_strings[json_strings.rfind(
+                    "*")-1:]
+                # fjerner den ukomplette pakken. til, men ikke med indexen
+                json_strings = json_strings[:json_strings.rfind("*")-1]
+
+            json_list = json_strings.split(json.dumps("*"))
+        except Exception as e:
+            print(f"{tcp_data = } Got error {e}")
+            return []
+        decoded_items = []
+
+        for item in json_list:
+
+            if item == '' or item == json.dumps("heartbeat"):
+                # print(f"{item = }")
+                continue
+
+            else:
+                # print(f"{item = }")
+                try:
+                    item = json.loads(item)
+                except Exception as e:
+                    print(f"{e = }\n {item = }, {tcp_data = }")
+                    with open("errors.txt", 'ab') as f:
+                        f.write(tcp_data)
+                    continue
+
+                    # exit(0)
+                decoded_items.append(item)
+        return decoded_items, end_not_complete_packet
+
+    def handle_data_from_rov(self, message: dict):
+        if run_network:
+            self.logger.sensor_logger.info(message)
+            print(f"{message =}")
+        message_name = ""
+        if not isinstance(message, dict):
+            try:
+                print(message)
+                return
+            except Exception as e:
+                print(e)
+                return
+        if "Error" in message or "info" in message:  # den og
+            print(message)
+            return
+        if "Alarm" in message:
+            print(message)      # få meldingen inn i GUI'en
+        try:
+            message_name = list(message.keys())[0]
+        except Exception as e:
+            print(e)
+            return
+        else:
+            pass
+            print(f"\n\nMESSAGE NOT RECOGNISED\n{message}\n")
+
+    def network_format(data) -> bytes:
+        """Formats the data for sending to network handler"""
+        packet_seperator = json.dumps("*")
+        return bytes(packet_seperator+json.dumps(data)+packet_seperator, "utf-8")
+
+    def craft_packet(self, t_watch: Threadwatcher, id):
+        print("CraftPack Thread")
+        while t_watch.should_run(id):
+            userinput = input(
+                "Packet: [parameter_id of type int, value of type float or int]: ")
+            var = []
+            try:
+                var = json.loads(userinput)
+                if not isinstance(var[0], int):
+                    print("Error: parameter id was not an int! try again.")
+                    continue
+                # if not isinstance(var[1], int) or not isinstance(var[1], float):
+                #     print("Error: parameter id was not an int or float! try again.")
+                #     continue
+                if len(var) != 2:
+                    print("Error: list was not length 2")
+                    continue
+            except Exception as e:
+                print(f"Error when parsing input\n {e}")
+                continue
+            print(var)
+            #self.packets_to_send.append([ID_DIRECTIONCOMMAND_PARAMETERS, var])
+            self.packets_to_send.append([var[0], var[1]])
+
+    def send_packets(self):
+        """Sends the created network packets and clears it"""
+
+        copied_packets = self.packets_to_send
+        self.packets_to_send = []
+        # [print(copied_packets)
+        for packet in copied_packets:
+            if packet[0] == ID_DIRECTIONCOMMAND or packet[0] == "*heartbeat*":
+                pass
+                print(f"{packet = }")
+        if run_network:
+            self.logger.sensor_logger.info(copied_packets)
+        if self.network_handler is None or not copied_packets:
+            return
+        self.network_handler.send(network_format(copied_packets))
+
+    def reset_5V_fuse(self, fuse_number):
+        """reset_5V_fuse creates and adds
+        packets for resetting a fuse on the ROV"""
+        byte0 = 0b10000000 | (fuse_number << 1)
+        fuse_reset_signal = [byte0]
+
+        for item in self.regulator_active:
+            fuse_reset_signal.append(item)
+
+        self.packets_to_send.append(97, fuse_reset_signal)
+
+    def reset_12V_thruster_fuse(self, fuse_number):
+        """reset_fuse_on_power_supply creates and adds
+        packets for resetting a fuse on the ROV"""
+        byte0 = 0b10000000 | (fuse_number << 1)
+        fuse_reset_signal = [byte0]
+
+        for item in self.regulator_active:
+            fuse_reset_signal.append(item)
+
+        self.packets_to_send.append([98, fuse_reset_signal])
+
+    def reset_12V_manipulator_fuse(self, fuse_number):
+        """reset_12V_manipulator_fuse creates and adds
+        packets for resetting a fuse on the ROV"""
+        byte0 = 0b10000000 | (fuse_number << 1)
+        fuse_reset_signal = [byte0]
+
+        for item in self.regulator_active:
+            fuse_reset_signal.append(item)
+
+        self.packets_to_send.append([99, fuse_reset_signal])
 
     def build_rov_packet(self):
         if self.data == {}:
@@ -104,7 +305,7 @@ class Rov_state:
 
 
 def run(network_handler: Network, t_watch: Threadwatcher, id: int, queue_for_rov: multiprocessing.Queue):
-    rov_state = Rov_state(queue_for_rov, t_watch)
+    rov_state = Rov_state(queue_for_rov, network_handler, t_watch)
 
     # Con. del
     while t_watch.should_run(id):
@@ -139,11 +340,11 @@ if __name__ == "__main__":
         global network
         global run_craft_packet
         run_craft_pakcet = True
-        run_network = True #Bytt t false når du ska prøva å connecte.
+        run_network = True  # Bytt t false når du ska prøva å connecte.
         run_get_controllerdata = True
         queue_for_rov = multiprocessing.Queue()
         t_watch = Threadwatcher()
-        debug_all = False #Sett til True om du vil se input fra controllers
+        debug_all = False  # Sett til True om du vil se input fra controllers
 
         network = False
         if not run_network:
@@ -163,12 +364,8 @@ if __name__ == "__main__":
         if run_get_controllerdata:
             id = t_watch.add_thread()
             # takes in controller data and sends it into child_conn
-<<<<<<< HEAD
             controller_process = Process(target=controller.run, args=(
-                queue_for_rov, t_watch, id, True, False), daemon=True)
-=======
-            controller_process = Process(target=controller.run, args=(queue_for_rov, t_watch, id, True, debug_all), daemon=True)
->>>>>>> 8b0a37bdeaa5ec635c2b64289018a7e074b85793
+                queue_for_rov, t_watch, id, True, debug_all), daemon=True)
             controller_process.start()
             input("Press Enter to start sending!")
             # controller_process.terminate()
@@ -180,10 +377,5 @@ if __name__ == "__main__":
         main_driver_loop.start()
 
     except KeyboardInterrupt:
-<<<<<<< HEAD
         t_watch.stop_all_threads()
         print("stopped all threads")
-=======
-            t_watch.stop_all_threads()
-            print("stopped all threads")
->>>>>>> 8b0a37bdeaa5ec635c2b64289018a7e074b85793
