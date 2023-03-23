@@ -164,12 +164,7 @@ if __name__ == "__main__":
         if run_get_controllerdata:
             id = t_watch.add_thread()
             # takes in controller data and sends it into child_conn
-<<<<<<< HEAD
-            controller_process = Process(target=controller.run, args=(
-                queue_for_rov, t_watch, id, True, False), daemon=True)
-=======
             controller_process = Process(target=controller.run, args=(queue_for_rov, t_watch, id, True, debug_all), daemon=True)
->>>>>>> 8b0a37bdeaa5ec635c2b64289018a7e074b85793
             controller_process.start()
             input("Press Enter to start sending!")
             # controller_process.terminate()
@@ -181,10 +176,5 @@ if __name__ == "__main__":
         main_driver_loop.start()
 
     except KeyboardInterrupt:
-<<<<<<< HEAD
         t_watch.stop_all_threads()
         print("stopped all threads")
-=======
-            t_watch.stop_all_threads()
-            print("stopped all threads")
->>>>>>> 8b0a37bdeaa5ec635c2b64289018a7e074b85793

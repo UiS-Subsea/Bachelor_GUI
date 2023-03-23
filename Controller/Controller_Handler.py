@@ -1,5 +1,5 @@
 import multiprocessing
-from Threadwatch import Threadwatcher
+from Thread_info import Threadwatcher
 import threading
 import os
 os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
