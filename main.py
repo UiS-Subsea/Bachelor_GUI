@@ -335,7 +335,6 @@ def run(network_handler: Network, t_watch: Threadwatcher, id: int, queue_for_rov
 if __name__ == "__main__":
 
     try:
-
         global run_network
         global network
         global run_craft_packet
