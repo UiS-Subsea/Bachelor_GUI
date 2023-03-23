@@ -36,11 +36,11 @@ class Rov_state:
     def __init__(self, queue,gui_pipe, t_watch: Threadwatcher) -> None:
         self.t_watch: Threadwatcher = t_watch
         self.data: dict = {}
-        self.logger = Logger()
+        #self.logger = Logger()
         self.queue: multiprocessing.Queue = queue
         self.gui_pipe = gui_pipe # Pipe to send sensordata back to the gui
         self.sensordata=None
-        self.send_sensordata_to_gui()
+        #self.send_sensordata_to_gui()
         
         # Pipe to send sensordata back to the gui
         # Prevents the tilt toggle from toggling back again immediately if we hold the button down
@@ -116,7 +116,7 @@ class Rov_state:
 
 
 def run(network_handler: Network, t_watch: Threadwatcher, id: int, queue_for_rov: multiprocessing.Queue):
-    rov_state = Rov_state(queue_for_rov, t_watch)
+    rov_state = Rov_state(queue_for_rov, t_watch, network_handler)
 
     # Con. del
     while t_watch.should_run(id):
@@ -151,7 +151,7 @@ if __name__ == "__main__":
         global network
         global run_craft_packet
         run_craft_pakcet = True
-        run_network = True #Bytt t false når du ska prøva å connecte.
+        run_network = False #Bytt t false når du ska prøva å connecte.
         run_gui = True
         run_get_controllerdata = True
         run_send_fake_sensordata=True #Sett til True om du vil sende fake sensordata til gui
