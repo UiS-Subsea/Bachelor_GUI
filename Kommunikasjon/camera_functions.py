@@ -28,4 +28,4 @@ def toggle_active_camera(self, button_index):
         # Changes camera id between 0, 1, and 2
         self.active_camera = (self.active_camera + 1) % 3
         print(f"Changed active camera to {self.active_camera}")
-        self.camera_toggle_wait_counter = 6
+       # self.camera_toggle_wait_counter = 6
