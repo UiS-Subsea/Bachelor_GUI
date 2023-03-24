@@ -92,8 +92,8 @@ class Controller:
                 print(f"Found {pygame.joystick.get_count()} controllers.")
                 rov_joystick = pygame.joystick.Joystick(0)
                 mani_joystick = pygame.joystick.Joystick(1)
-                print(f"Connected to {rov_joystick.get_name()}")
-                print(f"Connected to {mani_joystick.get_name()}")
+                print(f"Connected to {rov_joystick.get_name()} {rov_joystick.get_id()}")
+                print(f"Connected to {mani_joystick.get_name()} {mani_joystick.get_id()}")
                 break
             except Exception as e:
                 print(e)
@@ -161,7 +161,7 @@ class Controller:
         while t_watch.should_run(id):
             if pygame.joystick.get_count() < 2:
                 self.wait_for_controller()
-            self.duration = self.clock.tick(20)
+            self.duration = self.clock.tick(0.5)
             # print(duration)
             for event in pygame.event.get():
                 # print("entered event check")

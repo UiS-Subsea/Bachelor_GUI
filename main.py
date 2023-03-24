@@ -13,10 +13,10 @@ from Controller import Controller_Handler as controller
 
 # VALUES: (0-7) -> index i: [0,0,0,0,0,0,0,0]
 # MANIPULATOR
-MANIPULATOR_IN_OUT = 0
-MANIPULATOR_ROTATION = 1
-MANIPULATOR_TILT = 2
-MANIPULATOR_GRAB_RELEASE = 3
+MANIPULATOR_IN_OUT = 1
+MANIPULATOR_ROTATION = 0
+MANIPULATOR_TILT = 3
+MANIPULATOR_GRAB_RELEASE = 6
 
 # ROV
 X_AXIS = 1
@@ -271,6 +271,7 @@ class Rov_state:
         # print(self.packets_to_send)
 
     def build_manipulator_packet(self):
+        #Kan også endre til to indexer i data listen for mani inn og ut (f.eks 0 og 1 = btn 12 og 13)
         if self.data == {}:
             return
         data = [0, 0, 0, 0, 0, 0, 0, 0]
@@ -317,7 +318,7 @@ def run(network_handler: Network, t_watch: Threadwatcher, id: int, queue_for_rov
     # Komm. del
     print("run thread")
     print(f"{network_handler = }")
-    rov_state = Rov_state(queue_for_rov, network_handler, gui_pipe, t_watch)
+    rov_state = Rov_state(queue_for_rov, network_handler, t_watch)
     print(f"{network_handler = }")
     if not network_handler == None:
         id = t_watch.add_thread()
@@ -326,7 +327,7 @@ def run(network_handler: Network, t_watch: Threadwatcher, id: int, queue_for_rov
     if run_craft_pakcet:
         id = t_watch.add_thread()
         threading.Thread(target=rov_state.craft_packet,
-                         args=(t_watch, id), daemon=True).start()
+                        args=(t_watch, id), daemon=True).start()
     while t_watch.should_run(id):
         rov_state.send_packets()
         rov_state.data = {}
@@ -349,16 +350,16 @@ if __name__ == "__main__":
         network = False
         if not run_network:
             network = Network(is_server=False, port=6900, bind_addr="0.0.0.0",
-                              connect_addr="10.0.0.2")
+                            connect_addr="10.0.0.2")
             print("network started")
             run_network = True
 
-        print("starting send to rov")
-        id = t_watch.add_thread()
-        print(id)
-        main_driver_loop = threading.Thread(target=run, args=(
-            network, t_watch, id, queue_for_rov), daemon=True)
-        main_driver_loop.start()
+        # print("starting send to rov")
+        # id = t_watch.add_thread()
+        # print(id)
+        # main_driver_loop = threading.Thread(target=run, args=(
+        #     network, t_watch, id, queue_for_rov), daemon=True)
+        # main_driver_loop.start()
     # alt oppe er komm. del
 
         if run_get_controllerdata:
@@ -370,11 +371,11 @@ if __name__ == "__main__":
             input("Press Enter to start sending!")
             # controller_process.terminate()
 
-        # print("starting send to rov")
-        # id = t_watch.add_thread()
-        # main_driver_loop = threading.Thread(
-        #     target=run, args=(network, t_watch, id, queue_for_rov), daemon=True)
-        # main_driver_loop.start()
+        print("starting send to rov")
+        id = t_watch.add_thread()
+        main_driver_loop = threading.Thread(
+            target=run, args=(network, t_watch, id, queue_for_rov), daemon=True)
+        main_driver_loop.start()
 
     except KeyboardInterrupt:
         t_watch.stop_all_threads()

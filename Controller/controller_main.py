@@ -9,15 +9,15 @@ import Controller_Handler as controller
 
 # VALUES: (0-7) -> index i: [0,0,0,0,0,0,0,0]
 # MANIPULATOR
-MANIPULATOR_IN_OUT = 0
-MANIPULATOR_ROTATION = 1
-MANIPULATOR_TILT = 2
-MANIPULATOR_GRAB_RELEASE = 3
+MANIPULATOR_IN_OUT = 1
+MANIPULATOR_ROTATION = 0
+MANIPULATOR_TILT = 3
+MANIPULATOR_GRAB_RELEASE = 6
 
 #ROV
-X_AXIS = 1
-Y_AXIS = 0
-Z_AXIS = 6
+X_AXIS = 1   #LEFT JOYSTICK UP/DOWN
+Y_AXIS = 0   #LEFT JOYSTICK LEFT/RIGHT
+Z_AXIS = 6   #LT/RT
 ROTATION_AXIS = 2
 
 class Rov_state:
@@ -43,7 +43,7 @@ class Rov_state:
         if self.data == {}:
             return
         data = [0,0,0,0,0,0,0,0]
-        data[0] = self.data["mani_joysticks"][MANIPULATOR_IN_OUT]
+        data[0] = self.data["mani_buttons"][MANIPULATOR_IN_OUT]
         data[1] = self.data["mani_joysticks"][MANIPULATOR_ROTATION]
         data[2] = self.data["mani_joysticks"][MANIPULATOR_TILT]
         data[3] = self.data["mani_joysticks"][MANIPULATOR_GRAB_RELEASE]
@@ -68,7 +68,7 @@ class Rov_state:
             self.data = packet
     
     def check_controls(self):
-        self.button_handling()
+        # self.button_handling()
         self.build_rov_packet()
         self.build_manipulator_packet()
         print(self.packets_to_send)
