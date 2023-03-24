@@ -21,4 +21,3 @@ class Threadwatcher:
         for i in range(len(self.threads)):
             self.stop_thread(i)
         print(self.threads)
-
