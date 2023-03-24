@@ -86,7 +86,7 @@ class Rov_state:
                 if data == b"" or data is None:
                     continue
                 else:
-                    # print(data)
+                    print(data)
                     # if data is None:
                     #    continue
                     decoded, incomplete_packet = Rov_state.decode_packets(
@@ -189,10 +189,12 @@ class Rov_state:
     def craft_packet(self, t_watch: Threadwatcher, id):
         print("CraftPack Thread")
         while t_watch.should_run(id):
+            print("HELLO!")
             userinput = input(
                 "Packet: [parameter_id of type int, value of type float or int]: ")
             var = []
             try:
+                print("TRY")
                 var = json.loads(userinput)
                 if not isinstance(var[0], int):
                     print("Error: parameter id was not an int! try again.")
@@ -212,7 +214,7 @@ class Rov_state:
 
     def send_packets(self):
         """Sends the created network packets and clears it"""
-
+        print("SEND PACKETS")
         copied_packets = self.packets_to_send
         self.packets_to_send = []
         # [print(copied_packets)
@@ -308,16 +310,14 @@ class Rov_state:
 def run(network_handler: Network, t_watch: Threadwatcher, id: int, queue_for_rov: multiprocessing.Queue):
     rov_state = Rov_state(queue_for_rov, network_handler, t_watch)
 
-    # Con. del
-    while t_watch.should_run(id):
-        rov_state.get_from_queue()
-        if run_get_controllerdata and rov_state.data != {}:
-            rov_state.check_controls()
-        rov_state.data = {}
-
     # Komm. del
     print("run thread")
     print(f"{network_handler = }")
+<<<<<<< HEAD
+=======
+    # rov_state = Rov_state(queue_for_rov, network_handler, t_watch)
+    # print(f"{network_handler = }")
+>>>>>>> 8d570dea2644bc6f0ea6b884d28f28bb6b90093b
     if not network_handler == None:
         id = t_watch.add_thread()
         threading.Thread(target=rov_state.recieve_data_from_rov, args=(
@@ -326,9 +326,17 @@ def run(network_handler: Network, t_watch: Threadwatcher, id: int, queue_for_rov
         id = t_watch.add_thread()
         threading.Thread(target=rov_state.craft_packet,
                         args=(t_watch, id), daemon=True).start()
+    # Con. del
+    print("Before whiles")
     while t_watch.should_run(id):
         rov_state.get_from_queue()
+<<<<<<< HEAD
+=======
+        if run_get_controllerdata and rov_state.data != {}:
+            rov_state.check_controls()
+>>>>>>> 8d570dea2644bc6f0ea6b884d28f28bb6b90093b
         rov_state.send_packets()
+        print(":: Data sent ::")
         rov_state.data = {}
 
 
@@ -339,7 +347,7 @@ if __name__ == "__main__":
         global network
         global run_craft_packet
         run_craft_pakcet = True
-        run_network = False  # Bytt t false når du ska prøva å connecte.
+        run_network = True  # Bytt t false når du ska prøva å connecte.
         run_get_controllerdata = True
         queue_for_rov = multiprocessing.Queue()
         t_watch = Threadwatcher()
@@ -349,16 +357,16 @@ if __name__ == "__main__":
         network = False
         if run_network:
             network = Network(is_server=False, port=6900, bind_addr="0.0.0.0",
-                            connect_addr="10.0.0.2")
+                            connect_addr="10.0.0.187")
             print("network started")
             run_network = True
 
-        # print("starting send to rov")
-        # id = t_watch.add_thread()
-        # print(id)
-        # main_driver_loop = threading.Thread(target=run, args=(
-        #     network, t_watch, id, queue_for_rov), daemon=True)
-        # main_driver_loop.start()
+            print("starting send to rov")
+            id = t_watch.add_thread()
+            print(id)
+            main_driver_loop = threading.Thread(target=run, args=(
+                network, t_watch, id, queue_for_rov), daemon=True)
+            main_driver_loop.start()
     # alt oppe er komm. del
 
         if run_get_controllerdata:
@@ -369,12 +377,6 @@ if __name__ == "__main__":
             controller_process.start()
             input("Press Enter to start sending!")
             # controller_process.terminate()
-
-        print("starting send to rov")
-        id = t_watch.add_thread()
-        main_driver_loop = threading.Thread(
-            target=run, args=(network, t_watch, id, queue_for_rov), daemon=True)
-        main_driver_loop.start()
 
     except KeyboardInterrupt:
         t_watch.stop_all_threads()
