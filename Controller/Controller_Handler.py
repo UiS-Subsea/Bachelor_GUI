@@ -104,7 +104,7 @@ class Controller:
 
         rov_joystick.init()
         mani_joystick.init()
-        rov_joystick.rumble(1, 1, 1000)
+        rov_joystick.rumble(0.2, 0.2, 500)
 
     # Remaps a range. for example 1-10 range can be remapped to 1-100 so that for example 3 becomes 30
     def get_new_range(self, value, min, max, scale=100):
@@ -162,7 +162,7 @@ class Controller:
         while t_watch.should_run(id):
             if pygame.joystick.get_count() < 2:
                 self.wait_for_controller()
-            self.duration = self.clock.tick(0.5)
+            self.duration = self.clock.tick(20)
             # print(duration)
             for event in pygame.event.get():
                 # print("entered event check")
