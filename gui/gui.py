@@ -1,12 +1,14 @@
 import multiprocessing
 import subprocess
 from PyQt5 import QtCore, QtGui, QtWidgets, Qt, uic
-from PyQt5.QtWidgets import QMainWindow, QWidget, QCheckBox, QLabel, QMessageBox
+from PyQt5.QtWidgets import QMainWindow, QWidget, QCheckBox, QLabel, QMessageBox, QVBoxLayout, QGraphicsObject
+from PyQt5.QtCore import QMetaObject, Qt, Q_ARG, QTimer
 import sys
 import threading
 from . import guiFunctions as f
 from Thread_info import Threadwatcher
 import time
+from main import Rov_state as R
 
 class Window(QMainWindow):
     def __init__(
@@ -16,6 +18,7 @@ class Window(QMainWindow):
         t_watch: Threadwatcher,
         id: int,
         parent=None,
+        
     ):
 
         super().__init__(parent)
@@ -37,7 +40,6 @@ class Window(QMainWindow):
 
         self.gir_verdier = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
-
         self.receive = threading.Thread(
             target=self.receive_sensordata, daemon=True, args=(self.pipe_conn_only_rcv,)
         )
@@ -46,7 +48,8 @@ class Window(QMainWindow):
 
         self.w=None#SecondWindow() #
 
-
+        #self.central_widget = self.centralWidget()
+        #self.layout = self.central_widget.layout()
         # Buttons
     def show_new_window(self, checked):
         if self.w is None:
@@ -55,7 +58,7 @@ class Window(QMainWindow):
         else:
             print("window already open")
 
-    def connectFunctions(self,ID_RESET_DEPTH=66):
+    def connectFunctions(self,ID_RESET_DEPTH=66,fuse_number=1):
         #window2
         self.showNewWindowButton.clicked.connect(self.show_new_window)
     
@@ -65,9 +68,9 @@ class Window(QMainWindow):
         self.btnFrogCount.clicked.connect(lambda: f.frogCount(self))
         
         #Sikringer
-        self.btnReset5V.clicked.connect(lambda: f.reset5V(self))
-        self.btnResetThruster.clicked.connect(lambda: f.resetThruster(self))
-        self.btnResetManipulator.clicked.connect(lambda :f.resetManipulator(self))
+        #self.btnReset5V.clicked.connect(R.reset_5V_fuse(self,fuse_number))
+        #self.btnResetThruster.clicked.connect(R.reset_12V_manipulator_fuse(self,fuse_number))
+        #self.btnResetManipulator.clicked.connect(R.reset_12V_thruster_fuse(self,fuse_number))
         
         #IMU
         self.btnKalibrerIMU.clicked.connect(lambda: f.kalibrerIMU(self))
@@ -224,30 +227,40 @@ class Window(QMainWindow):
                 "background-color: rgb(30, 33, 38); border-radius: 5px; border: 1px solid rgb(30, 30, 30);"
             )
 
-        id_with_lekkasje = []  # List of IDs for sensors with leaks
-        for lekkasje_nr, is_lekkasje in enumerate(
-            lekkasje_liste
-        ):  # For each sensor in the list of leaks
-            if not is_lekkasje:  # If the sensor doesn't have a leak
-                id_with_lekkasje.append(
-                    lekkasje_nr + 1
-                )  # Add the sensor's ID to id_with_lekkasje
-        if (
-            not self.lekkasje_varsel_is_running and len(id_with_lekkasje) > 0
-        ):  # If there is no leak alert running and there is a sensor with a leak
-            self.lekkasje_varsel_is_running = (
-                True  # Set lekkasje_varsel_is_running to True
-            )
-            threading.Thread(
-                target=lambda: self.lekkasje_varsel(id_with_lekkasje)
-            ).start()  # Start the leak alert in a separate thread
-    
+            id_with_lekkasje = []  # List of IDs for sensors with leaks
+            for lekkasje_nr, is_lekkasje in enumerate(lekkasje_liste):  # For each sensor in the list of leaks
+                if not is_lekkasje:  # If the sensor doesn't have a leak
+                    id_with_lekkasje.append(lekkasje_nr + 1)  # Add the sensor's ID to id_with_lekkasje
+            if not self.lekkasje_varsel_is_running and len(id_with_lekkasje) > 0:  # If there is no leak alert running and there is a sensor with a leak
+                self.lekkasje_varsel_is_running = True  # Set lekkasje_varsel_is_running to True
+                timer = QTimer(self)
+                timer.timeout.connect(lambda: self.lekkasje_varsel(id_with_lekkasje))
+                timer.setSingleShot(True)
+                timer.start(0)
+            
     def lekkasje_varsel(self, sensor_nr_liste):
+        self.label_lekkasje_varsel = QLabel(self)
         self.label_lekkasje_varsel.setMaximumSize(16777215,150)
         self.label_lekkasje_varsel.setMinimumSize(16777215,150)
         self.label_lekkasje_varsel.raise_()
+        sensor_nr_liste = [str(item) for item in sensor_nr_liste]
         
+        text = f"Advarsel vannlekkasje oppdaget på sensor: {str(', '.join(sensor_nr_liste))}"
+        self.label_lekkasje_varsel.setText(text)
+        self.label_lekkasje_varsel.setStyleSheet("QLabel { color: rgba(255, 255, 255, 200); background-color: rgba(179, 32, 36, 200); font-size: 24pt;}")
         
+        #self.layout.addWidget(self.label_lekkasje_varsel)
+        
+        if "win" in sys.platform:
+            subprocess.call(('./ffplay.exe -autoexit -nodisp ./siren.wav'), stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
+        else:
+            subprocess.call(('./ffplay', '-autoexit', '-nodisp', './siren.wav'), stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
+        self.label_lekkasje_varsel.setStyleSheet("QLabel { color: rgba(255, 255, 255, 0); background-color: rgba(179, 32, 36, 0); font-size: 24pt;}")
+        self.label_lekkasje_varsel.lower()
+        self.lekkasje_varsel_is_running = False
+        self.label_lekkasje_varsel.setMaximumSize(0,0)
+        self.label_lekkasje_varsel.setMinimumSize(0,0)
+
     def gui_manipulator_update(self, sensordata):
         self.update_round_percent_visualizer(0, self.label_percentage_mani_1)
         self.update_round_percent_visualizer(0, self.label_percentage_mani_2)
@@ -280,7 +293,7 @@ def run(conn, queue_for_rov, t_watch: Threadwatcher, id):
     win = Window(conn, queue_for_rov, t_watch, id)  # Create an instance of our class
     GLOBAL_STATE = False
     win.show()  # Show the form
-
+    
     app.exec()
     #sys.exit(app.exec())
 

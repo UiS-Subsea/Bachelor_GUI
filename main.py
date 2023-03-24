@@ -40,14 +40,14 @@ def network_format(data) -> bytes:
 
 
 class Rov_state:
-    def __init__(self, queue, network_handler, t_watch: Threadwatcher) -> None:
+    def __init__(self, queue, network_handler,gui_pipe, t_watch: Threadwatcher,) -> None:
         self.t_watch: Threadwatcher = t_watch
         self.data: dict = {}
-        #self.logger = Logger()
+        self.logger = Logger()
         self.queue: multiprocessing.Queue = queue
         self.gui_pipe = gui_pipe # Pipe to send sensordata back to the gui
         self.sensordata=None
-        #self.send_sensordata_to_gui()
+        self.send_sensordata_to_gui()
         
         # Pipe to send sensordata back to the gui
         # Prevents the tilt toggle from toggling back again immediately if we hold the button down
