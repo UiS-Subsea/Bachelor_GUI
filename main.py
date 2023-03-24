@@ -355,12 +355,12 @@ if __name__ == "__main__":
             print("network started")
             run_network = True
 
-        print("starting send to rov")
-        id = t_watch.add_thread()
-        print(id)
-        main_driver_loop = threading.Thread(target=run, args=(
-            network, t_watch, id, queue_for_rov), daemon=True)
-        main_driver_loop.start()
+            print("starting send to rov")
+            id = t_watch.add_thread()
+            print(id)
+            main_driver_loop = threading.Thread(target=run, args=(
+                network, t_watch, id, queue_for_rov), daemon=True)
+            main_driver_loop.start()
     # alt oppe er komm. del
 
         if run_get_controllerdata:
