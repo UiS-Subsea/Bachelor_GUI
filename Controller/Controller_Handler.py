@@ -85,11 +85,6 @@ class Controller:
         """wait_for_controller will attempt to connect until it finds a controller."""
         while True:   
             try:
-                # if pygame.joystick.get_count() == 0 | 1:
-                #     for sec in range(5,0,-1):
-                #         sys.stdout.write("\r" + f"Only {pygame.joystick.get_count()} controllers connected! Need 2! Retrying in {sec} seconds")
-                #         time.sleep(1)
-                #         sys.stdout.flush()
                 print("Attempting to Connect to Controllers!")
                 pygame.joystick.init()
                 global rov_joystick
@@ -97,8 +92,8 @@ class Controller:
                 print(f"Found {pygame.joystick.get_count()} controllers.")
                 rov_joystick = pygame.joystick.Joystick(0)
                 mani_joystick = pygame.joystick.Joystick(1)
-                print(f"Connected to {rov_joystick.get_name()}")
-                print(f"Connected to {mani_joystick.get_name()}")
+                print(f"Connected to {rov_joystick.get_name()} {rov_joystick.get_id()}")
+                print(f"Connected to {mani_joystick.get_name()} {mani_joystick.get_id()}")
                 break
             except Exception as e:
                 print(e)
@@ -109,6 +104,7 @@ class Controller:
 
         rov_joystick.init()
         mani_joystick.init()
+        rov_joystick.rumble(1, 1, 1000)
 
     # Remaps a range. for example 1-10 range can be remapped to 1-100 so that for example 3 becomes 30
     def get_new_range(self, value, min, max, scale=100):
@@ -166,7 +162,7 @@ class Controller:
         while t_watch.should_run(id):
             if pygame.joystick.get_count() < 2:
                 self.wait_for_controller()
-            self.duration = self.clock.tick(0.2)
+            self.duration = self.clock.tick(0.5)
             # print(duration)
             for event in pygame.event.get():
                 # print("entered event check")
@@ -190,7 +186,7 @@ class Controller:
                         # threading.Thread(target=self.lekkasje).start()
 
                     if debug_all:
-                        if event.joy == 0:
+                        if event.joy == ROV_CONTROLLER_ID:
                             if event.button == BUTTON_A:
                                 print("ROV: A")
                             elif event.button == BUTTON_B:
@@ -215,7 +211,7 @@ class Controller:
                                 print("ROV: DPAD - Left")
                             elif event.button == 14:
                                 print("ROV: DPAD - Right")
-                        if event.joy == 1:
+                        if event.joy == MANIPULATOR_CONTROLLER_ID:
                             if event.button == BUTTON_A:
                                 print("MANIPULATOR: A")
                             elif event.button == BUTTON_B:
@@ -276,16 +272,16 @@ class Controller:
                 # this is "solved" by the fact that the other joystick reduces the value of the first joystick that was pressed. Since we add up the
                 # joystick values to get total trust. Example: axis 4: -50, axis 5: 100. Value we get is 50. With bug: axis 4: 0, axis 5: 50.
                 if event.type == JOYSTICK: #joystick movement JOYSTICK
-                    if event.joy == 0:
+                    if event.joy == ROV_CONTROLLER_ID:
                         self.rov_joysticks[event.axis] = self.normalize_joysticks(event)
                         self.rov_joysticks[6] = self.rov_joysticks[4] + self.rov_joysticks[5]
-                    elif event.joy == 1:
+                    elif event.joy == MANIPULATOR_CONTROLLER_ID:
                         self.mani_joysticks[event.axis] = self.normalize_joysticks(event)
                         self.mani_joysticks[6] = self.mani_joysticks[4] + self.mani_joysticks[5]
 
                     if debug_all:
                         deadzone = 0.07 #To prevent sensitive output in console
-                        if event.joy == 0:
+                        if event.joy == ROV_CONTROLLER_ID:
                             if event.axis == 0:
                                 if event.value > deadzone:
                                     print(f"ROV til HØYRE med {self.normalize_joysticks(event)}% kraft")
@@ -312,7 +308,7 @@ class Controller:
                                     print(f"ROV NEDOVER med {self.normalize_joysticks(event)}% kraft")
                             elif event.axis == 5:
                                     print(f"ROV OPPOVER med {self.normalize_joysticks(event)}% kraft")
-                        elif event.joy == 1:
+                        elif event.joy == MANIPULATOR_CONTROLLER_ID:
                                 if event.axis == 0:
                                     if event.value > deadzone:
                                         print(f"MANIPULATOR til HØYRE med {self.normalize_joysticks(event)}% kraft")
@@ -347,48 +343,6 @@ class Controller:
         print("closed connection")
         # self.connection.close() 
 
-def debug():
-    pygame.joystick.init()
-    pygame.joystick.Joystick(0).init()
-    pygame.joystick.Joystick(1).init()
-
-    if pygame.joystick.Joystick(0) is not None:
-        print(f"Controller 2 connected! ID:{pygame.joystick.Joystick(0).get_id()}")
-    if pygame.joystick.Joystick(1) is not None:
-        print(f"Controller 2 connected! ID:{pygame.joystick.Joystick(1).get_id()}")
-
-    # rov_con = pygame.joystick.Joystick(0)
-    # mani_con = pygame.joystick.Joystick(1)
-
-    while True:
-        for event in pygame.event.get():
-            if event.type == BUTTON_DOWN:
-                print(event.button)
-                if event.joy == 0:
-                    print("ROV: ", event.button, " pressed.")
-                elif event.joy == 1:
-                    print("Manipulator: ", event.button, " pressed.")
-            if event.type == pygame.JOYAXISMOTION:
-                if event.joy == 1:
-                    if abs(event.value) > 0.07:
-                        if event.axis == 0:
-                            print("ROV: Left Joystick X-axis movement: ", event.value)
-                        elif event.axis == 1:
-                            print("ROV: Left Joystick Y-axis movement: ", event.value)
-                        elif event.axis == 2:
-                            print("ROV: Right Joystick X-axis movement: ", event.value)
-                        elif event.axis == 3:
-                            print("ROV: Right Joystick Y-axis movement: ", event.value)
-                elif event.joy == 1:
-                    if abs(event.value) > 0.07:
-                        if event.axis == 0:
-                            print("Manipulator: Left Joystick X-axis movement: ", event.value)
-                        elif event.axis == 1:
-                            print("Manipulator: Left Joystick Y-axis movement: ", event.value)
-                        elif event.axis == 2:
-                            print("Manipulator: Right Joystick X-axis movement: ", event.value)
-                        elif event.axis == 3:
-                            print("Manipulator: Right Joystick Y-axis movement: ", event.value)
 
 # This is the entry point that main calls
 def run(queue_to_rov, t_watch: Threadwatcher, id, debug=True, debug_all=True):
