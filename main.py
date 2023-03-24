@@ -340,7 +340,7 @@ if __name__ == "__main__":
         global network
         global run_craft_packet
         run_craft_pakcet = True
-        run_network = True  # Bytt t false når du ska prøva å connecte.
+        run_network = False  # Bytt t false når du ska prøva å connecte.
         run_get_controllerdata = True
         queue_for_rov = multiprocessing.Queue()
         t_watch = Threadwatcher()
@@ -348,7 +348,7 @@ if __name__ == "__main__":
         debug_all = True  # Sett til True om du vil se input fra controllers
 
         network = False
-        if not run_network:
+        if run_network:
             network = Network(is_server=False, port=6900, bind_addr="0.0.0.0",
                             connect_addr="10.0.0.2")
             print("network started")

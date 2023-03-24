@@ -104,6 +104,7 @@ class Controller:
 
         rov_joystick.init()
         mani_joystick.init()
+        rov_joystick.rumble(1, 1, 1000)
 
     # Remaps a range. for example 1-10 range can be remapped to 1-100 so that for example 3 becomes 30
     def get_new_range(self, value, min, max, scale=100):
