@@ -317,7 +317,7 @@ def run(network_handler: Network, t_watch: Threadwatcher, id: int, queue_for_rov
     # Komm. del
     print("run thread")
     print(f"{network_handler = }")
-    rov_state = Rov_state(queue_for_rov, network_handler, gui_pipe, t_watch)
+    rov_state = Rov_state(queue_for_rov, network_handler, t_watch)
     print(f"{network_handler = }")
     if not network_handler == None:
         id = t_watch.add_thread()

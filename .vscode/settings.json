@@ -1,5 +1,6 @@
 {
     "python.analysis.extraPaths": [
-        "./Kommunikasjon"
+        "./Kommunikasjon",
+        "./GUI"
     ]
 }

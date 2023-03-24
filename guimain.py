@@ -2,7 +2,8 @@ import time
 from Thread_info import Threadwatcher
 import multiprocessing
 from multiprocessing import Pipe, Process, Queue
-from gui import *
+#from gui import *
+from GUI.gui import *
 import threading
 
 def send_fake_sensordata(t_watch: Threadwatcher, gui_pipe: multiprocessing.Pipe):
