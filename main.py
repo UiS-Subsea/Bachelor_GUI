@@ -157,7 +157,7 @@ class Rov_state:
 
     def handle_data_from_rov(self, message: dict):
         if run_network:
-            self.logger.sensor_logger.info(message)
+            self.logger.data_logger.info(message)
             print(f"{message =}")
         message_name = ""
         if not isinstance(message, dict):
@@ -181,10 +181,10 @@ class Rov_state:
             pass
             print(f"\n\nMESSAGE NOT RECOGNISED\n{message}\n")
 
-    def network_format(data) -> bytes:
-        """Formats the data for sending to network handler"""
-        packet_seperator = json.dumps("*")
-        return bytes(packet_seperator+json.dumps(data)+packet_seperator, "utf-8")
+    # def network_format(data) -> bytes:
+    #     """Formats the data for sending to network handler"""
+    #     packet_seperator = json.dumps("*")
+    #     return bytes(packet_seperator+json.dumps(data)+packet_seperator, "utf-8")
 
     def craft_packet(self, t_watch: Threadwatcher, id):
         print("CraftPack Thread")
@@ -221,7 +221,7 @@ class Rov_state:
                 pass
                 print(f"{packet = }")
         if run_network:
-            self.logger.sensor_logger.info(copied_packets)
+            self.logger.data_logger.info(copied_packets)
         if self.network_handler is None or not copied_packets:
             return
         self.network_handler.send(network_format(copied_packets))
@@ -304,7 +304,7 @@ class Rov_state:
         self.build_rov_packet()
         self.build_manipulator_packet()
 
-
+#på fuse send 1 og 0
 def run(network_handler: Network, t_watch: Threadwatcher, id: int, queue_for_rov: multiprocessing.Queue):
     rov_state = Rov_state(queue_for_rov, network_handler, t_watch)
 
@@ -318,8 +318,6 @@ def run(network_handler: Network, t_watch: Threadwatcher, id: int, queue_for_rov
     # Komm. del
     print("run thread")
     print(f"{network_handler = }")
-    rov_state = Rov_state(queue_for_rov, network_handler, t_watch)
-    print(f"{network_handler = }")
     if not network_handler == None:
         id = t_watch.add_thread()
         threading.Thread(target=rov_state.recieve_data_from_rov, args=(
@@ -329,6 +327,7 @@ def run(network_handler: Network, t_watch: Threadwatcher, id: int, queue_for_rov
         threading.Thread(target=rov_state.craft_packet,
                         args=(t_watch, id), daemon=True).start()
     while t_watch.should_run(id):
+        rov_state.get_from_queue()
         rov_state.send_packets()
         rov_state.data = {}
 

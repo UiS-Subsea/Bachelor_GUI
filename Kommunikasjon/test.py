@@ -80,3 +80,5 @@ def reset_fuse_on_power_supply(fuse_number):
 if __name__ == "__main__":
     r = reset_fuse_on_power_supply(2)
     print(r)
+    r2 = reset_fuse_on_power_supply(1)
+    print(r2)
