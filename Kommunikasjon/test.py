@@ -62,23 +62,24 @@
 #     print(r)
 regulator_active: list[bool] = [True, True, True]
 packets_to_send = []
+X_AXIS = 1
+Y_AXIS = 0
+Z_AXIS = 6
+ROTATION_AXIS = 2
+data = {}
 
 
-def reset_fuse_on_power_supply(fuse_number):
-    """reset_fuse_on_power_supply creates and adds
-    packets for reseting a fuse on the ROV"""
-    fuse_reset_signal = [False]*3
-    fuse_reset_signal[fuse_number] = True
-
-    for item in regulator_active:
-        fuse_reset_signal.append(item)
-
-    packets_to_send.append([139, fuse_reset_signal])
+def build_rov_packet():
+    data = [0, 0, 0, 0, 0, 0, 0, 0]
+    data[0] = data["rov_joysticks"][X_AXIS]
+    data[1] = data["rov_joysticks"][Y_AXIS]
+    data[2] = data["rov_joysticks"][Z_AXIS]
+    data[3] = data["rov_joysticks"][ROTATION_AXIS]
+    packets_to_send.append([40, data])
     print(packets_to_send)
+    # print(self.packets_to_send)
 
 
 if __name__ == "__main__":
-    r = reset_fuse_on_power_supply(2)
+    r = build_rov_packet()
     print(r)
-    r2 = reset_fuse_on_power_supply(1)
-    print(r2)

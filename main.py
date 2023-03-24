@@ -313,11 +313,8 @@ def run(network_handler: Network, t_watch: Threadwatcher, id: int, queue_for_rov
     # Komm. del
     print("run thread")
     print(f"{network_handler = }")
-<<<<<<< HEAD
-=======
     # rov_state = Rov_state(queue_for_rov, network_handler, t_watch)
     # print(f"{network_handler = }")
->>>>>>> 8d570dea2644bc6f0ea6b884d28f28bb6b90093b
     if not network_handler == None:
         id = t_watch.add_thread()
         threading.Thread(target=rov_state.recieve_data_from_rov, args=(
@@ -330,11 +327,8 @@ def run(network_handler: Network, t_watch: Threadwatcher, id: int, queue_for_rov
     print("Before whiles")
     while t_watch.should_run(id):
         rov_state.get_from_queue()
-<<<<<<< HEAD
-=======
         if run_get_controllerdata and rov_state.data != {}:
             rov_state.check_controls()
->>>>>>> 8d570dea2644bc6f0ea6b884d28f28bb6b90093b
         rov_state.send_packets()
         print(":: Data sent ::")
         rov_state.data = {}
