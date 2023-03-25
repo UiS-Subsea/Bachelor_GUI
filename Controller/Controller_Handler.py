@@ -1,5 +1,6 @@
 import multiprocessing
 from Thread_info import Threadwatcher
+# from Threadwatch import Threadwatcher
 import threading
 import os
 os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
@@ -37,7 +38,7 @@ class Controller:
         # list of all buttons that can be clicked. 1 means it is clicked and 0 is not clicked
         self.rov_buttons = [0]*15
 
-        self.mani_buttons = [0]*15
+        self.mani_buttons = [0]*16
         # values for all axes of the joysticks (and one "virtual joystick" that combines axes)
         self.rov_joysticks = [0]*7
 
@@ -79,6 +80,8 @@ class Controller:
     def reset_button(self, event) -> None:
         self.rov_buttons[event.button] = 0
         self.mani_buttons[event.button] = 0 
+        #For å resette virtuell knapp 15 (index -11+12)
+        self.mani_buttons[15] = 0
 
     
     def wait_for_controller(self):
@@ -162,22 +165,24 @@ class Controller:
         while t_watch.should_run(id):
             if pygame.joystick.get_count() < 2:
                 self.wait_for_controller()
-            self.duration = self.clock.tick(20)
+            self.duration = self.clock.tick(1)
             # print(duration)
             for event in pygame.event.get():
                 # print("entered event check")
-                if event.type == DPAD: #dpad (both up and down)
-                    if event.joy == ROV_CONTROLLER_ID:
-                        self.rov_dpad = event.value # BLIR DET BRUKT ELLER ER DET KNAPP?
-                    if event.joy == MANIPULATOR_CONTROLLER_ID:
-                        self.mani_dpad = event.value # BLIR DET BRUKT ELLER ER DET KNAPP?
-                    # self.dpad = [val*100 for val in event.value]
+                # if event.type == DPAD: #dpad (both up and down)
+                #     if event.joy == ROV_CONTROLLER_ID:
+                #         self.rov_dpad = event.value # BLIR DET BRUKT ELLER ER DET KNAPP?
+                #     if event.joy == MANIPULATOR_CONTROLLER_ID:
+                #         self.mani_dpad = event.value # BLIR DET BRUKT ELLER ER DET KNAPP?
+                #     # self.dpad = [val*100 for val in event.value]
 
                 if event.type == BUTTON_DOWN: #button down
                     if event.joy == ROV_CONTROLLER_ID:
                         self.rov_buttons[event.button] = 1
                     elif event.joy == MANIPULATOR_CONTROLLER_ID:
                         self.mani_buttons[event.button] = 1
+                        #Virtual button for mapping -1 to 1 on arm forward / backward
+                        self.mani_buttons[15] = ((-self.mani_buttons[12]) + self.mani_buttons[11])
 
                     #Trenger sikkert ikke denne, skal nok bruke andre funksjoner !!!
                     # if self.rov_buttons[BUTTON_Y] == 1:
@@ -266,7 +271,7 @@ class Controller:
                             print("DPAD - Left UP")
                         if event.button == 14:
                             print("DPAD - Right UP")
-                    self.reset_button(event)
+                    # self.reset_button(event)
 
                 # There is a bug where only one joystick is registered if the program has been started, but no buttons or dpad has been pressed yet.
                 # this is "solved" by the fact that the other joystick reduces the value of the first joystick that was pressed. Since we add up the
