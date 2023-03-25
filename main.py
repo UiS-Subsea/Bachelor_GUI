@@ -13,7 +13,7 @@ from Controller import Controller_Handler as controller
 
 # VALUES: (0-7) -> index i: [0,0,0,0,0,0,0,0]
 # MANIPULATOR
-MANIPULATOR_IN_OUT = 1
+MANIPULATOR_IN_OUT = 15
 MANIPULATOR_ROTATION = 0
 MANIPULATOR_TILT = 3
 MANIPULATOR_GRAB_RELEASE = 6
@@ -277,7 +277,7 @@ class Rov_state:
         if self.data == {}:
             return
         data = [0, 0, 0, 0, 0, 0, 0, 0]
-        data[0] = self.data["mani_joysticks"][MANIPULATOR_IN_OUT]
+        data[0] = self.data["mani_buttons"][MANIPULATOR_IN_OUT]*100
         data[1] = self.data["mani_joysticks"][MANIPULATOR_ROTATION]
         data[2] = self.data["mani_joysticks"][MANIPULATOR_TILT]
         data[3] = self.data["mani_joysticks"][MANIPULATOR_GRAB_RELEASE]
@@ -341,7 +341,7 @@ if __name__ == "__main__":
         global network
         global run_craft_packet
         run_craft_pakcet = True
-        run_network = True  # Bytt t false når du ska prøva å connecte.
+        run_network = False  # Bytt t True når du ska prøva å connecte.
         run_get_controllerdata = True
         queue_for_rov = multiprocessing.Queue()
         t_watch = Threadwatcher()
