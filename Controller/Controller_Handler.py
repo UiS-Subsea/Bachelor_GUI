@@ -88,13 +88,11 @@ class Controller:
         """wait_for_controller will attempt to connect until it finds a controller."""
         while True:   
             try:
-                if not self.first_run:
-                    pygame.joystick.quit()
-                else:
-                    print("Attempting to Connect to Controllers!")
                 global rov_joystick
                 global mani_joystick
                 pygame.joystick.init()
+                if pygame.joystick.get_count() == 0:
+                    raise Exception
                 if pygame.joystick.get_count() == 1:
                     print(f"Found {pygame.joystick.get_count()} controller. Connecting to ROV Only!")
                     rov_joystick = pygame.joystick.Joystick(0)
@@ -108,9 +106,8 @@ class Controller:
                 break
             except Exception as e:
                 print(e)
-                self.first_run = False
                 for sec in range(5,0,-1):
-                        sys.stdout.write("\r" + f"Only {pygame.joystick.get_count()} controllers connected! Need 2! Retrying in {sec} seconds")
+                        sys.stdout.write("\r" + f"Shut down and connect controller/s before starting! {sec}")
                         time.sleep(1)
                         sys.stdout.flush()
         if pygame.joystick.get_count() == 1:
@@ -118,6 +115,7 @@ class Controller:
         elif pygame.joystick.get_count() == 2:
             rov_joystick.init()
             mani_joystick.init()
+            #Indicates which controller that controls the ROV
             rov_joystick.rumble(0.2, 0.2, 500)
 
     # Remaps a range. for example 1-10 range can be remapped to 1-100 so that for example 3 becomes 30
