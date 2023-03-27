@@ -88,26 +88,37 @@ class Controller:
         """wait_for_controller will attempt to connect until it finds a controller."""
         while True:   
             try:
-                print("Attempting to Connect to Controllers!")
-                pygame.joystick.init()
+                if not self.first_run:
+                    pygame.joystick.quit()
+                else:
+                    print("Attempting to Connect to Controllers!")
                 global rov_joystick
                 global mani_joystick
-                print(f"Found {pygame.joystick.get_count()} controllers.")
-                rov_joystick = pygame.joystick.Joystick(0)
-                mani_joystick = pygame.joystick.Joystick(1)
-                print(f"Connected to {rov_joystick.get_name()} {rov_joystick.get_id()}")
-                print(f"Connected to {mani_joystick.get_name()} {mani_joystick.get_id()}")
+                pygame.joystick.init()
+                if pygame.joystick.get_count() == 1:
+                    print(f"Found {pygame.joystick.get_count()} controller. Connecting to ROV Only!")
+                    rov_joystick = pygame.joystick.Joystick(0)
+                    print(f"Connected to {rov_joystick.get_name()}")
+                if pygame.joystick.get_count() == 2:
+                    print(f"Found {pygame.joystick.get_count()} controllers. Connecting BOTH!")
+                    rov_joystick = pygame.joystick.Joystick(0)
+                    mani_joystick = pygame.joystick.Joystick(1)
+                    print(f"Connected to {rov_joystick.get_name()}")
+                    print(f"Connected to {mani_joystick.get_name()}")
                 break
             except Exception as e:
                 print(e)
+                self.first_run = False
                 for sec in range(5,0,-1):
                         sys.stdout.write("\r" + f"Only {pygame.joystick.get_count()} controllers connected! Need 2! Retrying in {sec} seconds")
                         time.sleep(1)
                         sys.stdout.flush()
-
-        rov_joystick.init()
-        mani_joystick.init()
-        rov_joystick.rumble(0.2, 0.2, 500)
+        if pygame.joystick.get_count() == 1:
+            rov_joystick.init()
+        elif pygame.joystick.get_count() == 2:
+            rov_joystick.init()
+            mani_joystick.init()
+            rov_joystick.rumble(0.2, 0.2, 500)
 
     # Remaps a range. for example 1-10 range can be remapped to 1-100 so that for example 3 becomes 30
     def get_new_range(self, value, min, max, scale=100):
@@ -163,9 +174,9 @@ class Controller:
     def get_events_loop(self, t_watch: Threadwatcher, id: int, debug=False, debug_all=False):
         """get_events_loop collects all the events and updates the buttons, dpad, and joystick values. It then sends it to the queue if it is not local"""
         while t_watch.should_run(id):
-            if pygame.joystick.get_count() < 2:
+            if pygame.joystick.get_count() < 1:
                 self.wait_for_controller()
-            self.duration = self.clock.tick(1)
+            self.duration = self.clock.tick(20)
             # print(duration)
             for event in pygame.event.get():
                 # print("entered event check")
