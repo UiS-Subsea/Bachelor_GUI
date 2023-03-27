@@ -93,12 +93,12 @@ class Controller:
                 print("Attempting to Connect to Controllers!")
                 pygame.joystick.init()
                 global rov_joystick
-                global mani_joystick
+                #global mani_joystick
                 print(f"Found {pygame.joystick.get_count()} controllers.")
                 rov_joystick = pygame.joystick.Joystick(0)
-                mani_joystick = pygame.joystick.Joystick(1)
+                #mani_joystick = pygame.joystick.Joystick(1)
                 print(f"Connected to {rov_joystick.get_name()}")
-                print(f"Connected to {mani_joystick.get_name()}")
+                #print(f"Connected to {mani_joystick.get_name()}")
                 break
             except Exception as e:
                 print(e)
@@ -108,7 +108,7 @@ class Controller:
                         sys.stdout.flush()
 
         rov_joystick.init()
-        mani_joystick.init()
+        #mani_joystick.init()
 
     # Remaps a range. for example 1-10 range can be remapped to 1-100 so that for example 3 becomes 30
     def get_new_range(self, value, min, max, scale=100):
@@ -164,7 +164,7 @@ class Controller:
     def get_events_loop(self, t_watch: Threadwatcher, id: int, debug=False, debug_all=False):
         """get_events_loop collects all the events and updates the buttons, dpad, and joystick values. It then sends it to the queue if it is not local"""
         while t_watch.should_run(id):
-            if pygame.joystick.get_count() < 2:
+            if pygame.joystick.get_count() < 1:
                 self.wait_for_controller()
             self.duration = self.clock.tick(0.2)
             # print(duration)

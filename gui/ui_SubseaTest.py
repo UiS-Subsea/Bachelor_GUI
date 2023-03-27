@@ -12,7 +12,7 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 class Ui_Form(object):
     def setupUi(self, Form):
         Form.setObjectName("Form")
-        Form.resize(889, 820)
+        Form.resize(929, 752)
         Form.setStyleSheet("/*Copyright (c) DevSec Studio. All rights reserved.\n"
 "\n"
 "MIT License\n"
