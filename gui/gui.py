@@ -246,6 +246,19 @@ class Window(QMainWindow):
         self.label_lekkasje_varsel.setMaximumSize(16777215,150)
         self.label_lekkasje_varsel.setMinimumSize(16777215,150)
         self.label_lekkasje_varsel.raise_()
+        sensor_nr_liste = [str(item) for item in sensor_nr_liste]
+        text = f"Advarsel vannlekkasje oppdaget på sensor: {str(', '.join(sensor_nr_liste))}"
+        self.label_lekkasje_varsel.setText(text)
+        self.label_lekkasje_varsel.setStyleSheet("QLabel { color: rgba(255, 255, 255, 200); background-color: rgba(179, 32, 36, 200); font-size: 24pt;}")
+        if "win" in sys.platform:
+            subprocess.call(('./ffplay.exe -autoexit -nodisp ./siren.wav'), stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
+        else:
+            subprocess.call(('./ffplay', '-autoexit', '-nodisp', './siren.wav'), stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
+        self.label_lekkasje_varsel.setStyleSheet("QLabel { color: rgba(255, 255, 255, 0); background-color: rgba(179, 32, 36, 0); font-size: 24pt;}")
+        self.label_lekkasje_varsel.lower()
+        self.lekkasje_varsel_is_running = False
+        self.label_lekkasje_varsel.setMaximumSize(0,0)
+        self.label_lekkasje_varsel.setMinimumSize(0,0)
         
         
     def gui_manipulator_update(self, sensordata):
