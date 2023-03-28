@@ -9,7 +9,8 @@ import Controller_Handler as controller
 
 # VALUES: (0-7) -> index i: [0,0,0,0,0,0,0,0]
 # MANIPULATOR
-MANIPULATOR_IN_OUT = 1
+MANIPULATOR_IN_OUT = 15
+
 MANIPULATOR_ROTATION = 0
 MANIPULATOR_TILT = 3
 MANIPULATOR_GRAB_RELEASE = 6
@@ -43,17 +44,18 @@ class Rov_state:
         if self.data == {}:
             return
         data = [0,0,0,0,0,0,0,0]
-        data[0] = self.data["mani_buttons"][MANIPULATOR_IN_OUT]
+        data[0] = self.data["mani_buttons"][MANIPULATOR_IN_OUT]*100
         data[1] = self.data["mani_joysticks"][MANIPULATOR_ROTATION]
         data[2] = self.data["mani_joysticks"][MANIPULATOR_TILT]
         data[3] = self.data["mani_joysticks"][MANIPULATOR_GRAB_RELEASE]
+        print(data)
         self.packets_to_send.append([41, data])
         # print(self.packets_to_send)
 
     def button_handling(self):
-        rov_buttons = self.data.get("rov_buttons")
+        # rov_buttons = self.data.get("rov_buttons")
         mani_buttons = self.data.get("mani_buttons")
-        # print(f"KNAPPER {rov_buttons} : {mani_buttons}")
+        print(f"KNAPPER {mani_buttons}")
 
     def get_from_queue(self):
         """Takes data from the queue and sends it to the correct handler"""
@@ -68,10 +70,10 @@ class Rov_state:
             self.data = packet
     
     def check_controls(self):
-        # self.button_handling()
+        self.button_handling()
         self.build_rov_packet()
         self.build_manipulator_packet()
-        print(self.packets_to_send)
+        # print(self.packets_to_send)
 
 def run(t_watch: Threadwatcher, id: int, queue_for_rov: multiprocessing.Queue):
     rov_state = Rov_state(queue_for_rov, t_watch)

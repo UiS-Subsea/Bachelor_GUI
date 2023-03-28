@@ -1,5 +1,6 @@
 import multiprocessing
 from Thread_info import Threadwatcher
+# from Threadwatch import Threadwatcher
 import threading
 import os
 os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
@@ -37,7 +38,7 @@ class Controller:
         # list of all buttons that can be clicked. 1 means it is clicked and 0 is not clicked
         self.rov_buttons = [0]*15
 
-        self.mani_buttons = [0]*15
+        self.mani_buttons = [0]*16
         # values for all axes of the joysticks (and one "virtual joystick" that combines axes)
         self.rov_joysticks = [0]*7
 
@@ -79,32 +80,43 @@ class Controller:
     def reset_button(self, event) -> None:
         self.rov_buttons[event.button] = 0
         self.mani_buttons[event.button] = 0 
+        #For å resette virtuell knapp 15 (index -11+12)
+        self.mani_buttons[15] = 0
 
     
     def wait_for_controller(self):
         """wait_for_controller will attempt to connect until it finds a controller."""
         while True:   
             try:
-                print("Attempting to Connect to Controllers!")
-                pygame.joystick.init()
                 global rov_joystick
                 global mani_joystick
-                print(f"Found {pygame.joystick.get_count()} controllers.")
-                rov_joystick = pygame.joystick.Joystick(0)
-                mani_joystick = pygame.joystick.Joystick(1)
-                print(f"Connected to {rov_joystick.get_name()} {rov_joystick.get_id()}")
-                print(f"Connected to {mani_joystick.get_name()} {mani_joystick.get_id()}")
+                pygame.joystick.init()
+                if pygame.joystick.get_count() == 0:
+                    raise Exception
+                if pygame.joystick.get_count() == 1:
+                    print(f"Found {pygame.joystick.get_count()} controller. Connecting to ROV Only!")
+                    rov_joystick = pygame.joystick.Joystick(0)
+                    print(f"Connected to {rov_joystick.get_name()}")
+                if pygame.joystick.get_count() == 2:
+                    print(f"Found {pygame.joystick.get_count()} controllers. Connecting BOTH!")
+                    rov_joystick = pygame.joystick.Joystick(0)
+                    mani_joystick = pygame.joystick.Joystick(1)
+                    print(f"Connected to {rov_joystick.get_name()}")
+                    print(f"Connected to {mani_joystick.get_name()}")
                 break
             except Exception as e:
                 print(e)
                 for sec in range(5,0,-1):
-                        sys.stdout.write("\r" + f"Only {pygame.joystick.get_count()} controllers connected! Need 2! Retrying in {sec} seconds")
+                        sys.stdout.write("\r" + f"Shut down and connect controller/s before starting! {sec}")
                         time.sleep(1)
                         sys.stdout.flush()
-
-        rov_joystick.init()
-        mani_joystick.init()
-        rov_joystick.rumble(0.2, 0.2, 500)
+        if pygame.joystick.get_count() == 1:
+            rov_joystick.init()
+        elif pygame.joystick.get_count() == 2:
+            rov_joystick.init()
+            mani_joystick.init()
+            #Indicates which controller that controls the ROV
+            rov_joystick.rumble(0.2, 0.2, 500)
 
     # Remaps a range. for example 1-10 range can be remapped to 1-100 so that for example 3 becomes 30
     def get_new_range(self, value, min, max, scale=100):
@@ -160,24 +172,26 @@ class Controller:
     def get_events_loop(self, t_watch: Threadwatcher, id: int, debug=False, debug_all=False):
         """get_events_loop collects all the events and updates the buttons, dpad, and joystick values. It then sends it to the queue if it is not local"""
         while t_watch.should_run(id):
-            if pygame.joystick.get_count() < 2:
+            if pygame.joystick.get_count() < 1:
                 self.wait_for_controller()
             self.duration = self.clock.tick(20)
             # print(duration)
             for event in pygame.event.get():
                 # print("entered event check")
-                if event.type == DPAD: #dpad (both up and down)
-                    if event.joy == ROV_CONTROLLER_ID:
-                        self.rov_dpad = event.value # BLIR DET BRUKT ELLER ER DET KNAPP?
-                    if event.joy == MANIPULATOR_CONTROLLER_ID:
-                        self.mani_dpad = event.value # BLIR DET BRUKT ELLER ER DET KNAPP?
-                    # self.dpad = [val*100 for val in event.value]
+                # if event.type == DPAD: #dpad (both up and down)
+                #     if event.joy == ROV_CONTROLLER_ID:
+                #         self.rov_dpad = event.value # BLIR DET BRUKT ELLER ER DET KNAPP?
+                #     if event.joy == MANIPULATOR_CONTROLLER_ID:
+                #         self.mani_dpad = event.value # BLIR DET BRUKT ELLER ER DET KNAPP?
+                #     # self.dpad = [val*100 for val in event.value]
 
                 if event.type == BUTTON_DOWN: #button down
                     if event.joy == ROV_CONTROLLER_ID:
                         self.rov_buttons[event.button] = 1
                     elif event.joy == MANIPULATOR_CONTROLLER_ID:
                         self.mani_buttons[event.button] = 1
+                        #Virtual button for mapping -1 to 1 on arm forward / backward
+                        self.mani_buttons[15] = ((-self.mani_buttons[12]) + self.mani_buttons[11])
 
                     #Trenger sikkert ikke denne, skal nok bruke andre funksjoner !!!
                     # if self.rov_buttons[BUTTON_Y] == 1:
@@ -266,7 +280,7 @@ class Controller:
                             print("DPAD - Left UP")
                         if event.button == 14:
                             print("DPAD - Right UP")
-                    self.reset_button(event)
+                    # self.reset_button(event)
 
                 # There is a bug where only one joystick is registered if the program has been started, but no buttons or dpad has been pressed yet.
                 # this is "solved" by the fact that the other joystick reduces the value of the first joystick that was pressed. Since we add up the
