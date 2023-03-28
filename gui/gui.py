@@ -105,6 +105,13 @@ class Window(QMainWindow):
                 time.sleep(0.15)  # Sleep for 0.15 seconds
         print("received")
         exit(0)
+    
+    # def send_data_to_main(self, data, id):
+    #     if self.queue is not None:
+    #         self.queue.put([id, data])
+    #     else:
+    #         raise TypeError("self.queue does not exist inside send_data_to_main")
+
 
     def gui_manipulator_state_update(self, sensordata):
         self.toggle_mani.setChecked(sensordata[0])
@@ -113,7 +120,7 @@ class Window(QMainWindow):
         self.sensor_update_function = {
             "lekk_temp": self.gui_lekk_temp_update,
             "thrust": self.gui_thrust_update,
-            # "accel": self.gui_acceleration_update,
+            #"accel": self.gui_acceleration_update,
             # "gyro": self.gui_gyro_update,
             # "time": self.gui_time_update,
             "manipulator": self.gui_manipulator_update,
@@ -148,7 +155,7 @@ class Window(QMainWindow):
             )
 
         # self.label_effekt_manipulator_2.setText(str(round(sensordata[1])) + " W")
-        # self.label_effekt_elektronikk_2.setText(str(round(sensordata[2])) +" W")
+        self.label_effekt_elektronikk_2.setText(str(round(sensordata[2])) +" W")
 
     def update_round_percent_visualizer(self, value, text_label):
         text_label.setText(str(value))

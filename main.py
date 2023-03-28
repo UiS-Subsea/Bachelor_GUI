@@ -48,6 +48,7 @@ def create_test_sensordata(delta, old_sensordata=None):
         sensordata["dybde"] = old_sensordata["dybde"] + 10 * delta
         sensordata["spenning"] = old_sensordata["spenning"] + 0.4 * delta
         sensordata["temp_rov"] = old_sensordata["temp_rov"] + 0.3 * delta
+        
     return sensordata
 
 def send_fake_sensordata(t_watch: Threadwatcher, gui_pipe: multiprocessing.Pipe):
@@ -421,7 +422,7 @@ if __name__ == "__main__":
         run_craft_packet = True
         run_network = False  # Bytt t True når du ska prøva å connecte.
         run_get_controllerdata = False
-        run_send_fake_sensordata=True #Sett til True om du vil sende fake sensordata til gui
+        run_send_fake_sensordata=True#Sett til True om du vil sende fake sensordata til gui
         
         t_watch = Threadwatcher()
         queue_for_rov = multiprocessing.Queue()

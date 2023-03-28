@@ -2192,7 +2192,7 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
     </rect>
    </property>
    <property name="text">
-    <string>Vinkel 1:</string>
+    <string>Rull</string>
    </property>
   </widget>
   <widget class="QLabel" name="Vinkel2">
@@ -2205,7 +2205,7 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
     </rect>
    </property>
    <property name="text">
-    <string>Vinkel 2:</string>
+    <string>Stamp</string>
    </property>
   </widget>
   <widget class="QLabel" name="Vinkel3">
@@ -2218,7 +2218,7 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
     </rect>
    </property>
    <property name="text">
-    <string>Vinkel 3:</string>
+    <string>Gir</string>
    </property>
   </widget>
   <widget class="QLabel" name="titleAkselerasjon">
