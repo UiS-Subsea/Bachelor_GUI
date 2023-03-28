@@ -78,9 +78,6 @@ class Window(QMainWindow):
         #Vinkler
         self.btnNullpunktVinkler.clicked.connect(lambda: f.nullpunktVinkler(self))
         
-        self.btnZoomIn.clicked.connect(self.zoom_in)
-        self.btnZoomIn.clicked.connect(self.zoom_out)
-        
     def receive_sensordata(
         self, conn
     ):  # conn is a pipe connection that only receives data
