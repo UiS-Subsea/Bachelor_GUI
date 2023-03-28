@@ -10,9 +10,8 @@ import time
 from Kommunikasjon.packet_info import Logger
 from Thread_info import Threadwatcher
 from Controller import Controller_Handler as controller
-import gui
-from gui import guiFunctions as f
-
+import GUI.guiFunctions as f
+import GUI.gui as gui
 # VALUES: (0-7) -> index i: [0,0,0,0,0,0,0,0]
 # MANIPULATOR
 MANIPULATOR_IN_OUT = 15
@@ -38,13 +37,15 @@ def network_format(data) -> bytes:
     packet_seperator = json.dumps("*")
     return bytes(packet_seperator+json.dumps(data)+packet_seperator, "utf-8")
 
+
 def recieve_commands_from_gui(conn, t_watch: Threadwatcher, id):
-    #Probably deprecated
+    # Probably deprecated
     while t_watch.should_run(id):
         if conn.poll():
             print(f" Inside recieve_commands_from_gui {conn.recv() = }")
         # print("recieve commands from gui")
     print("t_watch is false")
+
 
 def create_test_sensordata(delta, old_sensordata=None):
     # TODO: don't use this later its a test function
@@ -55,8 +56,9 @@ def create_test_sensordata(delta, old_sensordata=None):
         sensordata["dybde"] = old_sensordata["dybde"] + 10 * delta
         sensordata["spenning"] = old_sensordata["spenning"] + 0.4 * delta
         sensordata["temp_rov"] = old_sensordata["temp_rov"] + 0.3 * delta
-        
+
     return sensordata
+
 
 def send_fake_sensordata(t_watch: Threadwatcher, gui_pipe: multiprocessing.Pipe):
     thrust_list = [num for num in range(-100, 101)]
@@ -109,16 +111,17 @@ def send_fake_sensordata(t_watch: Threadwatcher, gui_pipe: multiprocessing.Pipe)
         gui_pipe.send(sensordata)
         time.sleep(1)
 
+
 class Rov_state:
-    def __init__(self, queue, network_handler,gui_pipe, t_watch: Threadwatcher) -> None:
+    def __init__(self, queue, network_handler, gui_pipe, t_watch: Threadwatcher) -> None:
         self.t_watch: Threadwatcher = t_watch
         self.data: dict = {}
         self.logger = Logger()
         self.queue: multiprocessing.Queue = queue
-        self.gui_pipe = gui_pipe # Pipe to send sensordata back to the gui
-        self.sensordata=None
+        self.gui_pipe = gui_pipe  # Pipe to send sensordata back to the gui
+        self.sensordata = None
         self.send_sensordata_to_gui(self.data)
-        
+
         # Pipe to send sensordata back to the gui
         # Prevents the tilt toggle from toggling back again immediately if we hold the button down
         self.camera_toggle_wait_counter: int = 0
@@ -140,8 +143,8 @@ class Rov_state:
         self_hud_camera_status = False
 
         self.packets_to_send = []
-    
-    def send_sensordata_to_gui(self,data):
+
+    def send_sensordata_to_gui(self, data):
         """Sends sensordata to the gui"""
         print("Enter into send_sensordata_to_gui function")
         if self.sensordata == None:
@@ -171,7 +174,7 @@ class Rov_state:
                 else:
                     print(data)
                     if data is None:
-                       continue
+                        continue
                     decoded, incomplete_packet = Rov_state.decode_packets(
                         data, incomplete_packet)
                 if decoded == []:
@@ -180,13 +183,13 @@ class Rov_state:
                     print(message)
                     self.handle_data_from_rov(message)
 
-                    #potentially for the future to get information to the GUI : send_to_gui(Rov_state, message)
+                    # potentially for the future to get information to the GUI : send_to_gui(Rov_state, message)
 
             except json.JSONDecodeError as e:
                 print(f"{data = }, {e = }")
                 pass
 
-    #Decodes the tcp packet/s recieved from the rov
+    # Decodes the tcp packet/s recieved from the rov
 
     def send_startup_commands(self):
         self.packets_to_send.append(
@@ -378,7 +381,8 @@ class Rov_state:
         rov_buttons = self.data.get("rov_buttons")
         mani_buttons = self.data.get("mani_buttons")
         # print(f"KNAPPER {rov_buttons} : {mani_buttons}")
-    #TODO: Add GUI commands here
+    # TODO: Add GUI commands here
+
     def get_from_queue(self):
         """Takes data from the queue and sends it to the correct handler"""
         id = -1
@@ -399,9 +403,9 @@ class Rov_state:
 # på fuse send 1 og 0
 
 
-def run(network_handler: Network, t_watch: Threadwatcher, id: int, queue_for_rov: multiprocessing.Queue,gui_pipe):
+def run(network_handler: Network, t_watch: Threadwatcher, id: int, queue_for_rov: multiprocessing.Queue, gui_pipe):
     print("Klarer å gå inn i run function")
-    rov_state = Rov_state(queue_for_rov, network_handler,gui_pipe, t_watch)
+    rov_state = Rov_state(queue_for_rov, network_handler, gui_pipe, t_watch)
 
     # Komm. del
     print("run thread")
@@ -426,6 +430,7 @@ def run(network_handler: Network, t_watch: Threadwatcher, id: int, queue_for_rov
         print(":: Data sent ::")
         rov_state.data = {}
 
+
 def test_gui_leak_response(gui_pipe: multiprocessing.Pipe):
     sensordata = {"lekk_temp": [False,  False, False, -1, -1, -1]}
     gui_pipe.send(sensordata)
@@ -438,22 +443,22 @@ if __name__ == "__main__":
         global run_network
         global network
         global run_craft_packet
-        run_gui=True
+        run_gui = True
         run_craft_packet = True
         run_network = False  # Bytt t True når du ska prøva å connecte.
         run_get_controllerdata = False
-        run_send_fake_sensordata=True#Sett til True om du vil sende fake sensordata til gui
-        
+        # Sett til True om du vil sende fake sensordata til gui
+        run_send_fake_sensordata = True
+
         t_watch = Threadwatcher()
         queue_for_rov = multiprocessing.Queue()
-        
+
         (
-            gui_parent_pipe,#Used by main process, to send/receive data to gui
-            gui_child_pipe,#Used by gui process, to send/receive data to main
+            gui_parent_pipe,  # Used by main process, to send/receive data to gui
+            gui_child_pipe,  # Used by gui process, to send/receive data to main
         ) = Pipe()  # starts the gui program. gui_parent_pipe should get the sensor data
-        
-        
-        #HUSK Å ENDRE TICK HVIS INPUT OPPDATERES SENT!
+
+        # HUSK Å ENDRE TICK HVIS INPUT OPPDATERES SENT!
         debug_all = True  # Sett til True om du vil se input fra controllers
 
         run_network = False
@@ -478,17 +483,16 @@ if __name__ == "__main__":
             controller_process.start()
             input("Press Enter to start sending!")
             # controller_process.terminate()
-        
+
         if run_gui:
             id = t_watch.add_thread()
             gui_loop = Process(
                 target=gui.run,
                 args=(gui_child_pipe, queue_for_rov, t_watch, id),
                 daemon=True,
-            )  #should recieve commands from the gui
+            )  # should recieve commands from the gui
             gui_loop.start()
             print("gui started")
-
 
         if run_send_fake_sensordata:
             id = t_watch.add_thread()
