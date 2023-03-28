@@ -2,7 +2,7 @@ from multiprocessing import Pipe, Process, Queue
 import threading
 from network_handler import Network
 import json
-from Kommunikasjon.Thread_info import Threadwatcher
+from Thread_info import Threadwatcher
 
 
 def recieve_data_from_rov(self, network: Network, t_watch: Threadwatcher, id: int):
