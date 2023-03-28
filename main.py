@@ -236,8 +236,15 @@ class Rov_state:
 
         for item in self.regulator_active:
             fuse_reset_signal.append(item)
-
         self.packets_to_send.append(97, fuse_reset_signal)
+
+    def reset_5V_fuse(self):
+        """reset_fuse_on_power_supply creates and adds
+        packets for resetting a fuse on the ROV"""
+        fuse_reset_bit = [0] * 8
+        fuse_reset_bit[0] = 1  # Set bit 0 of byte 0 to 1 to turn on the fuse
+        self.packets_to_send.append([97, fuse_reset_bit])
+        print(self.packets_to_send)
 
     def reset_12V_thruster_fuse(self, fuse_number):
         """reset_fuse_on_power_supply creates and adds
@@ -273,7 +280,7 @@ class Rov_state:
         # print(self.packets_to_send)
 
     def build_manipulator_packet(self):
-        #Kan også endre til to indexer i data listen for mani inn og ut (f.eks 0 og 1 = btn 12 og 13)
+        # Kan også endre til to indexer i data listen for mani inn og ut (f.eks 0 og 1 = btn 12 og 13)
         if self.data == {}:
             return
         data = [0, 0, 0, 0, 0, 0, 0, 0]
@@ -306,7 +313,9 @@ class Rov_state:
         self.build_rov_packet()
         self.build_manipulator_packet()
 
-#på fuse send 1 og 0
+# på fuse send 1 og 0
+
+
 def run(network_handler: Network, t_watch: Threadwatcher, id: int, queue_for_rov: multiprocessing.Queue):
     rov_state = Rov_state(queue_for_rov, network_handler, t_watch)
 
@@ -322,7 +331,7 @@ def run(network_handler: Network, t_watch: Threadwatcher, id: int, queue_for_rov
     if run_craft_pakcet:
         id = t_watch.add_thread()
         threading.Thread(target=rov_state.craft_packet,
-                        args=(t_watch, id), daemon=True).start()
+                         args=(t_watch, id), daemon=True).start()
     # Con. del
     print("Before whiles")
     while t_watch.should_run(id):
@@ -345,13 +354,13 @@ if __name__ == "__main__":
         run_get_controllerdata = True
         queue_for_rov = multiprocessing.Queue()
         t_watch = Threadwatcher()
-        #HUSK Å ENDRE TICK HVIS INPUT OPPDATERES SENT!
+        # HUSK Å ENDRE TICK HVIS INPUT OPPDATERES SENT!
         debug_all = True  # Sett til True om du vil se input fra controllers
 
-        network = False
+        run_network = False
         if run_network:
             network = Network(is_server=False, port=6900, bind_addr="0.0.0.0",
-                            connect_addr="10.0.0.187")
+                              connect_addr="10.0.0.187")
             print("network started")
             run_network = True
 
