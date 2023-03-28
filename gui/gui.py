@@ -4,9 +4,24 @@ from PyQt5 import QtCore, QtGui, QtWidgets, Qt, uic
 from PyQt5.QtWidgets import QMainWindow, QWidget, QCheckBox, QLabel, QMessageBox
 import sys
 import threading
+
+from main import Rov_state,FiveFuse
 from . import guiFunctions as f
 from Thread_info import Threadwatcher
 import time
+
+import json
+import multiprocessing
+from Kommunikasjon.network_handler import Network
+from multiprocessing import Process, Pipe
+import threading
+import time
+from Kommunikasjon.packet_info import Logger
+from Thread_info import Threadwatcher
+from Controller import Controller_Handler as controller
+import gui
+from gui import guiFunctions as f
+
 
 class Window(QMainWindow):
     def __init__(
@@ -21,6 +36,7 @@ class Window(QMainWindow):
         super().__init__(parent)
         uic.loadUi("gui/Subsea.ui", self)
         self.connectFunctions()
+        
 
         regulering_status_wait_counter = 0
         self.lekkasje_varsel_is_running = False
@@ -29,7 +45,6 @@ class Window(QMainWindow):
         self.queue: multiprocessing.Queue = (
             queue  
         )
-        
         self.pipe_conn_only_rcv = pipe_conn_only_rcv  # pipe_conn_only_rcv is a pipe connection that only receives data
         # Threadwatcher
         self.t_watch: Threadwatcher = t_watch  # t_watch is a threadwatcher object
@@ -43,9 +58,9 @@ class Window(QMainWindow):
         )
         self.receive.start()
         
-
+        
         self.w=None#SecondWindow() #
-
+        
 
         # Buttons
     def show_new_window(self, checked):
@@ -55,7 +70,7 @@ class Window(QMainWindow):
         else:
             print("window already open")
 
-    def connectFunctions(self,ID_RESET_DEPTH=66):
+    def connectFunctions(self):
         #window2
         self.showNewWindowButton.clicked.connect(self.show_new_window)
     
@@ -65,7 +80,7 @@ class Window(QMainWindow):
         self.btnFrogCount.clicked.connect(lambda: f.frogCount(self))
         
         #Sikringer
-        self.btnReset5V.clicked.connect(lambda: f.reset5V(self))
+        #self.btnReset5V.clicked.connect(self.rov_state.reset_5V_fuse2())
         self.btnResetThruster.clicked.connect(lambda: f.resetThruster(self))
         self.btnResetManipulator.clicked.connect(lambda :f.resetManipulator(self))
         
@@ -124,7 +139,7 @@ class Window(QMainWindow):
             # "gyro": self.gui_gyro_update,
             # "time": self.gui_time_update,
             "manipulator": self.gui_manipulator_update,
-            "power_consumption": self.gui_watt_update,
+            "139": self.gui_watt_update,
             "manipulator_toggled": self.gui_manipulator_state_update,
             # "regulator_strom_status": self.regulator_strom_status,
             # "regulering_status": self.gui_regulering_state_update,
