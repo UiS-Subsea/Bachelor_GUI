@@ -152,33 +152,33 @@ class Rov_state:
             "camera_tilts_down": 201
         }
 
-    # def receive_data_from_rov(self, network: Network, t_watch: Threadwatcher, id: int):
-    #     incomplete_packet = ""
-    #     print("recive data thread")
-    #     while t_watch.should_run(id):
-    #         try:
-    #             data = network.receive()
-    #             if data == b"" or data is None:
-    #                 continue
-    #             else:
-    #                 print(data)
-    #                 # if data is None:
-    #                 #    continue
-    #                 decoded, incomplete_packet = Rov_state.decode_packets(
-    #                     data, incomplete_packet)
-    #             if decoded == []:
-    #                 continue
-    #             for message in decoded:
-    #                 # print(message)
-    #                 self.handle_data_from_rov(message)
+    def receive_data_from_rov(self, network: Network, t_watch: Threadwatcher, id: int):
+        incomplete_packet = ""
+        print("recive data thread")
+        while t_watch.should_run(id):
+            try:
+                data = network.receive()
+                if data == b"" or data is None:
+                    continue
+                else:
+                    print(data)
+                    if data is None:
+                       continue
+                    decoded, incomplete_packet = Rov_state.decode_packets(
+                        data, incomplete_packet)
+                if decoded == []:
+                    continue
+                for message in decoded:
+                    print(message)
+                    self.handle_data_from_rov(message)
 
-    #                 # potentially for the future to get information to the GUI : send_to_gui(Rov_state, message)
+                    #potentially for the future to get information to the GUI : send_to_gui(Rov_state, message)
 
-    #         except json.JSONDecodeError as e:
-    #             print(f"{data = }, {e = }")
-    #             pass
+            except json.JSONDecodeError as e:
+                print(f"{data = }, {e = }")
+                pass
 
-    # Decodes the tcp packet/s recieved from the rov
+    #Decodes the tcp packet/s recieved from the rov
 
     def send_startup_commands(self):
         self.packets_to_send.append(
@@ -448,7 +448,6 @@ if __name__ == "__main__":
             main_driver_loop = threading.Thread(target=run, args=(
                 network, t_watch, id, queue_for_rov), daemon=True)
             main_driver_loop.start()
-    # alt oppe er komm. del
 
         if run_get_controllerdata:
             id = t_watch.add_thread()
@@ -465,7 +464,7 @@ if __name__ == "__main__":
                 target=gui.run,
                 args=(gui_child_pipe, queue_for_rov, t_watch, id),
                 daemon=True,
-            )  # and should recieve commands from the gui
+            )  #should recieve commands from the gui
             gui_loop.start()
             print("gui started")
 
@@ -478,14 +477,6 @@ if __name__ == "__main__":
                 daemon=True,
             )
             datafaker.start()
-            # print("starting send to rov")
-            # #id = t_watch.add_thread()
-            # print("1")
-            # main_driver_loop = threading.Thread(
-            #     target=run, args=(network,t_watch, id, queue_for_rov,gui_parent_pipe), daemon=True)
-            # print("2")
-            # main_driver_loop.start()
-            # print("etter main_driver")
         while True:
             time.sleep(5)
     except KeyboardInterrupt:

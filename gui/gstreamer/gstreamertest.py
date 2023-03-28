@@ -58,23 +58,15 @@ def camera_stream(multicast_group, port):
 # Camera stream information (multicast group and port)
 camera1_info = ("224.1.1.1", 5000)
 camera2_info = ("224.1.1.1", 5001)
-camera3_info = ("224.1.1.1", 5002)
-camera4_info = ("224.1.1.1", 5003)
 
 # Create and start threads to run both camera streams concurrently
 thread1 = Thread(target=camera_stream, args=camera1_info)
 thread2 = Thread(target=camera_stream, args=camera2_info)
-thread3 = Thread(target=camera_stream, args=camera3_info)
-thread4 = Thread(target=camera_stream, args=camera4_info)
 
 # Start the threads
 thread1.start()
 thread2.start()
-thread3.start()
-thread4.start()
 
 # Wait for the first and second camera stream thread to finish
 thread1.join()
 thread2.join()
-thread3.join()
-thread4.join()

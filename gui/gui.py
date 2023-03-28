@@ -19,7 +19,7 @@ class Window(QMainWindow):
     ):
 
         super().__init__(parent)
-        uic.loadUi("gui/SubseaTest.ui", self)
+        uic.loadUi("gui/Subsea.ui", self)
         self.connectFunctions()
 
         regulering_status_wait_counter = 0
@@ -77,6 +77,9 @@ class Window(QMainWindow):
         
         #Vinkler
         self.btnNullpunktVinkler.clicked.connect(lambda: f.nullpunktVinkler(self))
+        
+        self.btnZoomIn.clicked.connect(self.zoom_in)
+        self.btnZoomIn.clicked.connect(self.zoom_out)
         
     def receive_sensordata(
         self, conn

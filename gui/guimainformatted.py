@@ -4,10 +4,7 @@ import multiprocessing
 from multiprocessing import Pipe, Process, Queue
 from gui import gui
 import threading
-def network_format(data) -> bytes:
-    """Formats the data for sending to network handler"""
-    packet_seperator = json.dumps("*")
-    return bytes(packet_seperator+json.dumps(data)+packet_seperator, "utf-8")
+
 
 def create_test_sensordata(delta, old_sensordata=None):
     # TODO: don't use this later its a test function
@@ -75,7 +72,7 @@ def send_fake_sensordata(t_watch: Threadwatcher, gui_pipe: multiprocessing.Pipe)
 
 
 class Rov_state:
-    def __init__(self, queue,network_handler, gui_pipe, t_watch: Threadwatcher) -> None:
+    def __init__(self, queue, gui_pipe, t_watch: Threadwatcher) -> None:
         self.queue = multiprocessing.Queue = queue  # queue to rov
         self.gui_pipe = gui_pipe  # pipe to gui
         self.t_watch: Threadwatcher = t_watch  # threadwatcher to control threads
