@@ -38,6 +38,7 @@ class Rov_state:
         data[2] = self.data["rov_joysticks"][Z_AXIS]
         data[3] = self.data["rov_joysticks"][ROTATION_AXIS]
         self.packets_to_send.append([40, data])
+        # print(data)
         # print(self.packets_to_send)
 
     def build_manipulator_packet(self):
@@ -48,7 +49,7 @@ class Rov_state:
         data[1] = self.data["mani_joysticks"][MANIPULATOR_ROTATION]
         data[2] = self.data["mani_joysticks"][MANIPULATOR_TILT]
         data[3] = self.data["mani_joysticks"][MANIPULATOR_GRAB_RELEASE]
-        print(data)
+        # print(data)
         self.packets_to_send.append([41, data])
         # print(self.packets_to_send)
 
@@ -70,10 +71,10 @@ class Rov_state:
             self.data = packet
     
     def check_controls(self):
-        self.button_handling()
+        # self.button_handling()
         self.build_rov_packet()
         self.build_manipulator_packet()
-        # print(self.packets_to_send)
+        print(self.packets_to_send)
 
 def run(t_watch: Threadwatcher, id: int, queue_for_rov: multiprocessing.Queue):
     rov_state = Rov_state(queue_for_rov, t_watch)
