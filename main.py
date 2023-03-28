@@ -38,6 +38,13 @@ def network_format(data) -> bytes:
     packet_seperator = json.dumps("*")
     return bytes(packet_seperator+json.dumps(data)+packet_seperator, "utf-8")
 
+def recieve_commands_from_gui(conn, t_watch: Threadwatcher, id):
+    #Probably deprecated
+    while t_watch.should_run(id):
+        if conn.poll():
+            print(f" Inside recieve_commands_from_gui {conn.recv() = }")
+        # print("recieve commands from gui")
+    print("t_watch is false")
 
 def create_test_sensordata(delta, old_sensordata=None):
     # TODO: don't use this later its a test function
@@ -409,6 +416,10 @@ def run(network_handler: Network, t_watch: Threadwatcher, id: int, queue_for_rov
         rov_state.send_packets()
         print(":: Data sent ::")
         rov_state.data = {}
+
+def test_gui_leak_response(gui_pipe: multiprocessing.Pipe):
+    sensordata = {"lekk_temp": [False,  False, False, -1, -1, -1]}
+    gui_pipe.send(sensordata)
 
 
 if __name__ == "__main__":
