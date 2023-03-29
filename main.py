@@ -329,7 +329,7 @@ class Rov_state:
             fuse_reset_signal.append(item)
 
         self.packets_to_send.append(97, fuse_reset_signal)
-    
+
     def reset_5V_fuse2(self):
         reset_fuse_byte = [0] * 8
         reset_fuse_byte[0] = 1
@@ -421,8 +421,6 @@ def run(network_handler: Network, t_watch: Threadwatcher, id: int, queue_for_rov
 
     # Komm. del
     print("run thread")
-    print(f"{network_handler = }")
-    rov_state = Rov_state(queue_for_rov, network_handler, gui_pipe,t_watch)
     print(f"{network_handler = }")
     if not network_handler == None:
         id = t_watch.add_thread()
