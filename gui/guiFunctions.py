@@ -1,15 +1,5 @@
-#Generere Testdata
-def create_test_sensordata(delta, old_sensordata=None):
-    #TODO: don't use this later its a test function
-    sensordata = {}
-    if old_sensordata is None:
-        sensordata = {"dybde": -2500.0, "spenning": 48.0, "temp_rov": 26.0}
-    else:
-        #sensordata["tid"] = int(time.time()-start_time_sec)
-        sensordata["dybde"] = old_sensordata["dybde"] + 10*delta
-        sensordata["spenning"] = old_sensordata["spenning"] + 0.4*delta
-        sensordata["temp_rov"] = old_sensordata["temp_rov"] + 0.3*delta
-    return sensordata
+import multiprocessing
+from Thread_info import Threadwatcher
 
 #Kjøremoduser
 def manuellKjoring(window):
@@ -37,7 +27,8 @@ def kalibrerIMU(window):
 
 #Dybde
 def nullpunktDybde(window):
-    print("Nullpunkt Dybde")
+    print("Nullpunkt dybde")
+
 
 #Vinkler
 def nullpunktVinkler(window):
@@ -55,6 +46,5 @@ def takePic(window):
 
 def savePic(window):
     print("Lagre Bilde")
-
 
 
