@@ -1,6 +1,6 @@
 import multiprocessing
-from Thread_info import Threadwatcher
-# from Threadwatch import Threadwatcher
+# from Thread_info import Threadwatcher   #For full testing with main.py
+from Threadwatch import Threadwatcher   #For local testing on MAC
 import threading
 import os
 os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
@@ -70,7 +70,8 @@ class Controller:
     # Creates the default data packet that is sent to main
     def pack_controller_values(self):
         values = {"rov_joysticks": self.rov_joysticks, "mani_joysticks": self.mani_joysticks,
-                "rov_buttons": self.rov_buttons, "mani_buttons": self.mani_buttons}
+                "rov_buttons": self.rov_buttons, "mani_buttons": self.mani_buttons,
+                "camera_to_control": self.camera_motor, "camera_movement": self.rov_joysticks[3]}
                 # "camera_to_control": self.camera_motor,
                 # "camera_movement": self.rov_joysticks[3] #Kan endres til annen akse!
                 # , "time_between_updates": self.duration}
@@ -174,7 +175,7 @@ class Controller:
         while t_watch.should_run(id):
             if pygame.joystick.get_count() < 1:
                 self.wait_for_controller()
-            self.duration = self.clock.tick(20)
+            self.duration = self.clock.tick(0.2)
             # print(duration)
             for event in pygame.event.get():
                 # print("entered event check")
@@ -194,9 +195,9 @@ class Controller:
                         self.mani_buttons[15] = ((-self.mani_buttons[12]) + self.mani_buttons[11])
 
                     #Trenger sikkert ikke denne, skal nok bruke andre funksjoner !!!
-                    # if self.rov_buttons[BUTTON_Y] == 1:
-                        # self.camera_motor = (self.camera_motor+1)%2
-                        # print("CAMERA BUTTON! ONLY ROV?")
+                    if self.rov_buttons[BUTTON_Y] == 1:
+                        self.camera_motor = (self.camera_motor+1)%2
+                        print("CAMERA BUTTON Switch")
                         # threading.Thread(target=self.lekkasje).start()
 
                     if debug_all:

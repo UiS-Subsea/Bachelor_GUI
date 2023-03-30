@@ -56,7 +56,7 @@ class Rov_state:
     def button_handling(self):
         # rov_buttons = self.data.get("rov_buttons")
         mani_buttons = self.data.get("mani_buttons")
-        print(f"KNAPPER {mani_buttons}")
+        # print(f"KNAPPER {mani_buttons}")
 
     def get_from_queue(self):
         """Takes data from the queue and sends it to the correct handler"""
