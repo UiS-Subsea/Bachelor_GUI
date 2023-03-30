@@ -91,15 +91,9 @@ class Controller:
                 #global mani_joystick
                 print(f"Found {pygame.joystick.get_count()} controllers.")
                 rov_joystick = pygame.joystick.Joystick(0)
-<<<<<<< HEAD
-                #mani_joystick = pygame.joystick.Joystick(1)
-                print(f"Connected to {rov_joystick.get_name()}")
-                #print(f"Connected to {mani_joystick.get_name()}")
-=======
                 mani_joystick = pygame.joystick.Joystick(1)
                 print(f"Connected to {rov_joystick.get_name()} {rov_joystick.get_id()}")
                 print(f"Connected to {mani_joystick.get_name()} {mani_joystick.get_id()}")
->>>>>>> 8d570dea2644bc6f0ea6b884d28f28bb6b90093b
                 break
             except Exception as e:
                 print(e)
@@ -109,12 +103,8 @@ class Controller:
                         sys.stdout.flush()
 
         rov_joystick.init()
-<<<<<<< HEAD
-        #mani_joystick.init()
-=======
         mani_joystick.init()
         rov_joystick.rumble(0.2, 0.2, 500)
->>>>>>> 8d570dea2644bc6f0ea6b884d28f28bb6b90093b
 
     # Remaps a range. for example 1-10 range can be remapped to 1-100 so that for example 3 becomes 30
     def get_new_range(self, value, min, max, scale=100):
