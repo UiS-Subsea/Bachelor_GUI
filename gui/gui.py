@@ -4,8 +4,9 @@ from PyQt5 import QtCore, QtGui, QtWidgets, Qt, uic
 from PyQt5.QtWidgets import QMainWindow, QWidget, QCheckBox, QLabel, QMessageBox
 import sys
 import threading
+#from main import Vinkeldata
 
-from main import Rov_state,FiveFuse
+from main import Rov_state
 from . import guiFunctions as f
 from Thread_info import Threadwatcher
 import time
@@ -32,7 +33,7 @@ class Window(QMainWindow):
         id: int,
         parent=None,
     ):
-
+        self.packets_to_send = []
         super().__init__(parent)
         uic.loadUi("gui/Subsea.ui", self)
         self.connectFunctions()
@@ -80,7 +81,7 @@ class Window(QMainWindow):
         self.btnFrogCount.clicked.connect(lambda: f.frogCount(self))
         
         #Sikringer
-        #self.btnReset5V.clicked.connect(self.rov_state.reset_5V_fuse2())
+        self.btnReset5V.clicked.connect(lambda: Rov_state.reset_5V_fuse2(self))
         self.btnResetThruster.clicked.connect(lambda: f.resetThruster(self))
         self.btnResetManipulator.clicked.connect(lambda :f.resetManipulator(self))
         
@@ -133,7 +134,7 @@ class Window(QMainWindow):
 
     def decide_gui_update(self, sensordata):
         self.sensor_update_function = {
-            "lekk_temp": self.gui_lekk_temp_update,
+            #"139": self.gui_lekk_temp_update,
             "thrust": self.gui_thrust_update,
             #"accel": self.gui_acceleration_update,
             # "gyro": self.gui_gyro_update,
