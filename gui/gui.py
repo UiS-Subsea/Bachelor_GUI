@@ -20,8 +20,6 @@ import time
 from Kommunikasjon.packet_info import Logger
 from Thread_info import Threadwatcher
 from Controller import Controller_Handler as controller
-import gui
-from gui import guiFunctions as f
 
 
 class Window(QMainWindow):
@@ -35,7 +33,7 @@ class Window(QMainWindow):
     ):
         self.packets_to_send = []
         super().__init__(parent)
-        uic.loadUi("gui/Subsea.ui", self)
+        uic.loadUi("gui/window1.ui", self)
         self.connectFunctions()
         
 
@@ -134,21 +132,36 @@ class Window(QMainWindow):
 
     def decide_gui_update(self, sensordata):
         self.sensor_update_function = {
-            #"139": self.gui_lekk_temp_update,
+            "lekk_temp": self.gui_lekk_temp_update,
             "thrust": self.gui_thrust_update,
             #"accel": self.gui_acceleration_update,
             # "gyro": self.gui_gyro_update,
             # "time": self.gui_time_update,
             "manipulator": self.gui_manipulator_update,
-            "139": self.gui_watt_update,
+            "watt": self.gui_watt_update,
             "manipulator_toggled": self.gui_manipulator_state_update,
             # "regulator_strom_status": self.regulator_strom_status,
             # "regulering_status": self.gui_regulering_state_update,
             # "settpunkt": self.print_data
+            "vinkler": self.guiVinkelUpdate,
+            "dybde":self.guiDybdeUpdate,
         }
         for key in sensordata.keys():
             if key in self.sensor_update_function:
                 self.sensor_update_function[key](sensordata[key])
+                
+    def guiDybdeUpdate(self,sensordata):
+        label:QLabel = self.labelDybde
+        label.setText(str(round(sensordata[0],2)) + "m")
+        
+    def guiVinkelUpdate(self,sensordata):
+        vinkel_liste:list[QLabel] = [
+            self.labelRull,
+            self.labelStamp,
+            self.labelGir
+        ]
+        for index, label in enumerate(vinkel_liste):
+            label.setText(str(round(sensordata[index],2)) + "°")
 
     def gui_watt_update(self, sensordata):
         effekt_liste: list[QLabel] = [

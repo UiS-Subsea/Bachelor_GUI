@@ -2296,7 +2296,7 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
     <string>whiteBg</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_effekt_elektronikk_3">
+  <widget class="QLabel" name="labelDybde">
    <property name="geometry">
     <rect>
      <x>650</x>
@@ -2363,7 +2363,7 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
     <string>Nullpunkt Dybde</string>
    </property>
   </widget>
-  <widget class="QLabel" name="labelVinkel1">
+  <widget class="QLabel" name="labelRull">
    <property name="geometry">
     <rect>
      <x>650</x>
@@ -2417,7 +2417,7 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
     <string>whiteBg</string>
    </property>
   </widget>
-  <widget class="QLabel" name="labelVinkel2">
+  <widget class="QLabel" name="labelStamp">
    <property name="geometry">
     <rect>
      <x>650</x>
@@ -2471,7 +2471,7 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
     <string>whiteBg</string>
    </property>
   </widget>
-  <widget class="QLabel" name="labelVinkel3">
+  <widget class="QLabel" name="labelGir">
    <property name="geometry">
     <rect>
      <x>650</x>
