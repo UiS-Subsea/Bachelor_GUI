@@ -10,7 +10,7 @@ from main import Rov_state
 from . import guiFunctions as f
 from Thread_info import Threadwatcher
 import time
-
+from camerafeed.GUI_Camerafeed_Main import *
 import json
 import multiprocessing
 from Kommunikasjon.network_handler import Network
@@ -59,9 +59,9 @@ class Window(QMainWindow):
         )
         self.receive.start()
         
-        
+        self.exec = ExecutionClass(queue)
+        self.camera = CameraClass()
         self.w=None#SecondWindow() #
-        
 
         # Buttons
     def show_new_window(self, checked):
@@ -76,9 +76,9 @@ class Window(QMainWindow):
         self.showNewWindowButton.clicked.connect(self.show_new_window)
     
         #Kjøremodus
-        self.btnManuell.clicked.connect(lambda: f.manuellKjoring(self))
-        self.btnAutonom.clicked.connect(lambda: f.autonomDocking(self))
-        self.btnFrogCount.clicked.connect(lambda: f.frogCount(self))
+        self.btnManuell.clicked.connect(lambda: self.exec.manual())
+        self.btnAutonom.clicked.connect(lambda: self.exec.docking())
+        self.btnFrogCount.clicked.connect(lambda: self.exec.transect())
         
         #Sikringer
         self.btnReset5V.clicked.connect(lambda: Rov_state.reset_5V_fuse2(self))
@@ -304,8 +304,7 @@ class Window(QMainWindow):
 
     # TODO: fiks lekkasje varsel seinare
 
-
-
+    
 def run(conn, queue_for_rov, t_watch: Threadwatcher, id):
     # TODO: add suppress qt warnings?
 
