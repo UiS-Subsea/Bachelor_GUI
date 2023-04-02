@@ -17,8 +17,7 @@ MANIPULATOR_IN_OUT = 15
 MANIPULATOR_ROTATION = 0
 MANIPULATOR_TILT = 3
 MANIPULATOR_GRAB_RELEASE = 6
-global FiveFuse
-FiveFuse = 97
+
 
 
 # ROV
@@ -58,7 +57,6 @@ def create_test_sensordata(delta, old_sensordata=None):
         sensordata["dybde"] = old_sensordata["dybde"] + 10 * delta
         sensordata["spenning"] = old_sensordata["spenning"] + 0.4 * delta
         sensordata["temp_rov"] = old_sensordata["temp_rov"] + 0.3 * delta
-
     return sensordata
 
 
@@ -120,10 +118,10 @@ class Rov_state:
         self.data: dict = {}
         self.logger = Logger()
         self.queue: multiprocessing.Queue = queue
-        self.gui_pipe = gui_pipe  # Pipe to send sensordata back to the gui
-        self.sensordata = None
-        # self.send_sensordata_to_gui(self.data)
-
+        self.gui_pipe = gui_pipe # Pipe to send sensordata back to the gui
+        self.sensordata=None
+        #self.send_sensordata_to_gui(self.data)
+        
         # Pipe to send sensordata back to the gui
         # Prevents the tilt toggle from toggling back again immediately if we hold the button down
         self.camera_toggle_wait_counter: int = 0
@@ -145,10 +143,20 @@ class Rov_state:
         self_hud_camera_status = False
 
         self.packets_to_send = []
-
-        self.valid_gui_commands = [
-            "139", "thrust", "accel", "gyro", "time", "manipulator", "power_consumption"]
-
+        self.valid_gui_commands = ["139", "thrust", "accel", "gyro", "time", "manipulator", "power_consumption"]
+    
+    def update(self):
+        pass
+    
+    
+    def send_sensordata_to_gui(self,data):
+        """Sends sensordata to the gui"""
+        print("Enter into send_sensordata_to_gui function")
+        if self.sensordata == None:
+            print(f"THERE IS NO DATA {data}")
+        self.gui_pipe.send(data)
+        print(f"DATDATDATDATDATDATDATDATDTDATDDTDTDADDTADDATA{data}")
+        
     def sending_startup_ids(self):
         self.packets_to_send.append(
             [200, {"camera_tilt_upwards": self.camera_tilt[0]}])
@@ -337,11 +345,10 @@ class Rov_state:
     def reset_5V_fuse2(self):
         reset_fuse_byte = [0] * 8
         reset_fuse_byte[0] = 1
-        print("RESET BLEI KJØORT!")
+        print("Det går inn i funksjonen")
         self.packets_to_send.append([97, reset_fuse_byte])
-        print("RESET BLEI KJØORT!222")
-        print(self.packets_to_send)
-
+        print(f"Pakkene som blir sendt er: {self.packets_to_send}")
+        
     def reset_12V_thruster_fuse(self, fuse_number):
         """reset_fuse_on_power_supply creates and adds
         packets for resetting a fuse on the ROV"""
@@ -455,11 +462,10 @@ if __name__ == "__main__":
         global run_craft_packet
         run_gui = True
         run_craft_packet = True
-        run_network = False  # Bytt t True når du ska prøva å connecte.
+        run_network = True  # Bytt t True når du ska prøva å connecte.
         run_get_controllerdata = False
-        # Sett til True om du vil sende fake sensordata til gui
-        run_send_fake_sensordata = True
-
+        run_send_fake_sensordata=False#Sett til True om du vil sende fake sensordata til gui
+        
         t_watch = Threadwatcher()
         queue_for_rov = multiprocessing.Queue()
 
