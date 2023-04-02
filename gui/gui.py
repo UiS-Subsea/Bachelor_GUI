@@ -6,7 +6,6 @@ import sys
 import threading
 #from main import Vinkeldata
 
-from main import Rov_state
 from . import guiFunctions as f
 from Thread_info import Threadwatcher
 import time
@@ -134,7 +133,7 @@ class Window(QMainWindow):
         self.sensor_update_function = {
             "lekk_temp": self.gui_lekk_temp_update,
             "thrust": self.gui_thrust_update,
-            #"accel": self.gui_acceleration_update,
+            "accel": self.guiAccelUpdate,
             # "gyro": self.gui_gyro_update,
             # "time": self.gui_time_update,
             "manipulator": self.gui_manipulator_update,
@@ -153,6 +152,10 @@ class Window(QMainWindow):
     def guiDybdeUpdate(self,sensordata):
         label:QLabel = self.labelDybde
         label.setText(str(round(sensordata[0],2)) + "m")
+    
+    def guiAccelUpdate(self,sensordata):
+        label:QLabel = self.labelAccel
+        label.setText(str(round(sensordata[0],2)) + " m/s^2")
         
     def guiVinkelUpdate(self,sensordata):
         vinkel_liste:list[QLabel] = [
@@ -358,4 +361,3 @@ class Communicate(QtCore.QObject):
 
 if __name__ == "__main__":
     run()
-    

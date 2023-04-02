@@ -2525,7 +2525,7 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
     <string>whiteBg</string>
    </property>
   </widget>
-  <widget class="QLabel" name="labelAkelerasjon">
+  <widget class="QLabel" name="labelAccel">
    <property name="geometry">
     <rect>
      <x>650</x>

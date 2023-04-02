@@ -44,6 +44,7 @@ def send_fake_sensordata(t_watch: Threadwatcher, gui_pipe: multiprocessing.Pipe)
     power_list = [num for num in range(0, 101)]
     vinkel_list = [num for num in range(-360, 360)]
     dybde_list = [num for num in range(-100, 0)]
+    accel_list = [num for num in range(-100, 101)]
     count = -1
     sensordata = {}
     while t_watch.should_run(0):
@@ -74,8 +75,6 @@ def send_fake_sensordata(t_watch: Threadwatcher, gui_pipe: multiprocessing.Pipe)
             power_list[count % 101] * 2.4,
             power_list[count % 101] * 0.65,
         ]
-        # sensordata["gyro"] = [(time_since_start*2)%60, time_since_start%90, time_since_start%90]
-        # sensordata["time"] = [time_since_start]
         sensordata["thrust"] = [
             thrust_list[(0 + count) % 201],
             thrust_list[(13 + count) % 201],
@@ -97,9 +96,9 @@ def send_fake_sensordata(t_watch: Threadwatcher, gui_pipe: multiprocessing.Pipe)
             dybde_list[(0 + count) % 201],
             dybde_list[(45 + count) % 201],
         ]
-        
-            
-        # sensordata["thrust"] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        sensordata["accel"] = [
+            accel_list[(0 + count) % 201],
+        ]
         gui_pipe.send(sensordata)
         time.sleep(1)
 
