@@ -78,8 +78,8 @@ class Window(QMainWindow):
         self.btnManuell.clicked.connect(lambda: f.manuellKjoring(self))
         self.btnAutonom.clicked.connect(lambda: f.autonomDocking(self))
         self.btnFrogCount.clicked.connect(lambda: f.frogCount(self))
-        
-        #Sikringer
+
+        # Sikringer
         self.btnReset5V.clicked.connect(lambda: Rov_state.reset_5V_fuse2(self))
         self.btnResetThruster.clicked.connect(lambda: f.resetThruster(self))
         self.btnResetManipulator.clicked.connect(
@@ -134,7 +134,7 @@ class Window(QMainWindow):
 
     def decide_gui_update(self, sensordata):
         self.sensor_update_function = {
-            #"139": self.gui_lekk_temp_update,
+            # "139": self.gui_lekk_temp_update,
             "thrust": self.gui_thrust_update,
             # "accel": self.gui_acceleration_update,
             # "gyro": self.gui_gyro_update,

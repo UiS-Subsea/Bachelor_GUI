@@ -1,0 +1,8 @@
+ssh jetson@10.0.0.187
+
+password: jetson
+
+cd Kommunikasjon-2023/tests
+python3 camhandtest.py
+
+
