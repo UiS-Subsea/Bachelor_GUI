@@ -10,14 +10,16 @@ import time
 from Kommunikasjon.packet_info import Logger
 from Thread_info import Threadwatcher
 from Controller import Controller_Handler as controller
-import GUI.guiFunctions as f
-import GUI.gui as gui
+import gui
 # VALUES: (0-7) -> index i: [0,0,0,0,0,0,0,0]
 # MANIPULATOR
 MANIPULATOR_IN_OUT = 15
 MANIPULATOR_ROTATION = 0
 MANIPULATOR_TILT = 3
 MANIPULATOR_GRAB_RELEASE = 6
+global FiveFuse
+FiveFuse = 97
+
 
 # ROV
 X_AXIS = 1
@@ -120,7 +122,7 @@ class Rov_state:
         self.queue: multiprocessing.Queue = queue
         self.gui_pipe = gui_pipe  # Pipe to send sensordata back to the gui
         self.sensordata = None
-        self.send_sensordata_to_gui(self.data)
+        # self.send_sensordata_to_gui(self.data)
 
         # Pipe to send sensordata back to the gui
         # Prevents the tilt toggle from toggling back again immediately if we hold the button down
@@ -144,12 +146,8 @@ class Rov_state:
 
         self.packets_to_send = []
 
-    def send_sensordata_to_gui(self, data):
-        """Sends sensordata to the gui"""
-        print("Enter into send_sensordata_to_gui function")
-        if self.sensordata == None:
-            return
-        self.gui_pipe.send(data)
+        self.valid_gui_commands = [
+            "139", "thrust", "accel", "gyro", "time", "manipulator", "power_consumption"]
 
     def sending_startup_ids(self):
         self.packets_to_send.append(
@@ -260,12 +258,24 @@ class Rov_state:
             print(message)      # få meldingen inn i GUI'en
         try:
             message_name = list(message.keys())[0]
+            print(type(message_name))
         except Exception as e:
             print(e)
             return
+        if message_name in self.valid_gui_commands:
+            print(f"HERE IS MESSAGE NAME", message_name)
+            self.send_sensordata_to_gui(message)
         else:
             pass
             print(f"\n\nMESSAGE NOT RECOGNISED\n{message}\n")
+
+    def send_sensordata_to_gui(self, data):
+        """Sends sensordata to the gui"""
+        print("Enter into send_sensordata_to_gui function")
+        if self.sensordata == None:
+            print("THE RETURNED SENSORDATA WAS NONE")
+            return
+        self.gui_pipe.send(data)
 
     # def network_format(data) -> bytes:
     #     """Formats the data for sending to network handler"""
@@ -324,12 +334,12 @@ class Rov_state:
             fuse_reset_signal.append(item)
         self.packets_to_send.append(97, fuse_reset_signal)
 
-    def reset_5V_fuse(self):
-        """reset_fuse_on_power_supply creates and adds
-        packets for resetting a fuse on the ROV"""
-        fuse_reset_bit = [0] * 8
-        fuse_reset_bit[0] = 1  # Set bit 0 of byte 0 to 1 to turn on the fuse
-        self.packets_to_send.append([97, fuse_reset_bit])
+    def reset_5V_fuse2(self):
+        reset_fuse_byte = [0] * 8
+        reset_fuse_byte[0] = 1
+        print("RESET BLEI KJØORT!")
+        self.packets_to_send.append([97, reset_fuse_byte])
+        print("RESET BLEI KJØORT!222")
         print(self.packets_to_send)
 
     def reset_12V_thruster_fuse(self, fuse_number):
@@ -410,12 +420,12 @@ def run(network_handler: Network, t_watch: Threadwatcher, id: int, queue_for_rov
     # Komm. del
     print("run thread")
     print(f"{network_handler = }")
-    # rov_state = Rov_state(queue_for_rov, network_handler, t_watch)
-    # print(f"{network_handler = }")
-    # if not network_handler == None:
-    #     id = t_watch.add_thread()
-    #     threading.Thread(target=rov_state.receive_data_from_rov, args=(
-    #         network_handler, t_watch, id), daemon=True).start()
+    rov_state = Rov_state(queue_for_rov, network_handler, gui_pipe, t_watch)
+    print(f"{network_handler = }")
+    if not network_handler == None:
+        id = t_watch.add_thread()
+        threading.Thread(target=rov_state.receive_data_from_rov, args=(
+            network_handler, t_watch, id), daemon=True).start()
     if run_craft_packet:
         id = t_watch.add_thread()
         threading.Thread(target=rov_state.craft_packet,
@@ -464,7 +474,7 @@ if __name__ == "__main__":
         run_network = False
         if run_network:
             network = Network(is_server=False, port=6900, bind_addr="0.0.0.0",
-                              connect_addr="10.0.0.187")
+                              connect_addr="10.0.0.2")
             print("network started")
             run_network = True
 
@@ -472,7 +482,7 @@ if __name__ == "__main__":
             id = t_watch.add_thread()
             print(id)
             main_driver_loop = threading.Thread(target=run, args=(
-                network, t_watch, id, queue_for_rov), daemon=True)
+                network, t_watch, id, queue_for_rov, gui_parent_pipe), daemon=True)
             main_driver_loop.start()
 
         if run_get_controllerdata:

@@ -1,6 +1,6 @@
 import multiprocessing
-from Thread_info import Threadwatcher
-
+#from Thread_info import Threadwatcher
+from main import *
 # Kjøremoduser
 
 
@@ -19,6 +19,7 @@ def frogCount(window):
 
 
 def reset5V(window):
+    Rov_state.reset_5V_fuse2()
     print("Reset 5V sikring")
 
 
@@ -63,3 +64,10 @@ def takePic(window):
 
 def savePic(window):
     print("Lagre Bilde")
+
+
+if __name__ == "__main__":
+    print("guiFunctions")
+    # Klasse = Rov_state
+    # reset_5V = Klasse.reset_5V_fuse2
+    # print(reset_5V)
