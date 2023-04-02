@@ -1,7 +1,6 @@
 import cv2
 import numpy as np
 import time
-from camerafeed.Main_Classes.frog_count_main import FrogCount
 
 # What to tweak for water test:
 # 1. cv2.inRange() lower and upper range
@@ -13,7 +12,6 @@ class AutonomousTransect:
         self.canStabilize = False
         self.driving_data = [40, [0, 0, 0, 0, 0, 0, 0, 0]]
         self.frame = None
-        self.frog_count = FrogCount()
 
     #takes in frame, finds all the contours of objects with dark blue color
     #returns angle between             
@@ -21,8 +19,7 @@ class AutonomousTransect:
         self.frame = frame
         self.update()
         data = self.get_driving_data()
-        frog_counter = self.frog_count.update(frame)
-        return self.frame, data, frog_counter
+        return self.frame, data
         
     def update(self):
         self.autonomous_transect_maneuver()
@@ -72,7 +69,7 @@ class AutonomousTransect:
             
         else:
             print("No pipes found")
-            return "SKIP" # Skip frame, harmless result 
+            return "SKIP"
       
         
     def find_dark_blue_contours(self):
@@ -80,7 +77,7 @@ class AutonomousTransect:
         high_blue_range = (255, 60, 60)
     
         transect_pipe_mask = cv2.inRange(self.frame, low_blue_range, high_blue_range)
-        pipe_contours, _ = cv2.findContours(transect_pipe_mask, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
+        pipe_contours, _ = cv2.findContours(transect_pipe_mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
         # cv2.drawContours(frame, pipe_contours, -1, (0, 255, 0), 5)
         # cv2.imshow("contours", frame)
@@ -130,7 +127,7 @@ class AutonomousTransect:
                 leftPipe = pipes[1]
                 rightPipe = pipes[0]
             distanceFromLeftPipe = leftPipe[0][0]
-            distanceFromRightPipe = frame.shape[1] - rightPipe[0][0]
+            distanceFromRightPipe = self.frame.shape[1] - rightPipe[0][0]
             ratio = distanceFromLeftPipe / distanceFromRightPipe # ratio = 1 means perfect
             
             # print("Distance from left pipe: ", distanceFromLeftPipe)
@@ -152,6 +149,8 @@ class AutonomousTransect:
             # print("Can't stabilize yet")
             pass
          
+
+
 
     
 if __name__ == "__main__":

@@ -12,7 +12,7 @@ from Thread_info import Threadwatcher
 #from camerafeed import GUI_Camerafeed_Main as f
 from camerafeed.GUI_Camerafeed_Main import *
 import time
-#from ...subsea2023.Bachelor_Bildebehanding_main.camerafeed.GUI_Camerafeed_Main import *
+from camerafeed.GUI_Camerafeed_Main import *
 import json
 import multiprocessing
 from Kommunikasjon.network_handler import Network
@@ -62,8 +62,10 @@ class Window(QMainWindow):
             target=self.receive_sensordata, daemon=True, args=(self.pipe_conn_only_rcv,)
         )
         self.receive.start()
-
-        self.w = None  # SecondWindow() #
+        
+        self.exec = ExecutionClass(queue)
+        self.camera = CameraClass()
+        self.w=None#SecondWindow() #
 
         # Buttons
 
@@ -77,16 +79,13 @@ class Window(QMainWindow):
     def connectFunctions(self):
         # window2
         self.showNewWindowButton.clicked.connect(self.show_new_window)
-
-        # Kjøremodus
-        self.btnManuell.clicked.connect(
-            lambda: self.ExecClass.manual_driving())
-        self.btnAutonom.clicked.connect(
-            lambda: self.ExecClass.docking())
-        self.btnFrogCount.clicked.connect(
-            lambda: self.ExecClass.transect())
-
-        # Sikringer
+    
+        #Kjøremodus
+        self.btnManuell.clicked.connect(lambda: self.exec.manual())
+        self.btnAutonom.clicked.connect(lambda: self.exec.docking())
+        self.btnFrogCount.clicked.connect(lambda: self.exec.transect())
+        
+        #Sikringer
         self.btnReset5V.clicked.connect(lambda: Rov_state.reset_5V_fuse2(self))
         self.btnResetThruster.clicked.connect(lambda: f.resetThruster(self))
         self.btnResetManipulator.clicked.connect(
@@ -324,7 +323,7 @@ class Window(QMainWindow):
 
     # TODO: fiks lekkasje varsel seinare
 
-
+    
 def run(conn, queue_for_rov, t_watch: Threadwatcher, id):
     # TODO: add suppress qt warnings?
 

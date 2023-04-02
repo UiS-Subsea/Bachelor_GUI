@@ -34,9 +34,10 @@ class AutonomousDocking:
         self.draw_grouts = False
         self.draw_grout_boxes = False
         
-    def run(self, front_frame, down_frame):
+    #def run(self, front_frame, down_frame):
+    def run(self, front_frame):
         self.frame = front_frame
-        self.down_frame = down_frame
+        # self.down_frame = down_frame
         self.update()
         self.rotation_commands()
         data = self.get_driving_data()
@@ -92,6 +93,8 @@ class AutonomousDocking:
         max_red_ratio = 50 #if the red dot is more than 50% of the frame, stop
         if red_to_frame_ratio > max_red_ratio:
             print("Stop! Docking station is close enough!")
+            self.driving_data = [40, [0, 0, 0, 0, 0, 0, 0, 0]]
+            exit()
         else:
             self.driving_data = regulate_position(width_diff, height_diff)
             
