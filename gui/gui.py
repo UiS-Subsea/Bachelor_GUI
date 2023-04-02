@@ -9,9 +9,10 @@ import threading
 from main import Rov_state
 from . import guiFunctions as f
 from Thread_info import Threadwatcher
-
+#from camerafeed import GUI_Camerafeed_Main as f
+from camerafeed.GUI_Camerafeed_Main import *
 import time
-
+#from ...subsea2023.Bachelor_Bildebehanding_main.camerafeed.GUI_Camerafeed_Main import *
 import json
 import multiprocessing
 from Kommunikasjon.network_handler import Network
@@ -34,10 +35,13 @@ class Window(QMainWindow):
         id: int,
         parent=None,
     ):
+        self.camera = Camera()
         self.packets_to_send = []
         super().__init__(parent)
         uic.loadUi("gui/Subsea.ui", self)
         self.connectFunctions()
+
+        self.ExecClass = ExecutionClass()
 
         regulering_status_wait_counter = 0
         self.lekkasje_varsel_is_running = False
@@ -75,9 +79,12 @@ class Window(QMainWindow):
         self.showNewWindowButton.clicked.connect(self.show_new_window)
 
         # Kjøremodus
-        self.btnManuell.clicked.connect(lambda: f.manuellKjoring(self))
-        self.btnAutonom.clicked.connect(lambda: f.autonomDocking(self))
-        self.btnFrogCount.clicked.connect(lambda: f.frogCount(self))
+        self.btnManuell.clicked.connect(
+            lambda: self.ExecClass.manual_driving())
+        self.btnAutonom.clicked.connect(
+            lambda: self.ExecClass.docking())
+        self.btnFrogCount.clicked.connect(
+            lambda: self.ExecClass.transect())
 
         # Sikringer
         self.btnReset5V.clicked.connect(lambda: Rov_state.reset_5V_fuse2(self))
@@ -328,6 +335,7 @@ def run(conn, queue_for_rov, t_watch: Threadwatcher, id):
     # Create an instance of our class
     win = Window(conn, queue_for_rov, t_watch, id)
     GLOBAL_STATE = False
+#    win.camera.get_frame()
     win.show()  # Show the form
 
     app.exec()

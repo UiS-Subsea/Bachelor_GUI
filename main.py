@@ -11,13 +11,15 @@ from Kommunikasjon.packet_info import Logger
 from Thread_info import Threadwatcher
 from Controller import Controller_Handler as controller
 import gui
+from camerafeed.GUI_Camerafeed_Main import *
+from camerafeed.GUI_Camerafeed_Main import Camera
+
 # VALUES: (0-7) -> index i: [0,0,0,0,0,0,0,0]
 # MANIPULATOR
 MANIPULATOR_IN_OUT = 15
 MANIPULATOR_ROTATION = 0
 MANIPULATOR_TILT = 3
 MANIPULATOR_GRAB_RELEASE = 6
-
 
 
 # ROV
@@ -58,6 +60,13 @@ def create_test_sensordata(delta, old_sensordata=None):
         sensordata["spenning"] = old_sensordata["spenning"] + 0.4 * delta
         sensordata["temp_rov"] = old_sensordata["temp_rov"] + 0.3 * delta
     return sensordata
+
+
+def camera_feed(t_watch: Threadwatcher, gui_pipe: multiprocessing.Pipe):
+    camera = Camera()
+    while t_watch.should_run(0):
+        print("getting frames")
+        time.sleep(1)
 
 
 def send_fake_sensordata(t_watch: Threadwatcher, gui_pipe: multiprocessing.Pipe):
@@ -118,10 +127,10 @@ class Rov_state:
         self.data: dict = {}
         self.logger = Logger()
         self.queue: multiprocessing.Queue = queue
-        self.gui_pipe = gui_pipe # Pipe to send sensordata back to the gui
-        self.sensordata=None
-        #self.send_sensordata_to_gui(self.data)
-        
+        self.gui_pipe = gui_pipe  # Pipe to send sensordata back to the gui
+        self.sensordata = None
+        # self.send_sensordata_to_gui(self.data)
+
         # Pipe to send sensordata back to the gui
         # Prevents the tilt toggle from toggling back again immediately if we hold the button down
         self.camera_toggle_wait_counter: int = 0
@@ -143,20 +152,20 @@ class Rov_state:
         self_hud_camera_status = False
 
         self.packets_to_send = []
-        self.valid_gui_commands = ["139", "thrust", "accel", "gyro", "time", "manipulator", "power_consumption"]
-    
+        self.valid_gui_commands = [
+            "139", "thrust", "accel", "gyro", "time", "manipulator", "power_consumption"]
+
     def update(self):
         pass
-    
-    
-    def send_sensordata_to_gui(self,data):
+
+    def send_sensordata_to_gui(self, data):
         """Sends sensordata to the gui"""
         print("Enter into send_sensordata_to_gui function")
         if self.sensordata == None:
             print(f"THERE IS NO DATA {data}")
         self.gui_pipe.send(data)
         print(f"DATDATDATDATDATDATDATDATDTDATDDTDTDADDTADDATA{data}")
-        
+
     def sending_startup_ids(self):
         self.packets_to_send.append(
             [200, {"camera_tilt_upwards": self.camera_tilt[0]}])
@@ -348,7 +357,7 @@ class Rov_state:
         print("Det går inn i funksjonen")
         self.packets_to_send.append([97, reset_fuse_byte])
         print(f"Pakkene som blir sendt er: {self.packets_to_send}")
-        
+
     def reset_12V_thruster_fuse(self, fuse_number):
         """reset_fuse_on_power_supply creates and adds
         packets for resetting a fuse on the ROV"""
@@ -464,8 +473,9 @@ if __name__ == "__main__":
         run_craft_packet = True
         run_network = True  # Bytt t True når du ska prøva å connecte.
         run_get_controllerdata = False
-        run_send_fake_sensordata=False#Sett til True om du vil sende fake sensordata til gui
-        
+        # Sett til True om du vil sende fake sensordata til gui
+        run_send_fake_sensordata = False
+        run_camera = True
         t_watch = Threadwatcher()
         queue_for_rov = multiprocessing.Queue()
 
@@ -518,6 +528,16 @@ if __name__ == "__main__":
                 daemon=True,
             )
             datafaker.start()
+
+        if run_camera:
+            id = t_watch.add_thread()
+            datafaker2 = threading.Thread(
+                target=camera_feed,
+                args=(t_watch, gui_parent_pipe),
+                daemon=True,
+            )
+            datafaker2.start()
+
         while True:
             time.sleep(5)
     except KeyboardInterrupt:

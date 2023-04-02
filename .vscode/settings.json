@@ -1,6 +1,7 @@
 {
     "python.analysis.extraPaths": [
         "./Kommunikasjon",
-        "./GUI"
+        "./GUI",
+        "./Bachelor_Bildebehandling-main"
     ]
 }

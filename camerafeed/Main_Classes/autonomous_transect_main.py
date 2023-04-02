@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 import time
-from Main_Classes.frog_count_main import FrogCount
+from camerafeed.Main_Classes.frog_count_main import FrogCount
 
 # What to tweak for water test:
 # 1. cv2.inRange() lower and upper range
