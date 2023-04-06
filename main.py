@@ -47,7 +47,6 @@ def run_camera_func(t_watch: Threadwatcher, frame_pipe: multiprocessing.Pipe, id
         frame = camera.get_frame()
         frame_pipe.send(frame)
         time.sleep(1)
-        
 
 
 def send_fake_sensordata(t_watch: Threadwatcher, gui_pipe: multiprocessing.Pipe):

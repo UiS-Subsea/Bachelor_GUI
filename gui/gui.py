@@ -186,10 +186,6 @@ class Window(QMainWindow):
             label.setStyleSheet(
                 f"background-color: {color_list[index]}; border-radius: 5px; border: 1px solid rgb(30, 30, 30);"
             )
-
-        # self.label_effekt_manipulator_2.setText(str(round(sensordata[1])) + " W")
-        self.label_effekt_elektronikk_2.setText(str(round(sensordata[2])) +" W")
-
     def update_round_percent_visualizer(self, value, text_label):
         text_label.setText(str(value))
         # self.round_percent_visualizer.setValue(value)
