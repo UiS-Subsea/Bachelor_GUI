@@ -2687,7 +2687,6 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
  </widget>
  <resources>
   <include location="../../uis-subsea/Subsea_QT_GUI/resources.qrc"/>
-  <include location="resources.qrc"/>
  </resources>
  <connections/>
 </ui>

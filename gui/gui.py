@@ -206,9 +206,8 @@ class Window(QMainWindow):
         self.update_round_percent_visualizer(sensordata[5], self.thrust_label_6)
         self.update_round_percent_visualizer(sensordata[6], self.thrust_label_7)
         self.update_round_percent_visualizer(sensordata[7], self.thrust_label_8)
-
+        
     def gui_lekk_temp_update(self, sensordata):
-        # self.check_data_types(sensordata["lekk_temp"], (int, float, float, float))
         print(f"ran gui_lekk_temp_update {sensordata = }")
         print(f"{sensordata =}")
 
@@ -279,22 +278,38 @@ class Window(QMainWindow):
             ).start()  # Start the leak alert in a separate thread
     
     def lekkasje_varsel(self, sensor_nr_liste):
-        self.label_lekkasje_varsel.setMaximumSize(16777215,150)
-        self.label_lekkasje_varsel.setMinimumSize(16777215,150)
+        self.label_lekkasje_varsel = QLabel(self)
+        self.label_lekkasje_varsel.setMaximumSize(16777215, 150)
+        self.label_lekkasje_varsel.setMinimumSize(16777215, 150)
         self.label_lekkasje_varsel.raise_()
         sensor_nr_liste = [str(item) for item in sensor_nr_liste]
+
         text = f"Advarsel vannlekkasje oppdaget på sensor: {str(', '.join(sensor_nr_liste))}"
         self.label_lekkasje_varsel.setText(text)
-        self.label_lekkasje_varsel.setStyleSheet("QLabel { color: rgba(255, 255, 255, 200); background-color: rgba(179, 32, 36, 200); font-size: 24pt;}")
+        self.label_lekkasje_varsel.setStyleSheet(
+            "QLabel { color: rgba(255, 255, 255, 200); background-color: rgba(179, 32, 36, 200); font-size: 24pt;}"
+        )
+
+        self.label_lekkasje_varsel.setGeometry(0, 0, self.width(), 150)
+
+
         if "win" in sys.platform:
             subprocess.call(('./ffplay.exe -autoexit -nodisp ./siren.wav'), stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
         else:
             subprocess.call(('./ffplay', '-autoexit', '-nodisp', './siren.wav'), stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
         self.label_lekkasje_varsel.setStyleSheet("QLabel { color: rgba(255, 255, 255, 0); background-color: rgba(179, 32, 36, 0); font-size: 24pt;}")
-        self.label_lekkasje_varsel.lower()
         self.lekkasje_varsel_is_running = False
         self.label_lekkasje_varsel.setMaximumSize(0,0)
         self.label_lekkasje_varsel.setMinimumSize(0,0)
+        time.sleep(2)  # add a delay of 2 seconds
+        self.label_lekkasje_varsel.lower()
+
+
+    # def lekkasje_varsel(self, sensor_nr_liste):
+    #     sensor_nr_liste = [str(item) for item in sensor_nr_liste]
+    #     text = f"Advarsel vannlekkasje oppdaget på sensor: {', '.join(sensor_nr_liste)}"
+    #     QMessageBox.warning(self, "Lekkasje oppdaget", text, QMessageBox.Ok)
+
         
         
     def gui_manipulator_update(self, sensordata):

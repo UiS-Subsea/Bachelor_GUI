@@ -61,7 +61,7 @@ def send_fake_sensordata(t_watch: Threadwatcher, gui_pipe: multiprocessing.Pipe)
         # time_since_start = round(time.time()-start_time_sec)
         count += 1
         sensordata["lekk_temp"] = [
-            True,
+            False,
             True,
             True,
             (25 + count) % 60,
