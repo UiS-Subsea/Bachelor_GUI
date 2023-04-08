@@ -115,7 +115,7 @@ class Window(QMainWindow):
     def decide_gui_update(self, sensordata):
         self.sensor_update_function = {
             "lekk_temp": self.gui_lekk_temp_update,
-            "thrust": self.gui_thrust_update,
+            "32": self.gui_thrust_update,
             # "accel": self.gui_acceleration_update,
             # "gyro": self.gui_gyro_update,
             # "time": self.gui_time_update,
@@ -166,6 +166,7 @@ class Window(QMainWindow):
 
         # Update the labels
         self.update_round_percent_visualizer(sensordata[0], self.thrust_label_1)
+        print(f"here is the sensordata domynikas", sensordata[0])
         self.update_round_percent_visualizer(sensordata[1], self.thrust_label_2)
         self.update_round_percent_visualizer(sensordata[2], self.thrust_label_3)
         self.update_round_percent_visualizer(sensordata[3], self.thrust_label_4)
