@@ -1,14 +1,28 @@
 import multiprocessing
 import subprocess
 from PyQt5 import QtCore, QtGui, QtWidgets, Qt, uic
-from PyQt5.QtWidgets import QMainWindow, QWidget, QCheckBox, QLabel, QMessageBox, QVBoxLayout, QGraphicsObject
-from PyQt5.QtCore import QMetaObject, Qt, Q_ARG, QTimer
+from PyQt5.QtWidgets import QMainWindow, QWidget, QCheckBox, QLabel, QMessageBox
 import sys
 import threading
+#from main import Vinkeldata
+
+from main import Rov_state
 from . import guiFunctions as f
 from Thread_info import Threadwatcher
 import time
-from main import Rov_state as R
+from camerafeed.GUI_Camerafeed_Main import *
+import json
+import multiprocessing
+from Kommunikasjon.network_handler import Network
+from multiprocessing import Process, Pipe
+import threading
+import time
+from Kommunikasjon.packet_info import Logger
+from Thread_info import Threadwatcher
+from Controller import Controller_Handler as controller
+import gui
+from gui import guiFunctions as f
+
 
 class Window(QMainWindow):
     def __init__(
@@ -18,12 +32,12 @@ class Window(QMainWindow):
         t_watch: Threadwatcher,
         id: int,
         parent=None,
-        
     ):
-
+        self.packets_to_send = []
         super().__init__(parent)
-        uic.loadUi("gui/SubseaTest.ui", self)
+        uic.loadUi("gui/Subsea.ui", self)
         self.connectFunctions()
+        
 
         regulering_status_wait_counter = 0
         self.lekkasje_varsel_is_running = False
@@ -32,7 +46,6 @@ class Window(QMainWindow):
         self.queue: multiprocessing.Queue = (
             queue  
         )
-        
         self.pipe_conn_only_rcv = pipe_conn_only_rcv  # pipe_conn_only_rcv is a pipe connection that only receives data
         # Threadwatcher
         self.t_watch: Threadwatcher = t_watch  # t_watch is a threadwatcher object
@@ -40,16 +53,16 @@ class Window(QMainWindow):
 
         self.gir_verdier = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
+
         self.receive = threading.Thread(
             target=self.receive_sensordata, daemon=True, args=(self.pipe_conn_only_rcv,)
         )
         self.receive.start()
         
-
+        self.exec = ExecutionClass(queue)
+        self.camera = CameraClass()
         self.w=None#SecondWindow() #
 
-        #self.central_widget = self.centralWidget()
-        #self.layout = self.central_widget.layout()
         # Buttons
     def show_new_window(self, checked):
         if self.w is None:
@@ -58,19 +71,19 @@ class Window(QMainWindow):
         else:
             print("window already open")
 
-    def connectFunctions(self,ID_RESET_DEPTH=66,fuse_number=1):
+    def connectFunctions(self):
         #window2
         self.showNewWindowButton.clicked.connect(self.show_new_window)
     
         #Kjøremodus
-        self.btnManuell.clicked.connect(lambda: f.manuellKjoring(self))
-        self.btnAutonom.clicked.connect(lambda: f.autonomDocking(self))
-        self.btnFrogCount.clicked.connect(lambda: f.frogCount(self))
+        self.btnManuell.clicked.connect(lambda: self.exec.manual())
+        self.btnAutonom.clicked.connect(lambda: self.exec.docking())
+        self.btnFrogCount.clicked.connect(lambda: self.exec.transect())
         
         #Sikringer
-        #self.btnReset5V.clicked.connect(R.reset_5V_fuse(self,fuse_number))
-        #self.btnResetThruster.clicked.connect(R.reset_12V_manipulator_fuse(self,fuse_number))
-        #self.btnResetManipulator.clicked.connect(R.reset_12V_thruster_fuse(self,fuse_number))
+        self.btnReset5V.clicked.connect(lambda: Rov_state.reset_5V_fuse2(self))
+        self.btnResetThruster.clicked.connect(lambda: f.resetThruster(self))
+        self.btnResetManipulator.clicked.connect(lambda :f.resetManipulator(self))
         
         #IMU
         self.btnKalibrerIMU.clicked.connect(lambda: f.kalibrerIMU(self))
@@ -108,19 +121,26 @@ class Window(QMainWindow):
                 time.sleep(0.15)  # Sleep for 0.15 seconds
         print("received")
         exit(0)
+    
+    # def send_data_to_main(self, data, id):
+    #     if self.queue is not None:
+    #         self.queue.put([id, data])
+    #     else:
+    #         raise TypeError("self.queue does not exist inside send_data_to_main")
+
 
     def gui_manipulator_state_update(self, sensordata):
         self.toggle_mani.setChecked(sensordata[0])
 
     def decide_gui_update(self, sensordata):
         self.sensor_update_function = {
-            "lekk_temp": self.gui_lekk_temp_update,
-            "32": self.gui_thrust_update,
-            # "accel": self.gui_acceleration_update,
+            #"139": self.gui_lekk_temp_update,
+            "thrust": self.gui_thrust_update,
+            #"accel": self.gui_acceleration_update,
             # "gyro": self.gui_gyro_update,
             # "time": self.gui_time_update,
             "manipulator": self.gui_manipulator_update,
-            "power_consumption": self.gui_watt_update,
+            "139": self.gui_watt_update,
             "manipulator_toggled": self.gui_manipulator_state_update,
             # "regulator_strom_status": self.regulator_strom_status,
             # "regulering_status": self.gui_regulering_state_update,
@@ -151,7 +171,7 @@ class Window(QMainWindow):
             )
 
         # self.label_effekt_manipulator_2.setText(str(round(sensordata[1])) + " W")
-        # self.label_effekt_elektronikk_2.setText(str(round(sensordata[2])) +" W")
+        self.label_effekt_elektronikk_2.setText(str(round(sensordata[2])) +" W")
 
     def update_round_percent_visualizer(self, value, text_label):
         text_label.setText(str(value))
@@ -228,30 +248,32 @@ class Window(QMainWindow):
                 "background-color: rgb(30, 33, 38); border-radius: 5px; border: 1px solid rgb(30, 30, 30);"
             )
 
-            id_with_lekkasje = []  # List of IDs for sensors with leaks
-            for lekkasje_nr, is_lekkasje in enumerate(lekkasje_liste):  # For each sensor in the list of leaks
-                if not is_lekkasje:  # If the sensor doesn't have a leak
-                    id_with_lekkasje.append(lekkasje_nr + 1)  # Add the sensor's ID to id_with_lekkasje
-            if not self.lekkasje_varsel_is_running and len(id_with_lekkasje) > 0:  # If there is no leak alert running and there is a sensor with a leak
-                self.lekkasje_varsel_is_running = True  # Set lekkasje_varsel_is_running to True
-                timer = QTimer(self)
-                timer.timeout.connect(lambda: self.lekkasje_varsel(id_with_lekkasje))
-                timer.setSingleShot(True)
-                timer.start(0)
-            
+        id_with_lekkasje = []  # List of IDs for sensors with leaks
+        for lekkasje_nr, is_lekkasje in enumerate(
+            lekkasje_liste
+        ):  # For each sensor in the list of leaks
+            if not is_lekkasje:  # If the sensor doesn't have a leak
+                id_with_lekkasje.append(
+                    lekkasje_nr + 1
+                )  # Add the sensor's ID to id_with_lekkasje
+        if (
+            not self.lekkasje_varsel_is_running and len(id_with_lekkasje) > 0
+        ):  # If there is no leak alert running and there is a sensor with a leak
+            self.lekkasje_varsel_is_running = (
+                True  # Set lekkasje_varsel_is_running to True
+            )
+            threading.Thread(
+                target=lambda: self.lekkasje_varsel(id_with_lekkasje)
+            ).start()  # Start the leak alert in a separate thread
+    
     def lekkasje_varsel(self, sensor_nr_liste):
-        self.label_lekkasje_varsel = QLabel(self)
         self.label_lekkasje_varsel.setMaximumSize(16777215,150)
         self.label_lekkasje_varsel.setMinimumSize(16777215,150)
         self.label_lekkasje_varsel.raise_()
         sensor_nr_liste = [str(item) for item in sensor_nr_liste]
-        
         text = f"Advarsel vannlekkasje oppdaget på sensor: {str(', '.join(sensor_nr_liste))}"
         self.label_lekkasje_varsel.setText(text)
         self.label_lekkasje_varsel.setStyleSheet("QLabel { color: rgba(255, 255, 255, 200); background-color: rgba(179, 32, 36, 200); font-size: 24pt;}")
-        
-        #self.layout.addWidget(self.label_lekkasje_varsel)
-        
         if "win" in sys.platform:
             subprocess.call(('./ffplay.exe -autoexit -nodisp ./siren.wav'), stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
         else:
@@ -261,7 +283,8 @@ class Window(QMainWindow):
         self.lekkasje_varsel_is_running = False
         self.label_lekkasje_varsel.setMaximumSize(0,0)
         self.label_lekkasje_varsel.setMinimumSize(0,0)
-
+        
+        
     def gui_manipulator_update(self, sensordata):
         self.update_round_percent_visualizer(0, self.label_percentage_mani_1)
         self.update_round_percent_visualizer(0, self.label_percentage_mani_2)
@@ -282,8 +305,7 @@ class Window(QMainWindow):
 
     # TODO: fiks lekkasje varsel seinare
 
-
-
+    
 def run(conn, queue_for_rov, t_watch: Threadwatcher, id):
     # TODO: add suppress qt warnings?
 
@@ -294,7 +316,7 @@ def run(conn, queue_for_rov, t_watch: Threadwatcher, id):
     win = Window(conn, queue_for_rov, t_watch, id)  # Create an instance of our class
     GLOBAL_STATE = False
     win.show()  # Show the form
-    
+
     app.exec()
     #sys.exit(app.exec())
 
