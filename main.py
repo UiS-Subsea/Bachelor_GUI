@@ -9,10 +9,11 @@ import threading
 import time
 from Kommunikasjon.packet_info import Logger
 from Thread_info import Threadwatcher
+from camerafeed.GUI_Camerafeed_Main import CameraClass
 from Controller import Controller_Handler as controller
 import gui
 from gui import guiFunctions as f
-
+import queue
 # VALUES: (0-7) -> index i: [0,0,0,0,0,0,0,0]
 # MANIPULATOR
 MANIPULATOR_IN_OUT = 15
@@ -35,41 +36,32 @@ ID_DIRECTIONCOMMAND = 70
 ID_camera_tilt_upwards = 200
 ID_camera_tilt_downwards = 201
 
-
 def network_format(data) -> bytes:
-    """Formats the data for sending to network handler"""
     packet_seperator = json.dumps("*")
     return bytes(packet_seperator+json.dumps(data)+packet_seperator, "utf-8")
 
-def recieve_commands_from_gui(conn, t_watch: Threadwatcher, id):
-    #Probably deprecated
+def run_camera_func(t_watch: Threadwatcher, frame_pipe: multiprocessing.Pipe, id: int):
+    camera = CameraClass()
     while t_watch.should_run(id):
-        if conn.poll():
-            print(f" Inside recieve_commands_from_gui {conn.recv() = }")
-        # print("recieve commands from gui")
-    print("t_watch is false")
+        # print("Getting frame")
+        frame = camera.get_frame()
+        frame_pipe.send(frame)
+        time.sleep(1)
 
-def create_test_sensordata(delta, old_sensordata=None):
-    # TODO: don't use this later its a test function
-    sensordata = {}
-    if old_sensordata is None:
-        sensordata = {"dybde": -2500.0, "spenning": 48.0, "temp_rov": 26.0}
-    else:
-        sensordata["dybde"] = old_sensordata["dybde"] + 10 * delta
-        sensordata["spenning"] = old_sensordata["spenning"] + 0.4 * delta
-        sensordata["temp_rov"] = old_sensordata["temp_rov"] + 0.3 * delta
-    return sensordata
 
 def send_fake_sensordata(t_watch: Threadwatcher, gui_pipe: multiprocessing.Pipe):
     thrust_list = [num for num in range(-100, 101)]
     power_list = [num for num in range(0, 101)]
+    vinkel_list = [num for num in range(-360, 360)]
+    dybde_list = [num for num in range(-100, 0)]
+    accel_list = [num for num in range(-100, 101)]
     count = -1
     sensordata = {}
     while t_watch.should_run(0):
         # time_since_start = round(time.time()-start_time_sec)
         count += 1
         sensordata["lekk_temp"] = [
-            True,
+            False,
             True,
             True,
             (25 + count) % 60,
@@ -88,13 +80,11 @@ def send_fake_sensordata(t_watch: Threadwatcher, gui_pipe: multiprocessing.Pipe)
             thrust_list[(88 + count) % 201],
             thrust_list[(107 + count) % 201],
         ]
-        sensordata["power_consumption"] = [
+        sensordata["watt"] = [
             power_list[count % 101] * 13,
             power_list[count % 101] * 2.4,
             power_list[count % 101] * 0.65,
         ]
-        # sensordata["gyro"] = [(time_since_start*2)%60, time_since_start%90, time_since_start%90]
-        # sensordata["time"] = [time_since_start]
         sensordata["thrust"] = [
             thrust_list[(0 + count) % 201],
             thrust_list[(13 + count) % 201],
@@ -107,21 +97,39 @@ def send_fake_sensordata(t_watch: Threadwatcher, gui_pipe: multiprocessing.Pipe)
             thrust_list[(88 + count) % 201],
             thrust_list[(107 + count) % 201],
         ]
-        # sensordata["thrust"] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        sensordata["vinkler"] = [
+            vinkel_list[(0 + count) % 201],
+            vinkel_list[(45 + count) % 201],
+            vinkel_list[(90 + count) % 201]
+        ]
+        sensordata["dybde"]=[
+            dybde_list[(0 + count) % 201],
+            dybde_list[(45 + count) % 201],
+        ]
+        sensordata["accel"] = [
+            accel_list[(0 + count) % 201],
+        ]
         gui_pipe.send(sensordata)
         time.sleep(1)
 
+
+
+
 class Rov_state:
     def __init__(self, queue, network_handler,gui_pipe, t_watch: Threadwatcher) -> None:
+        # Threadwatcher
         self.t_watch: Threadwatcher = t_watch
+
         self.data: dict = {}
         self.logger = Logger()
+        
+        #Queue and Pipe
         self.queue: multiprocessing.Queue = queue
         self.gui_pipe = gui_pipe # Pipe to send sensordata back to the gui
         self.sensordata=None
-        #self.send_sensordata_to_gui(self.data)
         
-        # Pipe to send sensordata back to the gui
+        
+        
         # Prevents the tilt toggle from toggling back again immediately if we hold the button down
         self.camera_toggle_wait_counter: int = 0
         # Tilt in degrees of the camera servo motors.
@@ -149,12 +157,11 @@ class Rov_state:
     
     
     def send_sensordata_to_gui(self,data):
-        """Sends sensordata to the gui"""
+        #Sends sensordata to the gui
         print("Enter into send_sensordata_to_gui function")
         if self.sensordata == None:
-            print(f"THERE IS NO DATA {data}")
+            print(f"Data did not arrive{data}")
         self.gui_pipe.send(data)
-        print(f"DATDATDATDATDATDATDATDATDTDATDDTDTDADDTADDATA{data}")
         
     def sending_startup_ids(self):
         self.packets_to_send.append(
@@ -420,7 +427,7 @@ class Rov_state:
         print(self.packets_to_send)
 
 
-def run(network_handler: Network, t_watch: Threadwatcher, id: int, queue_for_rov: multiprocessing.Queue,gui_pipe):
+def run(network_handler: Network, t_watch: Threadwatcher, id: int, queue_for_rov: multiprocessing.Queue,gui_pipe, frame_pipe):
     print("Klarer å gå inn i run function")
     rov_state = Rov_state(queue_for_rov, network_handler,gui_pipe, t_watch)
 
@@ -457,15 +464,21 @@ if __name__ == "__main__":
         global run_network
         global network
         global run_craft_packet
+        global run_camera
+        
+        # exec = ExecutionClass()
+        # cam = Camera()
+        run_camera = True
         run_gui=True
-        run_craft_packet = True
-        run_network = True  # Bytt t True når du ska prøva å connecte.
+        run_craft_packet = False
+        run_network = False  # Bytt t True når du ska prøva å connecte.
         run_get_controllerdata = False
-        run_send_fake_sensordata=False#Sett til True om du vil sende fake sensordata til gui
+        run_send_fake_sensordata=True#Sett til True om du vil sende fake sensordata til gui
         
         t_watch = Threadwatcher()
         queue_for_rov = multiprocessing.Queue()
         
+        (frame_parent_pipe, frame_chid_pipe) = Pipe()
         (
             gui_parent_pipe,#Used by main process, to send/receive data to gui
             gui_child_pipe,#Used by gui process, to send/receive data to main
@@ -486,7 +499,7 @@ if __name__ == "__main__":
             id = t_watch.add_thread()
             print(id)
             main_driver_loop = threading.Thread(target=run, args=(
-                network, t_watch, id, queue_for_rov,gui_parent_pipe), daemon=True)
+                network, t_watch, id, queue_for_rov,gui_parent_pipe, frame_parent_pipe), daemon=True)
             main_driver_loop.start()
 
         if run_get_controllerdata:
@@ -497,7 +510,7 @@ if __name__ == "__main__":
             controller_process.start()
             input("Press Enter to start sending!")
             # controller_process.terminate()
-        
+            
         if run_gui:
             id = t_watch.add_thread()
             gui_loop = Process(
@@ -507,7 +520,12 @@ if __name__ == "__main__":
             )  #should recieve commands from the gui
             gui_loop.start()
             print("gui started")
+            
 
+        if run_camera:
+            id = t_watch.add_thread()
+            camera_thread = threading.Thread(target=run_camera_func, args=(t_watch, frame_parent_pipe,id), daemon=True)
+            camera_thread.start()
 
         if run_send_fake_sensordata:
             id = t_watch.add_thread()
@@ -517,8 +535,10 @@ if __name__ == "__main__":
                 daemon=True,
             )
             datafaker.start()
+            
         while True:
             time.sleep(5)
     except KeyboardInterrupt:
         t_watch.stop_all_threads()
         print("stopped all threads")
+      
