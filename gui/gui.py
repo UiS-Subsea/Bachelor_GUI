@@ -6,7 +6,6 @@ import sys
 import threading
 #from main import Vinkeldata
 
-from main import Rov_state
 from . import guiFunctions as f
 from Thread_info import Threadwatcher
 import time
@@ -20,8 +19,7 @@ import time
 from Kommunikasjon.packet_info import Logger
 from Thread_info import Threadwatcher
 from Controller import Controller_Handler as controller
-import gui
-from gui import guiFunctions as f
+from main import *
 
 
 class Window(QMainWindow):
@@ -35,7 +33,7 @@ class Window(QMainWindow):
     ):
         self.packets_to_send = []
         super().__init__(parent)
-        uic.loadUi("gui/Subsea.ui", self)
+        uic.loadUi("gui/window1.ui", self)
         self.connectFunctions()
         
 
@@ -134,21 +132,40 @@ class Window(QMainWindow):
 
     def decide_gui_update(self, sensordata):
         self.sensor_update_function = {
-            #"139": self.gui_lekk_temp_update,
+            "lekk_temp": self.gui_lekk_temp_update,
             "thrust": self.gui_thrust_update,
-            #"accel": self.gui_acceleration_update,
+            "accel": self.guiAccelUpdate,
             # "gyro": self.gui_gyro_update,
             # "time": self.gui_time_update,
             "manipulator": self.gui_manipulator_update,
-            "139": self.gui_watt_update,
+            "watt": self.gui_watt_update,
             "manipulator_toggled": self.gui_manipulator_state_update,
             # "regulator_strom_status": self.regulator_strom_status,
             # "regulering_status": self.gui_regulering_state_update,
             # "settpunkt": self.print_data
+            "vinkler": self.guiVinkelUpdate,
+            "dybde":self.guiDybdeUpdate,
         }
         for key in sensordata.keys():
             if key in self.sensor_update_function:
                 self.sensor_update_function[key](sensordata[key])
+                
+    def guiDybdeUpdate(self,sensordata):
+        label:QLabel = self.labelDybde
+        label.setText(str(round(sensordata[0],2)) + "m")
+    
+    def guiAccelUpdate(self,sensordata):
+        label:QLabel = self.labelAccel
+        label.setText(str(round(sensordata[0],2)) + " m/s^2")
+        
+    def guiVinkelUpdate(self,sensordata):
+        vinkel_liste:list[QLabel] = [
+            self.labelRull,
+            self.labelStamp,
+            self.labelGir
+        ]
+        for index, label in enumerate(vinkel_liste):
+            label.setText(str(round(sensordata[index],2)) + "°")
 
     def gui_watt_update(self, sensordata):
         effekt_liste: list[QLabel] = [
@@ -169,10 +186,6 @@ class Window(QMainWindow):
             label.setStyleSheet(
                 f"background-color: {color_list[index]}; border-radius: 5px; border: 1px solid rgb(30, 30, 30);"
             )
-
-        # self.label_effekt_manipulator_2.setText(str(round(sensordata[1])) + " W")
-        self.label_effekt_elektronikk_2.setText(str(round(sensordata[2])) +" W")
-
     def update_round_percent_visualizer(self, value, text_label):
         text_label.setText(str(value))
         # self.round_percent_visualizer.setValue(value)
@@ -194,9 +207,8 @@ class Window(QMainWindow):
         self.update_round_percent_visualizer(sensordata[5], self.thrust_label_6)
         self.update_round_percent_visualizer(sensordata[6], self.thrust_label_7)
         self.update_round_percent_visualizer(sensordata[7], self.thrust_label_8)
-
+        
     def gui_lekk_temp_update(self, sensordata):
-        # self.check_data_types(sensordata["lekk_temp"], (int, float, float, float))
         print(f"ran gui_lekk_temp_update {sensordata = }")
         print(f"{sensordata =}")
 
@@ -267,22 +279,38 @@ class Window(QMainWindow):
             ).start()  # Start the leak alert in a separate thread
     
     def lekkasje_varsel(self, sensor_nr_liste):
-        self.label_lekkasje_varsel.setMaximumSize(16777215,150)
-        self.label_lekkasje_varsel.setMinimumSize(16777215,150)
+        self.label_lekkasje_varsel = QLabel(self)
+        self.label_lekkasje_varsel.setMaximumSize(16777215, 150)
+        self.label_lekkasje_varsel.setMinimumSize(16777215, 150)
         self.label_lekkasje_varsel.raise_()
         sensor_nr_liste = [str(item) for item in sensor_nr_liste]
+
         text = f"Advarsel vannlekkasje oppdaget på sensor: {str(', '.join(sensor_nr_liste))}"
         self.label_lekkasje_varsel.setText(text)
-        self.label_lekkasje_varsel.setStyleSheet("QLabel { color: rgba(255, 255, 255, 200); background-color: rgba(179, 32, 36, 200); font-size: 24pt;}")
+        self.label_lekkasje_varsel.setStyleSheet(
+            "QLabel { color: rgba(255, 255, 255, 200); background-color: rgba(179, 32, 36, 200); font-size: 24pt;}"
+        )
+
+        self.label_lekkasje_varsel.setGeometry(0, 0, self.width(), 150)
+
+
         if "win" in sys.platform:
             subprocess.call(('./ffplay.exe -autoexit -nodisp ./siren.wav'), stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
         else:
             subprocess.call(('./ffplay', '-autoexit', '-nodisp', './siren.wav'), stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
         self.label_lekkasje_varsel.setStyleSheet("QLabel { color: rgba(255, 255, 255, 0); background-color: rgba(179, 32, 36, 0); font-size: 24pt;}")
-        self.label_lekkasje_varsel.lower()
         self.lekkasje_varsel_is_running = False
         self.label_lekkasje_varsel.setMaximumSize(0,0)
         self.label_lekkasje_varsel.setMinimumSize(0,0)
+        time.sleep(2)  # add a delay of 2 seconds
+        self.label_lekkasje_varsel.lower()
+
+
+    # def lekkasje_varsel(self, sensor_nr_liste):
+    #     sensor_nr_liste = [str(item) for item in sensor_nr_liste]
+    #     text = f"Advarsel vannlekkasje oppdaget på sensor: {', '.join(sensor_nr_liste)}"
+    #     QMessageBox.warning(self, "Lekkasje oppdaget", text, QMessageBox.Ok)
+
         
         
     def gui_manipulator_update(self, sensordata):
@@ -345,4 +373,3 @@ class Communicate(QtCore.QObject):
 
 if __name__ == "__main__":
     run()
-    
