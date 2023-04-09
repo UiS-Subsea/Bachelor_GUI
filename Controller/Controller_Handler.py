@@ -89,14 +89,6 @@ class Controller:
         while True:   
             try:
                 global rov_joystick
-<<<<<<< HEAD
-                #global mani_joystick
-                print(f"Found {pygame.joystick.get_count()} controllers.")
-                rov_joystick = pygame.joystick.Joystick(0)
-                mani_joystick = pygame.joystick.Joystick(1)
-                print(f"Connected to {rov_joystick.get_name()} {rov_joystick.get_id()}")
-                print(f"Connected to {mani_joystick.get_name()} {mani_joystick.get_id()}")
-=======
                 global mani_joystick
                 pygame.joystick.init()
                 if pygame.joystick.get_count() == 0:
@@ -111,7 +103,6 @@ class Controller:
                     mani_joystick = pygame.joystick.Joystick(1)
                     print(f"Connected to {rov_joystick.get_name()}")
                     print(f"Connected to {mani_joystick.get_name()}")
->>>>>>> 8f1674b1149f6b4ff8b012169a89fa3082a8a455
                 break
             except Exception as e:
                 print(e)
@@ -119,12 +110,6 @@ class Controller:
                         sys.stdout.write("\r" + f"Shut down and connect controller/s before starting! {sec}")
                         time.sleep(1)
                         sys.stdout.flush()
-<<<<<<< HEAD
-
-        rov_joystick.init()
-        mani_joystick.init()
-        rov_joystick.rumble(0.2, 0.2, 500)
-=======
         if pygame.joystick.get_count() == 1:
             rov_joystick.init()
         elif pygame.joystick.get_count() == 2:
@@ -132,7 +117,6 @@ class Controller:
             mani_joystick.init()
             #Indicates which controller that controls the ROV
             rov_joystick.rumble(0.2, 0.2, 500)
->>>>>>> 8f1674b1149f6b4ff8b012169a89fa3082a8a455
 
     # Remaps a range. for example 1-10 range can be remapped to 1-100 so that for example 3 becomes 30
     def get_new_range(self, value, min, max, scale=100):

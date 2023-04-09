@@ -467,7 +467,7 @@ if __name__ == "__main__":
         run_craft_packet = False
         run_network = False  # Bytt t True når du ska prøva å connecte.
         run_get_controllerdata = False
-        run_send_fake_sensordata=False#Sett til True om du vil sende fake sensordata til gui
+        run_send_fake_sensordata=True#Sett til True om du vil sende fake sensordata til gui
         
         t_watch = Threadwatcher()
         queue_for_rov = multiprocessing.Queue()
