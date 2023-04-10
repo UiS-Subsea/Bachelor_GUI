@@ -336,45 +336,41 @@ class Rov_state:
             return
         self.network_handler.send(network_format(copied_packets))
 
-    def reset_5V_fuse(self, fuse_number):
-        """reset_5V_fuse creates and adds
-        packets for resetting a fuse on the ROV"""
-        byte0 = 0b10000000 | (fuse_number << 1)
-        fuse_reset_signal = [byte0]
+    # def reset_5V_fuse(self, fuse_number):
+    #     """reset_5V_fuse creates and adds
+    #     packets for resetting a fuse on the ROV"""
+    #     byte0 = 0b10000000 | (fuse_number << 1)
+    #     fuse_reset_signal = [byte0]
 
-        for item in self.regulator_active:
-            fuse_reset_signal.append(item)
+    #     for item in self.regulator_active:
+    #         fuse_reset_signal.append(item)
 
-        self.packets_to_send.append(97, fuse_reset_signal)
+    #     self.packets_to_send.append(97, fuse_reset_signal)
 
     def reset_5V_fuse2(self):
         reset_fuse_byte = [0] * 8
         reset_fuse_byte[0] = 1
-        print("Det går inn i funksjonen")
+        print("Resetting 5V Fuse")
         self.packets_to_send.append([97, reset_fuse_byte])
         print(f"Pakkene som blir sendt er: {self.packets_to_send}")
 
     def reset_12V_thruster_fuse(self, fuse_number):
         """reset_fuse_on_power_supply creates and adds
         packets for resetting a fuse on the ROV"""
-        byte0 = 0b10000000 | (fuse_number << 1)
-        fuse_reset_signal = [byte0]
-
-        for item in self.regulator_active:
-            fuse_reset_signal.append(item)
-
-        self.packets_to_send.append([98, fuse_reset_signal])
+        reset_fuse_byte = [0] * 8
+        reset_fuse_byte[0] = 1
+        print("Resetting 12V Thruster Fuse")
+        self.packets_to_send.append([98, reset_fuse_byte])
 
     def reset_12V_manipulator_fuse(self, fuse_number):
         """reset_12V_manipulator_fuse creates and adds
         packets for resetting a fuse on the ROV"""
-        byte0 = 0b10000000 | (fuse_number << 1)
-        fuse_reset_signal = [byte0]
-
-        for item in self.regulator_active:
-            fuse_reset_signal.append(item)
-
-        self.packets_to_send.append([99, fuse_reset_signal])
+        reset_fuse_bye = [0] * 8
+        reset_fuse_bye[0] = 1
+        print("Resetting 12V Manipulator Fuse")
+        self.packets_to_send.append([99, reset_fuse_bye])
+    
+    
 
     def build_rov_packet(self):
         if self.data == {}:
