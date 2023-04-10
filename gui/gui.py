@@ -28,7 +28,8 @@ class Window(QMainWindow):
     def __init__(
         self,
         pipe_conn_only_rcv,
-        queue: multiprocessing.Queue,
+        queue_for_rov: multiprocessing.Queue,
+        queue_for_cam: multiprocessing.Queue,
         t_watch: Threadwatcher,
         id: int,
         parent=None,
@@ -45,7 +46,7 @@ class Window(QMainWindow):
         self.ID_RESET_DEPTH = 66
         # Queue and pipe
         self.queue: multiprocessing.Queue = (
-            queue
+            queue_for_rov
         )
         # pipe_conn_only_rcv is a pipe connection that only receives data
         self.pipe_conn_only_rcv = pipe_conn_only_rcv
@@ -60,7 +61,10 @@ class Window(QMainWindow):
         )
         self.receive.start()
 
-        self.cam = ExecutionClass(queue)
+        
+        # Use queue_for_rov to use the common queue!!!!
+        # queue for cam is only for testing, only receives data from camerafeed funcs
+        self.cam = ExecutionClass(queue_for_cam)
         self.w = None  # SecondWindow() #
 
         # Buttons
@@ -77,7 +81,7 @@ class Window(QMainWindow):
 
         # Kjøremodus
         self.btnManuell.clicked.connect(lambda: self.cam.manual())
-        self.btnAutonom.clicked.connect(lambda: self.cam.record())
+        self.btnAutonom.clicked.connect(lambda: self.cam.send_data_test())
         self.btnFrogCount.clicked.connect(lambda: self.cam.transect())
 
         # Sikringer
@@ -305,7 +309,7 @@ class Window(QMainWindow):
     # TODO: fiks lekkasje varsel seinare
 
 
-def run(conn, queue_for_rov, t_watch: Threadwatcher, id):
+def run(conn, queue_for_rov,queue_for_cam, t_watch: Threadwatcher, id):
     # TODO: add suppress qt warnings?
 
     app = QtWidgets.QApplication(
@@ -313,7 +317,7 @@ def run(conn, queue_for_rov, t_watch: Threadwatcher, id):
     )  # Create an instance of QtWidgets.QApplication
 
     # Create an instance of our class
-    win = Window(conn, queue_for_rov, t_watch, id)
+    win = Window(conn, queue_for_rov, queue_for_cam, t_watch, id)
     GLOBAL_STATE = False
     win.show()  # Show the form
 

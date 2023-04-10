@@ -68,7 +68,7 @@ class AutonomousTransect:
             return pipes
             
         else:
-            print("No pipes found")
+            # print("No pipes found")
             return "SKIP"
       
         

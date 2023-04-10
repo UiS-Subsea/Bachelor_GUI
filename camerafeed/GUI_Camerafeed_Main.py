@@ -7,6 +7,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 import datetime
+import random
 
 
 class CameraClass:
@@ -26,7 +27,7 @@ class CameraClass:
     def start(self):
         print("Camera has been started")
         self.cam = cv2.VideoCapture(0)
-        self.frame = self.cam.read()[1]
+        self.frame = self.get_frame()
         self.recording = False
 
     def setup_video(self, name):
@@ -63,16 +64,20 @@ class ExecutionClass:
 
     def show(self, frame, name="frame"):
         self.update()
+        if frame.any() == None:
+            frame = self.frame
         cv2.imshow(name, frame)
         if cv2.waitKey(1) == ord("q"):
             self.manual()
 
     def save_image(self):
         cv2.imwrite("camerafeed/output/output_image.jpg", self.frame.copy())
-
-    def test(self):
-        ting = self.driving_queue.get()
-        print(ting)
+        
+    def send_data_test(self):
+        while True:
+            random_data = [40, [random.randint(0,10) for i in range(8)]]
+            self.driving_queue.put(random_data)
+            QApplication.processEvents()
 
     def transect(self):
         self.done = False
@@ -82,7 +87,6 @@ class ExecutionClass:
                 self.frame.copy())
             self.show(transect_frame, "Transect")
             self.driving_queue.put(driving_data_packet)
-            self.test()
             QApplication.processEvents()
 
     def seagrass(self):

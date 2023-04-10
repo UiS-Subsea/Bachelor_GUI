@@ -9,7 +9,6 @@ import threading
 import time
 from Kommunikasjon.packet_info import Logger
 from Thread_info import Threadwatcher
-from camerafeed.GUI_Camerafeed_Main import CameraClass
 from Controller import Controller_Handler as controller
 import gui
 from gui import guiFunctions as f
@@ -44,16 +43,6 @@ ID_camera_tilt_downwards = 201
 def network_format(data) -> bytes:
     packet_seperator = json.dumps("*")
     return bytes(packet_seperator+json.dumps(data)+packet_seperator, "utf-8")
-
-
-def run_camera_func(t_watch: Threadwatcher, frame_pipe: multiprocessing.Pipe, id: int):
-    camera = CameraClass()
-    # camera.start()
-    while t_watch.should_run(id):
-        # print("Getting frame")
-        frame = camera.get_frame()
-        frame_pipe.send(frame)
-        time.sleep(1)
 
 
 def send_fake_sensordata(t_watch: Threadwatcher, gui_pipe: multiprocessing.Pipe):
@@ -501,7 +490,7 @@ class Rov_state:
         self.build_manipulator_packet()
 
 
-def run(network_handler: Network, t_watch: Threadwatcher, id: int, queue_for_rov: multiprocessing.Queue, gui_pipe, frame_pipe):
+def run(network_handler: Network, t_watch: Threadwatcher, id: int, queue_for_rov: multiprocessing.Queue, gui_pipe):
     print("Klarer å gå inn i run function")
     rov_state = Rov_state(queue_for_rov, network_handler, gui_pipe, t_watch)
 
@@ -555,8 +544,7 @@ if __name__ == "__main__":
 
         t_watch = Threadwatcher()
         queue_for_rov = multiprocessing.Queue()
-
-        (frame_parent_pipe, frame_chid_pipe) = Pipe()
+        queue_for_cam = multiprocessing.Queue()
         (
             gui_parent_pipe,  # Used by main process, to send/receive data to gui
             gui_child_pipe,  # Used by gui process, to send/receive data to main
@@ -576,7 +564,7 @@ if __name__ == "__main__":
             id = t_watch.add_thread()
             print(id)
             main_driver_loop = threading.Thread(target=run, args=(
-                network, t_watch, id, queue_for_rov, gui_parent_pipe, frame_parent_pipe), daemon=True)
+                network, t_watch, id, queue_for_rov, gui_parent_pipe), daemon=True)
             main_driver_loop.start()
 
         if run_get_controllerdata:
@@ -592,7 +580,7 @@ if __name__ == "__main__":
             id = t_watch.add_thread()
             gui_loop = Process(
                 target=gui.run,
-                args=(gui_child_pipe, queue_for_rov, t_watch, id),
+                args=(gui_child_pipe, queue_for_rov, queue_for_cam , t_watch, id),
                 daemon=True,
             )  # should recieve commands from the gui
             gui_loop.start()
@@ -613,7 +601,10 @@ if __name__ == "__main__":
             )
             datafaker.start()
 
+
+            
         while True:
+            print("Queue rn: ", queue_for_cam.get())
             time.sleep(5)
     except KeyboardInterrupt:
         t_watch.stop_all_threads()
