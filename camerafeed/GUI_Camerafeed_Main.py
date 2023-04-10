@@ -24,6 +24,7 @@ class CameraClass:
         #     raise KeyboardInterrupt
 
     def start(self):
+        print("Camera has been started")
         self.cam = cv2.VideoCapture(0)
         self.frame = self.cam.read()[1]
         self.recording = False
@@ -110,6 +111,12 @@ class ExecutionClass:
         
     def record(self):
         self.done = False
+        if self.Camera.recording:
+            self.Camera.recording = False
+            cv2.destroyWindow("Recording...")
+            print("Recording stopped")
+            self.done = True
+
         while not self.done:
             self.update()
             self.show(self.frame.copy(), "Recording...")
