@@ -48,7 +48,7 @@ def network_format(data) -> bytes:
 
 def run_camera_func(t_watch: Threadwatcher, frame_pipe: multiprocessing.Pipe, id: int):
     camera = CameraClass()
-    camera.start()
+    # camera.start()
     while t_watch.should_run(id):
         # print("Getting frame")
         frame = camera.get_frame()
@@ -545,7 +545,7 @@ if __name__ == "__main__":
 
         # exec = ExecutionClass()
         # cam = Camera()
-        run_camera = True
+        run_camera = False
         run_gui = True
         run_craft_packet = False
         run_network = False  # Bytt t True når du ska prøva å connecte.
@@ -598,11 +598,11 @@ if __name__ == "__main__":
             gui_loop.start()
             print("gui started")
 
-        if run_camera:
-            id = t_watch.add_thread()
-            camera_thread = threading.Thread(target=run_camera_func, args=(
-                t_watch, frame_parent_pipe, id), daemon=True)
-            camera_thread.start()
+        # if run_camera:
+        #     id = t_watch.add_thread()
+        #     camera_thread = threading.Thread(target=run_camera_func, args=(
+        #         t_watch, frame_parent_pipe, id), daemon=True)
+        #     camera_thread.start()
 
         if run_send_fake_sensordata:
             id = t_watch.add_thread()
