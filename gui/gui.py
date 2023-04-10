@@ -60,8 +60,7 @@ class Window(QMainWindow):
         )
         self.receive.start()
 
-        self.exec = ExecutionClass(queue)
-        self.camera = CameraClass()
+        self.cam = ExecutionClass(queue)
         self.w = None  # SecondWindow() #
 
         # Buttons
@@ -77,9 +76,9 @@ class Window(QMainWindow):
         self.showNewWindowButton.clicked.connect(self.show_new_window)
 
         # Kjøremodus
-        self.btnManuell.clicked.connect(lambda: self.exec.manual())
-        self.btnAutonom.clicked.connect(lambda: self.exec.docking())
-        self.btnFrogCount.clicked.connect(lambda: self.exec.transect())
+        self.btnManuell.clicked.connect(lambda: self.cam.manual())
+        self.btnAutonom.clicked.connect(lambda: self.cam.record())
+        self.btnFrogCount.clicked.connect(lambda: self.cam.transect())
 
         # Sikringer
         self.btnReset5V.clicked.connect(lambda: Rov_state.reset_5V_fuse2(self))
@@ -202,7 +201,7 @@ class Window(QMainWindow):
         if sensordata[3] == 1:
             labelLekkasjeAlarm.setText("ADVARSEL!")
             labelLekkasjeAlarm.setStyleSheet("color: red")
-            self.play_sound()
+            # self.play_sound()
 
     def dybdeTempUpdate(self, sensordata):
         labelDybde: QLabel = self.labelDybde
