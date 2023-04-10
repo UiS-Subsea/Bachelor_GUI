@@ -22,6 +22,13 @@ MANIPULATOR_TILT = 3
 MANIPULATOR_GRAB_RELEASE = 6
 
 
+VINKLER = "138" #0=roll, 2=stamp, 4=gir
+DYBDETEMP="139" #0=dybde, 2=vanntemp, 3=vanntemp msb, 4=sensorkorttemp, 5=sensorkorttemp msb
+FEILKODE ="140" #0=IMU Error, 1=Temp Error, 2=Trykk Error, 3=Lekkasje
+
+
+
+
 
 
 # ROV
@@ -53,13 +60,38 @@ def send_fake_sensordata(t_watch: Threadwatcher, gui_pipe: multiprocessing.Pipe)
     thrust_list = [num for num in range(-100, 101)]
     power_list = [num for num in range(0, 101)]
     vinkel_list = [num for num in range(-360, 360)]
-    dybde_list = [num for num in range(-100, 0)]
+    dybde_list = [num for num in range(50,20000)]
     accel_list = [num for num in range(-100, 101)]
+    feilkode_list=[num for num in range(0,1)]
     count = -1
     sensordata = {}
     while t_watch.should_run(0):
-        # time_since_start = round(time.time()-start_time_sec)
         count += 1
+        sensordata[DYBDETEMP]=[
+            dybde_list[(0 + count) % 201],
+            dybde_list[(10 + count) % 201],
+            dybde_list[(20 + count) % 201],
+            dybde_list[(30 + count) % 201],
+            dybde_list[(40 + count) % 201],
+            dybde_list[(50 + count) % 201],
+            dybde_list[(60 + count) % 201],
+        ]
+        sensordata[VINKLER] = [
+            vinkel_list[(0 + count) % 201],
+            vinkel_list[(0 + count) % 201],
+            vinkel_list[(45 + count) % 201],
+            vinkel_list[(90 + count) % 201],
+            vinkel_list[(0 + count) % 201],
+            vinkel_list[(0 + count) % 201],
+        ]
+        sensordata[FEILKODE]=[
+            0,
+            0,
+            0,
+            1,
+            vinkel_list[(0 + count) % 201],
+        ]
+        
         sensordata["lekk_temp"] = [
             False,
             True,
@@ -85,32 +117,13 @@ def send_fake_sensordata(t_watch: Threadwatcher, gui_pipe: multiprocessing.Pipe)
             power_list[count % 101] * 2.4,
             power_list[count % 101] * 0.65,
         ]
-        sensordata["thrust"] = [
-            thrust_list[(0 + count) % 201],
-            thrust_list[(13 + count) % 201],
-            thrust_list[(25 + count) % 201],
-            thrust_list[(38 + count) % 201],
-            thrust_list[(37 + count) % 201],
-            thrust_list[(50 + count) % 201],
-            thrust_list[(63 + count) % 201],
-            thrust_list[(75 + count) % 201],
-            thrust_list[(88 + count) % 201],
-            thrust_list[(107 + count) % 201],
-        ]
-        sensordata["vinkler"] = [
-            vinkel_list[(0 + count) % 201],
-            vinkel_list[(45 + count) % 201],
-            vinkel_list[(90 + count) % 201]
-        ]
-        sensordata["dybde"]=[
-            dybde_list[(0 + count) % 201],
-            dybde_list[(45 + count) % 201],
-        ]
+
+
         sensordata["accel"] = [
             accel_list[(0 + count) % 201],
         ]
         gui_pipe.send(sensordata)
-        time.sleep(1)
+        time.sleep(0.5)
 
 
 

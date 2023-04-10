@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>898</width>
+    <width>902</width>
     <height>819</height>
    </rect>
   </property>
@@ -806,7 +806,7 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
     </font>
    </property>
    <property name="text">
-    <string>Hovedkort:</string>
+    <string>Vanntemp:</string>
    </property>
    <property name="textFormat">
     <enum>Qt::PlainText</enum>
@@ -818,7 +818,7 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
     <string>subTitle</string>
    </property>
   </widget>
-  <widget class="QLabel" name="labelTempHovedkort">
+  <widget class="QLabel" name="labelTempVann">
    <property name="geometry">
     <rect>
      <x>140</x>
@@ -896,7 +896,7 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
     </font>
    </property>
    <property name="text">
-    <string>Kraftkort:</string>
+    <string>Vanntemp MSB:</string>
    </property>
    <property name="textFormat">
     <enum>Qt::RichText</enum>
@@ -938,7 +938,7 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
     <string>subTitle</string>
    </property>
   </widget>
-  <widget class="QLabel" name="labelTempKraftkort">
+  <widget class="QLabel" name="labelTempVannMSB">
    <property name="geometry">
     <rect>
      <x>140</x>
@@ -1719,11 +1719,11 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
     <bool>false</bool>
    </property>
   </widget>
-  <widget class="QLabel" name="labelGjSnittROV">
+  <widget class="QLabel" name="labelSnittTemp">
    <property name="geometry">
     <rect>
-     <x>140</x>
-     <y>770</y>
+     <x>150</x>
+     <y>720</y>
      <width>58</width>
      <height>38</height>
     </rect>
@@ -1776,8 +1776,8 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
   <widget class="QLabel" name="text_gjsnitttemp">
    <property name="geometry">
     <rect>
-     <x>10</x>
-     <y>770</y>
+     <x>20</x>
+     <y>720</y>
      <width>58</width>
      <height>38</height>
     </rect>
@@ -2675,13 +2675,419 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
     </font>
    </property>
    <property name="text">
-    <string>Vann Temp</string>
+    <string>Sensorkort MSB:</string>
    </property>
    <property name="textFormat">
     <enum>Qt::RichText</enum>
    </property>
    <property name="colorStyle" stdset="0">
     <string>subTitle</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="labelTempSensorkortMSB">
+   <property name="geometry">
+    <rect>
+     <x>140</x>
+     <y>680</y>
+     <width>74</width>
+     <height>38</height>
+    </rect>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>0</width>
+     <height>0</height>
+    </size>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>16777215</width>
+     <height>16777215</height>
+    </size>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>10</pointsize>
+     <weight>50</weight>
+     <italic>false</italic>
+     <bold>false</bold>
+    </font>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::NoFrame</enum>
+   </property>
+   <property name="lineWidth">
+    <number>0</number>
+   </property>
+   <property name="midLineWidth">
+    <number>0</number>
+   </property>
+   <property name="text">
+    <string>---</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+   <property name="margin">
+    <number>0</number>
+   </property>
+   <property name="labelStyle" stdset="0">
+    <string>blackBg</string>
+   </property>
+   <property name="labelStyle2" stdset="0">
+    <string>whiteBg</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="title_temp_ROV_2">
+   <property name="geometry">
+    <rect>
+     <x>250</x>
+     <y>538</y>
+     <width>191</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>16777215</width>
+     <height>16777215</height>
+    </size>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>10</pointsize>
+     <weight>50</weight>
+     <italic>false</italic>
+     <bold>false</bold>
+    </font>
+   </property>
+   <property name="text">
+    <string>Alarmer</string>
+   </property>
+   <property name="textFormat">
+    <enum>Qt::PlainText</enum>
+   </property>
+  </widget>
+  <widget class="QLabel" name="labelLekkasjeAlarm_2">
+   <property name="geometry">
+    <rect>
+     <x>610</x>
+     <y>690</y>
+     <width>119</width>
+     <height>43</height>
+    </rect>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>0</width>
+     <height>0</height>
+    </size>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>16777215</width>
+     <height>16777215</height>
+    </size>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>10</pointsize>
+     <weight>50</weight>
+     <italic>false</italic>
+     <bold>false</bold>
+    </font>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::NoFrame</enum>
+   </property>
+   <property name="lineWidth">
+    <number>0</number>
+   </property>
+   <property name="midLineWidth">
+    <number>0</number>
+   </property>
+   <property name="text">
+    <string>---</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+   <property name="margin">
+    <number>0</number>
+   </property>
+   <property name="labelStyle" stdset="0">
+    <string>blackBg</string>
+   </property>
+   <property name="labelStyle2" stdset="0">
+    <string>whiteBg</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="labelLekkasjeAlarm">
+   <property name="geometry">
+    <rect>
+     <x>400</x>
+     <y>590</y>
+     <width>101</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>0</width>
+     <height>0</height>
+    </size>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>16777215</width>
+     <height>16777215</height>
+    </size>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>10</pointsize>
+     <weight>50</weight>
+     <italic>false</italic>
+     <bold>false</bold>
+    </font>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::NoFrame</enum>
+   </property>
+   <property name="lineWidth">
+    <number>0</number>
+   </property>
+   <property name="midLineWidth">
+    <number>0</number>
+   </property>
+   <property name="text">
+    <string>---</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+   <property name="margin">
+    <number>0</number>
+   </property>
+   <property name="labelStyle" stdset="0">
+    <string>blackBg</string>
+   </property>
+   <property name="labelStyle2" stdset="0">
+    <string>whiteBg</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="labelIMUAlarm">
+   <property name="geometry">
+    <rect>
+     <x>410</x>
+     <y>730</y>
+     <width>81</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>0</width>
+     <height>0</height>
+    </size>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>16777215</width>
+     <height>16777215</height>
+    </size>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>10</pointsize>
+     <weight>50</weight>
+     <italic>false</italic>
+     <bold>false</bold>
+    </font>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::NoFrame</enum>
+   </property>
+   <property name="lineWidth">
+    <number>0</number>
+   </property>
+   <property name="midLineWidth">
+    <number>0</number>
+   </property>
+   <property name="text">
+    <string>---</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+   <property name="margin">
+    <number>0</number>
+   </property>
+   <property name="labelStyle" stdset="0">
+    <string>blackBg</string>
+   </property>
+   <property name="labelStyle2" stdset="0">
+    <string>whiteBg</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="labelTrykkAlarm">
+   <property name="geometry">
+    <rect>
+     <x>410</x>
+     <y>630</y>
+     <width>81</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>0</width>
+     <height>0</height>
+    </size>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>16777215</width>
+     <height>16777215</height>
+    </size>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>10</pointsize>
+     <weight>50</weight>
+     <italic>false</italic>
+     <bold>false</bold>
+    </font>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::NoFrame</enum>
+   </property>
+   <property name="lineWidth">
+    <number>0</number>
+   </property>
+   <property name="midLineWidth">
+    <number>0</number>
+   </property>
+   <property name="text">
+    <string>---</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+   <property name="margin">
+    <number>0</number>
+   </property>
+   <property name="labelStyle" stdset="0">
+    <string>blackBg</string>
+   </property>
+   <property name="labelStyle2" stdset="0">
+    <string>whiteBg</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="labelTempAlarm">
+   <property name="geometry">
+    <rect>
+     <x>390</x>
+     <y>670</y>
+     <width>111</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>0</width>
+     <height>0</height>
+    </size>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>16777215</width>
+     <height>16777215</height>
+    </size>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>10</pointsize>
+     <weight>50</weight>
+     <italic>false</italic>
+     <bold>false</bold>
+    </font>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::NoFrame</enum>
+   </property>
+   <property name="lineWidth">
+    <number>0</number>
+   </property>
+   <property name="midLineWidth">
+    <number>0</number>
+   </property>
+   <property name="text">
+    <string>---</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+   <property name="margin">
+    <number>0</number>
+   </property>
+   <property name="labelStyle" stdset="0">
+    <string>blackBg</string>
+   </property>
+   <property name="labelStyle2" stdset="0">
+    <string>whiteBg</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label">
+   <property name="geometry">
+    <rect>
+     <x>260</x>
+     <y>580</y>
+     <width>129</width>
+     <height>43</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Lekkasje:</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_3">
+   <property name="geometry">
+    <rect>
+     <x>260</x>
+     <y>680</y>
+     <width>61</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Temp Error:</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_2">
+   <property name="geometry">
+    <rect>
+     <x>260</x>
+     <y>630</y>
+     <width>61</width>
+     <height>51</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Trykk Error:</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_4">
+   <property name="geometry">
+    <rect>
+     <x>260</x>
+     <y>720</y>
+     <width>91</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>IMU Error:</string>
    </property>
   </widget>
  </widget>
