@@ -6,6 +6,7 @@ import multiprocessing as mp
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
+import datetime
 
 
 class CameraClass:
@@ -35,15 +36,16 @@ class CameraClass:
 
     def record_video(self, frame):
         if not self.recording:
-            self.setup_video("output_video")
+            self.setup_video(f"MyCam{datetime.datetime.now()}")
             self.recording = True
-
-        try:
+        if self.recording:
             self.videoresult.write(frame)
-        except KeyboardInterrupt:
+        else:
             self.videoresult.release()
-
-
+    
+    def save_image(self, frame):
+        cv2.imwrite(f"camerafeed/output/Img{datetime.datetime.now()}.jpg", frame)
+        
 class ExecutionClass:
     def __init__(self, driving_queue):
         self.AutonomousTransect = AutonomousTransect()
@@ -105,7 +107,19 @@ class ExecutionClass:
 
     def transect_test(self):
         print("Running Transect!")
-
+        
+    def record(self):
+        self.done = False
+        while not self.done:
+            self.update()
+            self.show(self.frame.copy(), "Recording...")
+            self.Camera.record_video(self.frame)
+            QApplication.processEvents()
+    
+    def save_image(self):
+        self.Camera.save_image(self.frame.copy())
+        print("Image saved")
+        
 
 if __name__ == "__main__":
     cam = CameraClass()

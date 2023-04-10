@@ -22,6 +22,12 @@ MANIPULATOR_TILT = 3
 MANIPULATOR_GRAB_RELEASE = 6
 
 
+VINKLER = "138"  # 0=roll, 2=stamp, 4=gir
+# 0=dybde, 2=vanntemp, 3=vanntemp msb, 4=sensorkorttemp, 5=sensorkorttemp msb
+DYBDETEMP = "139"
+FEILKODE = "140"  # 0=IMU Error, 1=Temp Error, 2=Trykk Error, 3=Lekkasje
+
+
 # ROV
 X_AXIS = 1
 Y_AXIS = 0
@@ -36,30 +42,8 @@ ID_camera_tilt_downwards = 201
 
 
 def network_format(data) -> bytes:
-    """Formats the data for sending to network handler"""
     packet_seperator = json.dumps("*")
     return bytes(packet_seperator+json.dumps(data)+packet_seperator, "utf-8")
-
-
-def recieve_commands_from_gui(conn, t_watch: Threadwatcher, id):
-    # Probably deprecated
-    while t_watch.should_run(id):
-        if conn.poll():
-            print(f" Inside recieve_commands_from_gui {conn.recv() = }")
-        # print("recieve commands from gui")
-    print("t_watch is false")
-
-
-def create_test_sensordata(delta, old_sensordata=None):
-    # TODO: don't use this later its a test function
-    sensordata = {}
-    if old_sensordata is None:
-        sensordata = {"dybde": -2500.0, "spenning": 48.0, "temp_rov": 26.0}
-    else:
-        sensordata["dybde"] = old_sensordata["dybde"] + 10 * delta
-        sensordata["spenning"] = old_sensordata["spenning"] + 0.4 * delta
-        sensordata["temp_rov"] = old_sensordata["temp_rov"] + 0.3 * delta
-    return sensordata
 
 
 def run_camera_func(t_watch: Threadwatcher, frame_pipe: multiprocessing.Pipe, id: int):
@@ -75,13 +59,41 @@ def run_camera_func(t_watch: Threadwatcher, frame_pipe: multiprocessing.Pipe, id
 def send_fake_sensordata(t_watch: Threadwatcher, gui_pipe: multiprocessing.Pipe):
     thrust_list = [num for num in range(-100, 101)]
     power_list = [num for num in range(0, 101)]
+    vinkel_list = [num for num in range(-360, 360)]
+    dybde_list = [num for num in range(50, 20000)]
+    accel_list = [num for num in range(-100, 101)]
+    feilkode_list = [num for num in range(0, 1)]
     count = -1
     sensordata = {}
-    while t_watch.should_run(2):
-        # time_since_start = round(time.time()-start_time_sec)
+    while t_watch.should_run(0):
         count += 1
+        sensordata[DYBDETEMP] = [
+            dybde_list[(0 + count) % 201],
+            dybde_list[(10 + count) % 201],
+            dybde_list[(20 + count) % 201],
+            dybde_list[(30 + count) % 201],
+            dybde_list[(40 + count) % 201],
+            dybde_list[(50 + count) % 201],
+            dybde_list[(60 + count) % 201],
+        ]
+        sensordata[VINKLER] = [
+            vinkel_list[(0 + count) % 201],
+            vinkel_list[(0 + count) % 201],
+            vinkel_list[(45 + count) % 201],
+            vinkel_list[(90 + count) % 201],
+            vinkel_list[(0 + count) % 201],
+            vinkel_list[(0 + count) % 201],
+        ]
+        sensordata[FEILKODE] = [
+            0,
+            0,
+            0,
+            1,
+            vinkel_list[(0 + count) % 201],
+        ]
+
         sensordata["lekk_temp"] = [
-            True,
+            False,
             True,
             True,
             (25 + count) % 60,
@@ -100,41 +112,32 @@ def send_fake_sensordata(t_watch: Threadwatcher, gui_pipe: multiprocessing.Pipe)
             thrust_list[(88 + count) % 201],
             thrust_list[(107 + count) % 201],
         ]
-        sensordata["power_consumption"] = [
+        sensordata["watt"] = [
             power_list[count % 101] * 13,
             power_list[count % 101] * 2.4,
             power_list[count % 101] * 0.65,
         ]
-        # sensordata["gyro"] = [(time_since_start*2)%60, time_since_start%90, time_since_start%90]
-        # sensordata["time"] = [time_since_start]
-        sensordata["thrust"] = [
-            thrust_list[(0 + count) % 201],
-            thrust_list[(13 + count) % 201],
-            thrust_list[(25 + count) % 201],
-            thrust_list[(38 + count) % 201],
-            thrust_list[(37 + count) % 201],
-            thrust_list[(50 + count) % 201],
-            thrust_list[(63 + count) % 201],
-            thrust_list[(75 + count) % 201],
-            thrust_list[(88 + count) % 201],
-            thrust_list[(107 + count) % 201],
+
+        sensordata["accel"] = [
+            accel_list[(0 + count) % 201],
         ]
-        # sensordata["thrust"] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
         gui_pipe.send(sensordata)
-        time.sleep(1)
+        time.sleep(0.5)
 
 
 class Rov_state:
     def __init__(self, queue, network_handler, gui_pipe, t_watch: Threadwatcher) -> None:
+        # Threadwatcher
         self.t_watch: Threadwatcher = t_watch
+
         self.data: dict = {}
         self.logger = Logger()
+
+        #Queue and Pipe
         self.queue: multiprocessing.Queue = queue
         self.gui_pipe = gui_pipe  # Pipe to send sensordata back to the gui
         self.sensordata = None
-        # self.send_sensordata_to_gui(self.data)
 
-        # Pipe to send sensordata back to the gui
         # Prevents the tilt toggle from toggling back again immediately if we hold the button down
         self.camera_toggle_wait_counter: int = 0
         # Tilt in degrees of the camera servo motors.
@@ -162,12 +165,11 @@ class Rov_state:
         pass
 
     def send_sensordata_to_gui(self, data):
-        """Sends sensordata to the gui"""
+        # Sends sensordata to the gui
         print("Enter into send_sensordata_to_gui function")
         if self.sensordata == None:
-            print(f"THERE IS NO DATA {data}")
+            print(f"Data did not arrive{data}")
         self.gui_pipe.send(data)
-        print(f"DATDATDATDATDATDATDATDATDTDATDDTDTDADDTADDATA{data}")
 
     def sending_startup_ids(self):
         self.packets_to_send.append(
@@ -351,10 +353,11 @@ class Rov_state:
         reset_fuse_byte = [0] * 8
         reset_fuse_byte[0] = 1
         print("Resetting 5V Fuse")
+
         self.packets_to_send.append([97, reset_fuse_byte])
         print(f"Pakkene som blir sendt er: {self.packets_to_send}")
 
-    def reset_12V_thruster_fuse(self, fuse_number):
+    def reset_12V_thruster_fuse(self):
         """reset_fuse_on_power_supply creates and adds
         packets for resetting a fuse on the ROV"""
         reset_fuse_byte = [0] * 8
@@ -362,15 +365,94 @@ class Rov_state:
         print("Resetting 12V Thruster Fuse")
         self.packets_to_send.append([98, reset_fuse_byte])
 
-    def reset_12V_manipulator_fuse(self, fuse_number):
+    def reset_12V_manipulator_fuse(self):
         """reset_12V_manipulator_fuse creates and adds
         packets for resetting a fuse on the ROV"""
-        reset_fuse_bye = [0] * 8
-        reset_fuse_bye[0] = 1
+        reset_fuse_byte = [0] * 8
+        reset_fuse_byte[0] = 1
         print("Resetting 12V Manipulator Fuse")
-        self.packets_to_send.append([99, reset_fuse_bye])
-    
-    
+        self.packets_to_send.append([99, reset_fuse_byte])
+
+    # def lights_on_off(self, light_sensitivity_forward: int, light_sensitivity_downward: int, light_on_forward: bool, light_off_forward: bool):
+    #     """Setting up variables for corresponding values
+    #     and booleans of light intensity and light on/off"""
+    #     self.light_sensitivity_forward = light_sensitivity_forward
+    #     self.light_sensitivity_downward = light_sensitivity_downward
+
+    #     self.light_on_forward = light_on_forward
+    #     self.light_off_forward = light_off_forward
+
+    #     light_forward = self.light_on_forward * self.light_sensitivity_forward
+    #     light_downward = self.light_off_forward * self.light_sensitivity_downward
+
+    # def light_forward(self, light_sensitivity_forward: int, light_on_forward: bool):
+    #     self.light_sensitivity_forward = light_sensitivity_forward
+    #     self.light_on_forward = light_on_forward
+
+    #     light_forward = light_sensitivity_forward * light_forward
+
+    #     self.packets_to_send.append(98, [light_forward])
+
+    # def light_downward(self, light_sensitivity_downward: int, light_on_downward: bool):
+    #     self.light_sensitivity_downward = light_sensitivity_downward
+    #     self.light_on_downward = light_on_downward
+
+    #     light_downward = light_sensitivity_downward * light_downward
+
+    #     self.packets_to_send.append(99, [light_downward])
+
+    # Update light values
+    # def update_light_value(self, front_light_intensity: int, front_light_dimming: int, bottom_light_intensity: int, bottom_light_dimming: int):
+    #     """Setting up variables for corresponding values
+    #     and booleans of light intensity and light on/off"""
+    #     ID_FRONT_LIGHTS = 98
+    #     ID_BOTTOM_LIGHTS = 99
+    #     BYTE_TURN_ON = 0
+    #     BYTE_DIMMING = 1
+    #     BIT_TURN_ON = 1
+    #     # Set front light values
+    #     front_light_on = int(front_light_intensity > 0)
+    #     self.packets_to_send.append([ID_FRONT_LIGHTS, [(front_light_on << BIT_TURN_ON) | front_light_dimming, 0]])
+
+    #     # Set bottom light values
+    #     bottom_light_on = int(bottom_light_intensity > 0)
+    #     self.packets_to_send.append([ID_BOTTOM_LIGHTS, [(bottom_light_on << BIT_TURN_ON) | bottom_light_dimming, 0]])
+
+    # def update_light_value(self, front_light_intensity: int, front_light_is_on: bool, bottom_light_intensity: int, bottom_light_is_on: bool):
+    #     self.front_light_intensity = front_light_intensity
+    #     self.front_light_is_on = front_light_is_on
+    #     self.bottom_light_intensity = bottom_light_intensity
+    #     self.bottom_light_is_on = bottom_light_is_on
+
+    #     front_light_byte0 = (front_light_is_on << 1) | 1
+    #     front_light_byte1 = self.front_light_intensity
+    #     bottom_light_byte0 = (bottom_light_is_on << 1) | 1
+    #     bottom_light_byte1 = self.bottom_light_intensity
+
+    #     self.packets_to_send.append(
+    #         [98, [front_light_byte0, front_light_byte1]])
+    #     self.packets_to_send.append(
+    #         [99, [bottom_light_byte0, bottom_light_byte1]])
+
+    def light_value_forward(self, front_light_intensity: int, front_light_is_on: bool):
+        self.front_light_intensity = front_light_intensity
+        self.front_light_is_on = front_light_is_on
+
+        front_light_byte0 = (front_light_is_on << 1) | 1
+        front_light_byte1 = self.front_light_intensity
+
+        self.packets_to_send.append(
+            [98, [front_light_byte0, front_light_byte1]])
+
+    def light_value_downward(self, bottom_light_intensity: int, bottom_light_is_on: bool):
+        self.bottom_light_intensity = bottom_light_intensity
+        self.bottom_light_is_on = bottom_light_is_on
+
+        bottom_light_byte0 = (bottom_light_is_on << 1) | 1
+        bottom_light_byte1 = self.bottom_light_intensity
+
+        self.packets_to_send.append(
+            [99, [bottom_light_byte0, bottom_light_byte1]])
 
     def build_rov_packet(self):
         if self.data == {}:
