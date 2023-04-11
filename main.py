@@ -23,8 +23,7 @@ MANIPULATOR_GRAB_RELEASE = 6
 
 
 VINKLER = "138"  # 0=roll, 2=stamp, 4=gir
-# 0=dybde, 2=vanntemp, 3=vanntemp msb, 4=sensorkorttemp, 5=sensorkorttemp msb
-DYBDETEMP = "139"
+DYBDETEMP = "139" # 0=dybde, 2=vanntemp, 3=vanntemp msb, 4=sensorkorttemp, 5=sensorkorttemp msb
 FEILKODE = "140"  # 0=IMU Error, 1=Temp Error, 2=Trykk Error, 3=Lekkasje
 
 
@@ -62,7 +61,12 @@ def send_fake_sensordata(t_watch: Threadwatcher, gui_pipe: multiprocessing.Pipe)
     vinkel_list = [num for num in range(-360, 360)]
     dybde_list = [num for num in range(50, 20000)]
     accel_list = [num for num in range(-100, 101)]
-    feilkode_list = [num for num in range(0, 1)]
+    #feilkode_list = [num for num in range(0, 1)]
+    imuErrors     = [False, False, False, False, False, False, False, False]
+    tempErrors    = [False, False, False, False]
+    pressureErrors= [False, False, False, False]
+    lekageAlarms  = [True, False, False, False]
+    
     count = -1
     sensordata = {}
     while t_watch.should_run(0):
@@ -84,12 +88,11 @@ def send_fake_sensordata(t_watch: Threadwatcher, gui_pipe: multiprocessing.Pipe)
             vinkel_list[(0 + count) % 201],
             vinkel_list[(0 + count) % 201],
         ]
-        sensordata[FEILKODE] = [
-            0,
-            0,
-            0,
-            1,
-            vinkel_list[(0 + count) % 201],
+        sensordata[FEILKODE]= [
+            imuErrors,
+            tempErrors,
+            pressureErrors,
+            lekageAlarms,
         ]
 
         sensordata["lekk_temp"] = [
@@ -123,7 +126,6 @@ def send_fake_sensordata(t_watch: Threadwatcher, gui_pipe: multiprocessing.Pipe)
         ]
         gui_pipe.send(sensordata)
         time.sleep(0.5)
-
 
 class Rov_state:
     def __init__(self, queue, network_handler, gui_pipe, t_watch: Threadwatcher) -> None:
@@ -544,6 +546,7 @@ if __name__ == "__main__":
         global run_camera
 
         # exec = ExecutionClass()
+        
         # cam = Camera()
         run_camera = True
         run_gui = True
@@ -597,12 +600,6 @@ if __name__ == "__main__":
             )  # should recieve commands from the gui
             gui_loop.start()
             print("gui started")
-
-        if run_camera:
-            id = t_watch.add_thread()
-            camera_thread = threading.Thread(target=run_camera_func, args=(
-                t_watch, frame_parent_pipe, id), daemon=True)
-            camera_thread.start()
 
         if run_send_fake_sensordata:
             id = t_watch.add_thread()

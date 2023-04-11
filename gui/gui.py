@@ -47,13 +47,11 @@ class Window(QMainWindow):
         self.queue: multiprocessing.Queue = (
             queue
         )
-        # pipe_conn_only_rcv is a pipe connection that only receives data
-        self.pipe_conn_only_rcv = pipe_conn_only_rcv
+        
+        self.pipe_conn_only_rcv = pipe_conn_only_rcv  # pipe_conn_only_rcv is a pipe connection that only receives data
         # Threadwatcher
         self.t_watch: Threadwatcher = t_watch  # t_watch is a threadwatcher object
         self.id = id  # id is an id that is used to identify the thread
-
-        self.gir_verdier = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
         self.receive = threading.Thread(
             target=self.receive_sensordata, daemon=True, args=(self.pipe_conn_only_rcv,)
@@ -62,9 +60,9 @@ class Window(QMainWindow):
 
         self.exec = ExecutionClass(queue)
         self.camera = CameraClass()
-        self.w = None  # SecondWindow() #
+        self.w = None  # SecondWindow()
 
-        # Buttons
+    # Buttons
     def show_new_window(self, checked):
         if self.w is None:
             self.w = SecondWindow(self)
@@ -80,6 +78,12 @@ class Window(QMainWindow):
         self.btnManuell.clicked.connect(lambda: self.exec.manual())
         self.btnAutonom.clicked.connect(lambda: self.exec.docking())
         self.btnFrogCount.clicked.connect(lambda: self.exec.transect())
+        
+        #Kamera
+        self.btnTakePic.clicked.connect(lambda: self.exec.save_image())
+        self.btnRecord.clicked.connect(lambda: self.exec.record())
+        
+        #Sikringer
 
         # Sikringer
         self.btnReset5V.clicked.connect(lambda: Rov_state.reset_5V_fuse2(self))
@@ -109,15 +113,13 @@ class Window(QMainWindow):
             Communicate()
         )  # Create a new instance of the class Communicate
         self.communicate.data_signal.connect(
-            self.decide_gui_update
+            self.decideGuiUpdate
         )  # Connect the signal to the function that decides what to do with the sensordata
         while self.t_watch.should_run(
             self.id
         ):  # While the threadwatcher says that the thread should run
             print("Waiting for sensordata")
             data_is_ready = conn.recv()  # Wait for sensordata
-            # if self.regulering_status_wait_counter > 0: #Wait for regulering_status to be sent
-            #    self.regulering_status_wait_counter -= 1 #Decrease counter
             if data_is_ready:
                 sensordata: dict = (
                     conn.recv()
@@ -139,7 +141,7 @@ class Window(QMainWindow):
     def gui_manipulator_state_update(self, sensordata):
         self.toggle_mani.setChecked(sensordata[0])
 
-    def decide_gui_update(self, sensordata):
+    def decideGuiUpdate(self, sensordata):
         self.sensor_update_function = {
             # "lekk_temp": self.gui_lekk_temp_update,
             # "thrust": self.gui_thrust_update,
@@ -190,19 +192,22 @@ class Window(QMainWindow):
         labelTempAlarm: QLabel = self.labelTempAlarm
         labelTrykkAlarm: QLabel = self.labelTrykkAlarm
 
-        if sensordata[0] == 1:
+        if True in sensordata[0]:
             labelIMUAlarm.setText("ADVARSEL!")
             labelIMUAlarm.setStyleSheet("color: red")
-        if sensordata[1] == 1:
+        if True in sensordata[1] == 1:
             labelTrykkAlarm.setText("ADVARSEL!")
             labelTrykkAlarm.setStyleSheet("color: red")
-        if sensordata[2] == 1:
+        if True in sensordata[2] == 1:
             labelTempAlarm.setText("ADVARSEL!")
             labelTempAlarm.setStyleSheet("color: red")
-        if sensordata[3] == 1:
-            labelLekkasjeAlarm.setText("ADVARSEL!")
-            labelLekkasjeAlarm.setStyleSheet("color: red")
-            self.play_sound()
+
+        for i in range (len(sensordata[3])):
+            if sensordata[3][i] == True:
+                print(sensordata[3][i])
+                labelLekkasjeAlarm.setText("ADVARSEL!")
+                labelLekkasjeAlarm.setStyleSheet("color: red")
+                #self.play_sound()
 
     def dybdeTempUpdate(self, sensordata):
         labelDybde: QLabel = self.labelDybde
@@ -303,11 +308,9 @@ class Window(QMainWindow):
                     round(sensordata[1] * 0.35), self.label_percentage_mani_3
                 )
 
-    # TODO: fiks lekkasje varsel seinare
-
+    
 
 def run(conn, queue_for_rov, t_watch: Threadwatcher, id):
-    # TODO: add suppress qt warnings?
 
     app = QtWidgets.QApplication(
         sys.argv
@@ -338,8 +341,8 @@ class SecondWindow(QWidget):
         # Kamera
         self.btnTiltUp.clicked.connect(lambda: f.tiltUp(self))
         self.btnTiltDown.clicked.connect(lambda: f.tiltDown(self))
-        self.btnTakePic.clicked.connect(lambda: f.takePic(self))
-        self.btnSavePic.clicked.connect(lambda: f.savePic(self))
+        
+
 
 
 class Communicate(QtCore.QObject):
