@@ -1922,7 +1922,7 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
   <widget class="QPushButton" name="btnNullpunktVinkler">
    <property name="geometry">
     <rect>
-     <x>750</x>
+     <x>740</x>
      <y>390</y>
      <width>111</width>
      <height>161</height>
@@ -3088,6 +3088,32 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
    </property>
    <property name="text">
     <string>IMU Error:</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btnTakePic">
+   <property name="geometry">
+    <rect>
+     <x>450</x>
+     <y>310</y>
+     <width>75</width>
+     <height>61</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Screenshot</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btnRecord">
+   <property name="geometry">
+    <rect>
+     <x>450</x>
+     <y>430</y>
+     <width>75</width>
+     <height>61</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Record</string>
    </property>
   </widget>
  </widget>

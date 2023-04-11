@@ -28,9 +28,6 @@ FEILKODE ="140" #0=IMU Error, 1=Temp Error, 2=Trykk Error, 3=Lekkasje
 
 
 
-
-
-
 # ROV
 X_AXIS = 1
 Y_AXIS = 0
@@ -85,11 +82,10 @@ def send_fake_sensordata(t_watch: Threadwatcher, gui_pipe: multiprocessing.Pipe)
             vinkel_list[(0 + count) % 201],
         ]
         sensordata[FEILKODE]=[
-            0,
-            0,
-            0,
-            1,
-            vinkel_list[(0 + count) % 201],
+            imuErrors     = [False, False, False, False, False, False, False, False]
+            tempErrors    = [False, False, False, False]
+            pressureErrors= [False, False, False, False]
+            lekageAlarms  = [False, False, False, False]
         ]
         
         sensordata["lekk_temp"] = [
@@ -124,9 +120,6 @@ def send_fake_sensordata(t_watch: Threadwatcher, gui_pipe: multiprocessing.Pipe)
         ]
         gui_pipe.send(sensordata)
         time.sleep(0.5)
-
-
-
 
 class Rov_state:
     def __init__(self, queue, network_handler,gui_pipe, t_watch: Threadwatcher) -> None:
@@ -471,12 +464,13 @@ if __name__ == "__main__":
         global run_camera
         
         # exec = ExecutionClass()
+        
         # cam = Camera()
         run_camera = True
         run_gui=True
         run_craft_packet = False
         run_network = False  # Bytt t True når du ska prøva å connecte.
-        run_get_controllerdata = False
+        run_get_controllerdata = True
         run_send_fake_sensordata=True#Sett til True om du vil sende fake sensordata til gui
         
         t_watch = Threadwatcher()
@@ -525,12 +519,7 @@ if __name__ == "__main__":
             gui_loop.start()
             print("gui started")
             
-
-        if run_camera:
-            id = t_watch.add_thread()
-            camera_thread = threading.Thread(target=run_camera_func, args=(t_watch, frame_parent_pipe,id), daemon=True)
-            camera_thread.start()
-
+            
         if run_send_fake_sensordata:
             id = t_watch.add_thread()
             datafaker = threading.Thread(
