@@ -61,11 +61,11 @@ def send_fake_sensordata(t_watch: Threadwatcher, gui_pipe: multiprocessing.Pipe)
     vinkel_list = [num for num in range(-360, 360)]
     dybde_list = [num for num in range(50, 20000)]
     accel_list = [num for num in range(-100, 101)]
-    feilkode_list = [num for num in range(0, 1)]
-    imuErrors=list()
-    tempErrors=list()
-    pressureErrors=list()
-    lekageAlarms=list()
+    #feilkode_list = [num for num in range(0, 1)]
+    imuErrors     = [False, False, False, False, False, False, False, False]
+    tempErrors    = [False, False, False, False]
+    pressureErrors= [False, False, False, False]
+    lekageAlarms  = [True, False, False, False]
     
     count = -1
     sensordata = {}
@@ -89,10 +89,10 @@ def send_fake_sensordata(t_watch: Threadwatcher, gui_pipe: multiprocessing.Pipe)
             vinkel_list[(0 + count) % 201],
         ]
         sensordata[FEILKODE]= [
-            imuErrors[False, False, False, False, False, False, False, False],
-            tempErrors[False, False, False, False],
-            pressureErrors[False, False, False, False],
-            lekageAlarms[False, False, False, False],
+            imuErrors,
+            tempErrors,
+            pressureErrors,
+            lekageAlarms,
         ]
 
         sensordata["lekk_temp"] = [

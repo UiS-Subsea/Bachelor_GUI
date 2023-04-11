@@ -201,13 +201,13 @@ class Window(QMainWindow):
         if True in sensordata[2] == 1:
             labelTempAlarm.setText("ADVARSEL!")
             labelTempAlarm.setStyleSheet("color: red")
-        if True in sensordata[3] == 1:
-            for i in range(sensordata[3]):
-                if sensordata[3][i] == True:
-                    print(sensordata[3][i])
-            labelLekkasjeAlarm.setText("ADVARSEL!")
-            labelLekkasjeAlarm.setStyleSheet("color: red")
-            #elf.play_sound()
+
+        for i in range (len(sensordata[3])):
+            if sensordata[3][i] == True:
+                print(sensordata[3][i])
+                labelLekkasjeAlarm.setText("ADVARSEL!")
+                labelLekkasjeAlarm.setStyleSheet("color: red")
+                #self.play_sound()
 
     def dybdeTempUpdate(self, sensordata):
         labelDybde: QLabel = self.labelDybde
