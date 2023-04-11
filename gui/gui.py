@@ -2,7 +2,7 @@ import multiprocessing
 import subprocess
 from PyQt5 import QtCore, QtGui, QtWidgets, Qt, uic
 from PyQt5.QtWidgets import QMainWindow, QWidget, QCheckBox, QLabel, QMessageBox
-from PyQt5.QtMultimedia import QSound,QSoundEffect,QMediaPlayer,QMediaContent
+from PyQt5.QtMultimedia import QSound, QSoundEffect, QMediaPlayer, QMediaContent
 from PyQt5.QtCore import QUrl
 import sys
 import threading
@@ -39,11 +39,13 @@ class Window(QMainWindow):
         self.connectFunctions()
         self.sound_timer = QTimer()
         self.sound_timer.timeout.connect(self.play_sound)
-        
-        
+
+        regulering_status_wait_counter = 0
+        self.lekkasje_varsel_is_running = False
+        self.ID_RESET_DEPTH = 66
         # Queue and pipe
         self.queue: multiprocessing.Queue = (
-            queue  
+            queue
         )
         
         self.pipe_conn_only_rcv = pipe_conn_only_rcv  # pipe_conn_only_rcv is a pipe connection that only receives data
@@ -55,10 +57,10 @@ class Window(QMainWindow):
             target=self.receive_sensordata, daemon=True, args=(self.pipe_conn_only_rcv,)
         )
         self.receive.start()
-        
+
         self.exec = ExecutionClass(queue)
         self.camera = CameraClass()
-        self.w=None#SecondWindow
+        self.w = None  # SecondWindow()
 
     # Buttons
     def show_new_window(self, checked):
@@ -69,10 +71,10 @@ class Window(QMainWindow):
             print("window already open")
 
     def connectFunctions(self):
-        #window2
+        # window2
         self.showNewWindowButton.clicked.connect(self.show_new_window)
-    
-        #Kjøremodus
+
+        # Kjøremodus
         self.btnManuell.clicked.connect(lambda: self.exec.manual())
         self.btnAutonom.clicked.connect(lambda: self.exec.docking())
         self.btnFrogCount.clicked.connect(lambda: self.exec.transect())
@@ -82,20 +84,28 @@ class Window(QMainWindow):
         self.btnRecord.clicked.connect(lambda: self.exec.record())
         
         #Sikringer
+
+        # Sikringer
         self.btnReset5V.clicked.connect(lambda: Rov_state.reset_5V_fuse2(self))
+        self.btnResetThruster.clicked.connect(
+            lambda: Rov_state.reset_12V_manipulator_fuse(self))
+        self.btnResetManipulator.clicked.connect(
+            lambda: Rov_state.reset_12V_thruster_fuse(self))
+
         self.btnResetThruster.clicked.connect(lambda: f.resetThruster(self))
-        self.btnResetManipulator.clicked.connect(lambda :f.resetManipulator(self))
-        
-        #IMU
+        self.btnResetManipulator.clicked.connect(
+            lambda: f.resetManipulator(self))
+
+        # IMU
         self.btnKalibrerIMU.clicked.connect(lambda: f.kalibrerIMU(self))
-        
-        #Dybde
+
+        # Dybde
         self.btnNullpunktDybde.clicked.connect(lambda: f.nullpunktDybde(self))
-        
-        #Vinkler
-        self.btnNullpunktVinkler.clicked.connect(lambda: f.nullpunktVinkler(self))
-        
-        
+
+        # Vinkler
+        self.btnNullpunktVinkler.clicked.connect(
+            lambda: f.nullpunktVinkler(self))
+
     def receive_sensordata(
         self, conn
     ):  # conn is a pipe connection that only receives data
@@ -121,31 +131,44 @@ class Window(QMainWindow):
                 time.sleep(0.15)  # Sleep for 0.15 seconds
         print("received")
         exit(0)
-    
+
+    # def send_data_to_main(self, data, id):
+    #     if self.queue is not None:
+    #         self.queue.put([id, data])
+    #     else:
+    #         raise TypeError("self.queue does not exist inside send_data_to_main")
+
     def gui_manipulator_state_update(self, sensordata):
         self.toggle_mani.setChecked(sensordata[0])
 
     def decideGuiUpdate(self, sensordata):
         self.sensor_update_function = {
-            #"lekk_temp": self.gui_lekk_temp_update,
-            #"thrust": self.gui_thrust_update,
-            #"accel": self.guiAccelUpdate,
+            # "lekk_temp": self.gui_lekk_temp_update,
+            # "thrust": self.gui_thrust_update,
+            # "accel": self.guiAccelUpdate,
             # "gyro": self.gui_gyro_update,
             # "time": self.gui_time_update,
-            #"manipulator": self.gui_manipulator_update,
-            #"watt": self.gui_watt_update,
-            #"manipulator_toggled": self.gui_manipulator_state_update,
+            # "manipulator": self.gui_manipulator_update,
+            # "watt": self.gui_watt_update,
+            # "manipulator_toggled": self.gui_manipulator_state_update,
             # "regulator_strom_status": self.regulator_strom_status,
             # "regulering_status": self.gui_regulering_state_update,
             # "settpunkt": self.print_data
             VINKLER: self.guiVinkelUpdate,
-            DYBDETEMP :self.dybdeTempUpdate,
-            FEILKODE :self.guiFeilKodeUpdate,
-            
+            DYBDETEMP: self.dybdeTempUpdate,
+            FEILKODE: self.guiFeilKodeUpdate,
+
         }
         for key in sensordata.keys():
             if key in self.sensor_update_function:
                 self.sensor_update_function[key](sensordata[key])
+
+    def start_sound(self):
+        # start the timer with a delay of 2 seconds
+        self.sound_timer.start(2000)
+
+    def stop_sound(self):
+        self.sound_timer.stop()
 
     def play_sound(self):
         # Load the sound file
@@ -157,16 +180,17 @@ class Window(QMainWindow):
 
         # Connect the player's mediaStatusChanged signal to a lambda function that
         # stops and deletes the player when the playback is finished
-        player.mediaStatusChanged.connect(lambda status: player.deleteLater() if status == QMediaPlayer.EndOfMedia else None)
+        player.mediaStatusChanged.connect(lambda status: player.deleteLater(
+        ) if status == QMediaPlayer.EndOfMedia else None)
 
         # Play the sound
         player.play()
-    
-    def guiFeilKodeUpdate(self,sensordata):
-        labelIMUAlarm:QLabel = self.labelIMUAlarm
-        labelLekkasjeAlarm:QLabel = self.labelLekkasjeAlarm
-        labelTempAlarm:QLabel = self.labelTempAlarm
-        labelTrykkAlarm:QLabel = self.labelTrykkAlarm
+
+    def guiFeilKodeUpdate(self, sensordata):
+        labelIMUAlarm: QLabel = self.labelIMUAlarm
+        labelLekkasjeAlarm: QLabel = self.labelLekkasjeAlarm
+        labelTempAlarm: QLabel = self.labelTempAlarm
+        labelTrykkAlarm: QLabel = self.labelTrykkAlarm
 
         if True in sensordata[0]:
             labelIMUAlarm.setText("ADVARSEL!")
@@ -185,39 +209,37 @@ class Window(QMainWindow):
             labelLekkasjeAlarm.setStyleSheet("color: red")
             #elf.play_sound()
 
-    def dybdeTempUpdate(self,sensordata): #Function for updateing 
-        labelDybde:QLabel = self.labelDybde
-        labelTempVann:QLabel = self.labelTempVann
-        labelTempVannMSB:QLabel = self.labelTempVannMSB
-        labelTempSensorKort:QLabel = self.labelTempSensorkort
-        labelTempSensorKortMSB:QLabel = self.labelTempSensorkortMSB
-        labelSnittTemp:QLabel = self.labelSnittTemp
-        
-        labelDybde.setText(str(round(sensordata[0],2)) + " m")
+    def dybdeTempUpdate(self, sensordata):
+        labelDybde: QLabel = self.labelDybde
+        labelTempVann: QLabel = self.labelTempVann
+        labelTempVannMSB: QLabel = self.labelTempVannMSB
+        labelTempSensorKort: QLabel = self.labelTempSensorkort
+        labelTempSensorKortMSB: QLabel = self.labelTempSensorkortMSB
+        labelSnittTemp: QLabel = self.labelSnittTemp
 
-        labelTempVann.setText(str(round(sensordata[1],2)) + " °C")
+        labelDybde.setText(str(round(sensordata[0], 2)) + " m")
+
+        labelTempVann.setText(str(round(sensordata[1], 2)) + " °C")
         if sensordata[1] > 50:
             labelTempVann.setStyleSheet("color: red")
-        labelTempVannMSB.setText(str(round(sensordata[2],2)) + " °C")
-        labelTempSensorKort.setText(str(round(sensordata[3],2)) + " °C")
-        labelTempSensorKortMSB.setText(str(round(sensordata[4],2)) + " °C")
-        snittTemp= (sensordata[1]+sensordata[2]+sensordata[3]+sensordata[4])/4
-        labelSnittTemp.setText(str(round(snittTemp,2)) + " °C")
-        
-    
-    def guiAccelUpdate(self,sensordata):
-        label:QLabel = self.labelAccel
-        label.setText(str(round(sensordata[0],2)) + " m/s^2")
-        
-    def guiVinkelUpdate(self,sensordata):
-        labelRull:QLabel = self.labelRull
-        labelStamp:QLabel = self.labelStamp
-        labelGir:QLabel = self.labelGir
-        
-        labelRull.setText(str(round(sensordata[0],2)) + "°")
-        labelStamp.setText(str(round(sensordata[2],2)) + "°")
-        labelGir.setText(str(round(sensordata[4],2)) + "°")
-        
+        labelTempVannMSB.setText(str(round(sensordata[2], 2)) + " °C")
+        labelTempSensorKort.setText(str(round(sensordata[3], 2)) + " °C")
+        labelTempSensorKortMSB.setText(str(round(sensordata[4], 2)) + " °C")
+        snittTemp = (sensordata[1]+sensordata[2]+sensordata[3]+sensordata[4])/4
+        labelSnittTemp.setText(str(round(snittTemp, 2)) + " °C")
+
+    def guiAccelUpdate(self, sensordata):
+        label: QLabel = self.labelAccel
+        label.setText(str(round(sensordata[0], 2)) + " m/s^2")
+
+    def guiVinkelUpdate(self, sensordata):
+        labelRull: QLabel = self.labelRull
+        labelStamp: QLabel = self.labelStamp
+        labelGir: QLabel = self.labelGir
+
+        labelRull.setText(str(round(sensordata[0], 2)) + "°")
+        labelStamp.setText(str(round(sensordata[2], 2)) + "°")
+        labelGir.setText(str(round(sensordata[4], 2)) + "°")
 
     def gui_watt_update(self, sensordata):
         effekt_liste: list[QLabel] = [
@@ -238,27 +260,36 @@ class Window(QMainWindow):
             label.setStyleSheet(
                 f"background-color: {color_list[index]}; border-radius: 5px; border: 1px solid rgb(30, 30, 30);"
             )
+
     def update_round_percent_visualizer(self, value, text_label):
         text_label.setText(str(value))
         # self.round_percent_visualizer.setValue(value)
         # self.round_percent_visualizer.setFormat(str(value) + "%")
 
     def gui_thrust_update(self, sensordata):
-        #print(f"thrust update: {sensordata = }")  # Print sensordata
+        # print(f"thrust update: {sensordata = }")  # Print sensordata
         for i in range(len(sensordata)):  # For each value in sensordata
             if sensordata[i] > 100:  # If the value is greater than 100
                 sensordata[i] = 100  # Set the value to 100
 
         # Update the labels
-        self.update_round_percent_visualizer(sensordata[0], self.thrust_label_1)
-        self.update_round_percent_visualizer(sensordata[1], self.thrust_label_2)
-        self.update_round_percent_visualizer(sensordata[2], self.thrust_label_3)
-        self.update_round_percent_visualizer(sensordata[3], self.thrust_label_4)
-        self.update_round_percent_visualizer(sensordata[4], self.thrust_label_5)
-        self.update_round_percent_visualizer(sensordata[5], self.thrust_label_6)
-        self.update_round_percent_visualizer(sensordata[6], self.thrust_label_7)
-        self.update_round_percent_visualizer(sensordata[7], self.thrust_label_8)
-        
+        self.update_round_percent_visualizer(
+            sensordata[0], self.thrust_label_1)
+        self.update_round_percent_visualizer(
+            sensordata[1], self.thrust_label_2)
+        self.update_round_percent_visualizer(
+            sensordata[2], self.thrust_label_3)
+        self.update_round_percent_visualizer(
+            sensordata[3], self.thrust_label_4)
+        self.update_round_percent_visualizer(
+            sensordata[4], self.thrust_label_5)
+        self.update_round_percent_visualizer(
+            sensordata[5], self.thrust_label_6)
+        self.update_round_percent_visualizer(
+            sensordata[6], self.thrust_label_7)
+        self.update_round_percent_visualizer(
+            sensordata[7], self.thrust_label_8)
+
     def gui_manipulator_update(self, sensordata):
         self.update_round_percent_visualizer(0, self.label_percentage_mani_1)
         self.update_round_percent_visualizer(0, self.label_percentage_mani_2)
@@ -278,22 +309,24 @@ class Window(QMainWindow):
                 )
 
     
+
 def run(conn, queue_for_rov, t_watch: Threadwatcher, id):
 
     app = QtWidgets.QApplication(
         sys.argv
     )  # Create an instance of QtWidgets.QApplication
 
-    win = Window(conn, queue_for_rov, t_watch, id)  # Create an instance of our class
+    # Create an instance of our class
+    win = Window(conn, queue_for_rov, t_watch, id)
     GLOBAL_STATE = False
     win.show()  # Show the form
 
     app.exec()
-    #sys.exit(app.exec())
+    # sys.exit(app.exec())
 
 
 class SecondWindow(QWidget):
-    def __init__(self,main_window,parent=None,):
+    def __init__(self, main_window, parent=None,):
         super().__init__()
         uic.loadUi("gui/window2.ui", self)
         self.label = QLabel("Camera Window")
@@ -303,12 +336,13 @@ class SecondWindow(QWidget):
     def closeEvent(self, event):
         self.main_window.w = None
         event.accept()
-    
+
     def connectFunctions(self):
-        #Kamera
+        # Kamera
         self.btnTiltUp.clicked.connect(lambda: f.tiltUp(self))
         self.btnTiltDown.clicked.connect(lambda: f.tiltDown(self))
         
+
 
 
 class Communicate(QtCore.QObject):
