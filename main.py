@@ -467,6 +467,16 @@ class Rov_state:
         self.packets_to_send.append([40, data])
         # print(self.packets_to_send)
 
+    # def get_autonom(self):
+    #     camerafeed = Camerafeed("mode")
+    #     x-akse = camerafeed.get_x-value()
+    #     y-akse = camerafeed.get_y-value()
+    #     z-akse = camerafeed.get_z-value()
+    #     rotasjon = camerafeed.get_rotation()
+    #     data = [x_akse, y-akse, z-akse, rotasjon,0,0,0,0]
+    #     self.packets_to_send.append([40, data])
+
+
     def build_manipulator_packet(self):
         # Kan også endre til to indexer i data listen for mani inn og ut (f.eks 0 og 1 = btn 12 og 13)
         if self.data == {}:
@@ -501,6 +511,7 @@ class Rov_state:
         # self.button_handling()
         self.build_rov_packet()
         self.build_manipulator_packet()
+        print(self.packets_to_send)
 
 
 def run(network_handler: Network, t_watch: Threadwatcher, id: int, queue_for_rov: multiprocessing.Queue, gui_pipe, frame_pipe):
