@@ -514,7 +514,7 @@ class Rov_state:
         print(self.packets_to_send)
 
 #TODO: HER VAR TIDLIGARE frame_pipe
-def run(network_handler: Network, t_watch: Threadwatcher, id: int, queue_for_rov: multiprocessing.Queue, gui_pipe,frame_pipe):
+def run(network_handler: Network, t_watch: Threadwatcher, id: int, queue_for_rov: multiprocessing.Queue, gui_pipe):
     print("Klarer å gå inn i run function")
     rov_state = Rov_state(queue_for_rov, network_handler, gui_pipe, t_watch)
 
@@ -555,18 +555,18 @@ if __name__ == "__main__":
         # exec = ExecutionClass()
         
         # cam = Camera()
-        run_camera = False
+        #run_camera = True
         run_gui = True
         run_craft_packet = True
-        run_network = True # Bytt t True når du ska prøva å connecte.
+        run_network = False # Bytt t True når du ska prøva å connecte.
         run_get_controllerdata = False
         # Sett til True om du vil sende fake sensordata til gui
-        run_send_fake_sensordata = False
+        run_send_fake_sensordata = True
 
         t_watch = Threadwatcher()
         queue_for_rov = multiprocessing.Queue()
         #TODO: Kanskje noke her?
-        (frame_parent_pipe, frame_child_pipe) = Pipe()
+        #(frame_parent_pipe, frame_chid_pipe) = Pipe()
         
         (
             gui_parent_pipe,  # Used by main process, to send/receive data to gui
@@ -588,7 +588,7 @@ if __name__ == "__main__":
             id = t_watch.add_thread()
             print(id)
             main_driver_loop = threading.Thread(target=run, args=(
-                network, t_watch, id, queue_for_rov, gui_parent_pipe,frame_parent_pipe), daemon=True)
+                network, t_watch, id, queue_for_rov, gui_parent_pipe), daemon=True)
             main_driver_loop.start()
 
 
