@@ -62,9 +62,9 @@ def send_fake_sensordata(t_watch: Threadwatcher, gui_pipe: multiprocessing.Pipe)
     dybde_list = [num for num in range(50, 20000)]
     accel_list = [num for num in range(-100, 101)]
     #feilkode_list = [num for num in range(0, 1)]
-    imuErrors     = [False, False, False, False, False, False, False, False]
-    tempErrors    = [False, False, False, False]
-    pressureErrors= [False, False, False, False]
+    imuErrors     = [True, False, False, False, False, False, False, False]
+    tempErrors    = [True, False, False, False]
+    pressureErrors= [True, False, False, False]
     lekageAlarms  = [True, False, False, False]
     
     count = -1
