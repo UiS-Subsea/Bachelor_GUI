@@ -12,7 +12,7 @@ import datetime
 class CameraClass:
     def __init__(self) -> None:
         self.frame = None
-        
+
     def get_frame(self):
         success, self.frame = self.cam.read()
         if success:
@@ -27,13 +27,13 @@ class CameraClass:
         self.cam = cv2.VideoCapture(0)
         self.frame = self.cam.read()[1]
         self.recording = False
-        
-    
-    def setup_video(self, name):
-        self.videoresult = cv2.VideoWriter(f'camerafeed/output/{name}.avi', cv2.VideoWriter_fourcc(*'MJPG'),10, (int(self.cam.get(3)), int(self.cam.get(4))))
 
+    def setup_video(self, name):
+        self.videoresult = cv2.VideoWriter(f'camerafeed/output/{name}.avi', cv2.VideoWriter_fourcc(
+            *'MJPG'), 10, (int(self.cam.get(3)), int(self.cam.get(4))))
 
     # Run this to start recording, and do a keyboard interrupt (ctrl + c) to stop recording
+
     def record_video(self, frame):
         if not self.recording:
             self.setup_video(f"MyCam{datetime.datetime.now()}")
@@ -56,61 +56,65 @@ class ExecutionClass:
         self.done = False
         self.Camera.start()
         self.driving_queue = driving_queue
-        
+
     def update(self):
         self.frame = self.Camera.get_frame()
-        
-    def show(self, frame, name = "frame"):
+
+    def show(self, frame, name="frame"):
         self.update()
         cv2.imshow(name, frame)
         if cv2.waitKey(1) == ord("q"):
             self.manual()
-            
-        
+
     def save_image(self):
         cv2.imwrite("camerafeed/output/output_image.jpg", self.frame.copy())
-            
+
     def test(self):
         ting = self.driving_queue.get()
         print(ting)
-        
+
     def transect(self):
         self.done = False
         while not self.done:
             self.update()
-            transect_frame, driving_data_packet = self.AutonomousTransect.run(self.frame.copy())
+            transect_frame, driving_data_packet = self.AutonomousTransect.run(
+                self.frame.copy())
             self.show(transect_frame, "Transect")
             self.driving_queue.put(driving_data_packet)
             self.test()
             QApplication.processEvents()
 
-            
     def seagrass(self):
         growth = self.Seagrass.run(self.frame.copy())
         return growth
-        
-        
+
     def docking(self):
         self.done = False
         while not self.done:
-            
+
             self.update()
-            docking_frame, frame_under, driving_data_packet = self.Docking.run(self.frame.copy())
+            docking_frame, frame_under, driving_data_packet = self.Docking.run(
+                self.frame.copy())
             self.show(docking_frame, "Docking")
             QApplication.processEvents()
             # self.show(frame_under, "Frame Under")
         return driving_data_packet
-    
+
     def manual(self):
         print("Stopping other processes, returning to manual control")
         cv2.destroyAllWindows()
         self.done = True
-        
+
     def transect_test(self):
         print("Running Transect!")
         
     def record(self):
         self.done = False
+        if self.Camera.recording:
+            self.Camera.recording = False
+            cv2.destroyWindow("Recording...")
+            self.done = True
+            
         while not self.done:
             self.update()
             self.show(self.frame.copy(), "Recording...")
@@ -130,6 +134,3 @@ if __name__ == "__main__":
         execution.show(frame)
         cam.record_video(frame)
         # execution.transect(frame)
-        
-    
-    
