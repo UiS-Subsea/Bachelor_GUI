@@ -87,20 +87,22 @@ class Window(QMainWindow):
             lambda: Rov_state.reset_12V_manipulator_fuse(self))
         self.btnResetManipulator.clicked.connect(
             lambda: Rov_state.reset_12V_thruster_fuse(self))
-
-        self.btnResetThruster.clicked.connect(lambda: f.resetThruster(self))
-        self.btnResetManipulator.clicked.connect(
-            lambda: f.resetManipulator(self))
+#
+#        self.btnResetThruster.clicked.connect(lambda: f.resetThruster(self))
+#        self.btnResetManipulator.clicked.connect(
+#            lambda: f.resetManipulator(self))
 
         # IMU
-        self.btnKalibrerIMU.clicked.connect(lambda: f.kalibrerIMU(self))
+        self.btnKalibrerIMU.clicked.connect(
+            lambda: Rov_state.calibrate_IMU(self))
 
         # Dybde
-        self.btnNullpunktDybde.clicked.connect(lambda: f.nullpunktDybde(self))
+        self.btnNullpunktDybde.clicked.connect(
+            lambda: Rov_state.reset_depth(self))
 
         # Vinkler
         self.btnNullpunktVinkler.clicked.connect(
-            lambda: f.nullpunktVinkler(self))
+            lambda: Rov_state.reset_angles(self))
 
     def receive_sensordata(
         self, conn

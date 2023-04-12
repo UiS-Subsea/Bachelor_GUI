@@ -350,18 +350,18 @@ class Rov_state:
     #     self.packets_to_send.append(97, fuse_reset_signal)
 
     def reset_5V_fuse2(self):
-        reset_fuse_byte = [0] * 8
-        reset_fuse_byte[0] = 1
-        print("Resetting 5V Fuse")
-
-        self.packets_to_send.append([97, reset_fuse_byte])
-        print(f"Pakkene som blir sendt er: {self.packets_to_send}")
-
-    def reset_12V_thruster_fuse(self):
-        """reset_fuse_on_power_supply creates and adds
+        """reset_5V_fuse creates and adds
         packets for resetting a fuse on the ROV"""
         reset_fuse_byte = [0] * 8
-        reset_fuse_byte[0] = 1
+        reset_fuse_byte[0] |= (1 << 0)  # reset bit 0
+        print("Resetting 5V Fuse")
+        self.packets_to_send.append([97, reset_fuse_byte])
+
+    def reset_12V_thruster_fuse(self):
+        """reset_12V_thruster_fuse creates and adds
+        packets for resetting a fuse on the ROV"""
+        reset_fuse_byte = [0] * 8
+        reset_fuse_byte[0] |= (1 << 0)  # reset bit 0
         print("Resetting 12V Thruster Fuse")
         self.packets_to_send.append([98, reset_fuse_byte])
 
@@ -369,9 +369,27 @@ class Rov_state:
         """reset_12V_manipulator_fuse creates and adds
         packets for resetting a fuse on the ROV"""
         reset_fuse_byte = [0] * 8
-        reset_fuse_byte[0] = 1
+        reset_fuse_byte[0] |= (1 << 0)  # reset bit 0
         print("Resetting 12V Manipulator Fuse")
         self.packets_to_send.append([99, reset_fuse_byte])
+
+    def reset_depth(self):
+        reset_depth_byte = [0] * 8
+        reset_depth_byte[0] |= (1 << 0)  # reset bit 0
+        print("Resetting Depth")
+        self.packets_to_send.append([66, reset_depth_byte])
+
+    def reset_angles(self):
+        reset_angles_byte = [0] * 8
+        reset_angles_byte[0] &= ~(1 << 1)  # reset bit 1
+        print("Resetting Angles")
+        self.packets_to_send.append([66, reset_angles_byte])
+
+    def calibrate_IMU(self):
+        calibrate_IMU_byte = [0] * 8
+        calibrate_IMU_byte[0] |= (1 << 2)  # reset bit 2
+        print("Kalibrerer IMU")
+        self.packets_to_send.append([66, calibrate_IMU_byte])
 
     # def lights_on_off(self, light_sensitivity_forward: int, light_sensitivity_downward: int, light_on_forward: bool, light_off_forward: bool):
     #     """Setting up variables for corresponding values
@@ -503,7 +521,6 @@ class Rov_state:
 
 def run(network_handler: Network, t_watch: Threadwatcher, id: int, queue_for_rov: multiprocessing.Queue, gui_pipe, frame_pipe):
     print("Klarer å gå inn i run function")
-    rov_state = Rov_state(queue_for_rov, network_handler, gui_pipe, t_watch)
 
     # Komm. del
     print("run thread")
@@ -548,7 +565,7 @@ if __name__ == "__main__":
         run_camera = True
         run_gui = True
         run_craft_packet = False
-        run_network = False  # Bytt t True når du ska prøva å connecte.
+        run_network = True  # Bytt t True når du ska prøva å connecte.
         run_get_controllerdata = False
         # Sett til True om du vil sende fake sensordata til gui
         run_send_fake_sensordata = True
