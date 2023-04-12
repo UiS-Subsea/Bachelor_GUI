@@ -37,23 +37,17 @@ class Window(QMainWindow):
         super().__init__(parent)
         uic.loadUi("gui/window1.ui", self)
         self.connectFunctions()
-        self.sound_timer = QTimer()
-        self.sound_timer.timeout.connect(self.play_sound)
-
-        regulering_status_wait_counter = 0
-        self.lekkasje_varsel_is_running = False
-        self.ID_RESET_DEPTH = 66
+        self.player = QMediaPlayer()
+        self.sound_file = "martinalarm.wav"
+        
         # Queue and pipe
         self.queue: multiprocessing.Queue = (
             queue
         )
-        # pipe_conn_only_rcv is a pipe connection that only receives data
-        self.pipe_conn_only_rcv = pipe_conn_only_rcv
-        # Threadwatcher
+        
+        self.pipe_conn_only_rcv = pipe_conn_only_rcv  # pipe_conn_only_rcv is a pipe connection that only receives data
         self.t_watch: Threadwatcher = t_watch  # t_watch is a threadwatcher object
         self.id = id  # id is an id that is used to identify the thread
-
-        self.gir_verdier = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
         self.receive = threading.Thread(
             target=self.receive_sensordata, daemon=True, args=(self.pipe_conn_only_rcv,)
@@ -62,9 +56,9 @@ class Window(QMainWindow):
 
         self.exec = ExecutionClass(queue)
         self.camera = CameraClass()
-        self.w = None  # SecondWindow() #
+        self.w = None  # SecondWindow() 
 
-        # Buttons
+    # Buttons
     def show_new_window(self, checked):
         if self.w is None:
             self.w = SecondWindow(self)
@@ -80,6 +74,12 @@ class Window(QMainWindow):
         self.btnManuell.clicked.connect(lambda: self.exec.manual())
         self.btnAutonom.clicked.connect(lambda: self.exec.docking())
         self.btnFrogCount.clicked.connect(lambda: self.exec.transect())
+        
+        #Kamera
+        self.btnTakePic.clicked.connect(lambda: self.exec.save_image())
+        self.btnRecord.clicked.connect(lambda: self.exec.record())
+        
+        #Sikringer
 
         # Sikringer
         self.btnReset5V.clicked.connect(lambda: Rov_state.reset_5V_fuse2(self))
@@ -111,37 +111,25 @@ class Window(QMainWindow):
             Communicate()
         )  # Create a new instance of the class Communicate
         self.communicate.data_signal.connect(
-            self.decide_gui_update
+            self.decideGuiUpdate
         )  # Connect the signal to the function that decides what to do with the sensordata
         while self.t_watch.should_run(
             self.id
         ):  # While the threadwatcher says that the thread should run
-            print("Waiting for sensordata")
+            #print("Waiting for sensordata")
             data_is_ready = conn.recv()  # Wait for sensordata
-            # if self.regulering_status_wait_counter > 0: #Wait for regulering_status to be sent
-            #    self.regulering_status_wait_counter -= 1 #Decrease counter
             if data_is_ready:
-                sensordata: dict = (
-                    conn.recv()
-                )  # "sensordata" is a dictionary with all the sensordata
-                self.communicate.data_signal.emit(
-                    sensordata
-                )  # Emit sensordata to the gui
+                sensordata: dict = (conn.recv())  # "sensordata" is a dictionary with all the sensordata
+                self.communicate.data_signal.emit(sensordata)  # Emit sensordata to the gui
             else:
                 time.sleep(0.15)  # Sleep for 0.15 seconds
         print("received")
         exit(0)
 
-    # def send_data_to_main(self, data, id):
-    #     if self.queue is not None:
-    #         self.queue.put([id, data])
-    #     else:
-    #         raise TypeError("self.queue does not exist inside send_data_to_main")
-
     def gui_manipulator_state_update(self, sensordata):
         self.toggle_mani.setChecked(sensordata[0])
 
-    def decide_gui_update(self, sensordata):
+    def decideGuiUpdate(self, sensordata):
         self.sensor_update_function = {
             # "lekk_temp": self.gui_lekk_temp_update,
             # "thrust": self.gui_thrust_update,
@@ -163,48 +151,86 @@ class Window(QMainWindow):
             if key in self.sensor_update_function:
                 self.sensor_update_function[key](sensordata[key])
 
-    def start_sound(self):
-        # start the timer with a delay of 2 seconds
-        self.sound_timer.start(2000)
-
-    def stop_sound(self):
-        self.sound_timer.stop()
 
     def play_sound(self):
-        # Load the sound file
-        sound_file = 'D:\Bachelor_GUI\siren2.wav'
+        if self.player.state() == QMediaPlayer.PlayingState:
+            # If the player is still playing, wait until the playback is finished
+            self.player.stateChanged.connect(self.on_player_state_changed)
+        else:
+            # Otherwise, start playing the new sound
+            self.player.setMedia(QMediaContent(QUrl.fromLocalFile(self.sound_file)))
+            self.player.play()
 
-        # Create a QMediaPlayer object and set the media content
-        player = QMediaPlayer()
-        player.setMedia(QMediaContent(QUrl.fromLocalFile(sound_file)))
-
-        # Connect the player's mediaStatusChanged signal to a lambda function that
-        # stops and deletes the player when the playback is finished
-        player.mediaStatusChanged.connect(lambda status: player.deleteLater(
-        ) if status == QMediaPlayer.EndOfMedia else None)
-
-        # Play the sound
-        player.play()
+    def on_player_state_changed(self, state):
+        if state == QMediaPlayer.StoppedState:
+        # When the playback is finished, disconnect the signal and start playing the new sound
+            self.player.stateChanged.disconnect(self.on_player_state_changed)
+            self.player.setMedia(QMediaContent(QUrl.fromLocalFile(self.sound_file)))
+            self.player.play()
 
     def guiFeilKodeUpdate(self, sensordata):
+        imuErrors = [  # Feilkoder fra IMU
+            "HAL_ERROR",
+            "HAL_BUSY",
+            "HAL_TIMEOUT",
+            "INIT_ERROR",
+            "WHO_AM_I_ERROR",
+            "MEMS_ERROR",
+            "MAG_WHO_AM_I_ERROR",
+        ]
+        
+        tempErrors = [ # Feilkoder fra temperatur
+            "HAL_ERROR",
+            "HAL_BUSY",
+            "HAL_TIMEOUT",
+        ]
+        
+        trykkErrors = [ # Feilkoder fra trykk
+            "HAL_ERROR",
+            "HAL_BUSY",
+            "HAL_TIMEOUT",
+        ]
+        
+        lekkasjeErrors=[ #Feilkoder fra lekkasje
+            "Probe_1",
+            "Probe_2",
+            "Probe_3",
+            "Probe_4",
+        ]
+        
+        #Henter alle labels
         labelIMUAlarm: QLabel = self.labelIMUAlarm
         labelLekkasjeAlarm: QLabel = self.labelLekkasjeAlarm
         labelTempAlarm: QLabel = self.labelTempAlarm
         labelTrykkAlarm: QLabel = self.labelTrykkAlarm
+        gradient =("background-color: #444444; color: #FF0000; border-radius: 10px;")
 
-        if sensordata[0] == 1:
-            labelIMUAlarm.setText("ADVARSEL!")
-            labelIMUAlarm.setStyleSheet("color: red")
-        if sensordata[1] == 1:
-            labelTrykkAlarm.setText("ADVARSEL!")
-            labelTrykkAlarm.setStyleSheet("color: red")
-        if sensordata[2] == 1:
-            labelTempAlarm.setText("ADVARSEL!")
-            labelTempAlarm.setStyleSheet("color: red")
-        if sensordata[3] == 1:
-            labelLekkasjeAlarm.setText("ADVARSEL!")
-            labelLekkasjeAlarm.setStyleSheet("color: red")
-            self.play_sound()
+        #Sjekker om det er feil i sensordataene
+        for i in range (len(sensordata[0])):
+            if sensordata[0][i] == True:
+                print(imuErrors[i])
+                labelIMUAlarm.setText(imuErrors[i])
+                labelIMUAlarm.setStyleSheet(gradient)
+                
+        for i in range (len(sensordata[1])):
+            if sensordata[1][i] == True:
+                print(tempErrors[i])
+                labelTempAlarm.setText(tempErrors[i])
+                labelTempAlarm.setStyleSheet(gradient)
+
+        for i in range (len(sensordata[2])):
+            if sensordata[2][i] == True:
+                print(trykkErrors[i])
+                labelTrykkAlarm.setText(trykkErrors[i])
+                labelTrykkAlarm.setStyleSheet(gradient)
+
+        for i in range (len(sensordata[3])):
+            if sensordata[3][i] == True:
+                print(lekkasjeErrors[i])
+                labelLekkasjeAlarm.setText(lekkasjeErrors[i])
+                labelLekkasjeAlarm.setStyleSheet(gradient)
+                self.play_sound()
+
 
     def dybdeTempUpdate(self, sensordata):
         labelDybde: QLabel = self.labelDybde
@@ -305,11 +331,9 @@ class Window(QMainWindow):
                     round(sensordata[1] * 0.35), self.label_percentage_mani_3
                 )
 
-    # TODO: fiks lekkasje varsel seinare
-
+    
 
 def run(conn, queue_for_rov, t_watch: Threadwatcher, id):
-    # TODO: add suppress qt warnings?
 
     app = QtWidgets.QApplication(
         sys.argv
@@ -340,8 +364,8 @@ class SecondWindow(QWidget):
         # Kamera
         self.btnTiltUp.clicked.connect(lambda: f.tiltUp(self))
         self.btnTiltDown.clicked.connect(lambda: f.tiltDown(self))
-        self.btnTakePic.clicked.connect(lambda: f.takePic(self))
-        self.btnSavePic.clicked.connect(lambda: f.savePic(self))
+        
+
 
 
 class Communicate(QtCore.QObject):

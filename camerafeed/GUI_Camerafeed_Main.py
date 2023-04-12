@@ -110,6 +110,11 @@ class ExecutionClass:
         
     def record(self):
         self.done = False
+        if self.Camera.recording:
+            self.Camera.recording = False
+            cv2.destroyWindow("Recording...")
+            self.done = True
+            
         while not self.done:
             self.update()
             self.show(self.frame.copy(), "Recording...")

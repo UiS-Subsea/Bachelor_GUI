@@ -23,8 +23,7 @@ MANIPULATOR_GRAB_RELEASE = 6
 
 
 VINKLER = "138"  # 0=roll, 2=stamp, 4=gir
-# 0=dybde, 2=vanntemp, 3=vanntemp msb, 4=sensorkorttemp, 5=sensorkorttemp msb
-DYBDETEMP = "139"
+DYBDETEMP = "139" # 0=dybde, 2=vanntemp, 3=vanntemp msb, 4=sensorkorttemp, 5=sensorkorttemp msb
 FEILKODE = "140"  # 0=IMU Error, 1=Temp Error, 2=Trykk Error, 3=Lekkasje
 
 
@@ -62,7 +61,12 @@ def send_fake_sensordata(t_watch: Threadwatcher, gui_pipe: multiprocessing.Pipe)
     vinkel_list = [num for num in range(-360, 360)]
     dybde_list = [num for num in range(50, 20000)]
     accel_list = [num for num in range(-100, 101)]
-    feilkode_list = [num for num in range(0, 1)]
+    #feilkode_list = [num for num in range(0, 1)]
+    imuErrors     = [True, False, False, False, False, False, False, False]
+    tempErrors    = [True, False, False, False]
+    pressureErrors= [True, False, False, False]
+    lekageAlarms  = [True, False, False, False]
+    
     count = -1
     sensordata = {}
     while t_watch.should_run(0):
@@ -84,12 +88,11 @@ def send_fake_sensordata(t_watch: Threadwatcher, gui_pipe: multiprocessing.Pipe)
             vinkel_list[(0 + count) % 201],
             vinkel_list[(0 + count) % 201],
         ]
-        sensordata[FEILKODE] = [
-            0,
-            0,
-            0,
-            1,
-            vinkel_list[(0 + count) % 201],
+        sensordata[FEILKODE]= [
+            imuErrors,
+            tempErrors,
+            pressureErrors,
+            lekageAlarms,
         ]
 
         sensordata["lekk_temp"] = [
@@ -123,7 +126,6 @@ def send_fake_sensordata(t_watch: Threadwatcher, gui_pipe: multiprocessing.Pipe)
         ]
         gui_pipe.send(sensordata)
         time.sleep(0.5)
-
 
 class Rov_state:
     def __init__(self, queue, network_handler, gui_pipe, t_watch: Threadwatcher) -> None:
@@ -483,6 +485,16 @@ class Rov_state:
         self.packets_to_send.append([40, data])
         # print(self.packets_to_send)
 
+    # def get_autonom(self):
+    #     camerafeed = Camerafeed("mode")
+    #     x-akse = camerafeed.get_x-value()
+    #     y-akse = camerafeed.get_y-value()
+    #     z-akse = camerafeed.get_z-value()
+    #     rotasjon = camerafeed.get_rotation()
+    #     data = [x_akse, y-akse, z-akse, rotasjon,0,0,0,0]
+    #     self.packets_to_send.append([40, data])
+
+
     def build_manipulator_packet(self):
         # Kan også endre til to indexer i data listen for mani inn og ut (f.eks 0 og 1 = btn 12 og 13)
         if self.data == {}:
@@ -517,6 +529,7 @@ class Rov_state:
         # self.button_handling()
         self.build_rov_packet()
         self.build_manipulator_packet()
+        print(self.packets_to_send)
 
 
 def run(network_handler: Network, t_watch: Threadwatcher, id: int, queue_for_rov: multiprocessing.Queue, gui_pipe, frame_pipe):
@@ -561,6 +574,7 @@ if __name__ == "__main__":
         global run_camera
 
         # exec = ExecutionClass()
+        
         # cam = Camera()
         run_camera = True
         run_gui = True
@@ -614,12 +628,6 @@ if __name__ == "__main__":
             )  # should recieve commands from the gui
             gui_loop.start()
             print("gui started")
-
-        if run_camera:
-            id = t_watch.add_thread()
-            camera_thread = threading.Thread(target=run_camera_func, args=(
-                t_watch, frame_parent_pipe, id), daemon=True)
-            camera_thread.start()
 
         if run_send_fake_sensordata:
             id = t_watch.add_thread()
