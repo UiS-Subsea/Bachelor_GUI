@@ -188,13 +188,13 @@ class Controller:
             
             # print(duration)
             for event in pygame.event.get():
-                # print("entered event check")
-                # if event.type == DPAD: #dpad (both up and down)
-                #     if event.joy == ROV_CONTROLLER_ID:
-                #         self.rov_dpad = event.value # BLIR DET BRUKT ELLER ER DET KNAPP?
-                #     if event.joy == MANIPULATOR_CONTROLLER_ID:
-                #         self.mani_dpad = event.value # BLIR DET BRUKT ELLER ER DET KNAPP?
-                #     # self.dpad = [val*100 for val in event.value]
+                print("entered event check")
+                if event.type == DPAD: #dpad (both up and down)
+                    if event.joy == ROV_CONTROLLER_ID:
+                        self.rov_dpad = event.value # BLIR DET BRUKT ELLER ER DET KNAPP?
+                    if event.joy == MANIPULATOR_CONTROLLER_ID:
+                        self.mani_dpad = event.value # BLIR DET BRUKT ELLER ER DET KNAPP?
+                    self.dpad = [val*100 for val in event.value]
 
                 if event.type == BUTTON_DOWN:  # button down
                     if event.joy == ROV_CONTROLLER_ID:

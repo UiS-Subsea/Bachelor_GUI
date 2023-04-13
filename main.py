@@ -22,9 +22,9 @@ MANIPULATOR_TILT = 3
 MANIPULATOR_GRAB_RELEASE = 6
 
 
-#VINKLER = "138"  # 0=roll, 1=stamp, 2=gir?
-#DYBDETEMP = "139" # 0=dybde, 2=vanntemp, 3=vanntemp msb, 4=sensorkorttemp, 5=sensorkorttemp msb
-#FEILKODE = "140"  # 0=IMU Error, 1=Temp Error, 2=Trykk Error, 3=Lekkasje
+# VINKLER = "138"  # 0=roll, 1=stamp, 2=gir?
+# DYBDETEMP = "139" # 0=dybde, 2=vanntemp, 3=vanntemp msb, 4=sensorkorttemp, 5=sensorkorttemp msb
+# FEILKODE = "140"  # 0=IMU Error, 1=Temp Error, 2=Trykk Error, 3=Lekkasje
 
 
 # ROV
@@ -162,7 +162,8 @@ class Rov_state:
         self_hud_camera_status = False
 
         self.packets_to_send = []
-        self.valid_gui_commands = ['138', "thrust", "accel", "gyro", "time", "manipulator", "power_consumption"]
+        self.valid_gui_commands = [
+            '138', "thrust", "accel", "gyro", "time", "manipulator", "power_consumption"]
 
     def update(self):
         pass
@@ -174,7 +175,6 @@ class Rov_state:
         #    print(f"Data did not arrive{data}")
 
         self.gui_pipe.send(data)
-
 
     def sending_startup_ids(self):
         self.packets_to_send.append(
@@ -197,7 +197,7 @@ class Rov_state:
                 if data == b"" or data is None:
                     continue
                 else:
-                    #print(data)
+                    # print(data)
                     if data is None:
                         continue
                     decoded, incomplete_packet = Rov_state.decode_packets(
@@ -205,7 +205,7 @@ class Rov_state:
                 if decoded == []:
                     continue
                 for message in decoded:
-                    #print(message)
+                    # print(message)
                     self.handle_data_from_rov(message)
 
                     # potentially for the future to get information to the GUI : send_to_gui(Rov_state, message)
@@ -383,18 +383,21 @@ class Rov_state:
         reset_depth_byte[0] |= (1 << 0)  # reset bit 0
         print("Resetting Depth")
         self.packets_to_send.append([66, reset_depth_byte])
+        print(self.packets_to_send)
 
     def reset_angles(self):
         reset_angles_byte = [0] * 8
-        reset_angles_byte[0] &= ~(1 << 1)  # reset bit 1
+        reset_angles_byte[0] |= (1 << 1)  # reset bit 1
         print("Resetting Angles")
         self.packets_to_send.append([66, reset_angles_byte])
+        print(self.packets_to_send)
 
     def calibrate_IMU(self):
         calibrate_IMU_byte = [0] * 8
         calibrate_IMU_byte[0] |= (1 << 2)  # reset bit 2
         print("Kalibrerer IMU")
         self.packets_to_send.append([66, calibrate_IMU_byte])
+        print(self.packets_to_send)
 
     # def lights_on_off(self, light_sensitivity_forward: int, light_sensitivity_downward: int, light_on_forward: bool, light_off_forward: bool):
     #     """Setting up variables for corresponding values
@@ -466,6 +469,7 @@ class Rov_state:
 
         self.packets_to_send.append(
             [98, [front_light_byte0, front_light_byte1]])
+        print(self.packets_to_send)
 
     def light_value_downward(self, bottom_light_intensity: int, bottom_light_is_on: bool):
         self.bottom_light_intensity = bottom_light_intensity
@@ -476,6 +480,7 @@ class Rov_state:
 
         self.packets_to_send.append(
             [99, [bottom_light_byte0, bottom_light_byte1]])
+        print(self.packets_to_send)
 
     def build_rov_packet(self):
         if self.data == {}:
@@ -533,7 +538,9 @@ class Rov_state:
         self.build_manipulator_packet()
         print(self.packets_to_send)
 
-#TODO: HER VAR TIDLIGARE frame_pipe
+# TODO: HER VAR TIDLIGARE frame_pipe
+
+
 def run(network_handler: Network, t_watch: Threadwatcher, id: int, queue_for_rov: multiprocessing.Queue, gui_pipe):
     print("Klarer å gå inn i run function")
 
@@ -561,7 +568,6 @@ def run(network_handler: Network, t_watch: Threadwatcher, id: int, queue_for_rov
         rov_state.data = {}
 
 
-
 if __name__ == "__main__":
 
     try:
@@ -577,16 +583,16 @@ if __name__ == "__main__":
         #run_camera = True
         run_gui = True
         run_craft_packet = True
-        run_network = False # Bytt t True når du ska prøva å connecte.
-        run_get_controllerdata = False
+        run_network = False  # Bytt t True når du ska prøva å connecte.
+        run_get_controllerdata = True
         # Sett til True om du vil sende fake sensordata til gui
-        run_send_fake_sensordata = True
+        run_send_fake_sensordata = False
 
         t_watch = Threadwatcher()
         queue_for_rov = multiprocessing.Queue()
-        #TODO: Kanskje noke her?
+        # TODO: Kanskje noke her?
         #(frame_parent_pipe, frame_chid_pipe) = Pipe()
-        
+
         (
             gui_parent_pipe,  # Used by main process, to send/receive data to gui
             gui_child_pipe,  # Used by gui process, to send/receive data to main
@@ -597,7 +603,6 @@ if __name__ == "__main__":
 
         network = False
 
-            
         if run_network:
             network = Network(is_server=False, port=6900, bind_addr="0.0.0.0",
                               connect_addr="10.0.0.2")
@@ -609,8 +614,6 @@ if __name__ == "__main__":
             main_driver_loop = threading.Thread(target=run, args=(
                 network, t_watch, id, queue_for_rov, gui_parent_pipe), daemon=True)
             main_driver_loop.start()
-
-
 
         if run_get_controllerdata:
             id = t_watch.add_thread()
@@ -631,8 +634,6 @@ if __name__ == "__main__":
             print("before start")
             gui_loop.start()
             print("gui started")
-
-
 
         if run_send_fake_sensordata:
             id = t_watch.add_thread()
