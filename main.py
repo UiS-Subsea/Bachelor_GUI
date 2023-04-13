@@ -375,67 +375,6 @@ class Rov_state:
         print("Resetting 12V Manipulator Fuse")
         self.packets_to_send.append([99, reset_fuse_byte])
 
-    # def lights_on_off(self, light_sensitivity_forward: int, light_sensitivity_downward: int, light_on_forward: bool, light_off_forward: bool):
-    #     """Setting up variables for corresponding values
-    #     and booleans of light intensity and light on/off"""
-    #     self.light_sensitivity_forward = light_sensitivity_forward
-    #     self.light_sensitivity_downward = light_sensitivity_downward
-
-    #     self.light_on_forward = light_on_forward
-    #     self.light_off_forward = light_off_forward
-
-    #     light_forward = self.light_on_forward * self.light_sensitivity_forward
-    #     light_downward = self.light_off_forward * self.light_sensitivity_downward
-
-    # def light_forward(self, light_sensitivity_forward: int, light_on_forward: bool):
-    #     self.light_sensitivity_forward = light_sensitivity_forward
-    #     self.light_on_forward = light_on_forward
-
-    #     light_forward = light_sensitivity_forward * light_forward
-
-    #     self.packets_to_send.append(98, [light_forward])
-
-    # def light_downward(self, light_sensitivity_downward: int, light_on_downward: bool):
-    #     self.light_sensitivity_downward = light_sensitivity_downward
-    #     self.light_on_downward = light_on_downward
-
-    #     light_downward = light_sensitivity_downward * light_downward
-
-    #     self.packets_to_send.append(99, [light_downward])
-
-    # Update light values
-    # def update_light_value(self, front_light_intensity: int, front_light_dimming: int, bottom_light_intensity: int, bottom_light_dimming: int):
-    #     """Setting up variables for corresponding values
-    #     and booleans of light intensity and light on/off"""
-    #     ID_FRONT_LIGHTS = 98
-    #     ID_BOTTOM_LIGHTS = 99
-    #     BYTE_TURN_ON = 0
-    #     BYTE_DIMMING = 1
-    #     BIT_TURN_ON = 1
-    #     # Set front light values
-    #     front_light_on = int(front_light_intensity > 0)
-    #     self.packets_to_send.append([ID_FRONT_LIGHTS, [(front_light_on << BIT_TURN_ON) | front_light_dimming, 0]])
-
-    #     # Set bottom light values
-    #     bottom_light_on = int(bottom_light_intensity > 0)
-    #     self.packets_to_send.append([ID_BOTTOM_LIGHTS, [(bottom_light_on << BIT_TURN_ON) | bottom_light_dimming, 0]])
-
-    # def update_light_value(self, front_light_intensity: int, front_light_is_on: bool, bottom_light_intensity: int, bottom_light_is_on: bool):
-    #     self.front_light_intensity = front_light_intensity
-    #     self.front_light_is_on = front_light_is_on
-    #     self.bottom_light_intensity = bottom_light_intensity
-    #     self.bottom_light_is_on = bottom_light_is_on
-
-    #     front_light_byte0 = (front_light_is_on << 1) | 1
-    #     front_light_byte1 = self.front_light_intensity
-    #     bottom_light_byte0 = (bottom_light_is_on << 1) | 1
-    #     bottom_light_byte1 = self.bottom_light_intensity
-
-    #     self.packets_to_send.append(
-    #         [98, [front_light_byte0, front_light_byte1]])
-    #     self.packets_to_send.append(
-    #         [99, [bottom_light_byte0, bottom_light_byte1]])
-
     def light_value_forward(self, front_light_intensity: int, front_light_is_on: bool):
         self.front_light_intensity = front_light_intensity
         self.front_light_is_on = front_light_is_on
@@ -515,8 +454,8 @@ class Rov_state:
 
 
 def run(network_handler: Network, t_watch: Threadwatcher, id: int, queue_for_rov: multiprocessing.Queue, gui_pipe, frame_pipe):
-    print("Klarer å gå inn i run function")
-    rov_state = Rov_state(queue_for_rov, network_handler, gui_pipe, t_watch)
+    # print("Klarer å gå inn i run function")
+    # rov_state = Rov_state(queue_for_rov, network_handler, gui_pipe, t_watch)
 
     # Komm. del
     print("run thread")
@@ -559,13 +498,13 @@ if __name__ == "__main__":
         # exec = ExecutionClass()
         
         # cam = Camera()
-        run_camera = True
-        run_gui = True
+        run_camera = False
+        run_gui = False
         run_craft_packet = False
         run_network = False  # Bytt t True når du ska prøva å connecte.
-        run_get_controllerdata = False
+        run_get_controllerdata = True
         # Sett til True om du vil sende fake sensordata til gui
-        run_send_fake_sensordata = True
+        run_send_fake_sensordata = False
 
         t_watch = Threadwatcher()
         queue_for_rov = multiprocessing.Queue()
