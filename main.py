@@ -452,16 +452,10 @@ class Rov_state:
         self.build_manipulator_packet()
         print(self.packets_to_send)
 
-<<<<<<< HEAD
-#på fuse send 1 og 0
-def run(network_handler: Network, t_watch: Threadwatcher, id: int, queue_for_rov: multiprocessing.Queue):
-    rov_state = Rov_state(queue_for_rov, network_handler, t_watch)
-=======
 
 def run(network_handler: Network, t_watch: Threadwatcher, id: int, queue_for_rov: multiprocessing.Queue, gui_pipe, frame_pipe):
     # print("Klarer å gå inn i run function")
     # rov_state = Rov_state(queue_for_rov, network_handler, gui_pipe, t_watch)
->>>>>>> 1f069aa2e013302f721cbe82e40bb207b551df22
 
     # Komm. del
     print("run thread")
