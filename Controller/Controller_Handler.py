@@ -1,6 +1,6 @@
 import multiprocessing
-# from Thread_info import Threadwatcher   #For full testing with main.py
-from Thread_info import Threadwatcher   #For local testing on MAC
+from Thread_info import Threadwatcher   #For full testing with main.py
+# from Threadwatch import Threadwatcher   #For local testing on MAC
 import threading
 import os
 os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
