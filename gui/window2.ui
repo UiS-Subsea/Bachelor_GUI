@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>566</width>
-    <height>288</height>
+    <width>446</width>
+    <height>59</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -336,32 +336,6 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
    </property>
    <property name="text">
     <string>V</string>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="btnTakePic">
-   <property name="geometry">
-    <rect>
-     <x>450</x>
-     <y>50</y>
-     <width>75</width>
-     <height>61</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Take</string>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="btnSavePic">
-   <property name="geometry">
-    <rect>
-     <x>450</x>
-     <y>170</y>
-     <width>75</width>
-     <height>61</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Save</string>
    </property>
   </widget>
   <widget class="QLabel" name="titlePicture">
