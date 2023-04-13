@@ -22,9 +22,9 @@ MANIPULATOR_TILT = 3
 MANIPULATOR_GRAB_RELEASE = 6
 
 
-VINKLER = "138"  # 0=roll, 2=stamp, 4=gir
-DYBDETEMP = "139" # 0=dybde, 2=vanntemp, 3=vanntemp msb, 4=sensorkorttemp, 5=sensorkorttemp msb
-FEILKODE = "140"  # 0=IMU Error, 1=Temp Error, 2=Trykk Error, 3=Lekkasje
+#VINKLER = "138"  # 0=roll, 1=stamp, 2=gir?
+#DYBDETEMP = "139" # 0=dybde, 2=vanntemp, 3=vanntemp msb, 4=sensorkorttemp, 5=sensorkorttemp msb
+#FEILKODE = "140"  # 0=IMU Error, 1=Temp Error, 2=Trykk Error, 3=Lekkasje
 
 
 # ROV
@@ -62,38 +62,38 @@ def send_fake_sensordata(t_watch: Threadwatcher, gui_pipe: multiprocessing.Pipe)
     dybde_list = [num for num in range(50, 20000)]
     accel_list = [num for num in range(-100, 101)]
     #feilkode_list = [num for num in range(0, 1)]
-    imuErrors     = [False, False, False, False, False, False, False, False]
-    tempErrors    = [False, False, False, False]
-    pressureErrors= [False, False, False, False]
+    imuErrors     = [True, False, False, False, False, False, False, False]
+    tempErrors    = [True, False, False, False]
+    pressureErrors= [True, False, False, False]
     lekageAlarms  = [True, False, False, False]
     
     count = -1
     sensordata = {}
     while t_watch.should_run(0):
         count += 1
-        sensordata[DYBDETEMP] = [
-            dybde_list[(0 + count) % 201],
-            dybde_list[(10 + count) % 201],
-            dybde_list[(20 + count) % 201],
-            dybde_list[(30 + count) % 201],
-            dybde_list[(40 + count) % 201],
-            dybde_list[(50 + count) % 201],
-            dybde_list[(60 + count) % 201],
-        ]
-        sensordata[VINKLER] = [
-            vinkel_list[(0 + count) % 201],
-            vinkel_list[(0 + count) % 201],
-            vinkel_list[(45 + count) % 201],
-            vinkel_list[(90 + count) % 201],
-            vinkel_list[(0 + count) % 201],
-            vinkel_list[(0 + count) % 201],
-        ]
-        sensordata[FEILKODE]= [
-            imuErrors,
-            tempErrors,
-            pressureErrors,
-            lekageAlarms,
-        ]
+        # sensordata[DYBDETEMP] = [
+        #     dybde_list[(0 + count) % 201],
+        #     dybde_list[(10 + count) % 201],
+        #     dybde_list[(20 + count) % 201],
+        #     dybde_list[(30 + count) % 201],
+        #     dybde_list[(40 + count) % 201],
+        #     dybde_list[(50 + count) % 201],
+        #     dybde_list[(60 + count) % 201],
+        # ]
+        # sensordata[VINKLER] = [
+        #     vinkel_list[(0 + count) % 201],
+        #     vinkel_list[(0 + count) % 201],
+        #     vinkel_list[(45 + count) % 201],
+        #     vinkel_list[(90 + count) % 201],
+        #     vinkel_list[(0 + count) % 201],
+        #     vinkel_list[(0 + count) % 201],
+        # ]
+        # sensordata[FEILKODE]= [
+        #     imuErrors,
+        #     tempErrors,
+        #     pressureErrors,
+        #     lekageAlarms,
+        # ]
 
         sensordata["lekk_temp"] = [
             False,
@@ -160,8 +160,7 @@ class Rov_state:
         self_hud_camera_status = False
 
         self.packets_to_send = []
-        self.valid_gui_commands = [
-            "139", "thrust", "accel", "gyro", "time", "manipulator", "power_consumption"]
+        self.valid_gui_commands = ['138', "thrust", "accel", "gyro", "time", "manipulator", "power_consumption"]
 
     def update(self):
         pass
@@ -172,6 +171,7 @@ class Rov_state:
         if self.sensordata == None:
             print(f"Data did not arrive{data}")
         self.gui_pipe.send(data)
+
 
     def sending_startup_ids(self):
         self.packets_to_send.append(
@@ -194,7 +194,7 @@ class Rov_state:
                 if data == b"" or data is None:
                     continue
                 else:
-                    print(data)
+                    #print(data)
                     if data is None:
                         continue
                     decoded, incomplete_packet = Rov_state.decode_packets(
@@ -202,7 +202,7 @@ class Rov_state:
                 if decoded == []:
                     continue
                 for message in decoded:
-                    print(message)
+                    #print(message)
                     self.handle_data_from_rov(message)
 
                     # potentially for the future to get information to the GUI : send_to_gui(Rov_state, message)
@@ -481,10 +481,6 @@ def run(network_handler: Network, t_watch: Threadwatcher, id: int, queue_for_rov
         rov_state.data = {}
 
 
-def test_gui_leak_response(gui_pipe: multiprocessing.Pipe):
-    sensordata = {"lekk_temp": [False,  False, False, -1, -1, -1]}
-    gui_pipe.send(sensordata)
-
 
 if __name__ == "__main__":
 
@@ -498,18 +494,19 @@ if __name__ == "__main__":
         # exec = ExecutionClass()
         
         # cam = Camera()
-        run_camera = False
-        run_gui = False
-        run_craft_packet = False
-        run_network = False  # Bytt t True når du ska prøva å connecte.
-        run_get_controllerdata = True
+        #run_camera = True
+        run_gui = True
+        run_craft_packet = True
+        run_network = False # Bytt t True når du ska prøva å connecte.
+        run_get_controllerdata = False
         # Sett til True om du vil sende fake sensordata til gui
         run_send_fake_sensordata = False
 
         t_watch = Threadwatcher()
         queue_for_rov = multiprocessing.Queue()
-
-        (frame_parent_pipe, frame_chid_pipe) = Pipe()
+        #TODO: Kanskje noke her?
+        #(frame_parent_pipe, frame_chid_pipe) = Pipe()
+        
         (
             gui_parent_pipe,  # Used by main process, to send/receive data to gui
             gui_child_pipe,  # Used by gui process, to send/receive data to main
@@ -519,18 +516,21 @@ if __name__ == "__main__":
         debug_all = True  # Sett til True om du vil se input fra controllers
 
         network = False
+
+            
         if run_network:
             network = Network(is_server=False, port=6900, bind_addr="0.0.0.0",
                               connect_addr="10.0.0.2")
             print("network started")
             run_network = True
-
             print("starting send to rov")
             id = t_watch.add_thread()
             print(id)
             main_driver_loop = threading.Thread(target=run, args=(
-                network, t_watch, id, queue_for_rov, gui_parent_pipe, frame_parent_pipe), daemon=True)
+                network, t_watch, id, queue_for_rov, gui_parent_pipe), daemon=True)
             main_driver_loop.start()
+
+
 
         if run_get_controllerdata:
             id = t_watch.add_thread()
@@ -548,8 +548,11 @@ if __name__ == "__main__":
                 args=(gui_child_pipe, queue_for_rov, t_watch, id),
                 daemon=True,
             )  # should recieve commands from the gui
+            print("before start")
             gui_loop.start()
             print("gui started")
+
+
 
         if run_send_fake_sensordata:
             id = t_watch.add_thread()
