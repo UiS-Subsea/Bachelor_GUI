@@ -33,6 +33,12 @@ Y_AXIS = 0
 Z_AXIS = 6
 ROTATION_AXIS = 2
 
+FRONT_LIGHT_ID = 98
+BOTTOM_LIGHT_ID = 99
+
+front_light_intensity = 0
+bottom_light_intensity = 0
+
 
 ID_DIRECTIONCOMMAND_PARAMETERS = 71
 ID_DIRECTIONCOMMAND = 70
@@ -460,27 +466,51 @@ class Rov_state:
     #     self.packets_to_send.append(
     #         [99, [bottom_light_byte0, bottom_light_byte1]])
 
-    def light_value_forward(self, front_light_intensity: int, front_light_is_on: bool):
-        self.front_light_intensity = front_light_intensity
-        self.front_light_is_on = front_light_is_on
+    # def top_light_on(self, top_light_on: bool):
 
-        front_light_byte0 = (front_light_is_on << 1) | 1
-        front_light_byte1 = self.front_light_intensity
+    # def light_value_forward(self, front_light_intensity: int, front_light_is_on: bool):
+    #     self.front_light_intensity = front_light_intensity
+    #     self.front_light_is_on = front_light_is_on
 
-        self.packets_to_send.append(
-            [98, [front_light_byte0, front_light_byte1]])
+    #     front_light_byte0 = (front_light_is_on << 1) | 1
+    #     front_light_byte1 = self.front_light_intensity
+
+    #     self.packets_to_send.append(
+    #         [98, [front_light_byte0, front_light_byte1]])
+    #     print(self.packets_to_send)
+
+    # def light_value_downward(self, bottom_light_intensity: int, bottom_light_is_on: bool):
+    #     self.bottom_light_intensity = bottom_light_intensity
+    #     self.bottom_light_is_on = bottom_light_is_on
+
+    #     bottom_light_byte0 = (bottom_light_is_on << 1) | 1
+    #     bottom_light_byte1 = self.bottom_light_intensity
+
+    #     self.packets_to_send.append(
+    #         [99, [bottom_light_byte0, bottom_light_byte1]])
+    #     print(self.packets_to_send)
+
+    def set_light_intensity(self, light_id: int, intensity: int, is_on: bool):
+
+        byte0 = (int(is_on) << 1) | 1
+        byte1 = intensity
+        packet = [light_id, [byte0, byte1]]
+        self.packets_to_send.append(packet)
         print(self.packets_to_send)
 
-    def light_value_downward(self, bottom_light_intensity: int, bottom_light_is_on: bool):
-        self.bottom_light_intensity = bottom_light_intensity
-        self.bottom_light_is_on = bottom_light_is_on
+    def set_top_light_on(intensity: int):
+        Rov_state.set_light_intensity(FRONT_LIGHT_ID, intensity, True)
 
-        bottom_light_byte0 = (bottom_light_is_on << 1) | 1
-        bottom_light_byte1 = self.bottom_light_intensity
+    def set_bottom_light_on(intensity: int):
+        Rov_state.set_light_intensity(BOTTOM_LIGHT_ID, intensity, True)
 
-        self.packets_to_send.append(
-            [99, [bottom_light_byte0, bottom_light_byte1]])
-        print(self.packets_to_send)
+    def set_front_light_dimming(intensity: int):
+        Rov_state.set_light_intensity(
+            FRONT_LIGHT_ID, intensity, front_light_intensity > 0)
+
+    def set_bottom_light_dimming(intensity: int):
+        Rov_state.set_light_intensity(
+            BOTTOM_LIGHT_ID, intensity, bottom_light_intensity > 0)
 
     def build_rov_packet(self):
         if self.data == {}:

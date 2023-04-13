@@ -84,10 +84,10 @@ class Window(QMainWindow):
         self.btnRecord.clicked.connect(lambda: self.exec.record())
 
         # Lys
-#        self.slider_lys_forward.valueChanged.connect(
-#            lambda: self.send_current_light_intensity)
-#        self.slider_lys_down.valueChanged.connect(
-#            lambda: self.send_current_light_intensity)
+        self.slider_lys_forward.valueChanged.connect(
+            lambda: self.send_current_light_intensity)
+        self.slider_lys_down.valueChanged.connect(
+            lambda: self.send_current_light_intensity)
 
 #        self.toggle_frontlys.stateChanged.connect(lambda: Rov_state.current_ligth_intensity)
 #        self.toggle_havbunnslys.stateChanged.connect(self.send_current_ligth_intensity)
