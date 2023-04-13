@@ -7,7 +7,7 @@ from PyQt5.QtCore import QUrl
 import sys
 import threading
 #from main import Vinkeldata
-
+from main import Rov_state
 from . import guiFunctions as f
 from Thread_info import Threadwatcher
 import time
@@ -57,6 +57,8 @@ class Window(QMainWindow):
         self.exec = ExecutionClass(queue)
         self.camera = CameraClass()
         self.w = None  # SecondWindow() 
+        self.gir_verdier = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+
 
     # Buttons
     def show_new_window(self, checked):
@@ -102,32 +104,60 @@ class Window(QMainWindow):
         self.btnNullpunktVinkler.clicked.connect(
             lambda: f.nullpunktVinkler(self))
 
+    # def receive_sensordata(
+    #     self, conn
+    # ):  # conn is a pipe connection that only receives data
+    #     self.communicate = (
+    #         Communicate()
+    #     )  # Create a new instance of the class Communicate
+    #     self.communicate.data_signal.connect(
+    #         self.decideGuiUpdate
+    #     )  # Connect the signal to the function that decides what to do with the sensordata
+    #     while self.t_watch.should_run(
+    #         self.id
+    #     ):  # While the threadwatcher says that the thread should run
+    #         #print("Waiting for sensordata")
+    #         data_is_ready = conn.recv()  # Wait for sensordata
+    #         if data_is_ready:
+    #             sensordata: dict = (conn.recv())  # "sensordata" is a dictionary with all the sensordata
+    #             self.communicate.data_signal.emit(sensordata)  # Emit sensordata to the gui
+    #         else:
+    #             time.sleep(0.15)  # Sleep for 0.15 seconds
+    #     print("received")
+    #     exit(0)
+    
     def receive_sensordata(
-        self, conn
-    ):  # conn is a pipe connection that only receives data
-        self.communicate = (
-            Communicate()
-        )  # Create a new instance of the class Communicate
-        self.communicate.data_signal.connect(
-            self.decideGuiUpdate
-        )  # Connect the signal to the function that decides what to do with the sensordata
-        while self.t_watch.should_run(
-            self.id
-        ):  # While the threadwatcher says that the thread should run
-            #print("Waiting for sensordata")
-            data_is_ready = conn.recv()  # Wait for sensordata
-            if data_is_ready:
-                sensordata: dict = (conn.recv())  # "sensordata" is a dictionary with all the sensordata
-                self.communicate.data_signal.emit(sensordata)  # Emit sensordata to the gui
-            else:
-                time.sleep(0.15)  # Sleep for 0.15 seconds
-        print("received")
-        exit(0)
+            self, conn
+        ):  # conn is a pipe connection that only receives data
+            self.communicate = (
+                Communicate()
+            )  # Create a new instance of the class Communicate
+            self.communicate.data_signal.connect(
+                self.decide_gui_update
+            )  # Connect the signal to the function that decides what to do with the sensordata
+            while self.t_watch.should_run(
+                self.id
+            ):  # While the threadwatcher says that the thread should run
+                print("Waiting for sensordata")
+                data_is_ready = conn.recv()  # Wait for sensordata
+                # if self.regulering_status_wait_counter > 0: #Wait for regulering_status to be sent
+                #    self.regulering_status_wait_counter -= 1 #Decrease counter
+                if data_is_ready:
+                    sensordata: dict = (
+                        conn.recv()
+                    )  # "sensordata" is a dictionary with all the sensordata
+                    self.communicate.data_signal.emit(
+                        sensordata
+                    )  # Emit sensordata to the gui
+                else:
+                    time.sleep(0.15)  # Sleep for 0.15 seconds
+            print("received")
+            exit(0)
 
     def gui_manipulator_state_update(self, sensordata):
         self.toggle_mani.setChecked(sensordata[0])
 
-    def decideGuiUpdate(self, sensordata):
+    def decide_gui_update(self, sensordata):
         self.sensor_update_function = {
             # "lekk_temp": self.gui_lekk_temp_update,
             # "thrust": self.gui_thrust_update,
@@ -140,9 +170,9 @@ class Window(QMainWindow):
             # "regulator_strom_status": self.regulator_strom_status,
             # "regulering_status": self.gui_regulering_state_update,
             # "settpunkt": self.print_data
-            VINKLER: self.guiVinkelUpdate,
-            DYBDETEMP: self.dybdeTempUpdate,
-            FEILKODE: self.guiFeilKodeUpdate,
+            '138': self.guiVinkelUpdate,
+            #"139": self.dybdeTempUpdate,
+            #"138": self.guiFeilKodeUpdate,
 
         }
         for key in sensordata.keys():
@@ -203,28 +233,29 @@ class Window(QMainWindow):
         labelTrykkAlarm: QLabel = self.labelTrykkAlarm
         gradient =("background-color: #444444; color: #FF0000; border-radius: 10px;")
 
+        IMUAlarm= ""
         #Sjekker om det er feil i sensordataene
         for i in range (len(sensordata[0])):
             if sensordata[0][i] == True:
-                print(imuErrors[i])
+                #print(imuErrors[i])
                 labelIMUAlarm.setText(imuErrors[i])
                 labelIMUAlarm.setStyleSheet(gradient)
                 
         for i in range (len(sensordata[1])):
             if sensordata[1][i] == True:
-                print(tempErrors[i])
+                #print(tempErrors[i])
                 labelTempAlarm.setText(tempErrors[i])
                 labelTempAlarm.setStyleSheet(gradient)
 
         for i in range (len(sensordata[2])):
             if sensordata[2][i] == True:
-                print(trykkErrors[i])
+                #print(trykkErrors[i])
                 labelTrykkAlarm.setText(trykkErrors[i])
                 labelTrykkAlarm.setStyleSheet(gradient)
 
         for i in range (len(sensordata[3])):
             if sensordata[3][i] == True:
-                print(lekkasjeErrors[i])
+                #print(lekkasjeErrors[i])
                 labelLekkasjeAlarm.setText(lekkasjeErrors[i])
                 labelLekkasjeAlarm.setStyleSheet(gradient)
                 self.play_sound()
@@ -253,14 +284,24 @@ class Window(QMainWindow):
         label: QLabel = self.labelAccel
         label.setText(str(round(sensordata[0], 2)) + " m/s^2")
 
-    def guiVinkelUpdate(self, sensordata):
-        labelRull: QLabel = self.labelRull
-        labelStamp: QLabel = self.labelStamp
-        labelGir: QLabel = self.labelGir
+    # def guiVinkelUpdate(self, sensordata):
+    #     labelRull: QLabel = self.labelRull
+    #     labelStamp: QLabel = self.labelStamp
+    #     labelGir: QLabel = self.labelGir
 
-        labelRull.setText(str(round(sensordata[0], 2)) + "°")
-        labelStamp.setText(str(round(sensordata[2], 2)) + "°")
-        labelGir.setText(str(round(sensordata[4], 2)) + "°")
+    #     labelRull.setText(str(round(sensordata[0], 2)) + "°")
+    #     labelStamp.setText(str(round(sensordata[2], 2)) + "°")
+    #     labelGir.setText(str(round(sensordata[4], 2)) + "°")
+    
+    def guiVinkelUpdate(self,sensordata):
+        vinkel_liste:list[QLabel] = [
+            self.labelRull,
+            self.labelStamp,
+            self.labelGir
+        ]
+        for index, label in enumerate(vinkel_liste):
+            label.setText(str(round(sensordata[index]/1000,2)) + "°")
+
 
     def gui_watt_update(self, sensordata):
         effekt_liste: list[QLabel] = [
