@@ -23,7 +23,8 @@ MANIPULATOR_GRAB_RELEASE = 6
 
 
 VINKLER = "138"  # 0=roll, 2=stamp, 4=gir
-DYBDETEMP = "139" # 0=dybde, 2=vanntemp, 3=vanntemp msb, 4=sensorkorttemp, 5=sensorkorttemp msb
+# 0=dybde, 2=vanntemp, 3=vanntemp msb, 4=sensorkorttemp, 5=sensorkorttemp msb
+DYBDETEMP = "139"
 FEILKODE = "140"  # 0=IMU Error, 1=Temp Error, 2=Trykk Error, 3=Lekkasje
 
 
@@ -62,11 +63,11 @@ def send_fake_sensordata(t_watch: Threadwatcher, gui_pipe: multiprocessing.Pipe)
     dybde_list = [num for num in range(50, 20000)]
     accel_list = [num for num in range(-100, 101)]
     #feilkode_list = [num for num in range(0, 1)]
-    imuErrors     = [True, False, False, False, False, False, False, False]
-    tempErrors    = [True, False, False, False]
-    pressureErrors= [True, False, False, False]
-    lekageAlarms  = [True, False, False, False]
-    
+    imuErrors = [True, False, False, False, False, False, False, False]
+    tempErrors = [True, False, False, False]
+    pressureErrors = [True, False, False, False]
+    lekageAlarms = [True, False, False, False]
+
     count = -1
     sensordata = {}
     while t_watch.should_run(0):
@@ -88,7 +89,7 @@ def send_fake_sensordata(t_watch: Threadwatcher, gui_pipe: multiprocessing.Pipe)
             vinkel_list[(0 + count) % 201],
             vinkel_list[(0 + count) % 201],
         ]
-        sensordata[FEILKODE]= [
+        sensordata[FEILKODE] = [
             imuErrors,
             tempErrors,
             pressureErrors,
@@ -125,7 +126,9 @@ def send_fake_sensordata(t_watch: Threadwatcher, gui_pipe: multiprocessing.Pipe)
             accel_list[(0 + count) % 201],
         ]
         gui_pipe.send(sensordata)
+        print(sensordata)
         time.sleep(0.5)
+
 
 class Rov_state:
     def __init__(self, queue, network_handler, gui_pipe, t_watch: Threadwatcher) -> None:
@@ -169,8 +172,9 @@ class Rov_state:
     def send_sensordata_to_gui(self, data):
         # Sends sensordata to the gui
         print("Enter into send_sensordata_to_gui function")
-        if self.sensordata == None:
-            print(f"Data did not arrive{data}")
+        # if self.sensordata == None:
+        #    print(f"Data did not arrive{data}")
+
         self.gui_pipe.send(data)
 
     def sending_startup_ids(self):
@@ -494,7 +498,6 @@ class Rov_state:
     #     data = [x_akse, y-akse, z-akse, rotasjon,0,0,0,0]
     #     self.packets_to_send.append([40, data])
 
-
     def build_manipulator_packet(self):
         # Kan også endre til to indexer i data listen for mani inn og ut (f.eks 0 og 1 = btn 12 og 13)
         if self.data == {}:
@@ -574,12 +577,12 @@ if __name__ == "__main__":
         global run_camera
 
         # exec = ExecutionClass()
-        
+
         # cam = Camera()
         run_camera = True
         run_gui = True
         run_craft_packet = False
-        run_network = True  # Bytt t True når du ska prøva å connecte.
+        run_network = False  # Bytt t True når du ska prøva å connecte.
         run_get_controllerdata = False
         # Sett til True om du vil sende fake sensordata til gui
         run_send_fake_sensordata = True
@@ -603,12 +606,12 @@ if __name__ == "__main__":
             print("network started")
             run_network = True
 
-            print("starting send to rov")
-            id = t_watch.add_thread()
-            print(id)
-            main_driver_loop = threading.Thread(target=run, args=(
-                network, t_watch, id, queue_for_rov, gui_parent_pipe, frame_parent_pipe), daemon=True)
-            main_driver_loop.start()
+        print("starting send to rov")
+        id = t_watch.add_thread()
+        print(id)
+        main_driver_loop = threading.Thread(target=run, args=(
+            network, t_watch, id, queue_for_rov, gui_parent_pipe, frame_parent_pipe), daemon=True)
+        main_driver_loop.start()
 
         if run_get_controllerdata:
             id = t_watch.add_thread()
