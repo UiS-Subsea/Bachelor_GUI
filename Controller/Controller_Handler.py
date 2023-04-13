@@ -3,7 +3,7 @@ import time
 import pygame
 import multiprocessing
 # from Thread_info import Threadwatcher   #For full testing with main.py
-from Thread_info import Threadwatcher  # For local testing on MAC
+from Thread_info import Threadwatcher   #For local testing on MAC
 import threading
 import os
 os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
@@ -182,10 +182,10 @@ class Controller:
             if pygame.joystick.get_count() < 1:
                 self.wait_for_controller()
 
-            # ENDRE TICK TIL 20 FOR NORMAL KJØRING
-            # ENDRE TIL MINDRE FOR Å DEBUGGE LETTERE
-            self.duration = self.clock.tick(1)
-
+            ### ENDRE TICK TIL 20 FOR NORMAL KJØRING
+            ### ENDRE TIL MINDRE FOR Å DEBUGGE LETTERE
+            self.duration = self.clock.tick(20)
+            
             # print(duration)
             for event in pygame.event.get():
                 # print("entered event check")
