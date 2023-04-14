@@ -490,7 +490,7 @@ class Rov_state:
     #         [99, [bottom_light_byte0, bottom_light_byte1]])
     #     print(self.packets_to_send)
 
-    def set_light_intensity(self, light_id: int, intensity: int, is_on: bool):
+    def set_light_intensity(self, light_id: int, intensity: int, is_on: bool = True):
 
         byte0 = (int(is_on) << 1) | 1
         byte1 = intensity
@@ -505,12 +505,10 @@ class Rov_state:
         Rov_state.set_light_intensity(BOTTOM_LIGHT_ID, intensity, True)
 
     def set_front_light_dimming(intensity: int):
-        Rov_state.set_light_intensity(
-            FRONT_LIGHT_ID, intensity, front_light_intensity > 0)
+        Rov_state.set_light_intensity(FRONT_LIGHT_ID, intensity, True)
 
     def set_bottom_light_dimming(intensity: int):
-        Rov_state.set_light_intensity(
-            BOTTOM_LIGHT_ID, intensity, bottom_light_intensity > 0)
+        Rov_state.set_light_intensity(BOTTOM_LIGHT_ID, intensity, True)
 
     def build_rov_packet(self):
         if self.data == {}:
@@ -614,7 +612,7 @@ if __name__ == "__main__":
         run_gui = True
         run_craft_packet = True
         run_network = False  # Bytt t True når du ska prøva å connecte.
-        run_get_controllerdata = True
+        run_get_controllerdata = False
         # Sett til True om du vil sende fake sensordata til gui
         run_send_fake_sensordata = False
 
