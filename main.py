@@ -66,23 +66,23 @@ def send_fake_sensordata(t_watch: Threadwatcher, gui_pipe: multiprocessing.Pipe)
     sensordata = {}
     while t_watch.should_run(0):
         count += 1
-        # sensordata[DYBDETEMP] = [
-        #     dybde_list[(0 + count) % 201],
-        #     dybde_list[(10 + count) % 201],
-        #     dybde_list[(20 + count) % 201],
-        #     dybde_list[(30 + count) % 201],
-        #     dybde_list[(40 + count) % 201],
-        #     dybde_list[(50 + count) % 201],
-        #     dybde_list[(60 + count) % 201],
-        # ]
-        # sensordata[VINKLER] = [
-        #     vinkel_list[(0 + count) % 201],
-        #     vinkel_list[(0 + count) % 201],
-        #     vinkel_list[(45 + count) % 201],
-        #     vinkel_list[(90 + count) % 201],
-        #     vinkel_list[(0 + count) % 201],
-        #     vinkel_list[(0 + count) % 201],
-        # ]
+        sensordata['138'] = [
+            dybde_list[(0 + count) % 201],
+            dybde_list[(10 + count) % 201],
+            dybde_list[(20 + count) % 201],
+            dybde_list[(30 + count) % 201],
+            dybde_list[(40 + count) % 201],
+            dybde_list[(50 + count) % 201],
+            dybde_list[(60 + count) % 201],
+        ]
+        sensordata['139'] = [
+            vinkel_list[(0 + count) % 201],
+            vinkel_list[(0 + count) % 201],
+            vinkel_list[(45 + count) % 201],
+            vinkel_list[(90 + count) % 201],
+            vinkel_list[(0 + count) % 201],
+            vinkel_list[(0 + count) % 201],
+        ]
         # sensordata[FEILKODE]= [
         #     imuErrors,
         #     tempErrors,
@@ -158,7 +158,7 @@ class Rov_state:
 
         self.packets_to_send = []
         self.valid_gui_commands = [
-            '139', '138', "accel", "gyro", "time", "manipulator", "power_consumption"]
+            '138', '139']
 
     def update(self):
         pass
@@ -600,7 +600,7 @@ if __name__ == "__main__":
         run_camera = False
         run_gui = True
         run_craft_packet = False
-        run_network = True  # Bytt t True når du ska prøva å connecte.
+        run_network = True # Bytt t True når du ska prøva å connecte.
         run_get_controllerdata = False
         # Sett til True om du vil sende fake sensordata til gui
         run_send_fake_sensordata = False

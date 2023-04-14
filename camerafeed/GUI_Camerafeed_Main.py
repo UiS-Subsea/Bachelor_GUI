@@ -118,7 +118,7 @@ class ExecutionClass:
         self.Camera = CameraClass()
         self.counter = 0
         self.done = False
-        self.Camera.start()
+        # self.Camera.start()
         self.driving_queue = driving_queue
 
     def update_down(self):

@@ -195,15 +195,15 @@ class Window(QMainWindow):
             if key in self.sensor_update_function:
                 self.sensor_update_function[key](sensordata[key])
 
-    def play_sound(self):
-        if self.player.state() == QMediaPlayer.PlayingState:
-            # If the player is still playing, wait until the playback is finished
-            self.player.stateChanged.connect(self.on_player_state_changed)
-        else:
-            # Otherwise, start playing the new sound
-            self.player.setMedia(QMediaContents(
-                QUrl.fromLocalFile(self.sound_file)))
-            self.player.play()
+    # def play_sound(self):
+    #     if self.player.state() == QMediaPlayer.PlayingState:
+    #         # If the player is still playing, wait until the playback is finished
+    #         self.player.stateChanged.connect(self.on_player_state_changed)
+    #     else:
+    #         # Otherwise, start playing the new sound
+    #         self.player.setMedia(QMediaContents(
+    #             QUrl.fromLocalFile(self.sound_file)))
+    #         self.player.play()
 
     # def send_current_light_intensity(self):
     #     front_light_is_on: bool = False
@@ -294,24 +294,24 @@ class Window(QMainWindow):
             labelLekkasjeAlarm.setStyleSheet("color: red")
             # self.play_sound()
 
-    def dybdeTempUpdate(self, sensordata):
-        labelDybde: QLabel = self.labelDybde
-        labelTempVann: QLabel = self.labelTempVann
-        labelTempVannMSB: QLabel = self.labelTempVannMSB
-        labelTempSensorKort: QLabel = self.labelTempSensorkort
-        labelTempSensorKortMSB: QLabel = self.labelTempSensorkortMSB
-        labelSnittTemp: QLabel = self.labelSnittTemp
+    # def dybdeTempUpdate(self, sensordata):
+    #     labelDybde: QLabel = self.labelDybde
+    #     labelTempVann: QLabel = self.labelTempVann
+    #     #labelTempVannMSB: QLabel = self.labelTempVannMSB
+    #     labelTempSensorKort: QLabel = self.labelTempSensorkort
+    #     #labelTempSensorKortMSB: QLabel = self.labelTempSensorkortMSB
+    #     #labelSnittTemp: QLabel = self.labelSnittTemp
 
-        labelDybde.setText(str(round(sensordata[0], 2)) + " m")
+    #     labelDybde.setText(str(round(sensordata[0], 2)) + " m")
 
-        labelTempVann.setText(str(round(sensordata[1], 2)) + " °C")
-        if sensordata[1] > 50:
-            labelTempVann.setStyleSheet("color: red")
-        #labelTempVannMSB.setText(str(round(sensordata[2], 2)) + " °C")
-        labelTempSensorKort.setText(str(round(sensordata[2], 2)) + " °C")
-        #labelTempSensorKortMSB.setText(str(round(sensordata[4], 2)) + " °C")
-        snittTemp = (sensordata[0]+sensordata[1]+sensordata[2])/3
-        labelSnittTemp.setText(str(round(snittTemp, 2)) + " °C")
+    #     labelTempVann.setText(str(round(sensordata[1], 2)) + " °C")
+    #     #if sensordata[1] > 50:
+    #     #    labelTempVann.setStyleSheet("color: red")
+    #     #labelTempVannMSB.setText(str(round(sensordata[2], 2)) + " °C")
+    #     labelTempSensorKort.setText(str(round(sensordata[2], 2)) + " °C")
+    #     #labelTempSensorKortMSB.setText(str(round(sensordata[4], 2)) + " °C")
+    #     #snittTemp = (sensordata[0]+sensordata[1]+sensordata[2])/3
+    #     #labelSnittTemp.setText(str(round(snittTemp, 2)) + " °C")
 
     def guiAccelUpdate(self, sensordata):
         label: QLabel = self.labelAccel
@@ -320,11 +320,11 @@ class Window(QMainWindow):
     # def guiVinkelUpdate(self, sensordata):
     #     labelRull: QLabel = self.labelRull
     #     labelStamp: QLabel = self.labelStamp
-    #     labelGir: QLabel = self.labelGir
+    #     #labelGir: QLabel = self.labelGir
 
     #     labelRull.setText(str(round(sensordata[0], 2)) + "°")
-    #     labelStamp.setText(str(round(sensordata[2], 2)) + "°")
-    #     labelGir.setText(str(round(sensordata[4], 2)) + "°")
+    #     labelStamp.setText(str(round(sensordata[1], 2)) + "°")
+    #     #labelGir.setText(str(round(sensordata[4], 2)) + "°")
 
     def guiVinkelUpdate(self, sensordata):
         vinkel_liste: list[QLabel] = [
@@ -334,6 +334,13 @@ class Window(QMainWindow):
         ]
         for index, label in enumerate(vinkel_liste):
             label.setText(str(round(sensordata[index]/1000, 2)) + "°")
+            QApplication.processEvents()
+            
+    def dybdeTempUpdate(self, sensordata):
+        temp_liste: list[QLabel] = [self.labelDybde, self.labelTempVann, self.labelTempSensorkort]
+        for idx, label in enumerate(temp_liste):
+            QApplication.processEvents()
+            label.setText(str(round(sensordata[idx], 2)) + "°")
 
     def gui_watt_update(self, sensordata):
         effekt_liste: list[QLabel] = [
