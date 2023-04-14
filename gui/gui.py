@@ -29,7 +29,6 @@ class Window(QMainWindow):
         self,
         pipe_conn_only_rcv,
         queue_for_rov: multiprocessing.Queue,
-        queue_for_cam: multiprocessing.Queue,
         t_watch: Threadwatcher,
         id: int,
         parent=None,
@@ -57,7 +56,7 @@ class Window(QMainWindow):
         )
         self.receive.start()
 
-        self.exec = ExecutionClass(queue)
+        self.exec = ExecutionClass(queue_for_rov)
         self.camera = CameraClass()
         self.w = None  # SecondWindow()
         self.gir_verdier = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -188,7 +187,7 @@ class Window(QMainWindow):
             # "regulering_status": self.gui_regulering_state_update,
             # "settpunkt": self.print_data
             '138': self.guiVinkelUpdate,
-            # "139": self.dybdeTempUpdate,
+            "139": self.dybdeTempUpdate,
             # "138": self.guiFeilKodeUpdate,
 
         }
@@ -308,10 +307,10 @@ class Window(QMainWindow):
         labelTempVann.setText(str(round(sensordata[1], 2)) + " °C")
         if sensordata[1] > 50:
             labelTempVann.setStyleSheet("color: red")
-        labelTempVannMSB.setText(str(round(sensordata[2], 2)) + " °C")
-        labelTempSensorKort.setText(str(round(sensordata[3], 2)) + " °C")
-        labelTempSensorKortMSB.setText(str(round(sensordata[4], 2)) + " °C")
-        snittTemp = (sensordata[1]+sensordata[2]+sensordata[3]+sensordata[4])/4
+        #labelTempVannMSB.setText(str(round(sensordata[2], 2)) + " °C")
+        labelTempSensorKort.setText(str(round(sensordata[2], 2)) + " °C")
+        #labelTempSensorKortMSB.setText(str(round(sensordata[4], 2)) + " °C")
+        snittTemp = (sensordata[0]+sensordata[1]+sensordata[2])/3
         labelSnittTemp.setText(str(round(snittTemp, 2)) + " °C")
 
     def guiAccelUpdate(self, sensordata):
@@ -411,7 +410,7 @@ def run(conn, queue_for_rov, t_watch: Threadwatcher, id):
     )  # Create an instance of QtWidgets.QApplication
 
     # Create an instance of our class
-    win = Window(conn, queue_for_rov, queue_for_cam, t_watch, id)
+    win = Window(conn, queue_for_rov, t_watch, id)
     GLOBAL_STATE = False
     win.show()  # Show the form
 

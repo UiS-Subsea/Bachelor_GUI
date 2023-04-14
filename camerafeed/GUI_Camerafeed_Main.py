@@ -218,7 +218,6 @@ class ExecutionClass:
             self.done = True
 
         while not self.done:
-            self.update()
             self.show(self.frame.copy(), "Recording...")
             self.Camera.record_video(self.frame)
             QApplication.processEvents()

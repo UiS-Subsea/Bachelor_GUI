@@ -158,7 +158,7 @@ class Rov_state:
 
         self.packets_to_send = []
         self.valid_gui_commands = [
-            "139", "138", "accel", "gyro", "time", "manipulator", "power_consumption"]
+            '139', '138', "accel", "gyro", "time", "manipulator", "power_consumption"]
 
     def update(self):
         pass
@@ -645,7 +645,7 @@ if __name__ == "__main__":
             id = t_watch.add_thread()
             gui_loop = Process(
                 target=gui.run,
-                args=(gui_child_pipe, queue_for_rov, queue_for_cam , t_watch, id),
+                args=(gui_child_pipe, queue_for_rov, t_watch, id),
                 daemon=True,
             )  # should recieve commands from the gui
             print("before start")
