@@ -21,10 +21,9 @@ MANIPULATOR_TILT = 3
 MANIPULATOR_GRAB_RELEASE = 6
 
 
-VINKLER = "138"  # 0=roll, 2=stamp, 4=gir
-# 0=dybde, 2=vanntemp, 3=vanntemp msb, 4=sensorkorttemp, 5=sensorkorttemp msb
-DYBDETEMP = "139"
-FEILKODE = "140"  # 0=IMU Error, 1=Temp Error, 2=Trykk Error, 3=Lekkasje
+# VINKLER = "138"  # 0=roll, 1=stamp, 2=gir?
+# DYBDETEMP = "139" # 0=dybde, 2=vanntemp, 3=vanntemp msb, 4=sensorkorttemp, 5=sensorkorttemp msb
+# FEILKODE = "140"  # 0=IMU Error, 1=Temp Error, 2=Trykk Error, 3=Lekkasje
 
 
 # ROV
@@ -32,6 +31,12 @@ X_AXIS = 1
 Y_AXIS = 0
 Z_AXIS = 6
 ROTATION_AXIS = 2
+
+FRONT_LIGHT_ID = 98
+BOTTOM_LIGHT_ID = 99
+
+front_light_intensity = 0
+bottom_light_intensity = 0
 
 
 ID_DIRECTIONCOMMAND_PARAMETERS = 71
@@ -51,35 +56,39 @@ def send_fake_sensordata(t_watch: Threadwatcher, gui_pipe: multiprocessing.Pipe)
     vinkel_list = [num for num in range(-360, 360)]
     dybde_list = [num for num in range(50, 20000)]
     accel_list = [num for num in range(-100, 101)]
-    feilkode_list = [num for num in range(0, 1)]
+    #feilkode_list = [num for num in range(0, 1)]
+    imuErrors = [True, False, False, False, False, False, False, False]
+    tempErrors = [True, False, False, False]
+    pressureErrors = [True, False, False, False]
+    lekageAlarms = [True, False, False, False]
+
     count = -1
     sensordata = {}
     while t_watch.should_run(0):
         count += 1
-        sensordata[DYBDETEMP] = [
-            dybde_list[(0 + count) % 201],
-            dybde_list[(10 + count) % 201],
-            dybde_list[(20 + count) % 201],
-            dybde_list[(30 + count) % 201],
-            dybde_list[(40 + count) % 201],
-            dybde_list[(50 + count) % 201],
-            dybde_list[(60 + count) % 201],
-        ]
-        sensordata[VINKLER] = [
-            vinkel_list[(0 + count) % 201],
-            vinkel_list[(0 + count) % 201],
-            vinkel_list[(45 + count) % 201],
-            vinkel_list[(90 + count) % 201],
-            vinkel_list[(0 + count) % 201],
-            vinkel_list[(0 + count) % 201],
-        ]
-        sensordata[FEILKODE] = [
-            0,
-            0,
-            0,
-            1,
-            vinkel_list[(0 + count) % 201],
-        ]
+        # sensordata[DYBDETEMP] = [
+        #     dybde_list[(0 + count) % 201],
+        #     dybde_list[(10 + count) % 201],
+        #     dybde_list[(20 + count) % 201],
+        #     dybde_list[(30 + count) % 201],
+        #     dybde_list[(40 + count) % 201],
+        #     dybde_list[(50 + count) % 201],
+        #     dybde_list[(60 + count) % 201],
+        # ]
+        # sensordata[VINKLER] = [
+        #     vinkel_list[(0 + count) % 201],
+        #     vinkel_list[(0 + count) % 201],
+        #     vinkel_list[(45 + count) % 201],
+        #     vinkel_list[(90 + count) % 201],
+        #     vinkel_list[(0 + count) % 201],
+        #     vinkel_list[(0 + count) % 201],
+        # ]
+        # sensordata[FEILKODE]= [
+        #     imuErrors,
+        #     tempErrors,
+        #     pressureErrors,
+        #     lekageAlarms,
+        # ]
 
         sensordata["lekk_temp"] = [
             False,
@@ -111,6 +120,7 @@ def send_fake_sensordata(t_watch: Threadwatcher, gui_pipe: multiprocessing.Pipe)
             accel_list[(0 + count) % 201],
         ]
         gui_pipe.send(sensordata)
+        print(sensordata)
         time.sleep(0.5)
 
 
@@ -156,8 +166,9 @@ class Rov_state:
     def send_sensordata_to_gui(self, data):
         # Sends sensordata to the gui
         print("Enter into send_sensordata_to_gui function")
-        if self.sensordata == None:
-            print(f"Data did not arrive{data}")
+        # if self.sensordata == None:
+        #    print(f"Data did not arrive{data}")
+
         self.gui_pipe.send(data)
 
     def sending_startup_ids(self):
@@ -181,7 +192,7 @@ class Rov_state:
                 if data == b"" or data is None:
                     continue
                 else:
-                    print(data)
+                    # print(data)
                     if data is None:
                         continue
                     decoded, incomplete_packet = Rov_state.decode_packets(
@@ -189,7 +200,7 @@ class Rov_state:
                 if decoded == []:
                     continue
                 for message in decoded:
-                    print(message)
+                    # print(message)
                     self.handle_data_from_rov(message)
 
                     # potentially for the future to get information to the GUI : send_to_gui(Rov_state, message)
@@ -339,18 +350,18 @@ class Rov_state:
     #     self.packets_to_send.append(97, fuse_reset_signal)
 
     def reset_5V_fuse2(self):
-        reset_fuse_byte = [0] * 8
-        reset_fuse_byte[0] = 1
-        print("Resetting 5V Fuse")
-
-        self.packets_to_send.append([97, reset_fuse_byte])
-        print(f"Pakkene som blir sendt er: {self.packets_to_send}")
-
-    def reset_12V_thruster_fuse(self):
-        """reset_fuse_on_power_supply creates and adds
+        """reset_5V_fuse creates and adds
         packets for resetting a fuse on the ROV"""
         reset_fuse_byte = [0] * 8
-        reset_fuse_byte[0] = 1
+        reset_fuse_byte[0] |= (1 << 0)  # reset bit 0
+        print("Resetting 5V Fuse")
+        self.packets_to_send.append([97, reset_fuse_byte])
+
+    def reset_12V_thruster_fuse(self):
+        """reset_12V_thruster_fuse creates and adds
+        packets for resetting a fuse on the ROV"""
+        reset_fuse_byte = [0] * 8
+        reset_fuse_byte[0] |= (1 << 0)  # reset bit 0
         print("Resetting 12V Thruster Fuse")
         self.packets_to_send.append([98, reset_fuse_byte])
 
@@ -358,9 +369,30 @@ class Rov_state:
         """reset_12V_manipulator_fuse creates and adds
         packets for resetting a fuse on the ROV"""
         reset_fuse_byte = [0] * 8
-        reset_fuse_byte[0] = 1
+        reset_fuse_byte[0] |= (1 << 0)  # reset bit 0
         print("Resetting 12V Manipulator Fuse")
         self.packets_to_send.append([99, reset_fuse_byte])
+
+    def reset_depth(self):
+        reset_depth_byte = [0] * 8
+        reset_depth_byte[0] |= (1 << 0)  # reset bit 0
+        print("Resetting Depth")
+        self.packets_to_send.append([66, reset_depth_byte])
+        print(self.packets_to_send)
+
+    def reset_angles(self):
+        reset_angles_byte = [0] * 8
+        reset_angles_byte[0] |= (1 << 1)  # reset bit 1
+        print("Resetting Angles")
+        self.packets_to_send.append([66, reset_angles_byte])
+        print(self.packets_to_send)
+
+    def calibrate_IMU(self):
+        calibrate_IMU_byte = [0] * 8
+        calibrate_IMU_byte[0] |= (1 << 2)  # reset bit 2
+        print("Kalibrerer IMU")
+        self.packets_to_send.append([66, calibrate_IMU_byte])
+        print(self.packets_to_send)
 
     # def lights_on_off(self, light_sensitivity_forward: int, light_sensitivity_downward: int, light_on_forward: bool, light_off_forward: bool):
     #     """Setting up variables for corresponding values
@@ -423,25 +455,49 @@ class Rov_state:
     #     self.packets_to_send.append(
     #         [99, [bottom_light_byte0, bottom_light_byte1]])
 
-    def light_value_forward(self, front_light_intensity: int, front_light_is_on: bool):
-        self.front_light_intensity = front_light_intensity
-        self.front_light_is_on = front_light_is_on
+    # def top_light_on(self, top_light_on: bool):
 
-        front_light_byte0 = (front_light_is_on << 1) | 1
-        front_light_byte1 = self.front_light_intensity
+    # def light_value_forward(self, front_light_intensity: int, front_light_is_on: bool):
+    #     self.front_light_intensity = front_light_intensity
+    #     self.front_light_is_on = front_light_is_on
 
-        self.packets_to_send.append(
-            [98, [front_light_byte0, front_light_byte1]])
+    #     front_light_byte0 = (front_light_is_on << 1) | 1
+    #     front_light_byte1 = self.front_light_intensity
 
-    def light_value_downward(self, bottom_light_intensity: int, bottom_light_is_on: bool):
-        self.bottom_light_intensity = bottom_light_intensity
-        self.bottom_light_is_on = bottom_light_is_on
+    #     self.packets_to_send.append(
+    #         [98, [front_light_byte0, front_light_byte1]])
+    #     print(self.packets_to_send)
 
-        bottom_light_byte0 = (bottom_light_is_on << 1) | 1
-        bottom_light_byte1 = self.bottom_light_intensity
+    # def light_value_downward(self, bottom_light_intensity: int, bottom_light_is_on: bool):
+    #     self.bottom_light_intensity = bottom_light_intensity
+    #     self.bottom_light_is_on = bottom_light_is_on
 
-        self.packets_to_send.append(
-            [99, [bottom_light_byte0, bottom_light_byte1]])
+    #     bottom_light_byte0 = (bottom_light_is_on << 1) | 1
+    #     bottom_light_byte1 = self.bottom_light_intensity
+
+    #     self.packets_to_send.append(
+    #         [99, [bottom_light_byte0, bottom_light_byte1]])
+    #     print(self.packets_to_send)
+
+    def set_light_intensity(self, light_id: int, intensity: int, is_on: bool = True):
+
+        byte0 = (int(is_on) << 1) | 1
+        byte1 = intensity
+        packet = [light_id, [byte0, byte1]]
+        self.packets_to_send.append(packet)
+        print(self.packets_to_send)
+
+    def set_top_light_on(intensity: int):
+        Rov_state.set_light_intensity(FRONT_LIGHT_ID, intensity, True)
+
+    def set_bottom_light_on(intensity: int):
+        Rov_state.set_light_intensity(BOTTOM_LIGHT_ID, intensity, True)
+
+    def set_front_light_dimming(intensity: int):
+        Rov_state.set_light_intensity(FRONT_LIGHT_ID, intensity, True)
+
+    def set_bottom_light_dimming(intensity: int):
+        Rov_state.set_light_intensity(BOTTOM_LIGHT_ID, intensity, True)
 
     def build_rov_packet(self):
         if self.data == {}:
@@ -453,6 +509,15 @@ class Rov_state:
         data[3] = self.data["rov_joysticks"][ROTATION_AXIS]
         self.packets_to_send.append([40, data])
         # print(self.packets_to_send)
+
+    # def get_autonom(self):
+    #     camerafeed = Camerafeed("mode")
+    #     x-akse = camerafeed.get_x-value()
+    #     y-akse = camerafeed.get_y-value()
+    #     z-akse = camerafeed.get_z-value()
+    #     rotasjon = camerafeed.get_rotation()
+    #     data = [x_akse, y-akse, z-akse, rotasjon,0,0,0,0]
+    #     self.packets_to_send.append([40, data])
 
     def build_manipulator_packet(self):
         # Kan også endre til to indexer i data listen for mani inn og ut (f.eks 0 og 1 = btn 12 og 13)
@@ -488,11 +553,13 @@ class Rov_state:
         # self.button_handling()
         self.build_rov_packet()
         self.build_manipulator_packet()
+        print(self.packets_to_send)
+
+# TODO: HER VAR TIDLIGARE frame_pipe
 
 
 def run(network_handler: Network, t_watch: Threadwatcher, id: int, queue_for_rov: multiprocessing.Queue, gui_pipe):
     print("Klarer å gå inn i run function")
-    rov_state = Rov_state(queue_for_rov, network_handler, gui_pipe, t_watch)
 
     # Komm. del
     print("run thread")
@@ -518,11 +585,6 @@ def run(network_handler: Network, t_watch: Threadwatcher, id: int, queue_for_rov
         rov_state.data = {}
 
 
-def test_gui_leak_response(gui_pipe: multiprocessing.Pipe):
-    sensordata = {"lekk_temp": [False,  False, False, -1, -1, -1]}
-    gui_pipe.send(sensordata)
-
-
 if __name__ == "__main__":
 
     try:
@@ -533,6 +595,7 @@ if __name__ == "__main__":
         global run_camera
 
         # exec = ExecutionClass()
+
         # cam = Camera()
         run_camera = False
         run_gui = True
@@ -544,7 +607,9 @@ if __name__ == "__main__":
 
         t_watch = Threadwatcher()
         queue_for_rov = multiprocessing.Queue()
-        queue_for_cam = multiprocessing.Queue()
+        # TODO: Kanskje noke her?
+        #(frame_parent_pipe, frame_chid_pipe) = Pipe()
+
         (
             gui_parent_pipe,  # Used by main process, to send/receive data to gui
             gui_child_pipe,  # Used by gui process, to send/receive data to main
@@ -554,12 +619,12 @@ if __name__ == "__main__":
         debug_all = True  # Sett til True om du vil se input fra controllers
 
         network = False
+
         if run_network:
             network = Network(is_server=False, port=6900, bind_addr="0.0.0.0",
                               connect_addr="10.0.0.2")
             print("network started")
             run_network = True
-
             print("starting send to rov")
             id = t_watch.add_thread()
             print(id)
@@ -583,14 +648,9 @@ if __name__ == "__main__":
                 args=(gui_child_pipe, queue_for_rov, queue_for_cam , t_watch, id),
                 daemon=True,
             )  # should recieve commands from the gui
+            print("before start")
             gui_loop.start()
             print("gui started")
-
-        # if run_camera:
-        #     id = t_watch.add_thread()
-        #     camera_thread = threading.Thread(target=run_camera_func, args=(
-        #         t_watch, frame_parent_pipe, id), daemon=True)
-        #     camera_thread.start()
 
         if run_send_fake_sensordata:
             id = t_watch.add_thread()
