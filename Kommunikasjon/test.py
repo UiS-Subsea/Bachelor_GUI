@@ -36,17 +36,24 @@
 #     print([ID_RESET_DEPTH, [BYTE0_INIT_FLAG]])
 
 
-def reset_depth():
+def reset_12V_manipulator_fuse():
     packets_to_send = []
-
-    calibrate_IMU_byte = [0] * 8
-    calibrate_IMU_byte[0] |= (1 << 2)  # reset bit 2
-    print("Kalibrerer IMU")
-    packets_to_send.append([66, calibrate_IMU_byte])
+    reset_fuse_byte = bytearray(8)  # Create byte array to represent 8 bytes
+    reset_fuse_byte[0] |= 1
+    # Clear other bits that might be used by other functions
+    # reset_fuse_byte[0] &= ~(1 << 1)  # Clear bit 1
+    # reset_fuse_byte[0] &= ~(1 << 2)  # Clear bit 2
+    reset_fuse_byte[0] &= ~(1 << 3)  # Clear bit 3
+    reset_fuse_byte[0] &= ~(1 << 4)  # Clear bit 4
+    reset_fuse_byte[0] &= ~(1 << 5)  # Clear bit 5
+    reset_fuse_byte[0] &= ~(1 << 6)  # Clear bit 6
+    reset_fuse_byte[0] &= ~(1 << 7)  # Clear bit 7
+    print("Resetting 12V Manipulator Fuse")
+    packets_to_send.append((99, bytes(reset_fuse_byte)))
     print(packets_to_send)
 
 
 if __name__ == "__main__":
-    reset_depth()
+    reset_12V_manipulator_fuse()
 #     s = set_zero_point_depth2()
 #     print(s)

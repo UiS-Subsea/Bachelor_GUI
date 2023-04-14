@@ -363,47 +363,86 @@ class Rov_state:
     def reset_5V_fuse2(self):
         """reset_5V_fuse creates and adds
         packets for resetting a fuse on the ROV"""
-        reset_fuse_byte = [0] * 8
-        reset_fuse_byte[0] |= (1 << 0)  # reset bit 0
-        print("Resetting 5V Fuse")
-        self.packets_to_send.append([97, reset_fuse_byte])
+        reset_fuse_byte = bytearray(
+            8)  # Create byte array to represent 8 bytes
+        reset_fuse_byte[0] |= 1
+        # Clear other bits that might be used by other functions
+        # reset_fuse_byte[0] &= ~(1 << 1)  # Clear bit 1
+        # reset_fuse_byte[0] &= ~(1 << 2)  # Clear bit 2
+        reset_fuse_byte[0] &= ~(1 << 3)  # Clear bit 3
+        reset_fuse_byte[0] &= ~(1 << 4)  # Clear bit 4
+        reset_fuse_byte[0] &= ~(1 << 5)  # Clear bit 5
+        reset_fuse_byte[0] &= ~(1 << 6)  # Clear bit 6
+        reset_fuse_byte[0] &= ~(1 << 7)  # Clear bit 7
+        print("Resetting 12V Manipulator Fuse")
+        self.packets_to_send.append((99, bytes(reset_fuse_byte)))
 
     def reset_12V_thruster_fuse(self):
         """reset_12V_thruster_fuse creates and adds
         packets for resetting a fuse on the ROV"""
-        reset_fuse_byte = [0] * 8
-        reset_fuse_byte[0] |= (1 << 0)  # reset bit 0
-        print("Resetting 12V Thruster Fuse")
-        self.packets_to_send.append([98, reset_fuse_byte])
+        reset_fuse_byte = bytearray(
+            8)  # Create byte array to represent 8 bytes
+        reset_fuse_byte[0] |= 1
+        # Clear other bits that might be used by other functions
+        # reset_fuse_byte[0] &= ~(1 << 1)  # Clear bit 1
+        # reset_fuse_byte[0] &= ~(1 << 2)  # Clear bit 2
+        reset_fuse_byte[0] &= ~(1 << 3)  # Clear bit 3
+        reset_fuse_byte[0] &= ~(1 << 4)  # Clear bit 4
+        reset_fuse_byte[0] &= ~(1 << 5)  # Clear bit 5
+        reset_fuse_byte[0] &= ~(1 << 6)  # Clear bit 6
+        reset_fuse_byte[0] &= ~(1 << 7)  # Clear bit 7
+        print("Resetting 12V Manipulator Fuse")
+        self.packets_to_send.append((98, bytes(reset_fuse_byte)))
 
     def reset_12V_manipulator_fuse(self):
-        """reset_12V_manipulator_fuse creates and adds
-        packets for resetting a fuse on the ROV"""
-        reset_fuse_byte = [0] * 8
-        reset_fuse_byte[0] |= (1 << 0)  # reset bit 0
+        # Create byte array to represent 8 bytes
+        reset_fuse_byte = bytearray(8)
+        reset_fuse_byte[0] |= 1
+        # Clear other bits that might be used by other functions
+        # reset_fuse_byte[0] &= ~(1 << 1)  # Clear bit 1
+        # reset_fuse_byte[0] &= ~(1 << 2)  # Clear bit 2
+        reset_fuse_byte[0] &= ~(1 << 3)  # Clear bit 3
+        reset_fuse_byte[0] &= ~(1 << 4)  # Clear bit 4
+        reset_fuse_byte[0] &= ~(1 << 5)  # Clear bit 5
+        reset_fuse_byte[0] &= ~(1 << 6)  # Clear bit 6
+        reset_fuse_byte[0] &= ~(1 << 7)  # Clear bit 7
         print("Resetting 12V Manipulator Fuse")
-        self.packets_to_send.append([99, reset_fuse_byte])
+        self.packets_to_send.append((99, bytes(reset_fuse_byte)))
+
+
+#    def reset_depth(self):
+#        reset_depth_byte = [0] * 8
+#        reset_depth_byte[0] |= (1 << 0)  # reset bit 0
+#        print("Resetting Depth")
+#        self.packets_to_send.append([66, reset_depth_byte])
+#        print(self.packets_to_send)
 
     def reset_depth(self):
-        reset_depth_byte = [0] * 8
-        reset_depth_byte[0] |= (1 << 0)  # reset bit 0
-        print("Resetting Depth")
-        self.packets_to_send.append([66, reset_depth_byte])
-        print(self.packets_to_send)
+        # Create byte array to represent 8 bytes
+        reset_fuse_byte = bytearray(8)
+        reset_fuse_byte[0] |= 1
+        # Clear other bits that might be used by other functions
+        # reset_fuse_byte[0] &= ~(1 << 1)  # Clear bit 1
+        # reset_fuse_byte[0] &= ~(1 << 2)  # Clear bit 2
+        # reset_fuse_byte[0] &= ~(1 << 3)  # Clear bit 3
+        reset_fuse_byte[0] &= ~(1 << 4)  # Clear bit 4
+        reset_fuse_byte[0] &= ~(1 << 5)  # Clear bit 5
+        reset_fuse_byte[0] &= ~(1 << 6)  # Clear bit 6
+        reset_fuse_byte[0] &= ~(1 << 7)  # Clear bit 7
+        print("Depth Reset")
+        self.packets_to_send.append((66, bytes(reset_fuse_byte)))
 
     def reset_angles(self):
-        reset_angles_byte = [0] * 8
-        reset_angles_byte[0] |= (1 << 1)  # reset bit 1
+        reset_angles_byte = bytearray(8)  # Create byte array for 8 bytes
+        reset_angles_byte[0] |= (1 << 1)  # Set bit 1 to 1
         print("Resetting Angles")
         self.packets_to_send.append([66, reset_angles_byte])
-        print(self.packets_to_send)
 
     def calibrate_IMU(self):
-        calibrate_IMU_byte = [0] * 8
+        calibrate_IMU_byte = bytearray(8)
         calibrate_IMU_byte[0] |= (1 << 2)  # reset bit 2
         print("Kalibrerer IMU")
         self.packets_to_send.append([66, calibrate_IMU_byte])
-        print(self.packets_to_send)
 
     # def lights_on_off(self, light_sensitivity_forward: int, light_sensitivity_downward: int, light_on_forward: bool, light_off_forward: bool):
     #     """Setting up variables for corresponding values
