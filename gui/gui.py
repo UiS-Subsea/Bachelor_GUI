@@ -3,7 +3,7 @@ import subprocess
 from PyQt5 import QtCore, QtGui, QtWidgets, Qt, uic
 from PyQt5.QtWidgets import QMainWindow, QWidget, QCheckBox, QLabel, QMessageBox
 from PyQt5.QtMultimedia import QSound, QSoundEffect, QMediaPlayer, QMediaContent
-from PyQt5.QtCore import QUrl
+from PyQt5.QtCore import QUrl, QTimer
 import sys
 import threading
 #from main import Vinkeldata
@@ -27,7 +27,7 @@ from main import *
 class Window(QMainWindow):
     def __init__(
         self,
-        pipe_conn_only_rcv,
+        gui_queue: multiprocessing.Queue,
         queue_for_rov: multiprocessing.Queue,
         t_watch: Threadwatcher,
         id: int,
@@ -40,28 +40,39 @@ class Window(QMainWindow):
         self.connectFunctions()
         self.player = QMediaPlayer()
         self.sound_file = "martinalarm.wav"
-
-        # Queue and pipe
         self.queue: multiprocessing.Queue = (
             queue_for_rov
         )
 
         # pipe_conn_only_rcv is a pipe connection that only receives data
-        self.pipe_conn_only_rcv = pipe_conn_only_rcv
+        self.gui_queue = gui_queue
         self.t_watch: Threadwatcher = t_watch  # t_watch is a threadwatcher object
         self.id = id  # id is an id that is used to identify the thread
 
-        self.receive = threading.Thread(
-            target=self.receive_sensordata, daemon=True, args=(self.pipe_conn_only_rcv,)
-        )
-        self.receive.start()
+        # self.receive = threading.Thread(
+        #     target=self.receive_sensordata, daemon=True, args=(self.pipe_conn_only_rcv,)
+        # )
+        # self.receive.start()
 
         self.exec = ExecutionClass(queue_for_rov)
         self.camera = CameraClass()
         self.w = None  # SecondWindow()
         self.gir_verdier = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        
+        self.timer = QTimer() # Create a timer
+        self.timer.timeout.connect(self.update_gui_data) # Connect timer to update_gui_data
+        self.timer.start(100) # Adjust the interval to your needs
+
+        # Queue and pipe
 
     # Buttons
+    
+    def update_gui_data(self):
+        # print("HAHAHAHAHAH", self.gui_queue.get())
+        while not self.gui_queue.empty():
+            sensordata = self.gui_queue.get()
+            # print("Received sensordata")
+            self.decide_gui_update(sensordata)
 
     def show_new_window(self, checked):
         if self.w is None:
@@ -76,7 +87,7 @@ class Window(QMainWindow):
 
         # Kjøremodus
         self.btnManuell.clicked.connect(lambda: self.exec.manual())
-        self.btnAutonom.clicked.connect(lambda: self.exec.docking())
+        self.btnAutonom.clicked.connect(lambda: self.exec.send_data_test())
         self.btnFrogCount.clicked.connect(lambda: self.exec.transect())
 
         # Kamera
@@ -141,39 +152,42 @@ class Window(QMainWindow):
     #             time.sleep(0.15)  # Sleep for 0.15 seconds
     #     print("received")
     #     exit(0)
+    
+    
 
-    def receive_sensordata(
-        self, conn
-    ):  # conn is a pipe connection that only receives data
-        self.communicate = (
-            Communicate()
-        )  # Create a new instance of the class Communicate
-        self.communicate.data_signal.connect(
-            self.decide_gui_update
-        )  # Connect the signal to the function that decides what to do with the sensordata
-        while self.t_watch.should_run(
-            self.id
-        ):  # While the threadwatcher says that the thread should run
-            # print("Waiting for sensordata")
-            data_is_ready = conn.recv()  # Wait for sensordata
-            # if self.regulering_status_wait_counter > 0: #Wait for regulering_status to be sent
-            #    self.regulering_status_wait_counter -= 1 #Decrease counter
-            if data_is_ready:
-                sensordata: dict = (
-                    conn.recv()
-                )  # "sensordata" is a dictionary with all the sensordata
-                self.communicate.data_signal.emit(
-                    sensordata
-                )  # Emit sensordata to the gui
-            else:
-                time.sleep(0.15)  # Sleep for 0.15 seconds
-        print("received")
-        exit(0)
+    # def receive_sensordata(
+    #     self, conn
+    # ):  # conn is a pipe connection that only receives data
+    #     self.communicate = (
+    #         Communicate()
+        # )  # Create a new instance of the class Communicate
+        # self.communicate.data_signal.connect(
+        #     self.decide_gui_update
+        # )  # Connect the signal to the function that decides what to do with the sensordata
+        # while self.t_watch.should_run(
+        #     self.id
+        # ):  # While the threadwatcher says that the thread should run
+        #     # print("Waiting for sensordata")
+        #     data_is_ready = conn.get()  # Wait for sensordata
+        #     # if self.regulering_status_wait_counter > 0: #Wait for regulering_status to be sent
+        #     #    self.regulering_status_wait_counter -= 1 #Decrease counter
+        #     if data_is_ready:
+        #         sensordata: dict = (
+        #             conn.recv()
+        #         )  # "sensordata" is a dictionary with all the sensordata
+        #         self.communicate.data_signal.emit(
+        #             sensordata
+        #         )  # Emit sensordata to the gui
+        #     else:
+        #         time.sleep(0.15)  # Sleep for 0.15 seconds
+        # print("received")
+        # exit(0)
 
     def gui_manipulator_state_update(self, sensordata):
         self.toggle_mani.setChecked(sensordata[0])
 
     def decide_gui_update(self, sensordata):
+        # print("Deciding with this data: ", sensordata)
         self.sensor_update_function = {
             # "lekk_temp": self.gui_lekk_temp_update,
             # "thrust": self.gui_thrust_update,
@@ -194,6 +208,16 @@ class Window(QMainWindow):
         for key in sensordata.keys():
             if key in self.sensor_update_function:
                 self.sensor_update_function[key](sensordata[key])
+                
+        #     QApplication.processEvents()
+        # keys = sensordata.keys()
+        # if '138' in keys:
+        #     self.guiVinkelUpdate(sensordata['138'])
+        # if '139' in keys:
+        #     self.dybdeTempUpdate(sensordata['139'])
+
+        
+            
 
     # def play_sound(self):
     #     if self.player.state() == QMediaPlayer.PlayingState:
@@ -334,14 +358,16 @@ class Window(QMainWindow):
         ]
         for index, label in enumerate(vinkel_liste):
             label.setText(str(round(sensordata[index]/1000, 2)) + "°")
-            QApplication.processEvents()
             
+        #QApplication.processEvents()
+        
     def dybdeTempUpdate(self, sensordata):
         temp_liste: list[QLabel] = [self.labelDybde, self.labelTempVann, self.labelTempSensorkort]
         for idx, label in enumerate(temp_liste):
-            QApplication.processEvents()
             label.setText(str(round(sensordata[idx], 2)) + "°")
 
+        #QApplication.processEvents()
+        
     def gui_watt_update(self, sensordata):
         effekt_liste: list[QLabel] = [
             self.labelEffektThrustere,
