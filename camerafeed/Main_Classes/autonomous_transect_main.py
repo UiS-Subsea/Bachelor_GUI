@@ -73,7 +73,7 @@ class AutonomousTransect:
       
         
     def find_dark_blue_contours(self):
-        low_blue_range = (70, 0, 0) #b, g, r
+        low_blue_range = (0, 0, 0) #b, g, r
         high_blue_range = (255, 60, 60)
     
         transect_pipe_mask = cv2.inRange(self.frame, low_blue_range, high_blue_range)

@@ -148,7 +148,7 @@ class Rov_state:
 
         self.packets_to_send = []
         self.valid_gui_commands = [
-            "139", "thrust", "accel", "gyro", "time", "manipulator", "power_consumption"]
+            "139", "138", "accel", "gyro", "time", "manipulator", "power_consumption"]
 
     def update(self):
         pass
@@ -537,10 +537,10 @@ if __name__ == "__main__":
         run_camera = False
         run_gui = True
         run_craft_packet = False
-        run_network = False  # Bytt t True når du ska prøva å connecte.
+        run_network = True  # Bytt t True når du ska prøva å connecte.
         run_get_controllerdata = False
         # Sett til True om du vil sende fake sensordata til gui
-        run_send_fake_sensordata = True
+        run_send_fake_sensordata = False
 
         t_watch = Threadwatcher()
         queue_for_rov = multiprocessing.Queue()
@@ -604,8 +604,8 @@ if __name__ == "__main__":
 
             
         while True:
-            print("Queue rn: ", queue_for_cam.get())
-            time.sleep(5)
+            print("Queue rn: ", queue_for_rov.get())
+            time.sleep(1)
     except KeyboardInterrupt:
         t_watch.stop_all_threads()
         print("stopped all threads")

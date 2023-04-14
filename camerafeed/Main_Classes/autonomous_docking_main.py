@@ -31,13 +31,13 @@ class AutonomousDocking:
     def __init__(self):
         self.driving_data = [40, [0, 0, 0, 0, 0, 0, 0, 0]]
         self.frame = None
-        self.draw_grouts = False
-        self.draw_grout_boxes = False
+        self.draw_grouts = True
+        self.draw_grout_boxes = True
         
     #def run(self, front_frame, down_frame):
-    def run(self, front_frame):
+    def run(self, front_frame, down_frame):
         self.frame = front_frame
-        # self.down_frame = down_frame
+        self.down_frame = down_frame
         self.update()
         self.rotation_commands()
         data = self.get_driving_data()

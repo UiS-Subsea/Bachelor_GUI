@@ -64,7 +64,7 @@ class Window(QMainWindow):
         
         # Use queue_for_rov to use the common queue!!!!
         # queue for cam is only for testing, only receives data from camerafeed funcs
-        self.cam = ExecutionClass(queue_for_cam)
+        self.cam = ExecutionClass(queue_for_rov)
         self.w = None  # SecondWindow() #
 
         # Buttons
@@ -81,7 +81,7 @@ class Window(QMainWindow):
 
         # Kjøremodus
         self.btnManuell.clicked.connect(lambda: self.cam.manual())
-        self.btnAutonom.clicked.connect(lambda: self.cam.send_data_test())
+        self.btnAutonom.clicked.connect(lambda: self.cam.docking())
         self.btnFrogCount.clicked.connect(lambda: self.cam.transect())
 
         # Sikringer
@@ -117,7 +117,7 @@ class Window(QMainWindow):
         while self.t_watch.should_run(
             self.id
         ):  # While the threadwatcher says that the thread should run
-            print("Waiting for sensordata")
+            # print("Waiting for sensordata")
             data_is_ready = conn.recv()  # Wait for sensordata
             # if self.regulering_status_wait_counter > 0: #Wait for regulering_status to be sent
             #    self.regulering_status_wait_counter -= 1 #Decrease counter
@@ -155,8 +155,8 @@ class Window(QMainWindow):
             # "regulator_strom_status": self.regulator_strom_status,
             # "regulering_status": self.gui_regulering_state_update,
             # "settpunkt": self.print_data
-            VINKLER: self.guiVinkelUpdate,
-            DYBDETEMP: self.dybdeTempUpdate,
+            "139": self.guiVinkelUpdate,
+            "138": self.dybdeTempUpdate,
             FEILKODE: self.guiFeilKodeUpdate,
 
         }
