@@ -17,6 +17,16 @@ class CameraClass:
         self.frame_stereoL = None
         self.frame_stereoR = None
         self.frame_manual = None
+        self.frame_test = None
+        
+        self.cam_down = None
+        self.cam_stereoL = None
+        self.cam_stereoR = None
+        self.cam_manip = None
+        self.cam_test = None
+        self.cam_manual = None
+        self.recording = False
+        
 
     def get_frame_down(self):
         _, self.frame_down = self.cam_down.read()
@@ -41,6 +51,11 @@ class CameraClass:
         _, self.frame_manual = self.cam_manual.read()
         
         return self.frame_manual
+    
+    def get_frame_test(self):
+        _, self.frame_test = self.cam_test.read()
+        
+        return self.frame_test
         
     def start_down_cam(self):
         print("Starting down camera")
@@ -84,6 +99,11 @@ class CameraClass:
         if self.cam_manual.isOpened():
             print("Manual camera started")
         
+    def start_test_cam(self):
+        print("Starting test camera")
+        self.cam_test = cv2.VideoCapture(0)
+        if self.cam_test.isOpened():
+            print("Test camera started")
         
     def start(self):
         # self.start_down_cam()
@@ -92,6 +112,25 @@ class CameraClass:
         # self.start_manip_cam()
         # self.start_manual_cam()
 
+    def close_all(self):
+        if self.cam_down is not None and self.cam_down.isOpened():
+            self.cam_down.release()
+            
+        if self.cam_stereoL is not None and self.cam_stereoL.isOpened():
+            self.cam_stereoL.release()
+            
+        if self.cam_stereoR is not None and self.cam_stereoR.isOpened():
+            self.cam_stereoR.release()
+            
+        if self.cam_manip is not None and self.cam_manip.isOpened():
+            self.cam_manip.release()
+            
+        if self.cam_manual is not None and self.cam_manual.isOpened():
+            self.cam_manual.release()
+            
+        if self.cam_test is not None and self.cam_test.isOpened():
+            self.cam_test.release()
+        
     def setup_video(self, name):
         self.videoresult = cv2.VideoWriter(f'camerafeed/output/{name}.avi', cv2.VideoWriter_fourcc(
             *'MJPG'), 10, (int(self.cam_manual.get(3)), int(self.cam_manual.get(4))))
@@ -136,6 +175,9 @@ class ExecutionClass:
     def update_manual(self):
         self.frame_manual = self.Camera.get_frame_manual()
 
+    def update_test_cam(self):
+        self.frame_test = self.Camera.get_frame_test()
+        
     def show(self, frame, name="frame"):
         cv2.imshow(name, frame)
         if cv2.waitKey(1) == ord("q"):
@@ -176,9 +218,10 @@ class ExecutionClass:
 
     def transect(self):
         self.done = False
+        self.Camera.start_test_cam()
         while not self.done:
-            self.update_stereo_L() #Should be down frame
-            transect_frame, driving_data_packet = self.AutonomousTransect.run(self.frame_stereoL)
+            self.update_test_cam() #Should be down frame
+            transect_frame, driving_data_packet = self.AutonomousTransect.run(self.frame_test)
             self.show(transect_frame, "Transect")
             self.driving_queue.put(driving_data_packet)
             QApplication.processEvents()
@@ -189,6 +232,8 @@ class ExecutionClass:
 
     def docking(self):
         self.done = False
+        self.Camera.start_stereo_cam_L()
+        self.Camera.start_stereo_cam_R()
         while not self.done:
             # Needs stereo L, and Down Cameras
             self.update_stereo_R()
@@ -200,11 +245,20 @@ class ExecutionClass:
             QApplication.processEvents()
             # self.show(frame_under, "Frame Under")
 
+    def normal_camera(self):
+        self.done = False
+        self.Camera.start_manual_cam()
+        while not self.done:
+            self.update_manual()
+            self.show(self.frame_manual, "Manual")
+            QApplication.processEvents()
+            
     def manual(self):
         print("Stopping other processes, returning to manual control")
         
-        cv2.destroyAllWindows()
         self.done = True
+        cv2.destroyAllWindows()
+        self.Camera.close_all()
 
     def transect_test(self):
         print("Running Transect!")
@@ -218,12 +272,13 @@ class ExecutionClass:
             self.done = True
 
         while not self.done:
-            self.show(self.frame.copy(), "Recording...")
-            self.Camera.record_video(self.frame)
+            self.update_manual()
+            self.show(self.frame_manual.copy(), "Recording...")
+            self.Camera.record_video(self.frame_manual.copy())
             QApplication.processEvents()
     
     def save_image(self):
-        self.Camera.save_image(self.frame.copy())
+        self.Camera.save_image(self.frame_manual.copy())
         print("Image saved")
         
 

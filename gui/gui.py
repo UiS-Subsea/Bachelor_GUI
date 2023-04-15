@@ -83,7 +83,7 @@ class Window(QMainWindow):
 
     def connectFunctions(self):
         # window2
-        self.showNewWindowButton.clicked.connect(self.show_new_window)
+        self.showNewWindowButton.clicked.connect(lambda: self.exec.normal_camera())
 
         # Kjøremodus
         self.btnManuell.clicked.connect(lambda: self.exec.manual())
