@@ -54,7 +54,7 @@ class Window(QMainWindow):
         )
         self.receive.start()
 
-        self.exec = ExecutionClass(queue)
+        self.exec = ExecutionClass(queue_for_rov)
         self.camera = CameraClass()
         self.w = None  # SecondWindow() 
         self.gir_verdier = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -171,7 +171,7 @@ class Window(QMainWindow):
             # "regulering_status": self.gui_regulering_state_update,
             # "settpunkt": self.print_data
             '138': self.guiVinkelUpdate,
-            #"139": self.dybdeTempUpdate,
+            "139": self.dybdeTempUpdate,
             #"138": self.guiFeilKodeUpdate,
 
         }
@@ -225,7 +225,7 @@ class Window(QMainWindow):
             "Probe_3",
             "Probe_4",
         ]
-        
+
         #Henter alle labels
         labelIMUAlarm: QLabel = self.labelIMUAlarm
         labelLekkasjeAlarm: QLabel = self.labelLekkasjeAlarm

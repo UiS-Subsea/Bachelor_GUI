@@ -587,9 +587,9 @@ if __name__ == "__main__":
             print("starting send to rov")
             id = t_watch.add_thread()
             print(id)
-            main_driver_loop = threading.Thread(target=run, args=(
-                network, t_watch, id, queue_for_rov, gui_parent_pipe), daemon=True)
-            main_driver_loop.start()
+        main_driver_loop = threading.Thread(target=run, args=(
+            network, t_watch, id, queue_for_rov, gui_parent_pipe), daemon=True)
+        main_driver_loop.start()
 
 
 
@@ -599,7 +599,8 @@ if __name__ == "__main__":
             controller_process = Process(target=controller.run, args=(
                 queue_for_rov, t_watch, id, True, debug_all), daemon=True)
             controller_process.start()
-            input("Press Enter to start sending!")
+            #input("Press Enter to start sending!")
+            print("controller started")
             # controller_process.terminate()
 
         if run_gui:

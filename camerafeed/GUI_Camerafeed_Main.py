@@ -24,7 +24,9 @@ class CameraClass:
         #     raise KeyboardInterrupt
 
     def start(self):
-        self.cam = cv2.VideoCapture(0)
+        #gstreamer_link = "udpsrc multicast-group=224.1.1.1 auto-multicast=true port=5000 ! application/x-rtp, media=video, clock-rate=90000, encoding-name=H264, payload=96 ! rtph264depay ! h264parse ! decodebin ! videoconvert ! appsink sync=false"
+        #self.cam = cv2.VideoCapture(gstreamer_link, cv2.CAP_GSTREAMER)
+        self.cam  = cv2.VideoCapture(0)
         self.frame = self.cam.read()[1]
         self.recording = False
 
