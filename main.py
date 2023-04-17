@@ -330,6 +330,8 @@ class Rov_state:
         # print("SEND PACKETS")
         packet = self.queue_for_rov.get()
         self.packets_to_send.append(packet)
+        
+        
         copied_packets = self.packets_to_send
         self.packets_to_send = []
         # [print(copied_packets)
@@ -607,11 +609,11 @@ if __name__ == "__main__":
         # cam = Camera()
         run_camera = False
         run_gui = True
-        run_craft_packet = False
-        run_network = False # Bytt t True når du ska prøva å connecte.
-        run_get_controllerdata = False
+        run_craft_packet = True
+        run_network = True # Bytt t True når du ska prøva å connecte.
+        run_get_controllerdata = True
         # Sett til True om du vil sende fake sensordata til gui
-        run_send_fake_sensordata = True
+        run_send_fake_sensordata = False
 
         t_watch = Threadwatcher()
         queue_for_rov = multiprocessing.Queue()
