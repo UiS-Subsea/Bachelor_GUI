@@ -605,9 +605,9 @@ if __name__ == "__main__":
         # exec = ExecutionClass()
 
         # cam = Camera()
-        run_camera = False
+        run_camera = True
         run_gui = True
-        run_craft_packet = False
+        run_craft_packet = True
         run_network = False # Bytt t True når du ska prøva å connecte.
         run_get_controllerdata = False
         # Sett til True om du vil sende fake sensordata til gui

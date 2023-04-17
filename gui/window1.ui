@@ -2977,7 +2977,7 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
     <string>Record</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="brnOpenCamera">
+  <widget class="QPushButton" name="btnOpenCamera">
    <property name="geometry">
     <rect>
      <x>10</x>
@@ -3037,6 +3037,19 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
    </property>
    <property name="text">
     <string>På/Av</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btnKalibrerIMU">
+   <property name="geometry">
+    <rect>
+     <x>750</x>
+     <y>590</y>
+     <width>111</width>
+     <height>51</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Kalibrer_IMU</string>
    </property>
   </widget>
  </widget>
