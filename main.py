@@ -121,7 +121,7 @@ def send_fake_sensordata(t_watch: Threadwatcher, gui_queue: multiprocessing.Queu
         ]
         gui_queue.put(sensordata)
         # print(sensordata)
-        print("Sending fake data!", sensordata["138"])
+        # print("Sending fake data!", sensordata["138"])
         time.sleep(0.5)
 
 
@@ -328,7 +328,12 @@ class Rov_state:
     def send_packets(self):
         """Sends the created network packets and clears it"""
         # print("SEND PACKETS")
-        # packet = self.queue_for_rov.get()
+        packet = self.queue_for_rov.get()
+        try:
+            self.build_rov_packet()
+        except:
+            pass
+        
         self.packets_to_send.append(packet)
         copied_packets = self.packets_to_send
         self.packets_to_send = []
@@ -673,7 +678,8 @@ if __name__ == "__main__":
 
             
         while True:
-            print("Queue rn: ", queue_for_rov.get())
+            # print("Queue rn: ", queue_for_rov.get())
+            pass
             time.sleep(1)
     except KeyboardInterrupt:
         t_watch.stop_all_threads()

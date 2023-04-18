@@ -1,4 +1,5 @@
 import threading
+import time
 from camerafeed.Main_Classes.autonomous_transect_main import AutonomousTransect
 from camerafeed.Main_Classes.grass_monitor_main import SeagrassMonitor
 from camerafeed.Main_Classes.autonomous_docking_main import AutonomousDocking
@@ -217,16 +218,20 @@ class ExecutionClass:
         cv2.imwrite("camerafeed/output/output_image.jpg", self.frame.copy())
         
     def send_data_test(self):
-        i = 0
-        while True:
-            if i%1000 == 0:
+        self.done = False
+        start = 0
+        #print(start)
+        while not self.done:
+            #print(time.time() - start)
+            cur_time = time.time()
+            if (cur_time - start) > 0.02:
                 random_data = [40, [random.randint(0,10) for i in range(8)]]
-                data_to_simulate = (1, {"rov_joysticks": random_data})
-                self.driving_queue.put(data_to_simulate)
-                self.sleep_func()
+                # data_to_simulate = (1, {"rov_joysticks": random_data})
+                self.driving_queue.put(random_data)
+                # self.sleep_func()
                 QApplication.processEvents()
-            i += 1
-    
+                start = time.time()
+        
     def sleep_func(self):
         threading.Timer(1000, self.sleep_func).start()
 
