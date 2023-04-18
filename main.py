@@ -21,17 +21,18 @@ MANIPULATOR_TILT = 3
 MANIPULATOR_GRAB_RELEASE = 6
 
 
-THRUST="129" #HHF, #HHB, #HVB, HVF, VHF, VHB, VVB, VVF
-REGULERINGTEMP="130" #0Reguleringskort, 1=Motordriverkort
+THRUST = "129"  # HHF, #HHB, #HVB, HVF, VHF, VHB, VVB, VVF
+REGULERINGTEMP = "130"  # 0Reguleringskort, 1=Motordriverkort
 VINKLER = "138"  # 0=roll, 1=stamp, 2=gir?
-DYBDETEMP = "139" # 0=dybde, 2=vanntemp, 4=sensorkorttemp
+DYBDETEMP = "139"  # 0=dybde, 2=vanntemp, 4=sensorkorttemp
 FEILKODE = "140"  # 0=IMU Error, 1=Temp Error, 2=Trykk Error, 3=Lekkasje
-TEMPKOMKONTROLLER="145" #=Temp
-MANIPULATOR12V = "150" #Strømtrekk, Temperatur, Sikringsstatus
-THRUSTER12V = "151"  #Strømtrekk, Temperatur, Sikringsstatus
-KRAFT5V = "152" #Strømtrekk, Temperatur, Sikringsstatus
+TEMPKOMKONTROLLER = "145"  # =Temp
+MANIPULATOR12V = "150"  # Strømtrekk, Temperatur, Sikringsstatus
+THRUSTER12V = "151"  # Strømtrekk, Temperatur, Sikringsstatus
+KRAFT5V = "152"  # Strømtrekk, Temperatur, Sikringsstatus
 
-VALIDCOMMANDS= [THRUST,REGULERINGTEMP,VINKLER,DYBDETEMP,FEILKODE,TEMPKOMKONTROLLER,MANIPULATOR12V,THRUSTER12V,KRAFT5V]
+VALIDCOMMANDS = [THRUST, REGULERINGTEMP, VINKLER, DYBDETEMP,
+                 FEILKODE, TEMPKOMKONTROLLER, MANIPULATOR12V, THRUSTER12V, KRAFT5V]
 
 # ROV
 X_AXIS = 1
@@ -62,8 +63,8 @@ def send_fake_sensordata(t_watch: Threadwatcher, gui_queue: multiprocessing.Queu
     power_list = [num for num in range(0, 101)]
     vinkel_list = [num for num in range(-360, 360)]
     dybde_list = [num for num in range(50, 20000)]
-    
-    #Errors
+
+    # Errors
     imuErrors = [True, False, False, False, False, False, False, False]
     tempErrors = [False, True, False, False]
     pressureErrors = [True, False, True, False]
@@ -83,24 +84,24 @@ def send_fake_sensordata(t_watch: Threadwatcher, gui_queue: multiprocessing.Queu
             dybde_list[(60 + count)],
         ]
         sensordata[DYBDETEMP] = [
-            vinkel_list[(0 + count)],#dybde
-            vinkel_list[(12 + count)],#vanntemp
-            vinkel_list[(45 + count) % 201],#sensorkorttemp
+            vinkel_list[(0 + count)],  # dybde
+            vinkel_list[(12 + count)],  # vanntemp
+            vinkel_list[(45 + count) % 201],  # sensorkorttemp
         ]
 
-        sensordata[FEILKODE]= [
+        sensordata[FEILKODE] = [
             imuErrors,
             tempErrors,
             pressureErrors,
             leakageAlarms,
         ]
-        
+
         # sensordata[MANIPULATOR][
         #     thrust_list[(0 + count)], #Motor1
         #     thrust_list[(5 + count)], #Motor2
         #     thrust_list[(7 + count)] #Motor3
         # ]
-        
+
         # sensordata[THRUSTER] = [
         #     thrust_list[(0 + count) % 201],
         #     thrust_list[(13 + count) % 201],
@@ -113,7 +114,7 @@ def send_fake_sensordata(t_watch: Threadwatcher, gui_queue: multiprocessing.Queu
         #     thrust_list[(88 + count) % 201],
         #     thrust_list[(107 + count) % 201],
         # ]
-        
+
         # sensordata[KRAFT] = [
         #     power_list[count % 101] * 13,
         #     power_list[count % 101] * 2.4,
@@ -121,6 +122,8 @@ def send_fake_sensordata(t_watch: Threadwatcher, gui_queue: multiprocessing.Queu
         # ]
         gui_queue.put(sensordata)
         time.sleep(0.5)
+
+
 class Rov_state:
     def __init__(self, queue_for_rov, network_handler, gui_queue, t_watch: Threadwatcher) -> None:
         # Threadwatcher
@@ -186,7 +189,8 @@ class Rov_state:
                 else:
                     if data is None:
                         continue
-                    decoded, incomplete_packet = Rov_state.decode_packets(data, incomplete_packet)
+                    decoded, incomplete_packet = Rov_state.decode_packets(
+                        data, incomplete_packet)
                 if decoded == []:
                     continue
                 for message in decoded:
@@ -296,19 +300,17 @@ class Rov_state:
             print(var)
             #self.packets_to_send.append([ID_DIRECTIONCOMMAND_PARAMETERS, var])
             self.packets_to_send.append([var[0], var[1]])
-            
-            
-    def  send_packets_to_rov(self, t_watch: Threadwatcher, id):
+
+    def send_packets_to_rov(self, t_watch: Threadwatcher, id):
         while t_watch.should_run(id):
             self.get_from_queue()
             if run_get_controllerdata and self.data != {}:
                 self.check_controls()
-                
+
             if self.packets_to_send != []:
                 self.send_packets()
                 self.data = {}
-            
-            
+
     def send_packets(self):
         """Sends the created network packets and clears it"""
         copied_packets = self.packets_to_send
@@ -409,7 +411,7 @@ class Rov_state:
     def build_autonom_packet(self):
         if self.data == {}:
             return
-        
+
         print(self.data["autonomdata"], "autonomdata")
         data = [0, 0, 0, 0, 0, 0, 0, 0]
         data[0] = self.data["autonomdata"][0]
@@ -448,15 +450,15 @@ class Rov_state:
             # return packet
         except Exception as e:
             return
-        
+
         self.data = packet
-            
+
     def check_controls(self):
         if self.packet_id == 1:
-        # self.button_handling()
+            # self.button_handling()
             self.build_rov_packet()
         elif self.packet_id == 2:
-        # self.build_manipulator_packet()
+            # self.build_manipulator_packet()
             self.build_autonom_packet()
 
 # TODO: HER VAR TIDLIGARE frame_pipe
@@ -478,7 +480,7 @@ def run(network_handler: Network, t_watch: Threadwatcher, id: int, queue_for_rov
     #     threading.Thread(target=rov_state.craft_packet,
     #                      args=(t_watch, id), daemon=True).start()
     # Con. del
-    
+
 
 if __name__ == "__main__":
 
@@ -492,20 +494,20 @@ if __name__ == "__main__":
         # exec = ExecutionClass()
 
         # cam = Camera()
-        run_camera = True
+        run_camera = False
         run_gui = True
         run_craft_packet = False
-        run_network = True # Bytt t True når du ska prøva å connecte.
-        run_get_controllerdata = True
+        run_network = False  # Bytt t True når du ska prøva å connecte.
+        run_get_controllerdata = False
         # Sett til True om du vil sende fake sensordata til gui
         run_send_fake_sensordata = False
 
         t_watch = Threadwatcher()
         queue_for_rov = multiprocessing.Queue()
         gui_parent_queue = multiprocessing.Queue()
-        
+
         gui_child_queue = multiprocessing.Queue()
-        
+
         (
             gui_parent_pipe,  # Used by main process, to send/receive data to gui
             gui_child_pipe,  # Used by gui process, to send/receive data to main
@@ -522,17 +524,19 @@ if __name__ == "__main__":
             # id = t_watch.add_thread()
             # main_driver_loop = threading.Thread(target=run, args=(network, t_watch, id, queue_for_rov, gui_parent_queue), daemon=True)
             # main_driver_loop.start()
-            
-            rovstate = Rov_state(queue_for_rov, network, gui_parent_queue, t_watch)
-            
+
+            rovstate = Rov_state(queue_for_rov, network,
+                                 gui_parent_queue, t_watch)
+
             id = t_watch.add_thread()
-            rov_state_recv_loop = threading.Thread(target=rovstate.receive_data_from_rov, args=(t_watch, id), daemon=True)
+            rov_state_recv_loop = threading.Thread(
+                target=rovstate.receive_data_from_rov, args=(t_watch, id), daemon=True)
             rov_state_recv_loop.start()
-            
+
             id = t_watch.add_thread()
-            rov_state_send_loop = threading.Thread(target=rovstate.send_packets_to_rov, args=(t_watch, id), daemon=True)
+            rov_state_send_loop = threading.Thread(
+                target=rovstate.send_packets_to_rov, args=(t_watch, id), daemon=True)
             rov_state_send_loop.start()
-            
 
         if run_get_controllerdata:
             id = t_watch.add_thread()
@@ -560,12 +564,9 @@ if __name__ == "__main__":
             )
             datafaker.start()
 
-
-            
         while True:
             pass
             time.sleep(1)
     except KeyboardInterrupt:
         t_watch.stop_all_threads()
         print("stopped all threads")
-        
