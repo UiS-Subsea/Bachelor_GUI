@@ -120,8 +120,6 @@ def send_fake_sensordata(t_watch: Threadwatcher, gui_queue: multiprocessing.Queu
             accel_list[(0 + count) % 201],
         ]
         gui_queue.put(sensordata)
-        # print(sensordata)
-        # print("Sending fake data!", sensordata["138"])
         time.sleep(0.5)
 
 
@@ -166,10 +164,6 @@ class Rov_state:
 
     def send_sensordata_to_gui(self, data):
         # Sends sensordata to the gui
-        # print("Enter into send_sensordata_to_gui function")
-        # if self.sensordata == None:
-        #    print(f"Data did not arrive{data}")
-        # print("Sending sensordata to gui", data)
         self.gui_queue.put(data)
 
     def sending_startup_ids(self):
@@ -193,15 +187,12 @@ class Rov_state:
                 if data == b"" or data is None:
                     continue
                 else:
-                    # print(data)
                     if data is None:
                         continue
-                    decoded, incomplete_packet = Rov_state.decode_packets(
-                        data, incomplete_packet)
+                    decoded, incomplete_packet = Rov_state.decode_packets(data, incomplete_packet)
                 if decoded == []:
                     continue
                 for message in decoded:
-                    # print(message)
                     self.handle_data_from_rov(message)
 
                     # potentially for the future to get information to the GUI : send_to_gui(Rov_state, message)
@@ -225,10 +216,8 @@ class Rov_state:
         try:
             json_strings = end_not_complete_packet + \
                 bytes.decode(tcp_data, "utf-8")
-            # print(json_strings)
             # pakken er ikke hel. Dette skal aldri skje sÃ¥ pakken burde bli forkasta
             if not json_strings.startswith('"*"'):
-                # print(f"Packet did not start with '*' something is wrong. {end_not_complete_packet}")
                 return [], ""
             if not json_strings.endswith('"*"'):  # pakken er ikke hel
                 end_not_complete_packet = json_strings[json_strings.rfind(
@@ -245,11 +234,9 @@ class Rov_state:
         for item in json_list:
 
             if item == '' or item == json.dumps("heartbeat"):
-                # print(f"{item = }")
                 continue
 
             else:
-                # print(f"{item = }")
                 try:
                     item = json.loads(item)
                 except Exception as e:
@@ -265,34 +252,25 @@ class Rov_state:
     def handle_data_from_rov(self, message: dict):
         if run_network:
             self.logger.data_logger.info(message)
-            # print(f"{message =}")
         message_name = ""
         if not isinstance(message, dict):
             try:
-                # print(message)
                 return
             except Exception as e:
-                # print(e)
                 return
         if "Error" in message or "info" in message:  # den og
-            # print(message)
             pass
             return
         if "Alarm" in message:
-            # print(message)      # få meldingen inn i GUI'en
             pass
         try:
             message_name = list(message.keys())[0]
-            # print(type(message_name))
         except Exception as e:
-            # print(e)
             return
         if message_name in self.valid_gui_commands:
-            # print(f"HERE IS MESSAGE NAME", message_name)
             self.send_sensordata_to_gui(message)
         else:
             pass
-            # print(f"\n\nMESSAGE NOT RECOGNISED\n{message}\n")
 
     # def network_format(data) -> bytes:
     #     """Formats the data for sending to network handler"""
@@ -302,12 +280,10 @@ class Rov_state:
     def craft_packet(self, t_watch: Threadwatcher, id):
         print("CraftPack Thread")
         while t_watch.should_run(id):
-            print("HELLO!")
             userinput = input(
                 "Packet: [parameter_id of type int, value of type float or int]: ")
             var = []
             try:
-                print("TRY")
                 var = json.loads(userinput)
                 if not isinstance(var[0], int):
                     print("Error: parameter id was not an int! try again.")
@@ -316,7 +292,6 @@ class Rov_state:
                 #     print("Error: parameter id was not an int or float! try again.")
                 #     continue
                 if len(var) != 2:
-                    print("Error: list was not length 2")
                     continue
             except Exception as e:
                 print(f"Error when parsing input\n {e}")
@@ -327,21 +302,18 @@ class Rov_state:
             
     def send_packets(self):
         """Sends the created network packets and clears it"""
-        # print("SEND PACKETS")
-        packet = self.queue_for_rov.get()
-        try:
-            self.build_rov_packet()
-        except:
-            pass
+        # packet = self.queue_for_rov.get()
+        # try:
+        #     self.build_rov_packet()
+        # except:
+        #     pass
         
-        self.packets_to_send.append(packet)
+        # self.packets_to_send.append(packet)
         copied_packets = self.packets_to_send
         self.packets_to_send = []
-        # [print(copied_packets)
         for packet in copied_packets:
             if packet[0] == ID_DIRECTIONCOMMAND or packet[0] == "*heartbeat*":
                 pass
-                print(f"{packet = }")
         if run_network:
             self.logger.data_logger.info(copied_packets)
         if self.network_handler is None or not copied_packets:
@@ -388,106 +360,18 @@ class Rov_state:
         reset_depth_byte[0] |= (1 << 0)  # reset bit 0
         print("Resetting Depth")
         self.packets_to_send.append([66, reset_depth_byte])
-        print(self.packets_to_send)
 
     def reset_angles(self):
         reset_angles_byte = [0] * 8
         reset_angles_byte[0] |= (1 << 1)  # reset bit 1
         print("Resetting Angles")
         self.packets_to_send.append([66, reset_angles_byte])
-        print(self.packets_to_send)
 
     def calibrate_IMU(self):
         calibrate_IMU_byte = [0] * 8
         calibrate_IMU_byte[0] |= (1 << 2)  # reset bit 2
         print("Kalibrerer IMU")
         self.packets_to_send.append([66, calibrate_IMU_byte])
-        print(self.packets_to_send)
-
-    # def lights_on_off(self, light_sensitivity_forward: int, light_sensitivity_downward: int, light_on_forward: bool, light_off_forward: bool):
-    #     """Setting up variables for corresponding values
-    #     and booleans of light intensity and light on/off"""
-    #     self.light_sensitivity_forward = light_sensitivity_forward
-    #     self.light_sensitivity_downward = light_sensitivity_downward
-
-    #     self.light_on_forward = light_on_forward
-    #     self.light_off_forward = light_off_forward
-
-    #     light_forward = self.light_on_forward * self.light_sensitivity_forward
-    #     light_downward = self.light_off_forward * self.light_sensitivity_downward
-
-    # def light_forward(self, light_sensitivity_forward: int, light_on_forward: bool):
-    #     self.light_sensitivity_forward = light_sensitivity_forward
-    #     self.light_on_forward = light_on_forward
-
-    #     light_forward = light_sensitivity_forward * light_forward
-
-    #     self.packets_to_send.append(98, [light_forward])
-
-    # def light_downward(self, light_sensitivity_downward: int, light_on_downward: bool):
-    #     self.light_sensitivity_downward = light_sensitivity_downward
-    #     self.light_on_downward = light_on_downward
-
-    #     light_downward = light_sensitivity_downward * light_downward
-
-    #     self.packets_to_send.append(99, [light_downward])
-
-    # Update light values
-    # def update_light_value(self, front_light_intensity: int, front_light_dimming: int, bottom_light_intensity: int, bottom_light_dimming: int):
-    #     """Setting up variables for corresponding values
-    #     and booleans of light intensity and light on/off"""
-    #     ID_FRONT_LIGHTS = 98
-    #     ID_BOTTOM_LIGHTS = 99
-    #     BYTE_TURN_ON = 0
-    #     BYTE_DIMMING = 1
-    #     BIT_TURN_ON = 1
-    #     # Set front light values
-    #     front_light_on = int(front_light_intensity > 0)
-    #     self.packets_to_send.append([ID_FRONT_LIGHTS, [(front_light_on << BIT_TURN_ON) | front_light_dimming, 0]])
-
-    #     # Set bottom light values
-    #     bottom_light_on = int(bottom_light_intensity > 0)
-    #     self.packets_to_send.append([ID_BOTTOM_LIGHTS, [(bottom_light_on << BIT_TURN_ON) | bottom_light_dimming, 0]])
-
-    # def update_light_value(self, front_light_intensity: int, front_light_is_on: bool, bottom_light_intensity: int, bottom_light_is_on: bool):
-    #     self.front_light_intensity = front_light_intensity
-    #     self.front_light_is_on = front_light_is_on
-    #     self.bottom_light_intensity = bottom_light_intensity
-    #     self.bottom_light_is_on = bottom_light_is_on
-
-    #     front_light_byte0 = (front_light_is_on << 1) | 1
-    #     front_light_byte1 = self.front_light_intensity
-    #     bottom_light_byte0 = (bottom_light_is_on << 1) | 1
-    #     bottom_light_byte1 = self.bottom_light_intensity
-
-    #     self.packets_to_send.append(
-    #         [98, [front_light_byte0, front_light_byte1]])
-    #     self.packets_to_send.append(
-    #         [99, [bottom_light_byte0, bottom_light_byte1]])
-
-    # def top_light_on(self, top_light_on: bool):
-
-    # def light_value_forward(self, front_light_intensity: int, front_light_is_on: bool):
-    #     self.front_light_intensity = front_light_intensity
-    #     self.front_light_is_on = front_light_is_on
-
-    #     front_light_byte0 = (front_light_is_on << 1) | 1
-    #     front_light_byte1 = self.front_light_intensity
-
-    #     self.packets_to_send.append(
-    #         [98, [front_light_byte0, front_light_byte1]])
-    #     print(self.packets_to_send)
-
-    # def light_value_downward(self, bottom_light_intensity: int, bottom_light_is_on: bool):
-    #     self.bottom_light_intensity = bottom_light_intensity
-    #     self.bottom_light_is_on = bottom_light_is_on
-
-    #     bottom_light_byte0 = (bottom_light_is_on << 1) | 1
-    #     bottom_light_byte1 = self.bottom_light_intensity
-
-    #     self.packets_to_send.append(
-    #         [99, [bottom_light_byte0, bottom_light_byte1]])
-    #     print(self.packets_to_send)
 
     def set_light_intensity(self, light_id: int, intensity: int, is_on: bool = True):
 
@@ -495,7 +379,6 @@ class Rov_state:
         byte1 = intensity
         packet = [light_id, [byte0, byte1]]
         self.packets_to_send.append(packet)
-        print(self.packets_to_send)
 
     def set_top_light_on(intensity: int):
         Rov_state.set_light_intensity(FRONT_LIGHT_ID, intensity, True)
@@ -518,16 +401,16 @@ class Rov_state:
         data[2] = self.data["rov_joysticks"][Z_AXIS]
         data[3] = self.data["rov_joysticks"][ROTATION_AXIS]
         self.packets_to_send.append([40, data])
-        # print(self.packets_to_send)
 
-    # def get_autonom(self):
-    #     camerafeed = Camerafeed("mode")
-    #     x-akse = camerafeed.get_x-value()
-    #     y-akse = camerafeed.get_y-value()
-    #     z-akse = camerafeed.get_z-value()
-    #     rotasjon = camerafeed.get_rotation()
-    #     data = [x_akse, y-akse, z-akse, rotasjon,0,0,0,0]
-    #     self.packets_to_send.append([40, data])
+    def build_autonom_packet(self):
+        if self.data == {}:
+            return
+        data = [0, 0, 0, 0, 0, 0, 0, 0]
+        data[0] = self.data["autonomdata"][X_AXIS]
+        data[1] = self.data["autonomdata"][Y_AXIS]
+        data[2] = self.data["autonomdata"][Z_AXIS]
+        data[3] = self.data["autonomdata"][ROTATION_AXIS]
+        self.packets_to_send.append([40, data])
 
     def build_manipulator_packet(self):
         # Kan også endre til to indexer i data listen for mani inn og ut (f.eks 0 og 1 = btn 12 og 13)
@@ -539,12 +422,11 @@ class Rov_state:
         data[2] = self.data["mani_joysticks"][MANIPULATOR_TILT]
         data[3] = self.data["mani_joysticks"][MANIPULATOR_GRAB_RELEASE]
         self.packets_to_send.append([41, data])
-        # print(self.packets_to_send)
 
     def button_handling(self):
         rov_buttons = self.data.get("rov_buttons")
         mani_buttons = self.data.get("mani_buttons")
-        # print(f"KNAPPER {rov_buttons} : {mani_buttons}")
+
     # TODO: Add GUI commands here
 
     def get_from_queue(self):
@@ -556,28 +438,28 @@ class Rov_state:
             # self.packets_to_send.append(packet[0], packet[1])
             # return packet
         except Exception as e:
-            # print(f"Error when trying to get from queue. \n{e}")
             return
-        if id == 1:  # controller data update
-            self.data = packet
+        if id == 1 or id == 2:  # controller data update
+            data = packet
+            
+        self.data = data
 
     def check_controls(self):
         # self.button_handling()
         self.build_rov_packet()
         self.build_manipulator_packet()
-        print(self.packets_to_send)
+        self.build_autonom_packet()
 
 # TODO: HER VAR TIDLIGARE frame_pipe
 
 
 def run(network_handler: Network, t_watch: Threadwatcher, id: int, queue_for_rov: multiprocessing.Queue, gui_queue):
-    print("Klarer å gå inn i run function")
 
     # Komm. del
-    print("run thread")
-    print(f"{network_handler = }")
+    print("Running thread: ")
+
     rov_state = Rov_state(queue_for_rov, network_handler, gui_queue, t_watch)
-    print(f"{network_handler = }")
+
     if not network_handler == None:
         id = t_watch.add_thread()
         threading.Thread(target=rov_state.receive_data_from_rov, args=(
@@ -587,15 +469,12 @@ def run(network_handler: Network, t_watch: Threadwatcher, id: int, queue_for_rov
         threading.Thread(target=rov_state.craft_packet,
                          args=(t_watch, id), daemon=True).start()
     # Con. del
-    print("Before whiles")
     while t_watch.should_run(id):
         rov_state.get_from_queue()
         if run_get_controllerdata and rov_state.data != {}:
             rov_state.check_controls()
         rov_state.send_packets()
-        # print(":: Data sent ::")
         rov_state.data = {}
-        # print(rov_state.queue_for_rov.get())
 
 
 if __name__ == "__main__":
@@ -630,18 +509,15 @@ if __name__ == "__main__":
         ) = Pipe()  # starts the gui program. gui_parent_pipe should get the sensor data
 
         # HUSK Å ENDRE TICK HVIS INPUT OPPDATERES SENT!
-        debug_all = True  # Sett til True om du vil se input fra controllers
+        debug_all = False  # Sett til True om du vil se input fra controllers
 
         network = False
 
         if run_network:
             network = Network(is_server=False, port=6900, bind_addr="0.0.0.0",
                               connect_addr="10.0.0.2")
-            print("network started")
             run_network = True
-            print("starting send to rov")
             id = t_watch.add_thread()
-            print(id)
             main_driver_loop = threading.Thread(target=run, args=(
                 network, t_watch, id, queue_for_rov, gui_parent_queue), daemon=True)
             main_driver_loop.start()
@@ -652,7 +528,6 @@ if __name__ == "__main__":
             controller_process = Process(target=controller.run, args=(
                 queue_for_rov, t_watch, id, True, debug_all), daemon=True)
             controller_process.start()
-            input("Press Enter to start sending!")
             # controller_process.terminate()
 
         if run_gui:
@@ -662,9 +537,7 @@ if __name__ == "__main__":
                 args=(gui_parent_queue, queue_for_rov, t_watch, id),
                 daemon=True,
             )  # should recieve commands from the gui
-            print("before start")
             gui_loop.start()
-            print("gui started")
 
         if run_send_fake_sensordata:
             id = t_watch.add_thread()
@@ -678,7 +551,6 @@ if __name__ == "__main__":
 
             
         while True:
-            # print("Queue rn: ", queue_for_rov.get())
             pass
             time.sleep(1)
     except KeyboardInterrupt:
