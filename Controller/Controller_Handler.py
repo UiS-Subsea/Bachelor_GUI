@@ -71,7 +71,8 @@ class Controller:
     def pack_controller_values(self):
         values = {"rov_joysticks": self.rov_joysticks, "mani_joysticks": self.mani_joysticks,
                   "rov_buttons": self.rov_buttons, "mani_buttons": self.mani_buttons,
-                  "camera_to_control": self.camera_motor, "camera_movement": self.rov_joysticks[3]}
+                  "camera_to_control": self.camera_motor, "camera_movement": self.rov_joysticks[3],
+                  "time_between_updates": self.duration}
         # "camera_to_control": self.camera_motor,
         # "camera_movement": self.rov_joysticks[3] #Kan endres til annen akse!
         # , "time_between_updates": self.duration}

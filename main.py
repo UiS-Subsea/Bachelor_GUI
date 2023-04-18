@@ -143,7 +143,7 @@ class Rov_state:
         # Prevents the tilt toggle from toggling back again immediately if we hold the button down
         self.camera_toggle_wait_counter: int = 0
         # Tilt in degrees of the camera servo motors.
-        self.camera_tilt: float[list] = [0, 0]
+        self.camera_tilt: float[list] = [0, 0] #list[float] ???
         # Turn the ability to change camera tilt, when camera processing is happening on the camera.
         self.camera_tilt_allowed = [True, True]  # [cam 0, cam 1]
         # Toggles between controlling rotation or camera tilt on right joystick
@@ -396,6 +396,15 @@ class Rov_state:
         self.packets_to_send.append(
             [99, [bottom_light_byte0, bottom_light_byte1]])
 
+    # def get_autonom(self):
+    #     camerafeed = Camerafeed("mode")
+    #     x-akse = camerafeed.get_x-value()
+    #     y-akse = camerafeed.get_y-value()
+    #     z-akse = camerafeed.get_z-value()
+    #     rotasjon = camerafeed.get_rotation()
+    #     data = [x_akse, y-akse, z-akse, rotasjon,0,0,0,0]
+    #     self.packets_to_send.append([40, data])
+
     def build_rov_packet(self):
         if self.data == {}:
             return
@@ -406,16 +415,6 @@ class Rov_state:
         data[3] = self.data["rov_joysticks"][ROTATION_AXIS]
         self.packets_to_send.append([40, data])
         # print(self.packets_to_send)
-
-    # def get_autonom(self):
-    #     camerafeed = Camerafeed("mode")
-    #     x-akse = camerafeed.get_x-value()
-    #     y-akse = camerafeed.get_y-value()
-    #     z-akse = camerafeed.get_z-value()
-    #     rotasjon = camerafeed.get_rotation()
-    #     data = [x_akse, y-akse, z-akse, rotasjon,0,0,0,0]
-    #     self.packets_to_send.append([40, data])
-
 
     def build_manipulator_packet(self):
         # Kan også endre til to indexer i data listen for mani inn og ut (f.eks 0 og 1 = btn 12 og 13)
@@ -429,6 +428,41 @@ class Rov_state:
         data[3] = self.data["mani_joysticks"][MANIPULATOR_GRAB_RELEASE]
         self.packets_to_send.append([41, data])
         # print(self.packets_to_send)
+
+    def update_camera_tilt_controller(self):
+        # print("camera tilt update func")
+        if self.camera_tilt_control_false and self.camera_tilt_allowed[self.active_camera]:
+            camera_movement = self.data.get('camera_movement')
+            if camera_movement is None:
+                return
+            if abs(camera_movement) > 0:
+                print("should tilt camera")
+                old_tilt = self.camera_tilt[self.active_camera]
+                tilt_time_sec = 2  # time in seconds for the camera to move from one side to the other
+                total_degrees = 60
+                tilt_per_ms = total_degrees/(tilt_time_sec*1000)
+
+                delta_tilt = (camera_movement/100)*self.data["time_between_updates"]*tilt_per_ms
+
+                self.calculate_new_tilt(self.active_camera, delta_tilt)
+    
+    def calculate_new_tilt(self, camera_to_tilt: int, delta_tilt: float) -> None:
+        total_degrees = 60
+
+        old_tilt = self.camera_tilt[camera_to_tilt]
+
+        self.camera_tilt[camera_to_tilt] += delta_tilt
+
+        if self.camera_tilt[camera_to_tilt] > total_degrees/2:
+                    self.camera_tilt[camera_to_tilt] = total_degrees//2
+
+        elif self.camera_tilt[camera_to_tilt] < -total_degrees/2:
+            self.camera_tilt[camera_to_tilt] = -total_degrees//2
+
+        self.camera_tilt[camera_to_tilt] = round(self.camera_tilt[camera_to_tilt])
+
+        if old_tilt != self.camera_tilt[camera_to_tilt]:
+            self.packets_to_send.append([ID_camera_tilt_upwards + camera_to_tilt, {"tilt": int(self.camera_tilt[camera_to_tilt])}])
 
     def button_handling(self):
         rov_buttons = self.data.get("rov_buttons")
