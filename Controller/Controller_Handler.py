@@ -43,6 +43,7 @@ class Controller:
         self.rov_joysticks = [0]*7
 
         self.mani_joysticks = [0]*7
+        self.autonom_data = [0]*8
         # tuple for dpad controll. Goes from -1 to 1 on both first and second variable
         # self.rov_dpad = (0, 0)
 
@@ -71,7 +72,7 @@ class Controller:
     def pack_controller_values(self):
         values = {"rov_joysticks": self.rov_joysticks, "mani_joysticks": self.mani_joysticks,
                   "rov_buttons": self.rov_buttons, "mani_buttons": self.mani_buttons,
-                  "camera_to_control": self.camera_motor, "camera_movement": self.rov_joysticks[3]}
+                  "camera_to_control": self.camera_motor, "camera_movement": self.rov_joysticks[3], "autonomdata": self.autonom_data}
         # "camera_to_control": self.camera_motor,
         # "camera_movement": self.rov_joysticks[3] #Kan endres til annen akse!
         # , "time_between_updates": self.duration}
@@ -188,7 +189,6 @@ class Controller:
             
             # print(duration)
             for event in pygame.event.get():
-                print("entered event check")
                 if event.type == DPAD: #dpad (both up and down)
                     if event.joy == ROV_CONTROLLER_ID:
                         self.rov_dpad = event.value # BLIR DET BRUKT ELLER ER DET KNAPP?
@@ -208,7 +208,6 @@ class Controller:
                     # Trenger sikkert ikke denne, skal nok bruke andre funksjoner !!!
                     if self.rov_buttons[BUTTON_Y] == 1:
                         self.camera_motor = (self.camera_motor+1) % 2
-                        print("CAMERA BUTTON Switch")
                         # threading.Thread(target=self.lekkasje).start()
 
                     if debug_all:
@@ -399,7 +398,6 @@ class Controller:
                 self.write_controller_values(local=True)
         print("closed connection")
         # self.connection.close()
-
 
 # This is the entry point that main calls
 def run(queue_to_rov, t_watch: Threadwatcher, id, debug=True, debug_all=True):
