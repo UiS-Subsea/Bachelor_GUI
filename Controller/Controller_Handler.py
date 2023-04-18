@@ -2,7 +2,7 @@ import sys
 import time
 import pygame
 import multiprocessing
-from Thread_info import Threadwatcher   #For full testing with main.py
+from Thread_info import Threadwatcher
 # from Threadwatch import Threadwatcher   #For local testing on MAC
 import threading
 import os
@@ -182,18 +182,18 @@ class Controller:
             if pygame.joystick.get_count() < 1:
                 self.wait_for_controller()
 
-            ### ENDRE TICK TIL 20 FOR NORMAL KJØRING
-            ### ENDRE TIL MINDRE FOR Å DEBUGGE LETTERE
+            # ENDRE TICK TIL 20 FOR NORMAL KJØRING
+            # ENDRE TIL MINDRE FOR Å DEBUGGE LETTERE
             self.duration = self.clock.tick(20)
-            
+
             # print(duration)
             for event in pygame.event.get():
                 print("entered event check")
-                if event.type == DPAD: #dpad (both up and down)
+                if event.type == DPAD:  # dpad (both up and down)
                     if event.joy == ROV_CONTROLLER_ID:
-                        self.rov_dpad = event.value # BLIR DET BRUKT ELLER ER DET KNAPP?
+                        self.rov_dpad = event.value  # BLIR DET BRUKT ELLER ER DET KNAPP?
                     if event.joy == MANIPULATOR_CONTROLLER_ID:
-                        self.mani_dpad = event.value # BLIR DET BRUKT ELLER ER DET KNAPP?
+                        self.mani_dpad = event.value  # BLIR DET BRUKT ELLER ER DET KNAPP?
                     self.dpad = [val*100 for val in event.value]
 
                 if event.type == BUTTON_DOWN:  # button down

@@ -3,8 +3,9 @@ import multiprocessing
 from multiprocessing import Process
 import threading
 import time
-from Thread_info import Threadwatcher
 import Controller_Handler as controller
+from Thread_info import Threadwatcher
+
 # from Build_data import *
 
 # VALUES: (0-7) -> index i: [0,0,0,0,0,0,0,0]
@@ -15,24 +16,24 @@ MANIPULATOR_ROTATION = 0
 MANIPULATOR_TILT = 3
 MANIPULATOR_GRAB_RELEASE = 6
 
-#ROV
-X_AXIS = 1   #LEFT JOYSTICK UP/DOWN
-Y_AXIS = 0   #LEFT JOYSTICK LEFT/RIGHT
-Z_AXIS = 6   #LT/RT
+# ROV
+X_AXIS = 1  # LEFT JOYSTICK UP/DOWN
+Y_AXIS = 0  # LEFT JOYSTICK LEFT/RIGHT
+Z_AXIS = 6  # LT/RT
 ROTATION_AXIS = 2
+
 
 class Rov_state:
     def __init__(self, queue, t_watch: Threadwatcher) -> None:
         self.t_watch: Threadwatcher = t_watch
-        self.data:dict = {}
+        self.data: dict = {}
         self.packets_to_send = []
         self.queue: multiprocessing.Queue = queue
-
 
     def build_rov_packet(self):
         if self.data == {}:
             return
-        data = [0,0,0,0,0,0,0,0]
+        data = [0, 0, 0, 0, 0, 0, 0, 0]
         data[0] = self.data["rov_joysticks"][X_AXIS]
         data[1] = self.data["rov_joysticks"][Y_AXIS]
         data[2] = self.data["rov_joysticks"][Z_AXIS]
@@ -44,7 +45,7 @@ class Rov_state:
     def build_manipulator_packet(self):
         if self.data == {}:
             return
-        data = [0,0,0,0,0,0,0,0]
+        data = [0, 0, 0, 0, 0, 0, 0, 0]
         data[0] = self.data["mani_buttons"][MANIPULATOR_IN_OUT]*100
         data[1] = self.data["mani_joysticks"][MANIPULATOR_ROTATION]
         data[2] = self.data["mani_joysticks"][MANIPULATOR_TILT]
@@ -67,16 +68,17 @@ class Rov_state:
         except Exception as e:
             # print(f"Error when trying to get from queue. \n{e}")
             return
-        if id == 1: # controller data update
+        if id == 1:  # controller data update
             self.data = packet
-    
+
     def check_controls(self):
         # self.button_handling()
         self.build_rov_packet()
         self.build_manipulator_packet()
 
-        #For testing/DEBUGGING
+        # For testing/DEBUGGING
         print(f"{self.packets_to_send[-2]} , {self.packets_to_send[-1]}")
+
 
 def run(t_watch: Threadwatcher, id: int, queue_for_rov: multiprocessing.Queue):
     rov_state = Rov_state(queue_for_rov, t_watch)
@@ -91,7 +93,6 @@ def run(t_watch: Threadwatcher, id: int, queue_for_rov: multiprocessing.Queue):
         rov_state.data = {}
 
 
-
 if __name__ == "__main__":
 
     try:
@@ -102,16 +103,18 @@ if __name__ == "__main__":
         if run_get_controllerdata:
             id = t_watch.add_thread()
             # takes in controller data and sends it into child_conn
-            controller_process = Process(target=controller.run, args=(queue_for_rov, t_watch, id, True, False), daemon=True)
+            controller_process = Process(target=controller.run, args=(
+                queue_for_rov, t_watch, id, True, False), daemon=True)
             controller_process.start()
             input("Press Enter to exit...")
             # controller_process.terminate()
-        
+
         print("starting send to rov")
         id = t_watch.add_thread()
-        main_driver_loop = threading.Thread(target=run, args=(t_watch, id, queue_for_rov), daemon=True)
+        main_driver_loop = threading.Thread(
+            target=run, args=(t_watch, id, queue_for_rov), daemon=True)
         main_driver_loop.start()
-        
+
     except KeyboardInterrupt:
-            t_watch.stop_all_threads()
-            print("stopped all threads")
+        t_watch.stop_all_threads()
+        print("stopped all threads")

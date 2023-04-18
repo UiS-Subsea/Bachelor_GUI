@@ -529,8 +529,31 @@ class Rov_state:
     #         [99, [bottom_light_byte0, bottom_light_byte1]])
     #     print(self.packets_to_send)
 
-    def set_light_intensity(self, light_id: int, intensity: int, is_on: bool = True):
+    def front_light_on(self):
+        set_light_byte = bytearray(8)
+        set_light_byte[0] |= (1 << 1)  # bit 1 to 1
+        print("Front Light On")
+        self.packets_to_send.append((98, bytes(set_light_byte)))
 
+    def bottom_light_on(self):
+        set_light_byte = bytearray(8)
+        set_light_byte[0] |= (1 << 1)  # bit 1 to 1
+        print("Bottom Light On")
+        self.packets_to_send.append((99, bytes(set_light_byte)))
+
+    def front_light_intensity(self, intensity):
+        set_intensity_byte = bytearray(8)
+        set_intensity_byte[1] = intensity
+        print("Adjusting Front Light Intensity")
+        self.packets_to_send.append((98, set_intensity_byte))
+
+    def bottom_light_intensity(self, intensity):
+        set_intensity_byte = bytearray(8)
+        set_intensity_byte[1] = intensity
+        print("Adjusting Bottom Light Intensity")
+        self.packets_to_send.append((99, set_intensity_byte))
+
+    def set_light_intensity(self, light_id: int, intensity: int, is_on: bool = True):
         byte0 = (int(is_on) << 1) | 1
         byte1 = intensity
         packet = [light_id, [byte0, byte1]]
@@ -653,7 +676,7 @@ if __name__ == "__main__":
         run_network = False  # Bytt t True når du ska prøva å connecte.
         run_get_controllerdata = False
         # Sett til True om du vil sende fake sensordata til gui
-        run_send_fake_sensordata = False
+        run_send_fake_sensordata = True
 
         t_watch = Threadwatcher()
         queue_for_rov = multiprocessing.Queue()
