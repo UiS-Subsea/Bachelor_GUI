@@ -1,3 +1,4 @@
+import threading
 from camerafeed.Main_Classes.autonomous_transect_main import AutonomousTransect
 from camerafeed.Main_Classes.grass_monitor_main import SeagrassMonitor
 from camerafeed.Main_Classes.autonomous_docking_main import AutonomousDocking
@@ -213,8 +214,13 @@ class ExecutionClass:
     def send_data_test(self):
         while True:
             random_data = [40, [random.randint(0,10) for i in range(8)]]
+            (1, {"data": random_data})
             self.driving_queue.put(random_data)
+            self.sleep_func()
             QApplication.processEvents()
+    
+    def sleep_func(self):
+        threading.Timer(100, self.sleep_func).start()
 
     def transect(self):
         self.done = False
