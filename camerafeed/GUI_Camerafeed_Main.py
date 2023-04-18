@@ -220,14 +220,19 @@ class ExecutionClass:
     def send_data_test(self):
         self.done = False
         start = 0
-        #print(start)
+        # print("in send data_test method")
         while not self.done:
-            #print(time.time() - start)
             cur_time = time.time()
+            # print("Before if check", cur_time - start)
             if (cur_time - start) > 0.02:
-                random_data = [40, [random.randint(0,10) for i in range(8)]]
-                # data_to_simulate = (1, {"rov_joysticks": random_data})
-                self.driving_queue.put(random_data)
+                # print("After if check!", cur_time - start)
+                random_data = [random.randint(0,10) for _ in range(8)]
+                
+                data_to_simulate = {"rov_joysticks": [0]*7, "mani_joysticks": [0]*7,
+                  "rov_buttons": [0]*15, "mani_buttons": [0]*16,
+                  "camera_to_control": 0, "camera_movement": 0, "autonomdata": random_data}
+                
+                self.driving_queue.put((2, data_to_simulate))
                 # self.sleep_func()
                 QApplication.processEvents()
                 start = time.time()
