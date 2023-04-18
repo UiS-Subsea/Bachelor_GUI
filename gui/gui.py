@@ -83,7 +83,7 @@ class Window(QMainWindow):
 
     def connectFunctions(self):
         # window2
-        self.showNewWindowButton.clicked.connect(lambda: self.exec.normal_camera())
+        self.showNewWindowButton.clicked.connect(lambda: self.show_new_window())
 
         # Kjøremodus
         self.btnManuell.clicked.connect(lambda: self.exec.manual())
@@ -93,6 +93,7 @@ class Window(QMainWindow):
         # Kamera
         self.btnTakePic.clicked.connect(lambda: self.exec.save_image())
         self.btnRecord.clicked.connect(lambda: self.exec.record())
+        self.btnOpenCamera.clicked.connect(lambda: self.exec.normal_camera())
 
         # Lys
         # Lag 2 av og på knapper top&bottom

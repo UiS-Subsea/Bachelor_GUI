@@ -605,9 +605,9 @@ if __name__ == "__main__":
         # exec = ExecutionClass()
 
         # cam = Camera()
-        run_camera = False
+        run_camera = True
         run_gui = True
-        run_craft_packet = False
+        run_craft_packet = True
         run_network = False # Bytt t True når du ska prøva å connecte.
         run_get_controllerdata = False
         # Sett til True om du vil sende fake sensordata til gui
@@ -647,7 +647,8 @@ if __name__ == "__main__":
             controller_process = Process(target=controller.run, args=(
                 queue_for_rov, t_watch, id, True, debug_all), daemon=True)
             controller_process.start()
-            input("Press Enter to start sending!")
+            #input("Press Enter to start sending!")
+            print("controller started")
             # controller_process.terminate()
 
         if run_gui:
