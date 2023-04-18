@@ -11,6 +11,11 @@ import datetime
 import random
 
 
+X_AXIS = 1
+Y_AKSE = 0
+Z_AKSE = 6
+R_AKSE = 2
+
 class CameraClass:
     def __init__(self) -> None:
         self.frame_down = None
@@ -212,15 +217,18 @@ class ExecutionClass:
         cv2.imwrite("camerafeed/output/output_image.jpg", self.frame.copy())
         
     def send_data_test(self):
+        i = 0
         while True:
-            random_data = [40, [random.randint(0,10) for i in range(8)]]
-            (1, {"data": random_data})
-            self.driving_queue.put(random_data)
-            self.sleep_func()
-            QApplication.processEvents()
+            if i%1000 == 0:
+                random_data = [40, [random.randint(0,10) for i in range(8)]]
+                data_to_simulate = (1, {"rov_joysticks": random_data})
+                self.driving_queue.put(data_to_simulate)
+                self.sleep_func()
+                QApplication.processEvents()
+            i += 1
     
     def sleep_func(self):
-        threading.Timer(100, self.sleep_func).start()
+        threading.Timer(1000, self.sleep_func).start()
 
     def transect(self):
         self.done = False

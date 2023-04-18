@@ -329,7 +329,7 @@ class Rov_state:
         """Sends the created network packets and clears it"""
         # print("SEND PACKETS")
         # packet = self.queue_for_rov.get()
-        # self.packets_to_send.append(packet)
+        self.packets_to_send.append(packet)
         copied_packets = self.packets_to_send
         self.packets_to_send = []
         # [print(copied_packets)
