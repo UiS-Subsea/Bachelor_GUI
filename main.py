@@ -21,9 +21,12 @@ MANIPULATOR_TILT = 3
 MANIPULATOR_GRAB_RELEASE = 6
 
 
-# VINKLER = "138"  # 0=roll, 1=stamp, 2=gir?
-# DYBDETEMP = "139" # 0=dybde, 2=vanntemp, 3=vanntemp msb, 4=sensorkorttemp, 5=sensorkorttemp msb
-# FEILKODE = "140"  # 0=IMU Error, 1=Temp Error, 2=Trykk Error, 3=Lekkasje
+VINKLER = "138"  # 0=roll, 1=stamp, 2=gir?
+DYBDETEMP = "139" # 0=dybde, 2=vanntemp, 4=sensorkorttemp
+FEILKODE = "140"  # 0=IMU Error, 1=Temp Error, 2=Trykk Error, 3=Lekkasje
+# MANIPULATOR = "150" # 0=Motor1, 1=Motor2, 2=Motor3
+# THRUSTER = "151"  # 0=Motor1, 1=Motor2, 2=Motor3, 3=Motor4, 4=Motor5, 5=Motor6, 6=Motor7, 7=Motor8
+# KRAFT = "152"
 
 
 # ROV
@@ -55,73 +58,64 @@ def send_fake_sensordata(t_watch: Threadwatcher, gui_queue: multiprocessing.Queu
     power_list = [num for num in range(0, 101)]
     vinkel_list = [num for num in range(-360, 360)]
     dybde_list = [num for num in range(50, 20000)]
-    accel_list = [num for num in range(-100, 101)]
-    #feilkode_list = [num for num in range(0, 1)]
+    
+    #Errors
     imuErrors = [True, False, False, False, False, False, False, False]
-    tempErrors = [True, False, False, False]
-    pressureErrors = [True, False, False, False]
-    lekageAlarms = [True, False, False, False]
+    tempErrors = [False, True, False, False]
+    pressureErrors = [True, False, True, False]
+    leakageAlarms = [False, False, False, True]
 
     count = -1
     sensordata = {}
     while t_watch.should_run(0):
         count += 1
-        sensordata['138'] = [
-            dybde_list[(0 + count) % 201],
-            dybde_list[(10 + count) % 201],
-            dybde_list[(20 + count) % 201],
-            dybde_list[(30 + count) % 201],
-            dybde_list[(40 + count) % 201],
-            dybde_list[(50 + count) % 201],
-            dybde_list[(60 + count) % 201],
+        sensordata[VINKLER] = [
+            dybde_list[(0 + count)],
+            dybde_list[(10 + count)],
+            dybde_list[(20 + count)],
+            dybde_list[(30 + count)],
+            dybde_list[(40 + count)],
+            dybde_list[(50 + count)],
+            dybde_list[(60 + count)],
         ]
-        sensordata['139'] = [
-            vinkel_list[(0 + count) % 201],
-            vinkel_list[(0 + count) % 201],
-            vinkel_list[(45 + count) % 201],
-            vinkel_list[(90 + count) % 201],
-            vinkel_list[(0 + count) % 201],
-            vinkel_list[(0 + count) % 201],
+        sensordata[DYBDETEMP] = [
+            vinkel_list[(0 + count)],#dybde
+            vinkel_list[(12 + count)],#vanntemp
+            vinkel_list[(45 + count) % 201],#sensorkorttemp
         ]
-        # sensordata[FEILKODE]= [
-        #     imuErrors,
-        #     tempErrors,
-        #     pressureErrors,
-        #     lekageAlarms,
+
+        sensordata[FEILKODE]= [
+            imuErrors,
+            tempErrors,
+            pressureErrors,
+            leakageAlarms,
+        ]
+        
+        # sensordata[MANIPULATOR][
+        #     thrust_list[(0 + count)], #Motor1
+        #     thrust_list[(5 + count)], #Motor2
+        #     thrust_list[(7 + count)] #Motor3
         # ]
-
-        sensordata["lekk_temp"] = [
-            False,
-            True,
-            True,
-            (25 + count) % 60,
-            (37 + count) % 60,
-            (61 + count) % 60,
-        ]
-        sensordata["thrust"] = [
-            thrust_list[(0 + count) % 201],
-            thrust_list[(13 + count) % 201],
-            thrust_list[(25 + count) % 201],
-            thrust_list[(38 + count) % 201],
-            thrust_list[(37 + count) % 201],
-            thrust_list[(50 + count) % 201],
-            thrust_list[(63 + count) % 201],
-            thrust_list[(75 + count) % 201],
-            thrust_list[(88 + count) % 201],
-            thrust_list[(107 + count) % 201],
-        ]
-        sensordata["watt"] = [
-            power_list[count % 101] * 13,
-            power_list[count % 101] * 2.4,
-            power_list[count % 101] * 0.65,
-        ]
-
-        sensordata["accel"] = [
-            accel_list[(0 + count) % 201],
-        ]
+        
+        # sensordata[THRUSTER] = [
+        #     thrust_list[(0 + count) % 201],
+        #     thrust_list[(13 + count) % 201],
+        #     thrust_list[(25 + count) % 201],
+        #     thrust_list[(38 + count) % 201],
+        #     thrust_list[(37 + count) % 201],
+        #     thrust_list[(50 + count) % 201],
+        #     thrust_list[(63 + count) % 201],
+        #     thrust_list[(75 + count) % 201],
+        #     thrust_list[(88 + count) % 201],
+        #     thrust_list[(107 + count) % 201],
+        # ]
+        
+        # sensordata[KRAFT] = [
+        #     power_list[count % 101] * 13,
+        #     power_list[count % 101] * 2.4,
+        #     power_list[count % 101] * 0.65,
+        # ]
         gui_queue.put(sensordata)
-        # print(sensordata)
-        print("Sending fake data!", sensordata["138"])
         time.sleep(0.5)
 
 
@@ -615,10 +609,10 @@ if __name__ == "__main__":
 
         t_watch = Threadwatcher()
         queue_for_rov = multiprocessing.Queue()
-        # TODO: Kanskje noke her?
-        #(frame_parent_pipe, frame_chid_pipe) = Pipe()
         gui_parent_queue = multiprocessing.Queue()
+        
         gui_child_queue = multiprocessing.Queue()
+        
         (
             gui_parent_pipe,  # Used by main process, to send/receive data to gui
             gui_child_pipe,  # Used by gui process, to send/receive data to main
