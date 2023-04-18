@@ -117,8 +117,6 @@ def send_fake_sensordata(t_watch: Threadwatcher, gui_queue: multiprocessing.Queu
         # ]
         gui_queue.put(sensordata)
         time.sleep(0.5)
-
-
 class Rov_state:
     def __init__(self, queue_for_rov, network_handler, gui_queue, t_watch: Threadwatcher) -> None:
         # Threadwatcher
@@ -323,6 +321,11 @@ class Rov_state:
         """Sends the created network packets and clears it"""
         # print("SEND PACKETS")
         packet = self.queue_for_rov.get()
+        try:
+            self.build_rov_packet()
+        except:
+            pass
+        
         self.packets_to_send.append(packet)
         copied_packets = self.packets_to_send
         self.packets_to_send = []
@@ -547,7 +550,7 @@ class Rov_state:
         except Exception as e:
             # print(f"Error when trying to get from queue. \n{e}")
             return
-        if id == 40:  # controller data update
+        if id == 1:  # controller data update
             self.data = packet
 
     def check_controls(self):
@@ -599,13 +602,13 @@ if __name__ == "__main__":
         # exec = ExecutionClass()
 
         # cam = Camera()
-        run_camera = False
+        run_camera = True
         run_gui = True
         run_craft_packet = False
-        run_network = False # Bytt t True når du ska prøva å connecte.
-        run_get_controllerdata = False
+        run_network = True # Bytt t True når du ska prøva å connecte.
+        run_get_controllerdata = True
         # Sett til True om du vil sende fake sensordata til gui
-        run_send_fake_sensordata = True
+        run_send_fake_sensordata = False
 
         t_watch = Threadwatcher()
         queue_for_rov = multiprocessing.Queue()
@@ -641,7 +644,8 @@ if __name__ == "__main__":
             controller_process = Process(target=controller.run, args=(
                 queue_for_rov, t_watch, id, True, debug_all), daemon=True)
             controller_process.start()
-            input("Press Enter to start sending!")
+            #input("Press Enter to start sending!")
+            print("controller started")
             # controller_process.terminate()
 
         if run_gui:
@@ -667,8 +671,10 @@ if __name__ == "__main__":
 
             
         while True:
-            print("Queue rn: ", queue_for_rov.get())
+            # print("Queue rn: ", queue_for_rov.get())
+            pass
             time.sleep(1)
     except KeyboardInterrupt:
         t_watch.stop_all_threads()
         print("stopped all threads")
+        

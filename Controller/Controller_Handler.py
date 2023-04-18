@@ -184,7 +184,7 @@ class Controller:
 
             ### ENDRE TICK TIL 20 FOR NORMAL KJØRING
             ### ENDRE TIL MINDRE FOR Å DEBUGGE LETTERE
-            self.duration = self.clock.tick(20)
+            self.duration = self.clock.tick(50)
             
             # print(duration)
             for event in pygame.event.get():
@@ -391,6 +391,10 @@ class Controller:
                 # 1 here is the id that tells main that this is from the controller and not a gui command or profile update
                 self.queue_to_rov.put((1, self.pack_controller_values()))
                 # print(self.buttons)
+                
+                # What the thing being sent into queue looks like:
+                # (1, {"rov_joysticks": [], "mani_joysticks": [], "buttons": []})
+                
             elif debug and self.connection is None:
                 self.write_controller_values(local=True)
         print("closed connection")
