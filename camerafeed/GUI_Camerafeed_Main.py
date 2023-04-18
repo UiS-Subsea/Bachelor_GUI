@@ -224,11 +224,15 @@ class ExecutionClass:
         while not self.done:
             cur_time = time.time()
             # print("Before if check", cur_time - start)
-            if (cur_time - start) > 1:
+            if (cur_time - start) > 0.02:
                 # print("After if check!", cur_time - start)
-                random_data = [40, [random.randint(0,10) for _ in range(8)]]
-                data_to_simulate = (2, {"autonomdata": random_data})
-                self.driving_queue.put(data_to_simulate)
+                random_data = [random.randint(0,10) for _ in range(8)]
+                
+                data_to_simulate = {"rov_joysticks": [0]*7, "mani_joysticks": [0]*7,
+                  "rov_buttons": [0]*15, "mani_buttons": [0]*16,
+                  "camera_to_control": 0, "camera_movement": 0, "autonomdata": random_data}
+                
+                self.driving_queue.put((2, data_to_simulate))
                 # self.sleep_func()
                 QApplication.processEvents()
                 start = time.time()
