@@ -242,9 +242,9 @@ class ExecutionClass:
 
     def transect(self):
         self.done = False
-        self.Camera.start_test_cam()
+        self.Camera.start_test_cam() # TODO should be down frame
         while not self.done:
-            self.update_test_cam() #Should be down frame
+            self.update_test_cam() # TODO Should be down frame
             transect_frame, driving_data_packet = self.AutonomousTransect.run(self.frame_test)
             self.show(transect_frame, "Transect")
             self.driving_queue.put(driving_data_packet)
@@ -257,12 +257,12 @@ class ExecutionClass:
     def docking(self):
         self.done = False
         self.Camera.start_stereo_cam_L()
-        self.Camera.start_stereo_cam_R()
+        self.Camera.start_stereo_cam_R() # TODO shoould be down camera
         while not self.done:
             # Needs stereo L, and Down Cameras
             self.update_stereo_R()
-            self.update_stereo_L()
-            docking_frame, frame_under, driving_data_packet = self.Docking.run(self.frame_stereoL, self.frame_stereoR)
+            self.update_stereo_L() # TODO should be down camera
+            docking_frame, frame_under, driving_data_packet = self.Docking.run(self.frame_stereoL, self.frame_stereoR) # TODO should be down camera
             self.show(docking_frame, "Docking")
             self.show(frame_under, "Frame Under")
             self.driving_queue.put(driving_data_packet)
