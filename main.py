@@ -178,12 +178,12 @@ class Rov_state:
             "camera_tilts_down": 201
         }
 
-    def receive_data_from_rov(self, network: Network, t_watch: Threadwatcher, id: int):
+    def receive_data_from_rov(self, t_watch: Threadwatcher, id: int):
         incomplete_packet = ""
         print("recive data thread")
         while t_watch.should_run(id):
             try:
-                data = network.receive()
+                data = self.network_handler.receive()
                 if data == b"" or data is None:
                     continue
                 else:
@@ -300,15 +300,20 @@ class Rov_state:
             #self.packets_to_send.append([ID_DIRECTIONCOMMAND_PARAMETERS, var])
             self.packets_to_send.append([var[0], var[1]])
             
+            
+    def  send_packets_to_rov(self, t_watch: Threadwatcher, id):
+        while t_watch.should_run(id):
+            self.get_from_queue()
+            if run_get_controllerdata and self.data != {}:
+                self.check_controls()
+                
+            if self.packets_to_send != []:
+                self.send_packets()
+                self.data = {}
+            
+            
     def send_packets(self):
         """Sends the created network packets and clears it"""
-        # packet = self.queue_for_rov.get()
-        # try:
-        #     self.build_rov_packet()
-        # except:
-        #     pass
-        
-        # self.packets_to_send.append(packet)
         copied_packets = self.packets_to_send
         self.packets_to_send = []
         for packet in copied_packets:
@@ -396,26 +401,24 @@ class Rov_state:
         if self.data == {}:
             return
         data = [0, 0, 0, 0, 0, 0, 0, 0]
-        try:
-            data[0] = self.data["rov_joysticks"][X_AXIS]
-            data[1] = self.data["rov_joysticks"][Y_AXIS]
-            data[2] = self.data["rov_joysticks"][Z_AXIS]
-            data[3] = self.data["rov_joysticks"][ROTATION_AXIS]
-        except KeyError:
-            pass
+
+        data[0] = self.data["rov_joysticks"][X_AXIS]
+        data[1] = self.data["rov_joysticks"][Y_AXIS]
+        data[2] = self.data["rov_joysticks"][Z_AXIS]
+        data[3] = self.data["rov_joysticks"][ROTATION_AXIS]
+
         self.packets_to_send.append([40, data])
 
     def build_autonom_packet(self):
         if self.data == {}:
             return
+        
+        print(self.data["autonomdata"], "autonomdata")
         data = [0, 0, 0, 0, 0, 0, 0, 0]
-        try:
-            data[0] = self.data["autonomdata"][0]
-            data[1] = self.data["autonomdata"][1]
-            data[2] = self.data["autonomdata"][2]
-            data[3] = self.data["autonomdata"][3]
-        except KeyError:
-            pass
+        data[0] = self.data["autonomdata"][0]
+        data[1] = self.data["autonomdata"][1]
+        data[2] = self.data["autonomdata"][2]
+        data[3] = self.data["autonomdata"][3]
         self.packets_to_send.append([40, data])
 
     def build_manipulator_packet(self):
@@ -440,26 +443,24 @@ class Rov_state:
 
     def get_from_queue(self):
         """Takes data from the queue and sends it to the correct handler"""
-        id = -1
+        self.packet_id = -1
         packet = ""
         try:
-            id, packet = self.queue_for_rov.get()
+            self.packet_id, packet = self.queue_for_rov.get()
             # self.packets_to_send.append(packet[0], packet[1])
             # return packet
         except Exception as e:
             return
-        if id == 1 or id == 2 or id == 3:
-            data = packet
+        
+        self.data = packet
             
-    
-            
-        self.data = data
-
     def check_controls(self):
+        if self.packet_id == 1:
         # self.button_handling()
-        self.build_rov_packet()
-        self.build_manipulator_packet()
-        self.build_autonom_packet()
+            self.build_rov_packet()
+        elif self.packet_id == 2:
+        # self.build_manipulator_packet()
+            self.build_autonom_packet()
 
 # TODO: HER VAR TIDLIGARE frame_pipe
 
@@ -469,24 +470,18 @@ def run(network_handler: Network, t_watch: Threadwatcher, id: int, queue_for_rov
     # Komm. del
     print("Running thread: ")
 
-    rov_state = Rov_state(queue_for_rov, network_handler, gui_queue, t_watch)
+    # rov_state = Rov_state(queue_for_rov, network_handler, gui_queue, t_watch)
 
-    if not network_handler == None:
-        id = t_watch.add_thread()
-        threading.Thread(target=rov_state.receive_data_from_rov, args=(
-            network_handler, t_watch, id), daemon=True).start()
-    if run_craft_packet:
-        id = t_watch.add_thread()
-        threading.Thread(target=rov_state.craft_packet,
-                         args=(t_watch, id), daemon=True).start()
+    # if network_handler != None:
+    #     print("im not fucked this is good")
+    #     id = t_watch.add_thread()
+    #     threading.Thread(target=rov_state.receive_data_from_rov, args=(t_watch, id), daemon=True).start()
+    # if run_craft_packet:
+    #     id = t_watch.add_thread()
+    #     threading.Thread(target=rov_state.craft_packet,
+    #                      args=(t_watch, id), daemon=True).start()
     # Con. del
-    while t_watch.should_run(id):
-        rov_state.get_from_queue()
-        if run_get_controllerdata and rov_state.data != {}:
-            rov_state.check_controls()
-        rov_state.send_packets()
-        rov_state.data = {}
-
+    
 
 if __name__ == "__main__":
 
@@ -502,7 +497,7 @@ if __name__ == "__main__":
         # cam = Camera()
         run_camera = False
         run_gui = True
-        run_craft_packet = False
+        run_craft_packet = True
         run_network = True # Bytt t True når du ska prøva å connecte.
         run_get_controllerdata = True
         # Sett til True om du vil sende fake sensordata til gui
@@ -527,11 +522,20 @@ if __name__ == "__main__":
         if run_network:
             network = Network(is_server=False, port=6900, bind_addr="0.0.0.0",
                               connect_addr="10.0.0.2")
-            run_network = True
+            # id = t_watch.add_thread()
+            # main_driver_loop = threading.Thread(target=run, args=(network, t_watch, id, queue_for_rov, gui_parent_queue), daemon=True)
+            # main_driver_loop.start()
+            
+            rovstate = Rov_state(queue_for_rov, network, gui_parent_queue, t_watch)
+            
             id = t_watch.add_thread()
-            main_driver_loop = threading.Thread(target=run, args=(
-                network, t_watch, id, queue_for_rov, gui_parent_queue), daemon=True)
-            main_driver_loop.start()
+            rov_state_recv_loop = threading.Thread(target=rovstate.receive_data_from_rov, args=(t_watch, id), daemon=True)
+            rov_state_recv_loop.start()
+            
+            id = t_watch.add_thread()
+            rov_state_send_loop = threading.Thread(target=rovstate.send_packets_to_rov, args=(t_watch, id), daemon=True)
+            rov_state_send_loop.start()
+            
 
         if run_get_controllerdata:
             id = t_watch.add_thread()

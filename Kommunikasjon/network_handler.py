@@ -107,9 +107,8 @@ class Network:
             self.conn.sendall(bytes_to_send)
         except (socket.error, BrokenPipeError) as e:
             print(f"Tried sending, but got an error \n{e}")
-            print(
-                f"conn = {self.conn}, waiting for conn: {self.waiting_for_conn}")
-            if not self.waiting_for_conn:
+            print(f"conn = {self.conn}, waiting for conn: {self.waiting_for_conn}")
+            if self.wait_for_conn == True:
                 self.new_conn()
 
     def receive(self) -> bytes:
