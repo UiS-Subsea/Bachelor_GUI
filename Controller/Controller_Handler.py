@@ -357,7 +357,11 @@ class Controller:
             if self.queue_to_rov is not None: # Means we send the values to main
                 self.queue_to_rov.put((1, self.pack_controller_values())) # 1 here is the id that tells main that this is from the controller and not a gui command or profile update
                 # print(self.buttons)
-            elif debug and self.connection is None: 
+                
+                # What the thing being sent into queue looks like:
+                # (1, {"rov_joysticks": [], "mani_joysticks": [], "buttons": []})
+                
+            elif debug and self.connection is None:
                 self.write_controller_values(local=True)
         print("closed connection")
         # self.connection.close() 
