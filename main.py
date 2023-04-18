@@ -328,10 +328,8 @@ class Rov_state:
     def send_packets(self):
         """Sends the created network packets and clears it"""
         # print("SEND PACKETS")
-        packet = self.queue_for_rov.get()
-        self.packets_to_send.append(packet)
-        
-        
+        # packet = self.queue_for_rov.get()
+        # self.packets_to_send.append(packet)
         copied_packets = self.packets_to_send
         self.packets_to_send = []
         # [print(copied_packets)
@@ -555,7 +553,7 @@ class Rov_state:
         except Exception as e:
             # print(f"Error when trying to get from queue. \n{e}")
             return
-        if id == 40:  # controller data update
+        if id == 1:  # controller data update
             self.data = packet
 
     def check_controls(self):
@@ -609,7 +607,7 @@ if __name__ == "__main__":
         # cam = Camera()
         run_camera = False
         run_gui = True
-        run_craft_packet = True
+        run_craft_packet = False
         run_network = True # Bytt t True når du ska prøva å connecte.
         run_get_controllerdata = True
         # Sett til True om du vil sende fake sensordata til gui
@@ -680,3 +678,4 @@ if __name__ == "__main__":
     except KeyboardInterrupt:
         t_watch.stop_all_threads()
         print("stopped all threads")
+        
