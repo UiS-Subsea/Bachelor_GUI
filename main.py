@@ -396,20 +396,26 @@ class Rov_state:
         if self.data == {}:
             return
         data = [0, 0, 0, 0, 0, 0, 0, 0]
-        data[0] = self.data["rov_joysticks"][X_AXIS]
-        data[1] = self.data["rov_joysticks"][Y_AXIS]
-        data[2] = self.data["rov_joysticks"][Z_AXIS]
-        data[3] = self.data["rov_joysticks"][ROTATION_AXIS]
+        try:
+            data[0] = self.data["rov_joysticks"][X_AXIS]
+            data[1] = self.data["rov_joysticks"][Y_AXIS]
+            data[2] = self.data["rov_joysticks"][Z_AXIS]
+            data[3] = self.data["rov_joysticks"][ROTATION_AXIS]
+        except KeyError:
+            pass
         self.packets_to_send.append([40, data])
 
     def build_autonom_packet(self):
         if self.data == {}:
             return
         data = [0, 0, 0, 0, 0, 0, 0, 0]
-        data[0] = self.data["autonomdata"][X_AXIS]
-        data[1] = self.data["autonomdata"][Y_AXIS]
-        data[2] = self.data["autonomdata"][Z_AXIS]
-        data[3] = self.data["autonomdata"][ROTATION_AXIS]
+        try:
+            data[0] = self.data["autonomdata"][0]
+            data[1] = self.data["autonomdata"][1]
+            data[2] = self.data["autonomdata"][2]
+            data[3] = self.data["autonomdata"][3]
+        except KeyError:
+            pass
         self.packets_to_send.append([40, data])
 
     def build_manipulator_packet(self):
@@ -417,10 +423,13 @@ class Rov_state:
         if self.data == {}:
             return
         data = [0, 0, 0, 0, 0, 0, 0, 0]
-        data[0] = self.data["mani_buttons"][MANIPULATOR_IN_OUT]*100
-        data[1] = self.data["mani_joysticks"][MANIPULATOR_ROTATION]
-        data[2] = self.data["mani_joysticks"][MANIPULATOR_TILT]
-        data[3] = self.data["mani_joysticks"][MANIPULATOR_GRAB_RELEASE]
+        try:
+            data[0] = self.data["mani_buttons"][MANIPULATOR_IN_OUT]*100
+            data[1] = self.data["mani_joysticks"][MANIPULATOR_ROTATION]
+            data[2] = self.data["mani_joysticks"][MANIPULATOR_TILT]
+            data[3] = self.data["mani_joysticks"][MANIPULATOR_GRAB_RELEASE]
+        except KeyError:
+            pass
         self.packets_to_send.append([41, data])
 
     def button_handling(self):
@@ -439,8 +448,10 @@ class Rov_state:
             # return packet
         except Exception as e:
             return
-        if id == 1 or id == 2:  # controller data update
+        if id == 1 or id == 2 or id == 3:
             data = packet
+            
+    
             
         self.data = data
 
