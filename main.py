@@ -21,13 +21,17 @@ MANIPULATOR_TILT = 3
 MANIPULATOR_GRAB_RELEASE = 6
 
 
+THRUST="129" #HHF, #HHB, #HVB, HVF, VHF, VHB, VVB, VVF
+REGULERINGTEMP="130" #0Reguleringskort, 1=Motordriverkort
 VINKLER = "138"  # 0=roll, 1=stamp, 2=gir?
 DYBDETEMP = "139" # 0=dybde, 2=vanntemp, 4=sensorkorttemp
 FEILKODE = "140"  # 0=IMU Error, 1=Temp Error, 2=Trykk Error, 3=Lekkasje
-# MANIPULATOR = "150" # 0=Motor1, 1=Motor2, 2=Motor3
-# THRUSTER = "151"  # 0=Motor1, 1=Motor2, 2=Motor3, 3=Motor4, 4=Motor5, 5=Motor6, 6=Motor7, 7=Motor8
-# KRAFT = "152"
+TEMPKOMKONTROLLER="145" #=Temp
+MANIPULATOR12V = "150" #Strømtrekk, Temperatur, Sikringsstatus
+THRUSTER12V = "151"  #Strømtrekk, Temperatur, Sikringsstatus
+KRAFT5V = "152" #Strømtrekk, Temperatur, Sikringsstatus
 
+VALIDCOMMANDS= [THRUST,REGULERINGTEMP,VINKLER,DYBDETEMP,FEILKODE,TEMPKOMKONTROLLER,MANIPULATOR12V,THRUSTER12V,KRAFT5V]
 
 # ROV
 X_AXIS = 1
@@ -150,8 +154,7 @@ class Rov_state:
         self_hud_camera_status = False
 
         self.packets_to_send = []
-        self.valid_gui_commands = [
-            '138', '139']
+        self.valid_gui_commands = VALIDCOMMANDS
 
     def update(self):
         pass
@@ -491,7 +494,7 @@ if __name__ == "__main__":
         # cam = Camera()
         run_camera = True
         run_gui = True
-        run_craft_packet = True
+        run_craft_packet = False
         run_network = True # Bytt t True når du ska prøva å connecte.
         run_get_controllerdata = True
         # Sett til True om du vil sende fake sensordata til gui
