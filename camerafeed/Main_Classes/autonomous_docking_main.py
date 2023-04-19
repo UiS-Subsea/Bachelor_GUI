@@ -31,17 +31,47 @@ class AutonomousDocking:
     def __init__(self):
         self.driving_data = [40, [0, 0, 0, 0, 0, 0, 0, 0]]
         self.frame = None
+        self.down_frame = None
         self.draw_grouts = True
         self.draw_grout_boxes = True
+        self.angle_good = False
         
     #def run(self, front_frame, down_frame):
     def run(self, front_frame, down_frame):
         self.frame = front_frame
         self.down_frame = down_frame
         self.update()
-        self.rotation_commands()
         data = self.get_driving_data()
         return self.frame, self.down_frame, data
+    
+
+    def update(self):
+        self.rotation_commands()
+
+        if self.angle_good:
+            frame_width = self.frame.shape[1]
+            frame_height = self.frame.shape[0]
+            
+            frame_centerpoint = (frame_width // 2, frame_height // 2)
+            red_centerpoint, red_radius = self.find_red()
+            
+            # center = (0, 0) and r = 0 are default values, meaning no red conture is found
+            if red_centerpoint == (0, 0) and red_radius == 0: 
+                # print("No docking station found!")
+                return "No docking station found!"
+            
+            width_diff, height_diff = frame_centerpoint[0] - red_centerpoint[0], frame_centerpoint[1] - red_centerpoint[1] #x, y values
+            
+            red_to_frame_ratio = ((math.pi * red_radius ** 2) / (frame_width * frame_height)) * 100
+            
+            max_red_ratio = 30 # TODO change value, maybe remove entirely. if the red dot is more than 30% of the frame, stop
+            if red_to_frame_ratio > max_red_ratio:
+                # print("Stop! Docking station is close enough!")
+                self.driving_data = [40, [0, 0, 0, 0, 0, 0, 0, 0]]
+                raise SystemExit # stops ALL running code, since docking is done.
+            else:
+                self.driving_data = regulate_position(width_diff, height_diff)
+
         
     def get_driving_data(self):
         data = self.driving_data.copy()
@@ -65,7 +95,7 @@ class AutonomousDocking:
         print(contours)
         for c in contours:
             (x, y), radius = cv2.minEnclosingCircle(c)
-            if radius > red_center[1]:
+            if radius > red_center[1]: # TODO may need to improve filtration of contures
                 red_center = (x, y), radius
         # write center and radius as integers
         center_point = (int(red_center[0][0]), int(red_center[0][1]))
@@ -74,31 +104,8 @@ class AutonomousDocking:
         cv2.circle(self.frame, center_point, radius, (0, 255, 0), 2)
         return center_point, radius
         
-    def update(self):
-        frame_width = self.frame.shape[1]
-        frame_height = self.frame.shape[0]
-        
-        frame_centerpoint = (frame_width / 2, frame_height / 2)
-        red_centerpoint, red_radius = self.find_red()
-        
-        #center = (0, 0) and r = 0 are default values, meaning no red conture is found
-        if red_centerpoint == (0, 0) and red_radius == 0: 
-            print("No docking station found!")
-            return "No docking station found!"
-        
-        width_diff, height_diff = frame_centerpoint[0] - red_centerpoint[0], frame_centerpoint[1] - red_centerpoint[1]
-        
-        red_to_frame_ratio = ((math.pi * red_radius ** 2) / (frame_width * frame_height)) * 100
-        
-        max_red_ratio = 50 #if the red dot is more than 50% of the frame, stop
-        if red_to_frame_ratio > max_red_ratio:
-            print("Stop! Docking station is close enough!")
-            self.driving_data = [40, [0, 0, 0, 0, 0, 0, 0, 0]]
-            exit()
-        else:
-            self.driving_data = regulate_position(width_diff, height_diff)
             
-    def find_grouts(self):
+    def find_grouts(self): # TODO should mabye dilate
         lower_bound, upper_bound = (1, 0, 0), (100, 100, 100)
         grouts = cv2.inRange(self.down_frame, lower_bound, upper_bound)
         canny = cv2.Canny(grouts, 100, 200)
@@ -112,16 +119,20 @@ class AutonomousDocking:
     
     def find_relative_angle(self):
         grout_contours = self.find_grouts()
+        
+        # Used to find the average angle of the grouts
         angle_sum = 0
         angle_counter = 0
+        
         for c in grout_contours:
             rect = cv2.minAreaRect(c)
             area = cv2.contourArea(c)
-            (x, y), (width, height), angle = rect
+            _, (width, height), angle = rect
             
-            MAX_AREA = 5000
-            MIN_AREA = 500
-            if (area > MAX_AREA) or (area < MIN_AREA):
+            # These max values depend on how far away the ROV is from the bottom
+            MAX_AREA = 5000 # TODO may need to change
+            MIN_AREA = 500 # TODO may need to change
+            if (area > MAX_AREA) or (area < MIN_AREA): 
                 continue
             
             if width < height:
@@ -131,33 +142,39 @@ class AutonomousDocking:
                 
             angle_sum += angle
             angle_counter += 1
+
             if self.draw_grout_boxes:
                 box = cv2.boxPoints(rect)
                 box = np.intp(box)
                 cv2.drawContours(self.down_frame, [box], 0, (0, 0, 255), 2)
+
                 if cv2.waitKey(1) & 0xFF == ord('q'):
                     self.draw_grout_boxes = False
                     
             if angle_counter == 0:
-                return "Bad"
+                return "NO ANGLE"
+            
             avg_angle = angle_sum / angle_counter
             return avg_angle
             
     def rotation_commands(self):
         angle = self.find_relative_angle()
-        if angle == "Bad":
-            return "No grouts found!"
+        if angle == "NO ANGLE":
+            return
         
         elif angle > 2:
+            # Rotating Right
             self.driving_data = [40, [0, 0, 0, 10, 0, 0, 0, 0]]
-            return "Turn right!"
+            return
         
         elif angle < -2:
+            # Rotating Left
             self.driving_data = [40, [0, 0, 0, -10, 0, 0, 0, 0]]
-            return "Turn left!"
+            return
         else:
-            self.driving_data = [40, [0, 10, 0, 0, 0, 0, 0, 0]]
-            return "Go straight!"
+            # Going Forward
+            self.angle_good = True
+            return
         
         
 if __name__ == "__main__":

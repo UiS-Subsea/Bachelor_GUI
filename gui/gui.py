@@ -332,7 +332,7 @@ class Window(QMainWindow):
             self.labelTempSensorkort
         ]
         for i, label in enumerate(temp_liste):
-            label.setText(str(round(sensordata[i], 2)) + "°")
+            label.setText(str(round(sensordata[i], 2)) + "CM")
    
     def guiKraft(self, sensordata):
         effekt_liste: list[QLabel] = [
