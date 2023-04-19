@@ -27,7 +27,7 @@ def clear_screen():
 
 
 class Controller:
-    def __init__(self, queue_to_rov: multiprocessing.Queue, t_watch: Threadwatcher, id, joystick_deadzone=15) -> None:
+    def __init__(self, queue_to_rov: multiprocessing.Queue, manual_flag, t_watch: Threadwatcher, id, joystick_deadzone=15) -> None:
         # Queue that is received in main
         self.queue_to_rov = queue_to_rov
         # t_watch and id is used for closing the process from main
@@ -37,7 +37,7 @@ class Controller:
         self.joystick_deadzone = joystick_deadzone  # deadzone in percent
         # list of all buttons that can be clicked. 1 means it is clicked and 0 is not clicked
         self.rov_buttons = [0]*15
-
+        self.manual_flag = manual_flag
         self.mani_buttons = [0]*16
         # values for all axes of the joysticks (and one "virtual joystick" that combines axes)
         self.rov_joysticks = [0]*7
@@ -189,6 +189,7 @@ class Controller:
             
             # print(duration)
             for event in pygame.event.get():
+                self.manual_flag.value = 1
                 if event.type == DPAD: #dpad (both up and down)
                     if event.joy == ROV_CONTROLLER_ID:
                         self.rov_dpad = event.value # BLIR DET BRUKT ELLER ER DET KNAPP?
@@ -400,9 +401,9 @@ class Controller:
         # self.connection.close()
 
 # This is the entry point that main calls
-def run(queue_to_rov, t_watch: Threadwatcher, id, debug=True, debug_all=True):
+def run(queue_to_rov,manual_flag, t_watch: Threadwatcher, id, debug=True, debug_all=True):
     # debug_all = True
-    c = Controller(queue_to_rov, t_watch, id)
+    c = Controller(queue_to_rov, manual_flag, t_watch, id)
     c.get_events_loop(t_watch, id, debug=debug, debug_all=debug_all)
 
 

@@ -49,22 +49,22 @@ if __name__ == "__main__":
         global network
         global run_craft_packet
         global run_camera
-
         # exec = ExecutionClass()
 
         # cam = Camera()
+        manual_flag = multiprocessing.Value("i", 1)
         run_gui = True
         run_craft_packet = False
-        run_network = False # Bytt t True når du ska prøva å connecte.
-        run_get_controllerdata = False
+        run_network = True # Bytt t True når du ska prøva å connecte.
+        run_get_controllerdata = True
         # Sett til True om du vil sende fake sensordata til gui
-        run_send_fake_sensordata = True
+        run_send_fake_sensordata = False
 
         t_watch = Threadwatcher()
         queue_for_rov = multiprocessing.Queue()
-        gui_parent_queue = multiprocessing.Queue()
+        gui_queue = multiprocessing.Queue()
         
-        gui_child_queue = multiprocessing.Queue()
+    
         
         # HUSK Å ENDRE TICK HVIS INPUT OPPDATERES SENT!
         debug_all = False  # Sett til True om du vil se input fra controllers
@@ -76,7 +76,7 @@ if __name__ == "__main__":
             # main_driver_loop = threading.Thread(target=run, args=(network, t_watch, id, queue_for_rov, gui_parent_queue), daemon=True)
             # main_driver_loop.start()
             
-            rovstate = Rov_state(queue_for_rov, network, gui_parent_queue, t_watch)
+            rovstate = Rov_state(queue_for_rov, network, gui_queue, manual_flag,  t_watch)
             
             id = t_watch.add_thread()
             rov_state_recv_loop = threading.Thread(target=rovstate.receive_data_from_rov, args=(t_watch, id), daemon=True)
@@ -91,7 +91,7 @@ if __name__ == "__main__":
             id = t_watch.add_thread()
             # takes in controller data and sends it into child_conn
             controller_process = Process(target=controller.run, args=(
-                queue_for_rov, t_watch, id, True, debug_all), daemon=True)
+                queue_for_rov, manual_flag, t_watch, id, True, debug_all), daemon=True)
             controller_process.start()
             # controller_process.terminate()
 
@@ -99,7 +99,7 @@ if __name__ == "__main__":
             id = t_watch.add_thread()
             gui_loop = Process(
                 target=gui.run,
-                args=(gui_parent_queue, queue_for_rov, t_watch, id),
+                args=(gui_queue, queue_for_rov, manual_flag,  t_watch, id),
                 daemon=True,
             )  # should recieve commands from the gui
             gui_loop.start()
@@ -108,7 +108,7 @@ if __name__ == "__main__":
             id = t_watch.add_thread()
             datafaker = threading.Thread(
                 target=send_fake_sensordata,
-                args=(t_watch, gui_parent_queue),
+                args=(t_watch, gui_queue),
                 daemon=True,
             )
             datafaker.start()
