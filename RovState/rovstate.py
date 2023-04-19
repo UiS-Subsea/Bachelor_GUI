@@ -378,3 +378,6 @@ class Rov_state:
         elif self.packet_id == 2 and self.manual_flag.value == 0:
         # self.build_manipulator_packet()
             self.build_autonom_packet()
+        
+        print(self.packets_to_send)
+    

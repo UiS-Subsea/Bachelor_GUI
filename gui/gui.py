@@ -38,13 +38,8 @@ class Window(QMainWindow):
         self.sound_file = "martinalarm.wav"
         self.queue = queue_for_rov
         self.sound_file = os.path.abspath("martinalarm.wav")
-<<<<<<< HEAD
-
-        self.queue: queue_for_rov 
-=======
         self.manual_flag = manual_flag
         self.queue: queue_for_rov  # queue_for_rov is a queue that is used to send data to the rov
->>>>>>> ec7b6acfc6b9477884bfe6801d744ce58c773b4d
 
         self.gui_queue = gui_queue
         self.threadwatcher = t_watch  
@@ -59,6 +54,10 @@ class Window(QMainWindow):
         self.timer.timeout.connect(self.update_gui_data) # Connect timer to update_gui_data
         self.timer.start(100) # Adjust the interval to your needs
         self.manual = True
+        self.reguleringDropdown = self.findChild(QComboBox, 'reguleringDropdown')
+        self.tuningInput = self.findChild(QLineEdit, 'tuningInput')
+        self.btnRegTuning = self.findChild(QPushButton, 'btnRegTuning')
+
 
         # Queue and pipe
 
@@ -90,9 +89,9 @@ class Window(QMainWindow):
                 self.exec.send_data_test()
         else:
             self.exec.stop_everything()
-            
-        
-                
+
+
+
     def update_gui_data(self):
         while not self.gui_queue.empty():
             sensordata = self.gui_queue.get()
@@ -155,6 +154,23 @@ class Window(QMainWindow):
         # Vinkler
         self.btnNullpunktVinkler.clicked.connect(
             lambda: Rov_state.reset_angles(self))
+        
+        
+        self.btnRegTuning.clicked.connect(self.updateRegulatorTuning)
+
+
+
+
+        
+    def updateRegulatorTuning(self):
+        combo_value = self.reguleringDropdown.currentText()
+        input_value = self.tuningInput.text()
+        
+        self.packets_to_send.append([combo_value, input_value])
+        print([combo_value, input_value])
+
+        
+
 
     def gui_manipulator_state_update(self, sensordata):
         self.toggle_mani.setChecked(sensordata[0])
@@ -166,17 +182,14 @@ class Window(QMainWindow):
             DYBDETEMP: self.dybdeTempUpdate,
             FEILKODE: self.guiFeilKodeUpdate,
             THRUST: self.guiThrustUpdate,
-<<<<<<< HEAD
             MANIPULATOR12V :self.guiManipulatorUpdate,
             THRUSTER12V:self.thruster12VUpdate,
             KRAFT5V:self.kraft5VUpdate,
             REGULERINGMOTORTEMP:self.reguleringMotorTempUpdate,
             TEMPKOMKONTROLLER:self.TempKomKontrollerUpdate
             
-=======
             # MANIPULATOR12V :self.guiManipulatorUpdate,
 
->>>>>>> ec7b6acfc6b9477884bfe6801d744ce58c773b4d
         }
         for key in sensordata.keys():
             if key in self.sensor_update_function:
@@ -261,12 +274,13 @@ class Window(QMainWindow):
             if sensordata[2][i] == True:
                 labelTrykkAlarm.setText(trykkErrors[i])
                 labelTrykkAlarm.setStyleSheet(self.gradient)  
-                
+        
+        #TODO: skru på før du pusha
         for i in range(len(sensordata[3])):
             if sensordata[3][i] == True:
                 labelLekkasjeAlarm.setText(lekkasjeErrors[i])
                 labelLekkasjeAlarm.setStyleSheet(self.gradient)
-                self.play_sound()
+                #self.play_sound()
 
 
     def guiVinkelUpdate(self, sensordata):
