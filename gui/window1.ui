@@ -2487,20 +2487,10 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
     <bool>false</bool>
    </property>
   </widget>
-  <widget class="QLineEdit" name="lineRull">
+  <widget class="QPushButton" name="btnRegTuning">
    <property name="geometry">
     <rect>
-     <x>870</x>
-     <y>289</y>
-     <width>141</width>
-     <height>31</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="btnRullKontroll">
-   <property name="geometry">
-    <rect>
-     <x>1020</x>
+     <x>1050</x>
      <y>290</y>
      <width>101</width>
      <height>31</height>
@@ -2520,85 +2510,7 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
     </rect>
    </property>
    <property name="text">
-    <string>Regulator Rull Kontroll</string>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="lineStamp">
-   <property name="geometry">
-    <rect>
-     <x>870</x>
-     <y>359</y>
-     <width>141</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="btnStampKontroll">
-   <property name="geometry">
-    <rect>
-     <x>1020</x>
-     <y>360</y>
-     <width>101</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Submit</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_6">
-   <property name="geometry">
-    <rect>
-     <x>870</x>
-     <y>330</y>
-     <width>191</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Regulator Stamp Kontroll</string>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="btnDybdeKontroll">
-   <property name="geometry">
-    <rect>
-     <x>1020</x>
-     <y>430</y>
-     <width>101</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Submit</string>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="lineDybde">
-   <property name="geometry">
-    <rect>
-     <x>870</x>
-     <y>429</y>
-     <width>141</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_7">
-   <property name="geometry">
-    <rect>
-     <x>870</x>
-     <y>400</y>
-     <width>131</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Regulator Dybde Kontroll</string>
+    <string>Regulator tuning</string>
    </property>
   </widget>
   <widget class="QPushButton" name="btnKalibrerIMU_2">
@@ -3737,6 +3649,149 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
    <property name="labelStyle2" stdset="0">
     <string>whiteBg</string>
    </property>
+  </widget>
+  <widget class="QLineEdit" name="tuningInput">
+   <property name="geometry">
+    <rect>
+     <x>980</x>
+     <y>290</y>
+     <width>51</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QListWidget" name="listWidget">
+   <property name="geometry">
+    <rect>
+     <x>720</x>
+     <y>310</y>
+     <width>101</width>
+     <height>191</height>
+    </rect>
+   </property>
+   <item>
+    <property name="text">
+     <string>Rull KP</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Rull KI</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Rull KD</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Stamp KP</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Stamp KI</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Stamp KD</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Dybde KP</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Dybde KI</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Dybde KD</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>TS</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Alpha</string>
+    </property>
+   </item>
+  </widget>
+  <widget class="QComboBox" name="reguleringDropdown">
+   <property name="geometry">
+    <rect>
+     <x>880</x>
+     <y>290</y>
+     <width>86</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <item>
+    <property name="text">
+     <string>Rull KI</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Rull KD</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Rull KP</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Stamp KI</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Stamp KD</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Stamp KP</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Dybde KI</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Dybde KD</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Dybde KP</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>TS</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Alpha</string>
+    </property>
+   </item>
   </widget>
  </widget>
  <resources>

@@ -26,7 +26,7 @@ from Controller import Controller_Handler as controller
 from main import *
 
 global RUN_MANUAL
-
+os.environ['QT_LOGGING_RULES'] = 'qt.qpa.wayland.warning=false'
 
 class Window(QMainWindow):
     def __init__(self, gui_queue: multiprocessing.Queue, queue_for_rov: multiprocessing.Queue, manual_flag,  t_watch: Threadwatcher, id: int, parent=None):
@@ -57,6 +57,10 @@ class Window(QMainWindow):
         self.timer.timeout.connect(self.update_gui_data)
         self.timer.start(100)  # Adjust the interval to your needs
         self.manual = True
+        self.reguleringDropdown = self.findChild(QComboBox, 'reguleringDropdown')
+        self.tuningInput = self.findChild(QLineEdit, 'tuningInput')
+        self.btnRegTuning = self.findChild(QPushButton, 'btnRegTuning')
+
 
         # Queue and pipe
 
@@ -153,7 +157,38 @@ class Window(QMainWindow):
 
         # Vinkler
         self.btnNullpunktVinkler.clicked.connect(
-            lambda: self.reset_angles())
+            lambda: self.reset_angles(self))
+        
+        
+        self.btnRegTuning.clicked.connect(self.updateRegulatorTuning)
+
+
+
+    def updateRegulatorTuning(self):
+        reguleringDropdown = self.reguleringDropdown.currentText()
+        input_value = float(self.tuningInput.text())
+
+        my_dict={
+                'Rull KI': 1,
+                'Rull KD': 2,
+                'Rull KP': 3,
+                'Stamp KI': 4,
+                'Stamp KD': 5,
+                'Stamp KP': 6,
+                'Dybde KI': 7,
+                'Dybde KD': 8,
+                'Dybde KP': 9,
+                'TS': 10,
+                'Alpha': 11
+        }
+
+        value = my_dict.get(reguleringDropdown, None) # None is default if key doesn't exist
+        update_regulator_tuning = [int(value), float(input_value)]
+#        self.packets_to_send.append([42, [int(value), float(input_value)]])
+        values = {"update_regulator_tuning": update_regulator_tuning}
+        self.queue.put((10, values))
+#        print(self.packets_to_send)
+        
 
     def gui_manipulator_state_update(self, sensordata):
         self.toggle_mani.setChecked(sensordata[0])
@@ -320,12 +355,13 @@ class Window(QMainWindow):
             if sensordata[2][i] == True:
                 labelTrykkAlarm.setText(trykkErrors[i])
                 labelTrykkAlarm.setStyleSheet(self.gradient)  
-                
+        
+        #TODO: skru på før du pusha
         for i in range(len(sensordata[3])):
             if sensordata[3][i] == True:
                 labelLekkasjeAlarm.setText(lekkasjeErrors[i])
                 labelLekkasjeAlarm.setStyleSheet(self.gradient)
-                self.play_sound()
+                #self.play_sound()
 
 
     def guiVinkelUpdate(self, sensordata):
