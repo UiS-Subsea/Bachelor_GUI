@@ -37,9 +37,7 @@ class Window(QMainWindow):
         self.queue = queue_for_rov
         self.sound_file = os.path.abspath("martinalarm.wav")
 
-        self.queue: multiprocessing.Queue = (
-            queue_for_rov
-        )
+        self.queue: queue_for_rov  # queue_for_rov is a queue that is used to send data to the rov
 
         # pipe_conn_only_rcv is a pipe connection that only receives data
         self.gui_queue = gui_queue
