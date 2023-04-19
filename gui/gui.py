@@ -4,6 +4,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets, Qt, uic
 from PyQt5.QtWidgets import QMainWindow, QWidget, QCheckBox, QLabel, QMessageBox
 from PyQt5.QtMultimedia import QSound, QSoundEffect, QMediaPlayer, QMediaContent
 from PyQt5.QtCore import QUrl, QTimer
+import os
 import sys
 import threading
 #from main import Vinkeldata
@@ -39,7 +40,8 @@ class Window(QMainWindow):
         uic.loadUi("gui/window1.ui", self)
         self.connectFunctions()
         self.player = QMediaPlayer()
-        self.sound_file = "martinalarm.wav"
+        self.sound_file = os.path.abspath("martinalarm.wav")
+
         self.queue: multiprocessing.Queue = (
             queue_for_rov
         )
