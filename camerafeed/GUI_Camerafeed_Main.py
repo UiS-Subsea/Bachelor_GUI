@@ -235,10 +235,10 @@ class ExecutionClass:
 
     def transect(self):
         self.done = False
-        self.Camera.start_test_cam() # TODO should be down frame
+        self.Camera.start_down_cam() # TODO should be down frame
         while not self.done and self.manual_flag.value == 0:
-            self.update_test_cam() # TODO Should be down frame
-            transect_frame, driving_data_packet = self.AutonomousTransect.run(self.frame_test)
+            self.update_down() # TODO Should be down frame
+            transect_frame, driving_data_packet = self.AutonomousTransect.run(self.frame_down)
             self.show(transect_frame, "Transect")
             self.send_data_to_rov(driving_data_packet)
             QApplication.processEvents()

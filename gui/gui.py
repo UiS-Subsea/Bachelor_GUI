@@ -81,6 +81,10 @@ class Window(QMainWindow):
                 self.exec.send_data_test()
             if mode == "transect":
                 self.exec.transect()
+            if mode == "docking":
+                self.exec.docking()
+            if mode == "testing":
+                self.exec.send_data_test()
         else:
             self.exec.stop_everything()
             
@@ -100,11 +104,11 @@ class Window(QMainWindow):
 
     def connectFunctions(self):
         # window2
-        self.showNewWindowButton.clicked.connect(lambda: self.show_new_window())
+        self.showNewWindowButton.clicked.connect(lambda: self.imageprocessing("testing"))
 
         # Kjøremodus
         self.btnManuell.clicked.connect(lambda: self.manual_kjoring())
-        self.btnAutonom.clicked.connect(lambda: self.exec.send_data_test())
+        self.btnAutonom.clicked.connect(lambda: self.imageprocessing("docking"))
         self.btnFrogCount.clicked.connect(lambda: self.imageprocessing("transect"))
 
         # Kamera
