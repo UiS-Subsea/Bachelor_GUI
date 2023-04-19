@@ -3075,7 +3075,7 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
     </font>
    </property>
    <property name="text">
-    <string>KomKontroller</string>
+    <string>Tempkontroller</string>
    </property>
    <property name="textFormat">
     <enum>Qt::RichText</enum>
@@ -3192,7 +3192,7 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
     <string>whiteBg</string>
    </property>
   </widget>
-  <widget class="QLabel" name="labelTempKomKontroller">
+  <widget class="QLabel" name="labelTempKontrollerTemp">
    <property name="geometry">
     <rect>
      <x>130</x>
@@ -3740,7 +3740,7 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
   </widget>
  </widget>
  <resources>
-  <include location="../../uis-subsea/Subsea_QT_GUI/resources.qrc"/>
+  <include location="../../../uis-subsea/Subsea_QT_GUI/resources.qrc"/>
  </resources>
  <connections/>
 </ui>
