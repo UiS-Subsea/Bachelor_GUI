@@ -114,10 +114,11 @@ class CameraClass:
         
     def start(self):
         # self.start_down_cam()
-        self.start_stereo_cam_L()
-        self.start_stereo_cam_R()
+        # self.start_stereo_cam_L()
+        # self.start_stereo_cam_R()
         # self.start_manip_cam()
         # self.start_manual_cam()
+        pass
 
     def close_all(self):
         if self.cam_down is not None and self.cam_down.isOpened():
@@ -253,16 +254,18 @@ class ExecutionClass:
         self.done = False
         self.Camera.start_stereo_cam_L()
         self.Camera.start_stereo_cam_R() # TODO shoould be down camera
-        while not self.done:
+        while not self.done and self.manual_flag.value == 0:
             # Needs stereo L, and Down Cameras
             self.update_stereo_R()
             self.update_stereo_L() # TODO should be down camera
             docking_frame, frame_under, driving_data_packet = self.Docking.run(self.frame_stereoL, self.frame_stereoR) # TODO should be down camera
             self.show(docking_frame, "Docking")
             self.show(frame_under, "Frame Under")
-            self.driving_queue.put(driving_data_packet)
+            self.send_data_to_rov(driving_data_packet)
             QApplication.processEvents()
             # self.show(frame_under, "Frame Under")
+        else:
+            self.stop_everything()
             
     def send_data_to_rov(self, datapacket):
         data_to_send = {"autonomdata": datapacket}

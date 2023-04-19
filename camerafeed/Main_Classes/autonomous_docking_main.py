@@ -8,22 +8,22 @@ def regulate_position(displacement_x, displacement_y):
     drive_command = ""
     if displacement_x > 10:
         #drive_command = "GO LEFT"
-        drive_command = [40, [-10, 0, 0, 0, 0, 0, 0, 0]]
+        drive_command = [-10, 0, 0, 0, 0, 0, 0, 0]
     
     elif displacement_x < -10:
         #drive_command = "GO RIGHT"
-        drive_command = [40, [10, 0, 0, 0, 0, 0, 0, 0]]
+        drive_command = [10, 0, 0, 0, 0, 0, 0, 0]
 
     elif displacement_y > 10:
         #drive_command = "GO DOWN"
-        drive_command = [40, [0, 0, -10, 0, 0, 0, 0, 0]]
+        drive_command = [0, 0, -10, 0, 0, 0, 0, 0]
 
     elif displacement_y < -10:
         #drive_command = "GO UP"
-        drive_command = [40, [0, 0, 10, 0, 0, 0, 0, 0]]
+        drive_command = [0, 0, 10, 0, 0, 0, 0, 0]
     else:
         # drive_command = "GO FORWARD"
-        drive_command = [40, [0, 10, 0, 0, 0, 0, 0, 0]]
+        drive_command = [0, 10, 0, 0, 0, 0, 0, 0]
         
     return drive_command
 
@@ -32,7 +32,7 @@ class AutonomousDocking:
         self.driving_data = [0, 0, 0, 0, 0, 0, 0, 0]
         self.frame = None
         self.down_frame = None
-        self.draw_grouts = True
+        self.draw_grouts = False
         self.draw_grout_boxes = True
         self.angle_good = False
         
@@ -92,7 +92,6 @@ class AutonomousDocking:
         contours, _ = cv2.findContours(canny, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
         # there may be a lot of noise in the image, to find the correct contoure, we loop through the list of contoures
         red_center = (0, 0), 0
-        print(contours)
         for c in contours:
             (x, y), radius = cv2.minEnclosingCircle(c)
             if radius > red_center[1]: # TODO may need to improve filtration of contures
@@ -155,21 +154,22 @@ class AutonomousDocking:
                 return "NO ANGLE"
             
             avg_angle = angle_sum / angle_counter
+            print(avg_angle)
             return avg_angle
             
     def rotation_commands(self):
         angle = self.find_relative_angle()
         if angle == "NO ANGLE":
             return
-        
+            
         elif angle > 2:
             # Rotating Right
-            self.driving_data = [40, [0, 0, 0, 10, 0, 0, 0, 0]]
+            self.driving_data = [0, 0, 0, 10, 0, 0, 0, 0]
             return
         
         elif angle < -2:
             # Rotating Left
-            self.driving_data = [40, [0, 0, 0, -10, 0, 0, 0, 0]]
+            self.driving_data = [0, 0, 0, -10, 0, 0, 0, 0]
             return
         else:
             # Going Forward

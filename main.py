@@ -22,24 +22,22 @@ MANIPULATOR_TILT = 3
 MANIPULATOR_GRAB_RELEASE = 6
 
 
-REGULERINGSKNAPPAR="32" #0=All regulering deaktivert, 1=Aktiver rull reg, 2=Regulering av dybde aktivert, 3=Regulering av vinkel aktivert, 4=Regulering av dybde og vinkel aktivert
-THRUST="129" #HHF, #HHB, #HVB, HVF, VHF, VHB, VVB, VVF
-REGULERINGTEMP="130" #0Reguleringskort, 1=Motordriverkort
+REGULERINGSKNAPPAR = "32"  # 0=All regulering deaktivert, 1=Aktiver rull reg, 2=Regulering av dybde aktivert, 3=Regulering av vinkel aktivert, 4=Regulering av dybde og vinkel aktivert
+THRUST = "129"  # HHF, #HHB, #HVB, HVF, VHF, VHB, VVB, VVF
+REGULERINGTEMP = "130"  # 0Reguleringskort, 1=Motordriverkort
 VINKLER = "138"  # 0=roll, 1=stamp, 2=gir?
-DYBDETEMP = "139" # 0=dybde, 2=vanntemp, 4=sensorkorttemp
+DYBDETEMP = "139"  # 0=dybde, 2=vanntemp, 4=sensorkorttemp
 FEILKODE = "140"  # 0=IMU Error, 1=Temp Error, 2=Trykk Error, 3=Lekkasje
-TEMPKOMKONTROLLER="145" #=Temp
-MANIPULATOR12V = "150" #Strømtrekk, Temperatur, Sikringsstatus
-THRUSTER12V = "151"  #Strømtrekk, Temperatur, Sikringsstatus
-KRAFT5V = "152" #Strømtrekk, Temperatur, Sikringsstatus
+TEMPKOMKONTROLLER = "145"  # =Temp
+MANIPULATOR12V = "150"  # Strømtrekk, Temperatur, Sikringsstatus
+THRUSTER12V = "151"  # Strømtrekk, Temperatur, Sikringsstatus
+KRAFT5V = "152"  # Strømtrekk, Temperatur, Sikringsstatus
 
 _tilt_downwards = 201
 
 
-
 # # TODO: HER VAR TIDLIGARE frame_pipe
 
-    
 
 if __name__ == "__main__":
 
@@ -55,7 +53,7 @@ if __name__ == "__main__":
         manual_flag = multiprocessing.Value("i", 1)
         run_gui = True
         run_craft_packet = False
-        run_network = True # Bytt t True når du ska prøva å connecte.
+        run_network = True  # Bytt t True når du ska prøva å connecte.
         run_get_controllerdata = True
         # Sett til True om du vil sende fake sensordata til gui
         run_send_fake_sensordata = False
@@ -63,9 +61,7 @@ if __name__ == "__main__":
         t_watch = Threadwatcher()
         queue_for_rov = multiprocessing.Queue()
         gui_queue = multiprocessing.Queue()
-        
-    
-        
+
         # HUSK Å ENDRE TICK HVIS INPUT OPPDATERES SENT!
         debug_all = False  # Sett til True om du vil se input fra controllers
 
@@ -75,17 +71,19 @@ if __name__ == "__main__":
             # id = t_watch.add_thread()
             # main_driver_loop = threading.Thread(target=run, args=(network, t_watch, id, queue_for_rov, gui_parent_queue), daemon=True)
             # main_driver_loop.start()
-            
-            rovstate = Rov_state(queue_for_rov, network, gui_queue, manual_flag,  t_watch)
-            
+
+            rovstate = Rov_state(queue_for_rov, network,
+                                 gui_queue, manual_flag,  t_watch)
+
             id = t_watch.add_thread()
-            rov_state_recv_loop = threading.Thread(target=rovstate.receive_data_from_rov, args=(t_watch, id), daemon=True)
+            rov_state_recv_loop = threading.Thread(
+                target=rovstate.receive_data_from_rov, args=(t_watch, id), daemon=True)
             rov_state_recv_loop.start()
-            
+
             id = t_watch.add_thread()
-            rov_state_send_loop = threading.Thread(target=rovstate.send_packets_to_rov, args=(t_watch, id), daemon=True)
+            rov_state_send_loop = threading.Thread(
+                target=rovstate.send_packets_to_rov, args=(t_watch, id), daemon=True)
             rov_state_send_loop.start()
-            
 
         if run_get_controllerdata:
             id = t_watch.add_thread()
@@ -113,11 +111,9 @@ if __name__ == "__main__":
             )
             datafaker.start()
 
-            
         while True:
             # print(queue_for_rov.get())
             time.sleep(1)
     except KeyboardInterrupt:
         t_watch.stop_all_threads()
         print("stopped all threads")
-        
