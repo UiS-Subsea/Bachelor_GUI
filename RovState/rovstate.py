@@ -1,5 +1,5 @@
 import json
-from logging import Logger
+from Kommunikasjon.packet_info import Logger
 from RovState.network_formatter import network_format
 from Thread_info import Threadwatcher
 from Kommunikasjon.network_handler import Network
@@ -44,11 +44,12 @@ ID_camera_tilt_upwards = 200
 ID_camera_tilt_downwards = 201
 
 class Rov_state:
-    def __init__(self, queue_for_rov, network_handler, gui_queue, t_watch: Threadwatcher) -> None:
+    def __init__(self, queue_for_rov, network_handler, gui_queue, manual_flag,  t_watch: Threadwatcher) -> None:
         # Threadwatcher
         self.t_watch: Threadwatcher = t_watch
         self.data: dict = {}
         self.logger = Logger()
+        self.manual_flag = manual_flag
 
         #Queue and Pipe
         self.queue_for_rov = queue_for_rov
@@ -371,9 +372,9 @@ class Rov_state:
         self.data = packet
             
     def build_packets(self):
-        if self.packet_id == 1:
+        if self.packet_id == 1 and self.manual_flag.value == 1:
         # self.button_handling()
             self.build_rov_packet()
-        elif self.packet_id == 2:
+        elif self.packet_id == 2 and self.manual_flag.value == 0:
         # self.build_manipulator_packet()
             self.build_autonom_packet()

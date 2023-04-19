@@ -157,7 +157,7 @@ class CameraClass:
         cv2.imwrite(f"camerafeed/output/Img{datetime.datetime.now()}.jpg", frame)
         
 class ExecutionClass:
-    def __init__(self, driving_queue):
+    def __init__(self, driving_queue, manual_flag):
         self.AutonomousTransect = AutonomousTransect()
         self.Docking = AutonomousDocking()
         self.Seagrass = SeagrassMonitor()
@@ -165,6 +165,7 @@ class ExecutionClass:
         self.counter = 0
         self.done = False
         # self.Camera.start()
+        self.manual_flag = manual_flag
         self.driving_queue = driving_queue
 
     def update_down(self):
@@ -234,13 +235,15 @@ class ExecutionClass:
 
     def transect(self):
         self.done = False
-        self.Camera.start_test_cam() # TODO should be down frame
-        while not self.done:
-            self.update_test_cam() # TODO Should be down frame
-            transect_frame, driving_data_packet = self.AutonomousTransect.run(self.frame_test)
+        self.Camera.start_down_cam() # TODO should be down frame
+        while not self.done and self.manual_flag.value == 0:
+            self.update_down() # TODO Should be down frame
+            transect_frame, driving_data_packet = self.AutonomousTransect.run(self.frame_down)
             self.show(transect_frame, "Transect")
-            self.driving_queue.put(driving_data_packet)
+            self.send_data_to_rov(driving_data_packet)
             QApplication.processEvents()
+        else:
+            self.stop_everything()
 
     def seagrass(self):
         growth = self.Seagrass.run(self.frame.copy())

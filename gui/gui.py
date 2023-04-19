@@ -25,9 +25,10 @@ from Thread_info import Threadwatcher
 from Controller import Controller_Handler as controller
 from main import *
 
+global RUN_MANUAL
 
 class Window(QMainWindow):
-    def __init__(self, gui_queue: multiprocessing.Queue, queue_for_rov: multiprocessing.Queue, t_watch: Threadwatcher, id: int, parent=None):
+    def __init__(self, gui_queue: multiprocessing.Queue, queue_for_rov: multiprocessing.Queue, manual_flag,  t_watch: Threadwatcher, id: int, parent=None):
         #        self.send_current_light_intensity()
         self.packets_to_send = []
         super().__init__(parent)
@@ -37,14 +38,19 @@ class Window(QMainWindow):
         self.sound_file = "martinalarm.wav"
         self.queue = queue_for_rov
         self.sound_file = os.path.abspath("martinalarm.wav")
+<<<<<<< HEAD
 
         self.queue: queue_for_rov 
+=======
+        self.manual_flag = manual_flag
+        self.queue: queue_for_rov  # queue_for_rov is a queue that is used to send data to the rov
+>>>>>>> ec7b6acfc6b9477884bfe6801d744ce58c773b4d
 
         self.gui_queue = gui_queue
         self.threadwatcher = t_watch  
         self.id = id 
 
-        self.exec = ExecutionClass(queue_for_rov)
+        self.exec = ExecutionClass(queue_for_rov, manual_flag)
         self.camera = CameraClass()
         self.w = None  # SecondWindow()
         self.gir_verdier = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -62,20 +68,29 @@ class Window(QMainWindow):
         "background-color: #444444; color: #FF0000; border-radius: 10px;")
     
     def manual_kjoring(self):
-        self.manual = True
+        self.manual_flag.value = 1
+        print("Manual flag: ", self.manual_flag.value)
+        
         id = self.threadwatcher.add_thread()
         imageprocessing = threading.Thread(target = self.exec.stop_everything)
         imageprocessing.start()
     
     def imageprocessing(self, mode):
-        self.manual = False
-        id = self.threadwatcher.add_thread()
-        if mode == "normal_camera":
-            imageprocessing = Process(target = self.exec.normal_camera, daemon=False)
-        if mode == "transect":
-            imageprocessing = Process(target = self.exec.transect)
+        self.manual_flag.value = 0
+        print("Manual flag: ", self.manual_flag.value)
+        if self.manual_flag.value == 0:
+            id = self.threadwatcher.add_thread()
+            if mode == "normal_camera":
+                self.exec.send_data_test()
+            if mode == "transect":
+                self.exec.transect()
+            if mode == "docking":
+                self.exec.docking()
+            if mode == "testing":
+                self.exec.send_data_test()
+        else:
+            self.exec.stop_everything()
             
-        imageprocessing.start()
         
                 
     def update_gui_data(self):
@@ -92,11 +107,11 @@ class Window(QMainWindow):
 
     def connectFunctions(self):
         # window2
-        self.showNewWindowButton.clicked.connect(lambda: self.show_new_window())
+        self.showNewWindowButton.clicked.connect(lambda: self.imageprocessing("testing"))
 
         # Kjøremodus
         self.btnManuell.clicked.connect(lambda: self.manual_kjoring())
-        self.btnAutonom.clicked.connect(lambda: self.exec.send_data_test())
+        self.btnAutonom.clicked.connect(lambda: self.imageprocessing("docking"))
         self.btnFrogCount.clicked.connect(lambda: self.imageprocessing("transect"))
 
         # Kamera
@@ -151,12 +166,17 @@ class Window(QMainWindow):
             DYBDETEMP: self.dybdeTempUpdate,
             FEILKODE: self.guiFeilKodeUpdate,
             THRUST: self.guiThrustUpdate,
+<<<<<<< HEAD
             MANIPULATOR12V :self.guiManipulatorUpdate,
             THRUSTER12V:self.thruster12VUpdate,
             KRAFT5V:self.kraft5VUpdate,
             REGULERINGMOTORTEMP:self.reguleringMotorTempUpdate,
             TEMPKOMKONTROLLER:self.TempKomKontrollerUpdate
             
+=======
+            # MANIPULATOR12V :self.guiManipulatorUpdate,
+
+>>>>>>> ec7b6acfc6b9477884bfe6801d744ce58c773b4d
         }
         for key in sensordata.keys():
             if key in self.sensor_update_function:
@@ -341,14 +361,14 @@ class Window(QMainWindow):
         labelTemp.setText(str(round(sensordata[0], 2)) + "C")
 
 
-def run(conn, queue_for_rov, t_watch: Threadwatcher, id):
+def run(conn, queue_for_rov, manual_flag,  t_watch: Threadwatcher, id):
 
     app = QtWidgets.QApplication(
         sys.argv
     )  # Create an instance of QtWidgets.QApplication
 
     # Create an instance of our class
-    win = Window(conn, queue_for_rov, t_watch, id)
+    win = Window(conn, queue_for_rov, manual_flag,  t_watch, id)
     GLOBAL_STATE = False
     win.show()  # Show the form
 

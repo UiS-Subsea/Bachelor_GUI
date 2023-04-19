@@ -29,7 +29,7 @@ def regulate_position(displacement_x, displacement_y):
 
 class AutonomousDocking:
     def __init__(self):
-        self.driving_data = [40, [0, 0, 0, 0, 0, 0, 0, 0]]
+        self.driving_data = [0, 0, 0, 0, 0, 0, 0, 0]
         self.frame = None
         self.down_frame = None
         self.draw_grouts = True
