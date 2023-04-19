@@ -8,19 +8,19 @@ MANIPULATOR_GRAB_RELEASE = 6
 
 
 REGULERINGSKNAPPAR="32" #0=All regulering deaktivert, 1=Aktiver rull reg, 2=Regulering av dybde aktivert, 3=Regulering av vinkel aktivert, 4=Regulering av dybde og vinkel aktivert
-THRUST="129" #HHF, #HHB, #HVB, HVF, VHF, VHB, VVB, VVF
-REGULERINGTEMP="130" #0Reguleringskort, 1=Motordriverkort
-VINKLER = "138"  # 0=roll, 1=stamp, 2=gir?
-DYBDETEMP = "139" # 0=dybde, 2=vanntemp, 4=sensorkorttemp
-FEILKODE = "140"  # 0=IMU Error, 1=Temp Error, 2=Trykk Error, 3=Lekkasje
-TEMPKOMKONTROLLER="145" #=Temp
-MANIPULATOR12V = "150" #Strømtrekk, Temperatur, Sikringsstatus
+THRUST="129" #HHF, #HHB, #HVB, HVF, VHF, VHB, VVB, VVF //GOOD
+REGULERINGMOTORTEMP="130" #0Reguleringskort, 1=Motordriverkort
+VINKLER = "138"  # 0=roll, 1=stamp, 2=gir? //GOOD
+DYBDETEMP = "139" # 0=dybde, 2=vanntemp, 4=sensorkorttemp //GOOD
+FEILKODE = "140"  # 0=IMU Error, 1=Temp Error, 2=Trykk Error, 3=Lekkasje //GOOD
+TEMPKOMKONTROLLER="145" #=Temp 
+MANIPULATOR12V = "150" #Strømtrekk, Temperatur, Sikringsstatus //GOOD
 THRUSTER12V = "151"  #Strømtrekk, Temperatur, Sikringsstatus
 KRAFT5V = "152" #Strømtrekk, Temperatur, Sikringsstatus
 
 
 
-VALIDCOMMANDS= [THRUST,REGULERINGTEMP,VINKLER,DYBDETEMP,FEILKODE,TEMPKOMKONTROLLER,MANIPULATOR12V,THRUSTER12V,KRAFT5V]
+VALIDCOMMANDS= [THRUST,REGULERINGMOTORTEMP,VINKLER,DYBDETEMP,FEILKODE,TEMPKOMKONTROLLER,MANIPULATOR12V,THRUSTER12V,KRAFT5V]
 
 # ROV
 X_AXIS = 1
@@ -51,7 +51,10 @@ def send_fake_sensordata(t_watch: Threadwatcher, gui_queue: multiprocessing.Queu
     imuErrors = [True, False, False, False, False, False, False, False]
     tempErrors = [False, True, False, False]
     pressureErrors = [True, False, True, False]
-    leakageAlarms = [False, False, False, False]
+    leakageAlarms = [True, False, False, False]
+    ManipulatorSikring=[True,False,False]
+    ThrusterSikring=[False,True,False]
+    KraftSikring=[False,False,True]
 
     count = -1
     sensordata = {}
@@ -79,12 +82,6 @@ def send_fake_sensordata(t_watch: Threadwatcher, gui_queue: multiprocessing.Queu
             leakageAlarms,
         ]
         
-        sensordata[MANIPULATOR12V]=[
-            manipulator_list[(0 + count)], #Strømtrekk
-            manipulator_list[(5 + count)], #Temperatur
-            manipulator_list[(7 + count)], #Sikringsstatus
-        ]
-        
         sensordata[THRUST] = [
             thrust_list[(0 + count) % 201],
             thrust_list[(13 + count) % 201],
@@ -96,11 +93,29 @@ def send_fake_sensordata(t_watch: Threadwatcher, gui_queue: multiprocessing.Queu
             thrust_list[(75 + count) % 201],
             thrust_list[(88 + count) % 201],
         ]
+        sensordata[MANIPULATOR12V]=[
+            manipulator_list[(0 + count)], #Strømtrekk
+            manipulator_list[(5 + count)], #Temperatur
+            ManipulatorSikring, #Sikringsstatus
+        ]
+        sensordata[THRUSTER12V]=[
+            thrust_list[(0 + count)], #Strømtrekk
+            manipulator_list[(5 + count)], #Temperatur
+            ThrusterSikring,  
+        ]
         
-        # sensordata[KRAFT] = [
-        #     power_list[count % 101] * 13,
-        #     power_list[count % 101] * 2.4,
-        #     power_list[count % 101] * 0.65,
-        # ]
+        sensordata[KRAFT5V] = [
+            power_list[count % 101] * 13,
+            power_list[count % 101] * 2.4,
+            KraftSikring
+        ]
+        sensordata[REGULERINGMOTORTEMP] = [
+            power_list[count % 101] * 13,
+            power_list[count % 101] * 2.4,
+        ]
+        sensordata[TEMPKOMKONTROLLER] = [
+            power_list[count % 101] * 13
+        ]
+             
         gui_queue.put(sensordata)
         time.sleep(0.5)
