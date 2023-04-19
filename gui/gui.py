@@ -26,7 +26,7 @@ from Controller import Controller_Handler as controller
 from main import *
 
 global RUN_MANUAL
-
+os.environ['QT_LOGGING_RULES'] = 'qt.qpa.wayland.warning=false'
 
 class Window(QMainWindow):
     def __init__(self, gui_queue: multiprocessing.Queue, queue_for_rov: multiprocessing.Queue, manual_flag,  t_watch: Threadwatcher, id: int, parent=None):
@@ -38,15 +38,10 @@ class Window(QMainWindow):
         self.player = QMediaPlayer()
         self.sound_file = "martinalarm.wav"
         self.sound_file = os.path.abspath("martinalarm.wav")
-<<<<<<< HEAD
-        self.manual_flag = manual_flag
-        self.queue: queue_for_rov  # queue_for_rov is a queue that is used to send data to the rov
-=======
 
         self.manual_flag = manual_flag
         self.queue: queue_for_rov  # queue_for_rov is a queue that is used to send data to the rov
         # queue_for_rov is a queue that is used to send data to the rov
->>>>>>> 26da0b840219dd5471475b7dba491dd3cac5ffee
 
         self.gui_queue = gui_queue
         self.threadwatcher = t_watch  
@@ -97,11 +92,6 @@ class Window(QMainWindow):
         else:
             self.exec.stop_everything()
 
-<<<<<<< HEAD
-
-
-=======
->>>>>>> 26da0b840219dd5471475b7dba491dd3cac5ffee
     def update_gui_data(self):
         while not self.gui_queue.empty():
             sensordata = self.gui_queue.get()
@@ -167,28 +157,36 @@ class Window(QMainWindow):
 
         # Vinkler
         self.btnNullpunktVinkler.clicked.connect(
-<<<<<<< HEAD
-            lambda: Rov_state.reset_angles(self))
+            lambda: self.reset_angles(self))
         
         
         self.btnRegTuning.clicked.connect(self.updateRegulatorTuning)
 
 
 
-
-        
     def updateRegulatorTuning(self):
-        combo_value = self.reguleringDropdown.currentText()
-        input_value = self.tuningInput.text()
-        
-        self.packets_to_send.append([combo_value, input_value])
-        print([combo_value, input_value])
+        reguleringDropdown = self.reguleringDropdown.currentText()
+        input_value = float(self.tuningInput.text())
 
-        
+        my_dict={
+                'Rull KI': 1,
+                'Rull KD': 2,
+                'Rull KP': 3,
+                'Stamp KI': 4,
+                'Stamp KD': 5,
+                'Stamp KP': 6,
+                'Dybde KI': 7,
+                'Dybde KD': 8,
+                'Dybde KP': 9,
+                'TS': 10,
+                'Alpha': 11
+        }
 
-=======
-            lambda: self.reset_angles())
->>>>>>> 26da0b840219dd5471475b7dba491dd3cac5ffee
+        value = my_dict.get(reguleringDropdown, None) # None is default if key doesn't exist
+        
+        self.packets_to_send.append([42, [int(value), float(input_value)]])
+        print(self.packets_to_send)
+        
 
     def gui_manipulator_state_update(self, sensordata):
         self.toggle_mani.setChecked(sensordata[0])
