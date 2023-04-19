@@ -21,6 +21,7 @@ MANIPULATOR_TILT = 3
 MANIPULATOR_GRAB_RELEASE = 6
 
 
+REGULERINGSKNAPPAR="32" #0=All regulering deaktivert, 1=Aktiver rull reg, 2=Regulering av dybde aktivert, 3=Regulering av vinkel aktivert, 4=Regulering av dybde og vinkel aktivert
 THRUST="129" #HHF, #HHB, #HVB, HVF, VHF, VHB, VVB, VVF
 REGULERINGTEMP="130" #0Reguleringskort, 1=Motordriverkort
 VINKLER = "138"  # 0=roll, 1=stamp, 2=gir?
@@ -30,6 +31,8 @@ TEMPKOMKONTROLLER="145" #=Temp
 MANIPULATOR12V = "150" #Strømtrekk, Temperatur, Sikringsstatus
 THRUSTER12V = "151"  #Strømtrekk, Temperatur, Sikringsstatus
 KRAFT5V = "152" #Strømtrekk, Temperatur, Sikringsstatus
+
+
 
 VALIDCOMMANDS= [THRUST,REGULERINGTEMP,VINKLER,DYBDETEMP,FEILKODE,TEMPKOMKONTROLLER,MANIPULATOR12V,THRUSTER12V,KRAFT5V]
 
@@ -301,8 +304,8 @@ class Rov_state:
     def  send_packets_to_rov(self, t_watch: Threadwatcher, id):
         while t_watch.should_run(id):
             self.get_from_queue()
-            if run_get_controllerdata and self.data != {}:
-                self.check_controls()
+
+            self.build_packets()
                 
             if self.packets_to_send != []:
                 self.send_packets()
@@ -451,7 +454,7 @@ class Rov_state:
         
         self.data = packet
             
-    def check_controls(self):
+    def build_packets(self):
         if self.packet_id == 1:
         # self.button_handling()
             self.build_rov_packet()
@@ -462,22 +465,22 @@ class Rov_state:
 # TODO: HER VAR TIDLIGARE frame_pipe
 
 
-def run(network_handler: Network, t_watch: Threadwatcher, id: int, queue_for_rov: multiprocessing.Queue, gui_queue):
+# def run(network_handler: Network, t_watch: Threadwatcher, id: int, queue_for_rov: multiprocessing.Queue, gui_queue):
 
-    # Komm. del
-    print("Running thread: ")
+#     # Komm. del
+#     print("Running thread: ")
 
-    # rov_state = Rov_state(queue_for_rov, network_handler, gui_queue, t_watch)
+#     # rov_state = Rov_state(queue_for_rov, network_handler, gui_queue, t_watch)
 
-    # if network_handler != None:
-    #     print("im not fucked this is good")
-    #     id = t_watch.add_thread()
-    #     threading.Thread(target=rov_state.receive_data_from_rov, args=(t_watch, id), daemon=True).start()
-    # if run_craft_packet:
-    #     id = t_watch.add_thread()
-    #     threading.Thread(target=rov_state.craft_packet,
-    #                      args=(t_watch, id), daemon=True).start()
-    # Con. del
+#     # if network_handler != None:
+#     #     print("im not fucked this is good")
+#     #     id = t_watch.add_thread()
+#     #     threading.Thread(target=rov_state.receive_data_from_rov, args=(t_watch, id), daemon=True).start()
+#     # if run_craft_packet:
+#     #     id = t_watch.add_thread()
+#     #     threading.Thread(target=rov_state.craft_packet,
+#     #                      args=(t_watch, id), daemon=True).start()
+#     # Con. del
     
 
 if __name__ == "__main__":
@@ -492,11 +495,10 @@ if __name__ == "__main__":
         # exec = ExecutionClass()
 
         # cam = Camera()
-        run_camera = True
         run_gui = True
         run_craft_packet = False
-        run_network = True # Bytt t True når du ska prøva å connecte.
-        run_get_controllerdata = True
+        run_network = False # Bytt t True når du ska prøva å connecte.
+        run_get_controllerdata = False
         # Sett til True om du vil sende fake sensordata til gui
         run_send_fake_sensordata = False
 
@@ -506,15 +508,8 @@ if __name__ == "__main__":
         
         gui_child_queue = multiprocessing.Queue()
         
-        (
-            gui_parent_pipe,  # Used by main process, to send/receive data to gui
-            gui_child_pipe,  # Used by gui process, to send/receive data to main
-        ) = Pipe()  # starts the gui program. gui_parent_pipe should get the sensor data
-
         # HUSK Å ENDRE TICK HVIS INPUT OPPDATERES SENT!
         debug_all = False  # Sett til True om du vil se input fra controllers
-
-        network = False
 
         if run_network:
             network = Network(is_server=False, port=6900, bind_addr="0.0.0.0",
@@ -560,10 +555,9 @@ if __name__ == "__main__":
             )
             datafaker.start()
 
-
             
         while True:
-            pass
+            # print(queue_for_rov.get())
             time.sleep(1)
     except KeyboardInterrupt:
         t_watch.stop_all_threads()
