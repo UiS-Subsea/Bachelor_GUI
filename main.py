@@ -62,6 +62,7 @@ def network_format(data) -> bytes:
 
 def send_fake_sensordata(t_watch: Threadwatcher, gui_queue: multiprocessing.Queue):
     thrust_list = [num for num in range(-100, 101)]
+    manipulator_list = [num for num in range(-100, 101)]
     power_list = [num for num in range(0, 101)]
     vinkel_list = [num for num in range(-360, 360)]
     dybde_list = [num for num in range(50, 20000)]
@@ -98,24 +99,23 @@ def send_fake_sensordata(t_watch: Threadwatcher, gui_queue: multiprocessing.Queu
             leakageAlarms,
         ]
         
-        # sensordata[MANIPULATOR][
-        #     thrust_list[(0 + count)], #Motor1
-        #     thrust_list[(5 + count)], #Motor2
-        #     thrust_list[(7 + count)] #Motor3
-        # ]
+        sensordata[MANIPULATOR12V]=[
+            manipulator_list[(0 + count)], #Strømtrekk
+            manipulator_list[(5 + count)], #Temperatur
+            manipulator_list[(7 + count)], #Sikringsstatus
+        ]
         
-        # sensordata[THRUSTER] = [
-        #     thrust_list[(0 + count) % 201],
-        #     thrust_list[(13 + count) % 201],
-        #     thrust_list[(25 + count) % 201],
-        #     thrust_list[(38 + count) % 201],
-        #     thrust_list[(37 + count) % 201],
-        #     thrust_list[(50 + count) % 201],
-        #     thrust_list[(63 + count) % 201],
-        #     thrust_list[(75 + count) % 201],
-        #     thrust_list[(88 + count) % 201],
-        #     thrust_list[(107 + count) % 201],
-        # ]
+        sensordata[THRUST] = [
+            thrust_list[(0 + count) % 201],
+            thrust_list[(13 + count) % 201],
+            thrust_list[(25 + count) % 201],
+            thrust_list[(38 + count) % 201],
+            thrust_list[(37 + count) % 201],
+            thrust_list[(50 + count) % 201],
+            thrust_list[(63 + count) % 201],
+            thrust_list[(75 + count) % 201],
+            thrust_list[(88 + count) % 201],
+        ]
         
         # sensordata[KRAFT] = [
         #     power_list[count % 101] * 13,
@@ -500,7 +500,7 @@ if __name__ == "__main__":
         run_network = False # Bytt t True når du ska prøva å connecte.
         run_get_controllerdata = False
         # Sett til True om du vil sende fake sensordata til gui
-        run_send_fake_sensordata = False
+        run_send_fake_sensordata = True
 
         t_watch = Threadwatcher()
         queue_for_rov = multiprocessing.Queue()
