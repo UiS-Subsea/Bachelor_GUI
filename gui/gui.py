@@ -27,6 +27,7 @@ from main import *
 
 global RUN_MANUAL
 
+
 class Window(QMainWindow):
     def __init__(self, gui_queue: multiprocessing.Queue, queue_for_rov: multiprocessing.Queue, manual_flag,  t_watch: Threadwatcher, id: int, parent=None):
         #        self.send_current_light_intensity()
@@ -36,10 +37,16 @@ class Window(QMainWindow):
         self.connectFunctions()
         self.player = QMediaPlayer()
         self.sound_file = "martinalarm.wav"
-        self.queue = queue_for_rov
         self.sound_file = os.path.abspath("martinalarm.wav")
+<<<<<<< HEAD
         self.manual_flag = manual_flag
         self.queue: queue_for_rov  # queue_for_rov is a queue that is used to send data to the rov
+=======
+
+        self.manual_flag = manual_flag
+        self.queue: queue_for_rov  # queue_for_rov is a queue that is used to send data to the rov
+        # queue_for_rov is a queue that is used to send data to the rov
+>>>>>>> 26da0b840219dd5471475b7dba491dd3cac5ffee
 
         self.gui_queue = gui_queue
         self.threadwatcher = t_watch  
@@ -49,10 +56,11 @@ class Window(QMainWindow):
         self.camera = CameraClass()
         self.w = None  # SecondWindow()
         self.gir_verdier = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-        
-        self.timer = QTimer() # Create a timer
-        self.timer.timeout.connect(self.update_gui_data) # Connect timer to update_gui_data
-        self.timer.start(100) # Adjust the interval to your needs
+
+        self.timer = QTimer()  # Create a timer
+        # Connect timer to update_gui_data
+        self.timer.timeout.connect(self.update_gui_data)
+        self.timer.start(100)  # Adjust the interval to your needs
         self.manual = True
         self.reguleringDropdown = self.findChild(QComboBox, 'reguleringDropdown')
         self.tuningInput = self.findChild(QLineEdit, 'tuningInput')
@@ -69,16 +77,15 @@ class Window(QMainWindow):
     def manual_kjoring(self):
         self.manual_flag.value = 1
         print("Manual flag: ", self.manual_flag.value)
-        
+
         id = self.threadwatcher.add_thread()
-        imageprocessing = threading.Thread(target = self.exec.stop_everything)
+        imageprocessing = threading.Thread(target=self.exec.stop_everything)
         imageprocessing.start()
-    
+
     def imageprocessing(self, mode):
         self.manual_flag.value = 0
         print("Manual flag: ", self.manual_flag.value)
         if self.manual_flag.value == 0:
-            id = self.threadwatcher.add_thread()
             if mode == "normal_camera":
                 self.exec.send_data_test()
             if mode == "transect":
@@ -90,8 +97,11 @@ class Window(QMainWindow):
         else:
             self.exec.stop_everything()
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> 26da0b840219dd5471475b7dba491dd3cac5ffee
     def update_gui_data(self):
         while not self.gui_queue.empty():
             sensordata = self.gui_queue.get()
@@ -106,17 +116,21 @@ class Window(QMainWindow):
 
     def connectFunctions(self):
         # window2
-        self.showNewWindowButton.clicked.connect(lambda: self.imageprocessing("testing"))
+        self.showNewWindowButton.clicked.connect(
+            lambda: self.imageprocessing("testing"))
 
         # Kjøremodus
         self.btnManuell.clicked.connect(lambda: self.manual_kjoring())
-        self.btnAutonom.clicked.connect(lambda: self.imageprocessing("docking"))
-        self.btnFrogCount.clicked.connect(lambda: self.imageprocessing("transect"))
+        self.btnAutonom.clicked.connect(
+            lambda: self.imageprocessing("docking"))
+        self.btnFrogCount.clicked.connect(
+            lambda: self.imageprocessing("transect"))
 
         # Kamera
         self.btnTakePic.clicked.connect(lambda: self.exec.save_image())
         self.btnRecord.clicked.connect(lambda: self.exec.record())
-        self.btnOpenCamera.clicked.connect(lambda: self.imageprocessing("normal_camera"))
+        self.btnOpenCamera.clicked.connect(
+            lambda: self.imageprocessing("normal_camera"))
 
         # Lys
         # Lag 2 av og på knapper top&bottom
@@ -133,11 +147,11 @@ class Window(QMainWindow):
 #        self.toggle_havbunnslys.stateChanged.connect(self.send_current_ligth_intensity)
 
         # Sikringer
-        self.btnReset5V.clicked.connect(lambda: Rov_state.reset_5V_fuse2(self))
+        self.btnReset5V.clicked.connect(lambda: self.reset_5V_fuse2())
         self.btnResetThruster.clicked.connect(
-            lambda: Rov_state.reset_12V_manipulator_fuse(self))
+            lambda: self.reset_12V_manipulator_fuse())
         self.btnResetManipulator.clicked.connect(
-            lambda: Rov_state.reset_12V_thruster_fuse(self))
+            lambda: self.reset_12V_thruster_fuse())
 #
 #        self.btnResetThruster.clicked.connect(lambda: f.resetThruster(self))
 #        self.btnResetManipulator.clicked.connect(
@@ -145,14 +159,15 @@ class Window(QMainWindow):
 
         # IMU
         self.btnKalibrerIMU.clicked.connect(
-            lambda: Rov_state.calibrate_IMU(self))
+            lambda: self.calibrate_IMU())
 
         # Dybde
         self.btnNullpunktDybde.clicked.connect(
-            lambda: Rov_state.reset_depth(self))
+            lambda: self.reset_depth())
 
         # Vinkler
         self.btnNullpunktVinkler.clicked.connect(
+<<<<<<< HEAD
             lambda: Rov_state.reset_angles(self))
         
         
@@ -171,9 +186,74 @@ class Window(QMainWindow):
 
         
 
+=======
+            lambda: self.reset_angles())
+>>>>>>> 26da0b840219dd5471475b7dba491dd3cac5ffee
 
     def gui_manipulator_state_update(self, sensordata):
         self.toggle_mani.setChecked(sensordata[0])
+
+    def reset_5V_fuse2(self):
+        """reset_5V_fuse creates and adds
+        packets for resetting a fuse on the ROV"""
+        reset_fuse_byte = [0] * 8
+        reset_fuse_byte[0] |= (1 << 0)  # reset bit 0
+        print("Resetting 5V Fuse")
+        values = {"reset_controls": reset_fuse_byte}
+        print(("Want to send", 97, reset_fuse_byte))
+        self.queue.put((4, values))
+
+    def reset_12V_thruster_fuse(self):
+        """reset_12V_thruster_fuse creates and adds
+        packets for resetting a fuse on the ROV"""
+        reset_fuse_byte = [0] * 8
+        reset_fuse_byte[0] |= (1 << 0)  # reset bit 0
+        print("Resetting 12V Thruster Fuse")
+        values = {"reset_controls_thruster": reset_fuse_byte}
+        print(("Want to send", 98, reset_fuse_byte))
+        self.queue.put((5, values))
+#        self.packets_to_send.append([98, reset_fuse_byte])
+
+    def reset_12V_manipulator_fuse(self):
+        """reset_12V_manipulator_fuse creates and adds
+        packets for resetting a fuse on the ROV"""
+        reset_fuse_byte = [0] * 8
+        reset_fuse_byte[0] |= (1 << 0)  # reset bit 0
+        print("Resetting 12V Manipulator Fuse")
+        values = {"reset_controls_manipulator": reset_fuse_byte}
+        print(("Want to send", 99, ))
+        self.queue.put((6, values))
+
+        #self.packets_to_send.append([99, reset_fuse_byte])
+
+    def reset_depth(self):
+        reset_depth_byte = [0] * 8
+        reset_depth_byte[0] |= (1 << 0)  # reset bit 0
+        print("Resetting Depth")
+        values = {"reset_depth": reset_depth_byte}
+        self.queue.put((7, values))
+        print(("Want to send", 66, reset_depth_byte))
+        #self.packets_to_send.append([66, reset_depth_byte])
+
+    def reset_angles(self):
+        reset_angles_byte = [0] * 8
+        reset_angles_byte[0] |= (1 << 1)  # reset bit 1
+        print("Resetting Angles")
+        values = {"reset_angles": reset_angles_byte}
+        print(("Want to send", 66, reset_angles_byte))
+        self.queue.put((8, values))
+        #self.packets_to_send.append([66, reset_angles_byte])
+        # print(reset_angles_byte)
+
+    def calibrate_IMU(self):
+        calibrate_IMU_byte = [0] * 8
+        calibrate_IMU_byte[0] |= (1 << 2)  # reset bit 2
+        print("Kalibrerer IMU")
+        values = {"kalibrer_IMU": calibrate_IMU_byte}
+        print(("Want to send", 66, calibrate_IMU_byte))
+        self.queue.put((9, values))
+        #self.packets_to_send.append([66, calibrate_IMU_byte])
+        # print(calibrate_IMU_byte)
 
     def decide_gui_update(self, sensordata):
         # print("Deciding with this data: ", sensordata)
@@ -201,7 +281,8 @@ class Window(QMainWindow):
             self.player.stateChanged.connect(self.on_player_state_changed)
         else:
             # Otherwise, start playing the new sound
-            self.player.setMedia(QMediaContent(QUrl.fromLocalFile(self.sound_file)))
+            self.player.setMedia(QMediaContent(
+                QUrl.fromLocalFile(self.sound_file)))
             self.player.play()
 
     # def send_current_light_intensity(self):
@@ -257,7 +338,7 @@ class Window(QMainWindow):
         labelTempAlarm: QLabel = self.labelTempAlarm
         labelTrykkAlarm: QLabel = self.labelTrykkAlarm
 
-        #TODO: kanskje legge til ekstra oppdatering seinare
+        # TODO: kanskje legge til ekstra oppdatering seinare
         IMUAlarm = ""
         # Sjekker om det er feil i sensordataene
         for i in range(len(sensordata[0])):
@@ -311,7 +392,7 @@ class Window(QMainWindow):
             self.thrust_label_6,
             self.thrust_label_7,
             self.thrust_label_8,
-            
+
         ]
         for i, label in enumerate(thrust_liste):
             label.setText(str(round(sensordata[i], 2)))

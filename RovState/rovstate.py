@@ -10,20 +10,20 @@ MANIPULATOR_TILT = 3
 MANIPULATOR_GRAB_RELEASE = 6
 
 
-REGULERINGSKNAPPAR="32" #0=All regulering deaktivert, 1=Aktiver rull reg, 2=Regulering av dybde aktivert, 3=Regulering av vinkel aktivert, 4=Regulering av dybde og vinkel aktivert
-THRUST="129" #HHF, #HHB, #HVB, HVF, VHF, VHB, VVB, VVF
-REGULERINGTEMP="130" #0Reguleringskort, 1=Motordriverkort
+REGULERINGSKNAPPAR = "32"  # 0=All regulering deaktivert, 1=Aktiver rull reg, 2=Regulering av dybde aktivert, 3=Regulering av vinkel aktivert, 4=Regulering av dybde og vinkel aktivert
+THRUST = "129"  # HHF, #HHB, #HVB, HVF, VHF, VHB, VVB, VVF
+REGULERINGTEMP = "130"  # 0Reguleringskort, 1=Motordriverkort
 VINKLER = "138"  # 0=roll, 1=stamp, 2=gir?
-DYBDETEMP = "139" # 0=dybde, 2=vanntemp, 4=sensorkorttemp
+DYBDETEMP = "139"  # 0=dybde, 2=vanntemp, 4=sensorkorttemp
 FEILKODE = "140"  # 0=IMU Error, 1=Temp Error, 2=Trykk Error, 3=Lekkasje
-TEMPKOMKONTROLLER="145" #=Temp
-MANIPULATOR12V = "150" #Strømtrekk, Temperatur, Sikringsstatus
-THRUSTER12V = "151"  #Strømtrekk, Temperatur, Sikringsstatus
-KRAFT5V = "152" #Strømtrekk, Temperatur, Sikringsstatus
+TEMPKOMKONTROLLER = "145"  # =Temp
+MANIPULATOR12V = "150"  # Strømtrekk, Temperatur, Sikringsstatus
+THRUSTER12V = "151"  # Strømtrekk, Temperatur, Sikringsstatus
+KRAFT5V = "152"  # Strømtrekk, Temperatur, Sikringsstatus
 
 
-
-VALIDCOMMANDS= [THRUST,REGULERINGTEMP,VINKLER,DYBDETEMP,FEILKODE,TEMPKOMKONTROLLER,MANIPULATOR12V,THRUSTER12V,KRAFT5V]
+VALIDCOMMANDS = [THRUST, REGULERINGTEMP, VINKLER, DYBDETEMP,
+                 FEILKODE, TEMPKOMKONTROLLER, MANIPULATOR12V, THRUSTER12V, KRAFT5V]
 
 # ROV
 X_AXIS = 1
@@ -42,6 +42,7 @@ ID_DIRECTIONCOMMAND_PARAMETERS = 71
 ID_DIRECTIONCOMMAND = 70
 ID_camera_tilt_upwards = 200
 ID_camera_tilt_downwards = 201
+
 
 class Rov_state:
     def __init__(self, queue_for_rov, network_handler, gui_queue, manual_flag,  t_watch: Threadwatcher) -> None:
@@ -108,7 +109,8 @@ class Rov_state:
                 else:
                     if data is None:
                         continue
-                    decoded, incomplete_packet = Rov_state.decode_packets(data, incomplete_packet)
+                    decoded, incomplete_packet = Rov_state.decode_packets(
+                        data, incomplete_packet)
                 if decoded == []:
                     continue
                 for message in decoded:
@@ -217,22 +219,21 @@ class Rov_state:
             print(var)
             #self.packets_to_send.append([ID_DIRECTIONCOMMAND_PARAMETERS, var])
             self.packets_to_send.append([var[0], var[1]])
-            
-            
-    def  send_packets_to_rov(self, t_watch: Threadwatcher, id):
+
+    def send_packets_to_rov(self, t_watch: Threadwatcher, id):
         while t_watch.should_run(id):
             self.get_from_queue()
 
             self.build_packets()
-                
+
             if self.packets_to_send != []:
                 self.send_packets()
                 self.data = {}
-            
-            
+
     def send_packets(self):
         """Sends the created network packets and clears it"""
         copied_packets = self.packets_to_send
+#        print(f"før for loop" + copied_packets)
         self.packets_to_send = []
         for packet in copied_packets:
             if packet[0] == ID_DIRECTIONCOMMAND or packet[0] == "*heartbeat*":
@@ -329,7 +330,7 @@ class Rov_state:
     def build_autonom_packet(self):
         if self.data == {}:
             return
-        
+
         print(self.data["autonomdata"], "autonomdata")
         data = [0, 0, 0, 0, 0, 0, 0, 0]
         data[0] = self.data["autonomdata"][0]
@@ -352,6 +353,60 @@ class Rov_state:
             pass
         self.packets_to_send.append([41, data])
 
+    def build_reset_packet(self):
+        if self.data == {}:
+            return
+        data = [0, 0, 0, 0, 0, 0, 0, 0]
+
+        data[0] = self.data["reset_controls"][0]
+
+        self.packets_to_send.append([97, data])
+
+    def build_reset_thruster_packet(self):
+        if self.data == {}:
+            return
+        data = [0, 0, 0, 0, 0, 0, 0, 0]
+
+        data[0] = self.data["reset_controls_thruster"][0]
+
+        self.packets_to_send.append([98, data])
+
+    def build_reset_manipulator_packet(self):
+        if self.data == {}:
+            return
+        data = [0, 0, 0, 0, 0, 0, 0, 0]
+
+        data[0] = self.data["reset_controls_manipulator"][0]
+
+        self.packets_to_send.append([99, data])
+
+    def build_reset_depth(self):
+        if self.data == {}:
+            return
+        data = [0, 0, 0, 0, 0, 0, 0, 0]
+
+        data[0] = self.data["reset_depth"][0]
+
+        self.packets_to_send.append([66, data])
+
+    def build_reset_angles(self):
+        if self.data == {}:
+            return
+        data = [0, 0, 0, 0, 0, 0, 0, 0]
+
+        data = self.data["reset_angles"]
+
+        self.packets_to_send.append([66, data])
+
+    def build_calibrate_IMU(self):
+        if self.data == {}:
+            return
+        data = [0, 0, 0, 0, 0, 0, 0, 0]
+
+        data[2] = self.data["kalibrer_IMU"][2]
+
+        self.packets_to_send.append([66, data])
+
     def button_handling(self):
         rov_buttons = self.data.get("rov_buttons")
         mani_buttons = self.data.get("mani_buttons")
@@ -368,16 +423,25 @@ class Rov_state:
             # return packet
         except Exception as e:
             return
-        
+
         self.data = packet
-            
+
     def build_packets(self):
         if self.packet_id == 1 and self.manual_flag.value == 1:
-        # self.button_handling()
+            # self.button_handling()
             self.build_rov_packet()
         elif self.packet_id == 2 and self.manual_flag.value == 0:
-        # self.build_manipulator_packet()
+            # self.build_manipulator_packet()
             self.build_autonom_packet()
-        
-        print(self.packets_to_send)
-    
+        elif self.packet_id == 4:
+            self.build_reset_packet()
+        elif self.packet_id == 5:
+            self.build_reset_thruster_packet()
+        elif self.packet_id == 6:
+            self.build_reset_manipulator_packet()
+        elif self.packet_id == 7:
+            self.reset_depth()
+        elif self.packet_id == 8:
+            self.reset_angles()
+        elif self.packet_id == 9:
+            self.calibrate_IMU()
