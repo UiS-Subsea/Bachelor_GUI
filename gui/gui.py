@@ -76,7 +76,6 @@ class Window(QMainWindow):
         self.manual_flag.value = 0
         print("Manual flag: ", self.manual_flag.value)
         if self.manual_flag.value == 0:
-            id = self.threadwatcher.add_thread()
             if mode == "normal_camera":
                 self.exec.send_data_test()
             if mode == "transect":
