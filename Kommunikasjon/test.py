@@ -39,10 +39,15 @@
 def reset_depth():
     packets_to_send = []
 
-    calibrate_IMU_byte = [0] * 8
+    # calibrate_IMU_byte = [0] * 8
+    # calibrate_IMU_byte[0] |= (1 << 2)  # reset bit 2
+    # print("Kalibrerer IMU")
+    # packets_to_send.append([66, bytes(calibrate_IMU_byte)])
+    # print(packets_to_send)
+    calibrate_IMU_byte = bytearray(8)
     calibrate_IMU_byte[0] |= (1 << 2)  # reset bit 2
     print("Kalibrerer IMU")
-    packets_to_send.append([66, calibrate_IMU_byte])
+    packets_to_send.append([66, bytes(calibrate_IMU_byte)])
     print(packets_to_send)
 
 

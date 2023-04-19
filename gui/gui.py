@@ -31,6 +31,7 @@ class Window(QMainWindow):
         queue_for_rov: multiprocessing.Queue,
         t_watch: Threadwatcher,
         id: int,
+        # network_handler: Network,
         parent=None,
     ):
         #        self.send_current_light_intensity()
@@ -53,20 +54,22 @@ class Window(QMainWindow):
         #     target=self.receive_sensordata, daemon=True, args=(self.pipe_conn_only_rcv,)
         # )
         # self.receive.start()
-
+        # self.rov = Rov_state(
+        #    queue_for_rov, network_handler, gui_queue, t_watch)
         self.exec = ExecutionClass(queue_for_rov)
         self.camera = CameraClass()
         self.w = None  # SecondWindow()
         self.gir_verdier = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-        
-        self.timer = QTimer() # Create a timer
-        self.timer.timeout.connect(self.update_gui_data) # Connect timer to update_gui_data
-        self.timer.start(100) # Adjust the interval to your needs
+
+        self.timer = QTimer()  # Create a timer
+        # Connect timer to update_gui_data
+        self.timer.timeout.connect(self.update_gui_data)
+        self.timer.start(100)  # Adjust the interval to your needs
 
         # Queue and pipe
 
     # Buttons
-    
+
     def update_gui_data(self):
         while not self.gui_queue.empty():
             sensordata = self.gui_queue.get()
@@ -81,7 +84,8 @@ class Window(QMainWindow):
 
     def connectFunctions(self):
         # window2
-        self.showNewWindowButton.clicked.connect(lambda: self.show_new_window())
+        self.showNewWindowButton.clicked.connect(
+            lambda: self.show_new_window())
 
         # Kjøremodus
         self.btnManuell.clicked.connect(lambda: self.exec.manual())
@@ -129,6 +133,8 @@ class Window(QMainWindow):
         # Vinkler
         self.btnNullpunktVinkler.clicked.connect(
             lambda: Rov_state.reset_angles(self))
+        # self.btnNullpunktVinkler.clicked.connect(
+        #    lambda: Rov_state.reset_angles(self))
 
     # def receive_sensordata(
     #     self, conn
@@ -151,8 +157,6 @@ class Window(QMainWindow):
     #             time.sleep(0.15)  # Sleep for 0.15 seconds
     #     print("received")
     #     exit(0)
-    
-    
 
     # def receive_sensordata(
     #     self, conn
@@ -215,7 +219,8 @@ class Window(QMainWindow):
             self.player.stateChanged.connect(self.on_player_state_changed)
         else:
             # Otherwise, start playing the new sound
-            self.player.setMedia(QMediaContent(QUrl.fromLocalFile(self.sound_file)))
+            self.player.setMedia(QMediaContent(
+                QUrl.fromLocalFile(self.sound_file)))
             self.player.play()
 
     # def send_current_light_intensity(self):
@@ -273,30 +278,29 @@ class Window(QMainWindow):
         gradient = (
             "background-color: #444444; color: #FF0000; border-radius: 10px;")
 
-        #TODO: kanskje legge til ekstra oppdatering seinare
+        # TODO: kanskje legge til ekstra oppdatering seinare
         IMUAlarm = ""
         # Sjekker om det er feil i sensordataene
         for i in range(len(sensordata[0])):
             if sensordata[0][i] == True:
                 labelIMUAlarm.setText(imuErrors[i])
                 labelIMUAlarm.setStyleSheet(gradient)
-                
+
         for i in range(len(sensordata[1])):
             if sensordata[1][i] == True:
                 labelTempAlarm.setText(tempErrors[i])
                 labelTempAlarm.setStyleSheet(gradient)
-                
+
         for i in range(len(sensordata[2])):
             if sensordata[2][i] == True:
                 labelTrykkAlarm.setText(trykkErrors[i])
-                labelTrykkAlarm.setStyleSheet(gradient)  
-                
+                labelTrykkAlarm.setStyleSheet(gradient)
+
         for i in range(len(sensordata[3])):
             if sensordata[3][i] == True:
                 labelLekkasjeAlarm.setText(lekkasjeErrors[i])
                 labelLekkasjeAlarm.setStyleSheet(gradient)
                 self.play_sound()
-
 
     def guiVinkelUpdate(self, sensordata):
         vinkel_liste: list[QLabel] = [
@@ -324,7 +328,7 @@ class Window(QMainWindow):
         ]
         for i, label in enumerate(temp_liste):
             label.setText(str(round(sensordata[i], 2)) + "°")
-   
+
     def guiKraft(self, sensordata):
         effekt_liste: list[QLabel] = [
             self.labelEffektThrustere,

@@ -302,14 +302,17 @@ class Rov_state:
             self.packets_to_send.append([var[0], var[1]])
 
     def send_packets_to_rov(self, t_watch: Threadwatcher, id):
+        print("1")
         while t_watch.should_run(id):
             self.get_from_queue()
             if run_get_controllerdata and self.data != {}:
                 self.check_controls()
-
             if self.packets_to_send != []:
                 self.send_packets()
                 self.data = {}
+                print("2")
+        print("3")
+        print(self.packets_to_send)
 
     def send_packets(self):
         """Sends the created network packets and clears it"""
@@ -370,6 +373,7 @@ class Rov_state:
         reset_angles_byte[0] |= (1 << 1)  # reset bit 1
         print("Resetting Angles")
         self.packets_to_send.append([66, reset_angles_byte])
+        print(self.packets_to_send)
 
     def calibrate_IMU(self):
         calibrate_IMU_byte = [0] * 8
@@ -500,7 +504,7 @@ if __name__ == "__main__":
         run_network = False  # Bytt t True når du ska prøva å connecte.
         run_get_controllerdata = False
         # Sett til True om du vil sende fake sensordata til gui
-        run_send_fake_sensordata = False
+        run_send_fake_sensordata = True
 
         t_watch = Threadwatcher()
         queue_for_rov = multiprocessing.Queue()
