@@ -66,7 +66,7 @@ class Window(QMainWindow):
     def manual_kjoring(self):
         self.manual = True
         id = self.threadwatcher.add_thread()
-        imageprocessing = threading.Thread(target = self.exec.manual)
+        imageprocessing = threading.Thread(target = self.exec.stop_everything)
         imageprocessing.start()
     
     def imageprocessing(self, mode):

@@ -275,7 +275,6 @@ class ExecutionClass:
             
     def stop_everything(self):
         print("Stopping other processes, returning to manual control")
-        
         self.done = True
         cv2.destroyAllWindows()
         self.Camera.close_all()
