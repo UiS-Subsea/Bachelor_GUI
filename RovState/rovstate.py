@@ -233,7 +233,7 @@ class Rov_state:
     def send_packets(self):
         """Sends the created network packets and clears it"""
         copied_packets = self.packets_to_send
-        print(f"før for loop" + copied_packets)
+#        print(f"før for loop" + copied_packets)
         self.packets_to_send = []
         for packet in copied_packets:
             if packet[0] == ID_DIRECTIONCOMMAND or packet[0] == "*heartbeat*":

@@ -53,8 +53,8 @@ if __name__ == "__main__":
         manual_flag = multiprocessing.Value("i", 1)
         run_gui = True
         run_craft_packet = False
-        run_network = False  # Bytt t True når du ska prøva å connecte.
-        run_get_controllerdata = False
+        run_network = True  # Bytt t True når du ska prøva å connecte.
+        run_get_controllerdata = True
         # Sett til True om du vil sende fake sensordata til gui
         run_send_fake_sensordata = False
 
