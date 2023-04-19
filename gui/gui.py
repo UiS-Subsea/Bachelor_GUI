@@ -237,7 +237,7 @@ class Window(QMainWindow):
         reset_fuse_byte = [0] * 8
         reset_fuse_byte[0] |= (1 << 0)  # reset bit 0
         print("Resetting 12V Manipulator Fuse")
-        values = {"reset_controls_manipulator"}
+        values = {"reset_controls_manipulator": reset_fuse_byte}
         print(("Want to send", 99, reset_fuse_byte))
         self.queue.put((6, values))
 
@@ -247,7 +247,7 @@ class Window(QMainWindow):
         reset_depth_byte = [0] * 8
         reset_depth_byte[0] |= (1 << 0)  # reset bit 0
         print("Resetting Depth")
-        values = {"reset_depth"}
+        values = {"reset_depth": reset_depth_byte}
         self.queue.put((7, values))
         print(("Want to send", 66, reset_depth_byte))
         #self.packets_to_send.append([66, reset_depth_byte])
@@ -256,7 +256,7 @@ class Window(QMainWindow):
         reset_angles_byte = [0] * 8
         reset_angles_byte[0] |= (1 << 1)  # reset bit 1
         print("Resetting Angles")
-        values = {"reset_angles"}
+        values = {"reset_angles": reset_angles_byte}
         print(("Want to send", 66, reset_angles_byte))
         self.queue.put((8, values))
         #self.packets_to_send.append([66, reset_angles_byte])
@@ -266,7 +266,7 @@ class Window(QMainWindow):
         calibrate_IMU_byte = [0] * 8
         calibrate_IMU_byte[0] |= (1 << 2)  # reset bit 2
         print("Kalibrerer IMU")
-        values = {"kalibrer_IMU"}
+        values = {"kalibrer_IMU": calibrate_IMU_byte}
         print(("Want to send", 66, calibrate_IMU_byte))
         self.queue.put((9, values))
         #self.packets_to_send.append([66, calibrate_IMU_byte])
