@@ -26,29 +26,22 @@ from main import *
 
 
 class Window(QMainWindow):
-    def __init__(
-        self,
-        gui_queue: multiprocessing.Queue,
-        queue_for_rov: multiprocessing.Queue,
-        t_watch: Threadwatcher,
-        id: int,
-        parent=None,
-    ):
+    def __init__(self, gui_queue: multiprocessing.Queue, queue_for_rov: multiprocessing.Queue, t_watch: Threadwatcher, id: int, parent=None):
         #        self.send_current_light_intensity()
         self.packets_to_send = []
         super().__init__(parent)
         uic.loadUi("gui/window1.ui", self)
         self.connectFunctions()
         self.player = QMediaPlayer()
+        self.sound_file = "martinalarm.wav"
+        self.queue = queue_for_rov
         self.sound_file = os.path.abspath("martinalarm.wav")
 
-        self.queue: multiprocessing.Queue = (
-            queue_for_rov
-        )
+        self.queue: queue_for_rov  # queue_for_rov is a queue that is used to send data to the rov
 
         # pipe_conn_only_rcv is a pipe connection that only receives data
         self.gui_queue = gui_queue
-        self.t_watch: Threadwatcher = t_watch  # t_watch is a threadwatcher object
+        self.threadwatcher = t_watch  # t_watch is a threadwatcher object
         self.id = id  # id is an id that is used to identify the thread
 
         # self.receive = threading.Thread(
@@ -64,11 +57,29 @@ class Window(QMainWindow):
         self.timer = QTimer() # Create a timer
         self.timer.timeout.connect(self.update_gui_data) # Connect timer to update_gui_data
         self.timer.start(100) # Adjust the interval to your needs
+        self.manual = True
 
         # Queue and pipe
 
     # Buttons
     
+    def manual_kjoring(self):
+        self.manual = True
+        id = self.threadwatcher.add_thread()
+        imageprocessing = threading.Thread(target = self.exec.stop_everything)
+        imageprocessing.start()
+    
+    def imageprocessing(self, mode):
+        self.manual = False
+        id = self.threadwatcher.add_thread()
+        if mode == "normal_camera":
+            imageprocessing = Process(target = self.exec.normal_camera, daemon=False)
+        if mode == "transect":
+            imageprocessing = Process(target = self.exec.transect)
+            
+        imageprocessing.start()
+        
+                
     def update_gui_data(self):
         while not self.gui_queue.empty():
             sensordata = self.gui_queue.get()
@@ -86,14 +97,14 @@ class Window(QMainWindow):
         self.showNewWindowButton.clicked.connect(lambda: self.show_new_window())
 
         # Kjøremodus
-        self.btnManuell.clicked.connect(lambda: self.exec.manual())
+        self.btnManuell.clicked.connect(lambda: self.manual_kjoring())
         self.btnAutonom.clicked.connect(lambda: self.exec.send_data_test())
-        self.btnFrogCount.clicked.connect(lambda: self.exec.transect())
+        self.btnFrogCount.clicked.connect(lambda: self.imageprocessing("transect"))
 
         # Kamera
         self.btnTakePic.clicked.connect(lambda: self.exec.save_image())
         self.btnRecord.clicked.connect(lambda: self.exec.record())
-        self.btnOpenCamera.clicked.connect(lambda: self.exec.normal_camera())
+        self.btnOpenCamera.clicked.connect(lambda: self.imageprocessing("normal_camera"))
 
         # Lys
         # Lag 2 av og på knapper top&bottom

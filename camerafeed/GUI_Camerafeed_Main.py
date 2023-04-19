@@ -188,7 +188,7 @@ class ExecutionClass:
     def show(self, frame, name="frame"):
         cv2.imshow(name, frame)
         if cv2.waitKey(1) == ord("q"):
-            self.manual()
+            self.stop_everything()
             
     def testing_for_torr(self):
         self.done = False
@@ -220,20 +220,12 @@ class ExecutionClass:
     def send_data_test(self):
         self.done = False
         start = 0
-        # print("in send data_test method")
         while not self.done:
             cur_time = time.time()
-            # print("Before if check", cur_time - start)
             if (cur_time - start) > 0.02:
-                # print("After if check!", cur_time - start)
                 random_data = [random.randint(0,10) for _ in range(8)]
+                self.send_data_to_rov(random_data)
                 
-                data_to_simulate = {"rov_joysticks": [0]*7, "mani_joysticks": [0]*7,
-                  "rov_buttons": [0]*15, "mani_buttons": [0]*16,
-                  "camera_to_control": 0, "camera_movement": 0, "autonomdata": random_data}
-                
-                self.driving_queue.put((2, data_to_simulate))
-                # self.sleep_func()
                 QApplication.processEvents()
                 start = time.time()
         
@@ -242,9 +234,9 @@ class ExecutionClass:
 
     def transect(self):
         self.done = False
-        self.Camera.start_test_cam()
+        self.Camera.start_test_cam() # TODO should be down frame
         while not self.done:
-            self.update_test_cam() #Should be down frame
+            self.update_test_cam() # TODO Should be down frame
             transect_frame, driving_data_packet = self.AutonomousTransect.run(self.frame_test)
             self.show(transect_frame, "Transect")
             self.driving_queue.put(driving_data_packet)
@@ -257,17 +249,21 @@ class ExecutionClass:
     def docking(self):
         self.done = False
         self.Camera.start_stereo_cam_L()
-        self.Camera.start_stereo_cam_R()
+        self.Camera.start_stereo_cam_R() # TODO shoould be down camera
         while not self.done:
             # Needs stereo L, and Down Cameras
             self.update_stereo_R()
-            self.update_stereo_L()
-            docking_frame, frame_under, driving_data_packet = self.Docking.run(self.frame_stereoL, self.frame_stereoR)
+            self.update_stereo_L() # TODO should be down camera
+            docking_frame, frame_under, driving_data_packet = self.Docking.run(self.frame_stereoL, self.frame_stereoR) # TODO should be down camera
             self.show(docking_frame, "Docking")
             self.show(frame_under, "Frame Under")
             self.driving_queue.put(driving_data_packet)
             QApplication.processEvents()
             # self.show(frame_under, "Frame Under")
+            
+    def send_data_to_rov(self, datapacket):
+        data_to_send = {"autonomdata": datapacket}
+        self.driving_queue.put((2, data_to_send))
 
     def normal_camera(self):
         self.done = False
@@ -277,9 +273,8 @@ class ExecutionClass:
             self.show(self.frame_manual, "Manual")
             QApplication.processEvents()
             
-    def manual(self):
+    def stop_everything(self):
         print("Stopping other processes, returning to manual control")
-        
         self.done = True
         cv2.destroyAllWindows()
         self.Camera.close_all()

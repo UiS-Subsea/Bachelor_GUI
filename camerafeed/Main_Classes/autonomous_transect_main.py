@@ -22,8 +22,8 @@ class AutonomousTransect:
         return self.frame, data
         
     def update(self):
-        self.autonomous_transect_maneuver()
-        self.doStabilize()
+        self.stabilize_angle()
+        self.stabilize_alignment()
         
     def get_driving_data(self):
         data = self.driving_data.copy()
@@ -73,7 +73,7 @@ class AutonomousTransect:
       
         
     def find_dark_blue_contours(self):
-        low_blue_range = (0, 0, 0) #b, g, r
+        low_blue_range = (0, 0, 0) #b, g, r, TODO should mabye be (70, 0, 0)
         high_blue_range = (255, 60, 60)
     
         transect_pipe_mask = cv2.inRange(self.frame, low_blue_range, high_blue_range)
@@ -88,31 +88,28 @@ class AutonomousTransect:
     
     # driving packet: [id, [x, y, z, r, 0, 0, 0, 0]]
     
-    def autonomous_transect_maneuver(self):
+    def stabilize_angle(self):
         pipes = self.find_pipes()
         if pipes == "SKIP":
-            return "SKIP"
+            return
+            
         
         transect_angle = self.get_angle_between_pipes(pipes[0], pipes[1])
         
         if transect_angle < -2:
-            print("Turn left")
+            # print("Turn left")
             self.driving_data = [40, [0, 0, 0, -10, 0, 0, 0, 0]]
     
         elif transect_angle > 2:
             self.driving_data = [40, [0, 0, 0, 10, 0, 0, 0, 0]]
-            print("Turn right")
+            # print("Turn right")
             
         else:
-            print("Go forward")
+            # print("Clear for stabilization")
             self.canStabilize = True
-            self.driving_data = [40, [0, 10, 0, 0, 0, 0, 0, 0]]
-
-
-        #call go center function
         
 
-    def doStabilize(self):
+    def stabilize_alignment(self):
         if self.canStabilize:
             pipes = self.find_pipes()
             if pipes == "SKIP":
@@ -136,18 +133,22 @@ class AutonomousTransect:
             
             if 0.95 > ratio:
                 self.driving_data = [40, [-10, 0, 0, 0, 0, 0, 0, 0]]
-                print("Move to left")
+                # print("Move to left")
                 
             elif 1.05 < ratio:
-                print("Move to right")
+                # print("Move to right")
                 self.driving_data = [40, [10, 0, 0, 0, 0, 0, 0, 0]]
                 
             else:
-                print("Go forward")
+                # print("Go forward")
                 self.driving_data = [40, [0, 10, 0, 0, 0, 0, 0, 0]]
+
+            self.canStabilize = False
+            return
+            
         else:
-            # print("Can't stabilize yet")
-            pass
+            # print("Waiting for ROV to stabilize angle")
+            return
          
 
 
