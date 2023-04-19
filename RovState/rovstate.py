@@ -233,6 +233,7 @@ class Rov_state:
     def send_packets(self):
         """Sends the created network packets and clears it"""
         copied_packets = self.packets_to_send
+        print(f"før for loop" + copied_packets)
         self.packets_to_send = []
         for packet in copied_packets:
             if packet[0] == ID_DIRECTIONCOMMAND or packet[0] == "*heartbeat*":
@@ -351,6 +352,60 @@ class Rov_state:
         except KeyError:
             pass
         self.packets_to_send.append([41, data])
+
+    def build_reset_packet(self):
+        if self.data == {}:
+            return
+        data = [0, 0, 0, 0, 0, 0, 0, 0]
+
+        data[0] = self.data["reset_controls"][0]
+
+        self.packets_to_send.append([97, data])
+
+    def build_reset_thruster_packet(self):
+        if self.data == {}:
+            return
+        data = [0, 0, 0, 0, 0, 0, 0, 0]
+
+        data[0] = self.data["reset_controls_thruster"][0]
+
+        self.packets_to_send.append([98, data])
+
+    def build_reset_manipulator_packet(self):
+        if self.data == {}:
+            return
+        data = [0, 0, 0, 0, 0, 0, 0, 0]
+
+        data[0] = self.data["reset_controls_manipulator"][0]
+
+        self.packets_to_send.append([99, data])
+
+    def build_reset_depth(self):
+        if self.data == {}:
+            return
+        data = [0, 0, 0, 0, 0, 0, 0, 0]
+
+        data[0] = self.data["reset_depth"][0]
+
+        self.packets_to_send.append([66, data])
+
+    def build_reset_angles(self):
+        if self.data == {}:
+            return
+        data = [0, 0, 0, 0, 0, 0, 0, 0]
+
+        data = self.data["reset_angles"]
+
+        self.packets_to_send.append([66, data])
+
+    def build_calibrate_IMU(self):
+        if self.data == {}:
+            return
+        data = [0, 0, 0, 0, 0, 0, 0, 0]
+
+        data[2] = self.data["kalibrer_IMU"][2]
+
+        self.packets_to_send.append([66, data])
 
     def button_handling(self):
         rov_buttons = self.data.get("rov_buttons")
