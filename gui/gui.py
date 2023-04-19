@@ -4,6 +4,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets, Qt, uic
 from PyQt5.QtWidgets import QMainWindow, QWidget, QCheckBox, QLabel, QMessageBox
 from PyQt5.QtMultimedia import QSound, QSoundEffect, QMediaPlayer, QMediaContent
 from PyQt5.QtCore import QUrl, QTimer
+import os
 import sys
 import threading
 #from main import Vinkeldata
@@ -40,7 +41,8 @@ class Window(QMainWindow):
         uic.loadUi("gui/window1.ui", self)
         self.connectFunctions()
         self.player = QMediaPlayer()
-        self.sound_file = "martinalarm.wav"
+        self.sound_file = os.path.abspath("martinalarm.wav")
+
         self.queue: multiprocessing.Queue = (
             queue_for_rov
         )
@@ -206,7 +208,8 @@ class Window(QMainWindow):
             VINKLER: self.guiVinkelUpdate,
             DYBDETEMP: self.dybdeTempUpdate,
             FEILKODE: self.guiFeilKodeUpdate,
-            # MANIPULATOR :self.manipulatorUpdate
+            THRUST: self.guiThrustUpdate,
+            MANIPULATOR12V :self.guiManipulatorUpdate,
 
         }
         for key in sensordata.keys():
@@ -327,8 +330,8 @@ class Window(QMainWindow):
             self.labelTempSensorkort
         ]
         for i, label in enumerate(temp_liste):
-            label.setText(str(round(sensordata[i], 2)) + "°")
-
+            label.setText(str(round(sensordata[i], 2)) + "CM")
+   
     def guiKraft(self, sensordata):
         effekt_liste: list[QLabel] = [
             self.labelEffektThrustere,
@@ -349,52 +352,37 @@ class Window(QMainWindow):
                 f"background-color: {color_list[index]}; border-radius: 5px; border: 1px solid rgb(30, 30, 30);"
             )
 
-    def update_round_percent_visualizer(self, value, text_label):
-        text_label.setText(str(value))
-        # self.round_percent_visualizer.setValue(value)
-        # self.round_percent_visualizer.setFormat(str(value) + "%")
+    
+    def guiThrustUpdate(self, sensordata):
+        thrust_liste: list[QLabel] = [
+            self.thrust_label_1,
+            self.thrust_label_2,
+            self.thrust_label_3,
+            self.thrust_label_4,
+            self.thrust_label_5,
+            self.thrust_label_6,
+            self.thrust_label_7,
+            self.thrust_label_8,
+            
+        ]
+        for i, label in enumerate(thrust_liste):
+            label.setText(str(round(sensordata[i], 2)))
 
-    def gui_thrust_update(self, sensordata):
-        # print(f"thrust update: {sensordata = }")  # Print sensordata
-        for i in range(len(sensordata)):  # For each value in sensordata
-            if sensordata[i] > 100:  # If the value is greater than 100
-                sensordata[i] = 100  # Set the value to 100
+    def guiManipulatorUpdate(self,sensordata):
+        manipulator_liste: list[QLabel] = [
+            self.labelManipulatorKraft,
+            self.labelManipulatorTemp,
+            self.labelManipulatorSikring,
+        ]
+        for i, label in enumerate(manipulator_liste):
+            label.setText(str(round(sensordata[i], 2)))
 
-        # Update the labels
-        self.update_round_percent_visualizer(
-            sensordata[0], self.thrust_label_1)
-        self.update_round_percent_visualizer(
-            sensordata[1], self.thrust_label_2)
-        self.update_round_percent_visualizer(
-            sensordata[2], self.thrust_label_3)
-        self.update_round_percent_visualizer(
-            sensordata[3], self.thrust_label_4)
-        self.update_round_percent_visualizer(
-            sensordata[4], self.thrust_label_5)
-        self.update_round_percent_visualizer(
-            sensordata[5], self.thrust_label_6)
-        self.update_round_percent_visualizer(
-            sensordata[6], self.thrust_label_7)
-        self.update_round_percent_visualizer(
-            sensordata[7], self.thrust_label_8)
-
-    def gui_manipulator_update(self, sensordata):
-        self.update_round_percent_visualizer(0, self.label_percentage_mani_1)
-        self.update_round_percent_visualizer(0, self.label_percentage_mani_2)
-        self.update_round_percent_visualizer(0, self.label_percentage_mani_3)
-        if sensordata[3]:
-            if sensordata[0] != 0:  # åpne/lukke manipulator
-                self.update_round_percent_visualizer(
-                    round(sensordata[0] * 0.35), self.label_percentage_mani_1
-                )
-            elif sensordata[2] != 0:  # rotere manipulator
-                self.update_round_percent_visualizer(
-                    round(sensordata[2] * 0.35), self.label_percentage_mani_2
-                )
-            elif sensordata[1] != 0:  # inn ut med manipulator1
-                self.update_round_percent_visualizer(
-                    round(sensordata[1] * 0.35), self.label_percentage_mani_3
-                )
+            # if i == 0:
+            #     label.setText(str(round(sensordata[i], 2))+"W")
+            # elif i == 1:
+            #     label.setText(str(round(sensordata[i], 2))+"C")
+            # elif i == 2:
+            #     label.setText(str(round(sensordata[i], 2)))
 
 
 def run(conn, queue_for_rov, t_watch: Threadwatcher, id):
