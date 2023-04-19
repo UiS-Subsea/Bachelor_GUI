@@ -38,16 +38,27 @@
 
 def reset_depth():
     packets_to_send = []
+    angle_bit_state = 0
 
-    # calibrate_IMU_byte = [0] * 8
-    # calibrate_IMU_byte[0] |= (1 << 2)  # reset bit 2
-    # print("Kalibrerer IMU")
-    # packets_to_send.append([66, bytes(calibrate_IMU_byte)])
-    # print(packets_to_send)
-    calibrate_IMU_byte = bytearray(8)
-    calibrate_IMU_byte[0] |= (1 << 2)  # reset bit 2
-    print("Kalibrerer IMU")
-    packets_to_send.append([66, bytes(calibrate_IMU_byte)])
+    reset_angles_byte = [0] * 8
+    # toggle the bit
+    if angle_bit_state == 0:
+        reset_angles_byte[0] |= (1 << 0)
+        angle_bit_state = 1
+        print("Setting All Regulator To True")
+        if reset_angles_byte[0] & (1 << 0):  # check if bit 0 is set to 1
+            reset_angles_byte[0] |= (1 << 1)  # set bit 1 to 1
+            reset_angles_byte[0] |= (1 << 2)  # set bit 2 to 1
+            reset_angles_byte[0] |= (1 << 3)  # set bit 3 to 1
+    elif angle_bit_state == 1:
+        reset_angles_byte[0] |= (0 << 0)
+        angle_bit_state = 0
+        print("Setting All Regulators To False")
+        if reset_angles_byte[0] & (0 << 0):
+            reset_angles_byte[0] |= (0 << 1)  # set bit 1 to 1
+            reset_angles_byte[0] |= (0 << 2)  # set bit 2 to 1
+            reset_angles_byte[0] |= (0 << 3)  # set bit 3 to 1
+    packets_to_send.append([32, bytes(reset_angles_byte)])
     print(packets_to_send)
 
 

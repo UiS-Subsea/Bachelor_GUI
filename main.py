@@ -96,13 +96,13 @@ def send_fake_sensordata(t_watch: Threadwatcher, gui_queue: multiprocessing.Queu
             pressureErrors,
             leakageAlarms,
         ]
-        
-        sensordata[MANIPULATOR12V]=[
-            manipulator_list[(0 + count)], #Strømtrekk
-            manipulator_list[(5 + count)], #Temperatur
-            manipulator_list[(7 + count)], #Sikringsstatus
+
+        sensordata[MANIPULATOR12V] = [
+            manipulator_list[(0 + count)],  # Strømtrekk
+            manipulator_list[(5 + count)],  # Temperatur
+            manipulator_list[(7 + count)],  # Sikringsstatus
         ]
-        
+
         sensordata[THRUST] = [
             thrust_list[(0 + count) % 201],
             thrust_list[(13 + count) % 201],
@@ -114,7 +114,7 @@ def send_fake_sensordata(t_watch: Threadwatcher, gui_queue: multiprocessing.Queu
             thrust_list[(75 + count) % 201],
             thrust_list[(88 + count) % 201],
         ]
-        
+
         # sensordata[KRAFT] = [
         #     power_list[count % 101] * 13,
         #     power_list[count % 101] * 2.4,
@@ -156,6 +156,7 @@ class Rov_state:
         self.active_camera = 0
         self_hud_camera_status = False
 
+        self.angle_bit_state = 0
         self.packets_to_send = []
         self.valid_gui_commands = VALIDCOMMANDS
 
@@ -381,24 +382,69 @@ class Rov_state:
         print("Kalibrerer IMU")
         self.packets_to_send.append([66, calibrate_IMU_byte])
 
-    def set_light_intensity(self, light_id: int, intensity: int, is_on: bool = True):
+    def toogle_regulator_all(self):
+        reset_angles_byte = [0] * 8
+        # toggle the bit
+        if self.angle_bit_state == 0:
+            reset_angles_byte[0] |= (1 << 0)
+            self.angle_bit_state = 1
+            print("Setting All Regulator To True")
+            if reset_angles_byte[0] & (1 << 0):  # check if bit 0 is set to 1
+                reset_angles_byte[0] |= (1 << 1)  # set bit 1 to 1
+                reset_angles_byte[0] |= (1 << 2)  # set bit 2 to 1
+                reset_angles_byte[0] |= (1 << 3)  # set bit 3 to 1
+        elif self.angle_bit_state == 1:
+            reset_angles_byte[0] |= (0 << 0)
+            self.angle_bit_state = 0
+            print("Setting All Regulators To False")
+            if reset_angles_byte[0] & (0 << 0):
+                reset_angles_byte[0] |= (0 << 1)  # set bit 1 to 1
+                reset_angles_byte[0] |= (0 << 2)  # set bit 2 to 1
+                reset_angles_byte[0] |= (0 << 3)  # set bit 3 to 1
+        self.packets_to_send.append([32, reset_angles_byte])
+        print(self.packets_to_send)
 
-        byte0 = (int(is_on) << 1) | 1
-        byte1 = intensity
-        packet = [light_id, [byte0, byte1]]
-        self.packets_to_send.append(packet)
+    def toggle_rull_reg(self):
+        toggle_rull_reg = [0] * 8
+        toggle_rull_reg[0] |= (1 << 0)
+        print("Rull Regulator På")
+        self.packets_to_send.append([66, toggle_rull_reg])
 
-    def set_top_light_on(intensity: int):
-        Rov_state.set_light_intensity(FRONT_LIGHT_ID, intensity, True)
+    def toggle_stamp_reg(self):
+        toggle_stamp_reg = [0] * 8
+        toggle_stamp_reg[0] |= (1 << 2)
+        print("Stamp Regulator På")
+        self.packets_to_send.append([66, toggle_stamp_reg])
 
-    def set_bottom_light_on(intensity: int):
-        Rov_state.set_light_intensity(BOTTOM_LIGHT_ID, intensity, True)
+    def toggle_dybde_reg(self):
+        toggle_dybde_reg = [0] * 8
+        toggle_dybde_reg[0] |= (1 << 3)
+        print("Dybde Regulator På")
+        self.packets_to_send.append([66, toggle_dybde_reg])
 
-    def set_front_light_dimming(intensity: int):
-        Rov_state.set_light_intensity(FRONT_LIGHT_ID, intensity, True)
+    def front_light_on(self):
+        set_light_byte = bytearray(8)
+        set_light_byte[0] |= (1 << 1)  # bit 1 to 1
+        print("Front Light On")
+        self.packets_to_send.append((98, bytes(set_light_byte)))
 
-    def set_bottom_light_dimming(intensity: int):
-        Rov_state.set_light_intensity(BOTTOM_LIGHT_ID, intensity, True)
+    def bottom_light_on(self):
+        set_light_byte = bytearray(8)
+        set_light_byte[0] |= (1 << 1)  # bit 1 to 1
+        print("Bottom Light On")
+        self.packets_to_send.append((99, bytes(set_light_byte)))
+
+    def front_light_intensity(self, intensity):
+        set_intensity_byte = bytearray(8)
+        set_intensity_byte[1] = intensity
+        print("Adjusting Front Light Intensity")
+        self.packets_to_send.append((98, set_intensity_byte))
+
+    def bottom_light_intensity(self, intensity):
+        set_intensity_byte = bytearray(8)
+        set_intensity_byte[1] = intensity
+        print("Adjusting Bottom Light Intensity")
+        self.packets_to_send.append((99, set_intensity_byte))
 
     def build_rov_packet(self):
         if self.data == {}:
@@ -501,7 +547,7 @@ if __name__ == "__main__":
         run_camera = False
         run_gui = True
         run_craft_packet = False
-        run_network = False # Bytt t True når du ska prøva å connecte.
+        run_network = False  # Bytt t True når du ska prøva å connecte.
         run_get_controllerdata = False
         # Sett til True om du vil sende fake sensordata til gui
         run_send_fake_sensordata = True
