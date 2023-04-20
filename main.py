@@ -53,17 +53,17 @@ if __name__ == "__main__":
         manual_flag = multiprocessing.Value("i", 1)
         run_gui = True
         run_craft_packet = False
-        run_network = False  # Bytt t True når du ska prøva å connecte.
-        run_get_controllerdata = False
+        run_network = True  # Bytt t True når du ska prøva å connecte.
+        run_get_controllerdata = True
         # Sett til True om du vil sende fake sensordata til gui
-        run_send_fake_sensordata = True
+        run_send_fake_sensordata = False
 
         t_watch = Threadwatcher()
         queue_for_rov = multiprocessing.Queue()
         gui_queue = multiprocessing.Queue()
 
         # HUSK Å ENDRE TICK HVIS INPUT OPPDATERES SENT!
-        debug_all = False  # Sett til True om du vil se input fra controllers
+        debug_all = True  # Sett til True om du vil se input fra controllers
 
         if run_network:
             network = Network(is_server=False, port=6900, bind_addr="0.0.0.0",
