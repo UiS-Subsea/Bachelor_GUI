@@ -308,7 +308,7 @@ class Window(QMainWindow):
             "INIT_ERROR",
             "WHO_AM_I_ERROR",
             "MEMS_ERROR",
-            "MAG_WHO_AM_I_ERROR",
+            "MAG_WHO_AM_I_ERROerR",
         ]
 
         tempErrors = [  # Feilkoder fra temperatur
