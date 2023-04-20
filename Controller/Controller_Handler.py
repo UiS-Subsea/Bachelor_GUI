@@ -301,7 +301,7 @@ class Controller:
                     if event.joy == ROV_CONTROLLER_ID:
                         self.rov_joysticks[event.axis] = self.normalize_joysticks(
                             event)
-                        print(f"{event.axis}: {event.value}")
+                        # print(f"{event.axis}: {event.value}")
                         self.rov_joysticks[6] = int((100+self.rov_joysticks[5]) - \
                             (100+self.rov_joysticks[2])/2) - 100
                         # self.rov_joysticks[6] = (1+self.rov_joysticks[5])/2 - \
@@ -309,8 +309,10 @@ class Controller:
                     elif event.joy == MANIPULATOR_CONTROLLER_ID:
                         self.mani_joysticks[event.axis] = self.normalize_joysticks(
                             event)
-                        self.mani_joysticks[6] = self.mani_joysticks[2] + \
-                            self.mani_joysticks[5]
+                        # self.mani_joysticks[6] = self.mani_joysticks[2] + \
+                        #     self.mani_joysticks[5]
+                        self.rov_joysticks[6] = int((100+self.rov_joysticks[5]) - \
+                            (100+self.rov_joysticks[2])/2) - 100
 
                     if debug_all:
                         deadzone = 0.07  # To prevent sensitive output in console

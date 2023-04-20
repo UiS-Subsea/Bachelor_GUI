@@ -391,7 +391,7 @@ class Rov_state:
             return
         data = [0, 0, 0, 0, 0, 0, 0, 0]
         try:
-            data[0] = self.data["mani_buttons"][MANIPULATOR_IN_OUT]*100
+            data[0] = self.data["mani_buttons"][1] #for vanntest
             data[1] = self.data["mani_joysticks"][MANIPULATOR_ROTATION]
             data[2] = self.data["mani_joysticks"][MANIPULATOR_TILT]
             data[3] = self.data["mani_joysticks"][MANIPULATOR_GRAB_RELEASE]
