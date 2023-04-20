@@ -34,6 +34,7 @@ class Window(QMainWindow):
         #        self.send_current_light_intensity()
         self.packets_to_send = []
         self.angle_bit_state = 0
+        self.light_state = 0
 
         super().__init__(parent)
         uic.loadUi("gui/window1.ui", self)
