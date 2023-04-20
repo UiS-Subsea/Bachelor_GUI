@@ -162,32 +162,10 @@ class Window(QMainWindow):
         
         self.btnRegTuning.clicked.connect(self.updateRegulatorTuning)
 
-
-
-    def updateRegulatorTuning(self):
-        reguleringDropdown = self.reguleringDropdown.currentText()
-        input_value = float(self.tuningInput.text())
-
-        my_dict={
-                'Rull KI': 1,
-                'Rull KD': 2,
-                'Rull KP': 3,
-                'Stamp KI': 4,
-                'Stamp KD': 5,
-                'Stamp KP': 6,
-                'Dybde KI': 7,
-                'Dybde KD': 8,
-                'Dybde KP': 9,
-                'TS': 10,
-                'Alpha': 11
-        }
-
-        value = my_dict.get(reguleringDropdown, None) # None is default if key doesn't exist
-        update_regulator_tuning = [int(value), float(input_value)]
-#        self.packets_to_send.append([42, [int(value), float(input_value)]])
-        values = {"update_regulator_tuning": update_regulator_tuning}
-        self.queue.put((10, values))
-#        print(self.packets_to_send)
+        #Må ha knapp for alle reg knapper!!!!!
+        #!!!!
+        #!!!!
+        #!!!!
         
 
     def gui_manipulator_state_update(self, sensordata):
@@ -254,6 +232,81 @@ class Window(QMainWindow):
         self.queue.put((9, values))
         #self.packets_to_send.append([66, calibrate_IMU_byte])
         # print(calibrate_IMU_byte)
+    
+    def updateRegulatorTuning(self):
+        reguleringDropdown = self.reguleringDropdown.currentText()
+        input_value = float(self.tuningInput.text())
+
+        my_dict={
+                'Rull KI': 1,
+                'Rull KD': 2,
+                'Rull KP': 3,
+                'Stamp KI': 4,
+                'Stamp KD': 5,
+                'Stamp KP': 6,
+                'Dybde KI': 7,
+                'Dybde KD': 8,
+                'Dybde KP': 9,
+                'TS': 10,
+                'Alpha': 11
+        }
+
+        value = my_dict.get(reguleringDropdown, None) # None is default if key doesn't exist
+        update_regulator_tuning = [int(value), float(input_value)]
+#        self.packets_to_send.append([42, [int(value), float(input_value)]])
+        values = {"update_regulator_tuning": update_regulator_tuning}
+        self.queue.put((10, values))
+#        print(self.packets_to_send)
+
+
+    def toogle_regulator_all(self):
+        self.angle_bit_state == 0
+        toogle_regulator_byte = [0] * 8
+        # toggle the bit
+        if self.angle_bit_state == 0:
+            toogle_regulator_byte[0] |= (1 << 0)
+            self.angle_bit_state = 1
+            print("Setting All Regulator To True")
+            if toogle_regulator_byte[0] & (1 << 0):  # check if bit 0 is set to 1
+                toogle_regulator_byte[0] |= (1 << 1)  # set bit 1 to 1
+                toogle_regulator_byte[0] |= (1 << 2)  # set bit 2 to 1
+                toogle_regulator_byte[0] |= (1 << 3)  # set bit 3 to 1
+        elif self.angle_bit_state == 1:
+            toogle_regulator_byte[0] |= (0 << 0)
+            self.angle_bit_state = 0
+            print("Setting All Regulators To False")
+            if toogle_regulator_byte[0] & (0 << 0):
+                toogle_regulator_byte[0] |= (0 << 1)  # set bit 1 to 1
+                toogle_regulator_byte[0] |= (0 << 2)  # set bit 2 to 1
+                toogle_regulator_byte[0] |= (0 << 3)  # set bit 3 to 1
+        values = {"toggle_regulator_all": toogle_regulator_byte}
+        self.queue.put((11, values))
+#        self.packets_to_send.append([32, toogle_regulator_byte])
+#        print(self.packets_to_send)
+
+    def toggle_rull_reg(self):
+        toggle_rull_reg = [0] * 8
+        toggle_rull_reg[0] |= (1 << 0)
+        print("Rull Regulator På")
+        values = {"toggle_rull_reg": toggle_rull_reg}
+        self.queue.put((12, values))
+#        self.packets_to_send.append([66, toggle_rull_reg])
+
+    def toggle_stamp_reg(self):
+        toggle_stamp_reg = [0] * 8
+        toggle_stamp_reg[0] |= (1 << 2)
+        print("Stamp Regulator På")
+        values = {"toggle_stamp_reg": toggle_stamp_reg}
+        self.queue.put((13, values))
+#        self.packets_to_send.append([66, toggle_stamp_reg])
+
+    def toggle_dybde_reg(self):
+        toggle_dybde_reg = [0] * 8
+        toggle_dybde_reg[0] |= (1 << 3)
+        print("Dybde Regulator På")
+        values = {"toggle_dybde_reg": toggle_dybde_reg}
+        self.queue.put((14, values))
+#        self.packets_to_send.append([66, toggle_dybde_reg])
 
     def decide_gui_update(self, sensordata):
         # print("Deciding with this data: ", sensordata)

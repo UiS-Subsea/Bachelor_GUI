@@ -321,25 +321,26 @@ class Rov_state:
         self.packets_to_send.append((99, set_intensity_byte))
 
     def toogle_regulator_all(self):
-        reset_angles_byte = [0] * 8
+        toogle_regulator_byte = [0] * 8
         # toggle the bit
         if self.angle_bit_state == 0:
-            reset_angles_byte[0] |= (1 << 0)
+            toogle_regulator_byte[0] |= (1 << 0)
             self.angle_bit_state = 1
             print("Setting All Regulator To True")
-            if reset_angles_byte[0] & (1 << 0):  # check if bit 0 is set to 1
-                reset_angles_byte[0] |= (1 << 1)  # set bit 1 to 1
-                reset_angles_byte[0] |= (1 << 2)  # set bit 2 to 1
-                reset_angles_byte[0] |= (1 << 3)  # set bit 3 to 1
+            # check if bit 0 is set to 1
+            if toogle_regulator_byte[0] & (1 << 0):
+                toogle_regulator_byte[0] |= (1 << 1)  # set bit 1 to 1
+                toogle_regulator_byte[0] |= (1 << 2)  # set bit 2 to 1
+                toogle_regulator_byte[0] |= (1 << 3)  # set bit 3 to 1
         elif self.angle_bit_state == 1:
-            reset_angles_byte[0] |= (0 << 0)
+            toogle_regulator_byte[0] |= (0 << 0)
             self.angle_bit_state = 0
             print("Setting All Regulators To False")
-            if reset_angles_byte[0] & (0 << 0):
-                reset_angles_byte[0] |= (0 << 1)  # set bit 1 to 1
-                reset_angles_byte[0] |= (0 << 2)  # set bit 2 to 1
-                reset_angles_byte[0] |= (0 << 3)  # set bit 3 to 1
-        self.packets_to_send.append([32, reset_angles_byte])
+            if toogle_regulator_byte[0] & (0 << 0):
+                toogle_regulator_byte[0] |= (0 << 1)  # set bit 1 to 1
+                toogle_regulator_byte[0] |= (0 << 2)  # set bit 2 to 1
+                toogle_regulator_byte[0] |= (0 << 3)  # set bit 3 to 1
+        self.packets_to_send.append([32, toogle_regulator_byte])
         print(self.packets_to_send)
 
     def toggle_rull_reg(self):
@@ -371,9 +372,6 @@ class Rov_state:
         data[3] = self.data["rov_joysticks"][ROTATION_AXIS]
 
         self.packets_to_send.append([40, data])
-
-
-
 
     def build_autonom_packet(self):
         if self.data == {}:
@@ -465,6 +463,45 @@ class Rov_state:
 
         self.packets_to_send.append([42, data])
 
+    def build_toggle_regulator_all(self):
+        if self.data == {}:
+            return
+        data = [0, 0, 0, 0, 0, 0, 0, 0]
+
+        data[0] = self.data["toggle_regulator_all"][0]
+        data[1] = self.data["toggle_regulator_all"][1]
+        data[2] = self.data["toggle_regulator_all"][2]
+        data[3] = self.data["toggle_regulator_all"][3]
+
+        self.packets_to_send.append([32, data])
+
+    def build_rull_regulator(self):
+        if self.data == {}:
+            return
+        data = [0, 0, 0, 0, 0, 0, 0, 0]
+
+        data[1] = self.data["toggle_rull_reg"][1]
+
+        self.packets_to_send.append([32, data])
+
+    def build_stamp_reg(self):
+        if self.data == {}:
+            return
+        data = [0, 0, 0, 0, 0, 0, 0, 0]
+
+        data[2] = self.data["toggle_stamp_reg"][2]
+
+        self.packets_to_send.append([32, data])
+
+    def build_dybde_regulator(self):
+        if self.data == {}:
+            return
+        data = [0, 0, 0, 0, 0, 0, 0, 0]
+
+        data[3] = self.data["toggle_dybde_reg"][3]
+
+        self.packets_to_send.append([32, data])
+
     def button_handling(self):
         rov_buttons = self.data.get("rov_buttons")
         mani_buttons = self.data.get("mani_buttons")
@@ -505,3 +542,11 @@ class Rov_state:
             self.build_calibrate_IMU()
         elif self.packet_id == 10:
             self.build_regulator_tuning()
+        elif self.packet_id == 11:
+            self.build_toggle_regulator_all()
+        elif self.packet_id == 12:
+            self.build_rull_regulator()
+        elif self.packet_id == 13:
+            self.build_stamp_reg()
+        elif self.packet_id == 14:
+            self.build_dybde_regulator()
