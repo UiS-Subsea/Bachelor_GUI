@@ -105,7 +105,7 @@ class AutonomousDocking:
         
             
     def find_grouts(self): # TODO should mabye dilate
-        lower_bound, upper_bound = (1, 0, 0), (100, 100, 100)
+        lower_bound, upper_bound = (0, 0, 0), (100, 100, 100)
         grouts = cv2.inRange(self.down_frame, lower_bound, upper_bound)
         canny = cv2.Canny(grouts, 100, 200)
         blurred = cv2.GaussianBlur(canny, (11, 13), 0)
@@ -114,6 +114,8 @@ class AutonomousDocking:
             cv2.drawContours(self.down_frame, grout_contours, -1, (0, 255, 0), 3)
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 self.draw_grouts = False
+        
+
         return grout_contours
     
     def find_relative_angle(self):
@@ -129,10 +131,10 @@ class AutonomousDocking:
             _, (width, height), angle = rect
             
             # These max values depend on how far away the ROV is from the bottom
-            MAX_AREA = 5000 # TODO may need to change
-            MIN_AREA = 500 # TODO may need to change
-            if (area > MAX_AREA) or (area < MIN_AREA): 
-                continue
+            # MAX_AREA = 5000 # TODO may need to change
+            # MIN_AREA = 500 # TODO may need to change
+            # if (area > MAX_AREA) or (area < MIN_AREA): 
+            #     continue
             
             if width < height:
                 angle = 90 - angle
@@ -147,18 +149,18 @@ class AutonomousDocking:
                 box = np.intp(box)
                 cv2.drawContours(self.down_frame, [box], 0, (0, 0, 255), 2)
 
-                if cv2.waitKey(1) & 0xFF == ord('q'):
-                    self.draw_grout_boxes = False
-                    
-            if angle_counter == 0:
-                return "NO ANGLE"
-            
-            avg_angle = angle_sum / angle_counter
-            print(avg_angle)
-            return avg_angle
+        avg_angle = angle_sum / angle_counter
+
+        if angle_counter == 0:
+            return "NO ANGLE"
+        
+        return avg_angle
             
     def rotation_commands(self):
         angle = self.find_relative_angle()
+        if angle == None:
+            return
+            
         if angle == "NO ANGLE":
             return
             
