@@ -33,6 +33,8 @@ class Window(QMainWindow):
     def __init__(self, gui_queue: multiprocessing.Queue, queue_for_rov: multiprocessing.Queue, manual_flag,  t_watch: Threadwatcher, id: int, parent=None):
         #        self.send_current_light_intensity()
         self.packets_to_send = []
+        self.angle_bit_state = 0
+
         super().__init__(parent)
         uic.loadUi("gui/window1.ui", self)
         self.connectFunctions()
@@ -161,12 +163,14 @@ class Window(QMainWindow):
         self.btnNullpunktVinkler.clicked.connect(
             lambda: self.reset_angles())
 
-        self.btnRegTuning.clicked.connect(self.updateRegulatorTuning)
+        self.btnRegTuning.clicked.connect(lambda: self.updateRegulatorTuning)
 
-        # Må ha knapp for alle reg knapper!!!!!
-        #!!!!
-        #!!!!
-        #!!!!
+        # Regulatorer
+
+        self.btnRegOn.clicked.connect(lambda: self.toogle_regulator_all())
+        self.btnRullOn.clicked.connect(lambda: self.toggle_rull_reg())
+        self.btnStampOn.clicked.connect(lambda: self.toggle_stamp_reg())
+        self.btnDybdeOn.clicked.connect(lambda: self.toggle_dybde_reg())
 
     def gui_manipulator_state_update(self, sensordata):
         self.toggle_mani.setChecked(sensordata[0])
@@ -308,6 +312,38 @@ class Window(QMainWindow):
         values = {"toggle_dybde_reg": toggle_dybde_reg}
         self.queue.put((14, values))
 #        self.packets_to_send.append([66, toggle_dybde_reg])
+
+    def front_light_on(self):
+        set_light_byte = [0] * 8
+        set_light_byte[0] |= (1 << 1)  # bit 1 to 1
+        print("Front Light On")
+        values = {"front_light_on": set_light_byte}
+        self.queue.put((15, values))
+#        self.packets_to_send.append((98, bytes(set_light_byte)))
+
+    def bottom_light_on(self):
+        set_light_byte = [0] * 8
+        set_light_byte[0] |= (1 << 1)  # bit 1 to 1
+        print("Bottom Light On")
+        values = {"bottom_light_on": set_light_byte}
+        self.queue.put((16, values))
+#        self.packets_to_send.append((99, bytes(set_light_byte)))
+
+    def front_light_intensity(self, intensity):
+        set_intensity_byte = [0] * 8
+        set_intensity_byte[1] = intensity
+        print("Adjusting Front Light Intensity")
+        values = {"front_light_intensity": set_intensity_byte}
+        self.queue.put((17, values))
+#        self.packets_to_send.append((98, set_intensity_byte))
+
+    def bottom_light_intensity(self, intensity):
+        set_intensity_byte = [0] * 8
+        set_intensity_byte[1] = intensity
+        print("Adjusting Bottom Light Intensity")
+        values = {"bottom_light_intensity": set_intensity_byte}
+        self.queue.put((18, values))
+#        self.packets_to_send.append((99, set_intensity_byte))
 
     def decide_gui_update(self, sensordata):
         # print("Deciding with this data: ", sensordata)

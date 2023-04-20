@@ -502,6 +502,42 @@ class Rov_state:
 
         self.packets_to_send.append([32, data])
 
+    def build_front_light_on(self):
+        if self.data == {}:
+            return
+        data = [0, 0, 0, 0, 0, 0, 0, 0]
+
+        data[1] = self.data["front_light_on"][1]
+
+        self.packets_to_send.append([98, data])
+
+    def build_bottom_light_on(self):
+        if self.data == {}:
+            return
+        data = [0, 0, 0, 0, 0, 0, 0, 0]
+
+        data[1] = self.data["bottom_light_on"][1]
+
+        self.packets_to_send.append([99, data])
+
+    def build_front_light_intensity(self):
+        if self.data == {}:
+            return
+        data = [0, 0, 0, 0, 0, 0, 0, 0]
+
+        data[1] = self.data["front_light_intensity"][1]
+
+        self.packets_to_send.append([98, data])
+
+    def build_bottom_light_intensity(self):
+        if self.data == {}:
+            return
+        data = [0, 0, 0, 0, 0, 0, 0, 0]
+
+        data[1] = self.data["bottom_light_intensity"][1]
+
+        self.packets_to_send.append([99, data])
+
     def button_handling(self):
         rov_buttons = self.data.get("rov_buttons")
         mani_buttons = self.data.get("mani_buttons")
@@ -550,3 +586,11 @@ class Rov_state:
             self.build_stamp_reg()
         elif self.packet_id == 14:
             self.build_dybde_regulator()
+        elif self.packet_id == 15:
+            self.build_front_light_on()
+        elif self.packet_id == 16:
+            self.build_bottom_light_on()
+        elif self.packet_id == 17:
+            self.build_front_light_intensity()
+        elif self.packet_id == 18:
+            self.build
