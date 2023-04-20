@@ -185,7 +185,7 @@ class Controller:
 
             ### ENDRE TICK TIL 20 FOR NORMAL KJØRING
             ### ENDRE TIL MINDRE FOR Å DEBUGGE LETTERE
-            self.duration = self.clock.tick(50)
+            self.duration = self.clock.tick(20)
             
             # print(duration)
             for event in pygame.event.get():
@@ -311,8 +311,8 @@ class Controller:
                             event)
                         # self.mani_joysticks[6] = self.mani_joysticks[2] + \
                         #     self.mani_joysticks[5]
-                        self.rov_joysticks[6] = int((100+self.rov_joysticks[5]) - \
-                            (100+self.rov_joysticks[2])/2) - 100
+                        self.mani_joysticks[6] = int((100+self.mani_joysticks[5]) - \
+                            (100+self.mani_joysticks[2])/2) - 100
 
                     if debug_all:
                         deadzone = 0.07  # To prevent sensitive output in console
