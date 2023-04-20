@@ -28,6 +28,7 @@ from main import *
 global RUN_MANUAL
 os.environ['QT_LOGGING_RULES'] = 'qt.qpa.wayland.warning=false'
 
+
 class Window(QMainWindow):
     def __init__(self, gui_queue: multiprocessing.Queue, queue_for_rov: multiprocessing.Queue, manual_flag,  t_watch: Threadwatcher, id: int, parent=None):
         #        self.send_current_light_intensity()
@@ -40,12 +41,13 @@ class Window(QMainWindow):
         self.sound_file = os.path.abspath("martinalarm.wav")
 
         self.manual_flag = manual_flag
-        self.queue: queue_for_rov  # queue_for_rov is a queue that is used to send data to the rov
+        # queue_for_rov is a queue that is used to send data to the rov
+        self.queue = queue_for_rov
         # queue_for_rov is a queue that is used to send data to the rov
 
         self.gui_queue = gui_queue
-        self.threadwatcher = t_watch  
-        self.id = id 
+        self.threadwatcher = t_watch
+        self.id = id
 
         self.exec = ExecutionClass(queue_for_rov, manual_flag)
         self.camera = CameraClass()
@@ -57,10 +59,10 @@ class Window(QMainWindow):
         self.timer.timeout.connect(self.update_gui_data)
         self.timer.start(100)  # Adjust the interval to your needs
         self.manual = True
-        self.reguleringDropdown = self.findChild(QComboBox, 'reguleringDropdown')
+        self.reguleringDropdown = self.findChild(
+            QComboBox, 'reguleringDropdown')
         self.tuningInput = self.findChild(QLineEdit, 'tuningInput')
         self.btnRegTuning = self.findChild(QPushButton, 'btnRegTuning')
-
 
         # Queue and pipe
 
@@ -68,7 +70,7 @@ class Window(QMainWindow):
 
     gradient = (
         "background-color: #444444; color: #FF0000; border-radius: 10px;")
-    
+
     def manual_kjoring(self):
         self.manual_flag.value = 1
         print("Manual flag: ", self.manual_flag.value)
@@ -139,9 +141,9 @@ class Window(QMainWindow):
         # Sikringer
         self.btnReset5V.clicked.connect(lambda: self.reset_5V_fuse2())
         self.btnResetThruster.clicked.connect(
-            lambda: self.reset_12V_manipulator_fuse())
-        self.btnResetManipulator.clicked.connect(
             lambda: self.reset_12V_thruster_fuse())
+        self.btnResetManipulator.clicked.connect(
+            lambda: self.reset_12V_manipulator_fuse())
 #
 #        self.btnResetThruster.clicked.connect(lambda: f.resetThruster(self))
 #        self.btnResetManipulator.clicked.connect(
@@ -157,16 +159,14 @@ class Window(QMainWindow):
 
         # Vinkler
         self.btnNullpunktVinkler.clicked.connect(
-            lambda: self.reset_angles(self))
-        
-        
+            lambda: self.reset_angles())
+
         self.btnRegTuning.clicked.connect(self.updateRegulatorTuning)
 
-        #Må ha knapp for alle reg knapper!!!!!
+        # Må ha knapp for alle reg knapper!!!!!
         #!!!!
         #!!!!
         #!!!!
-        
 
     def gui_manipulator_state_update(self, sensordata):
         self.toggle_mani.setChecked(sensordata[0])
@@ -232,32 +232,32 @@ class Window(QMainWindow):
         self.queue.put((9, values))
         #self.packets_to_send.append([66, calibrate_IMU_byte])
         # print(calibrate_IMU_byte)
-    
+
     def updateRegulatorTuning(self):
         reguleringDropdown = self.reguleringDropdown.currentText()
         input_value = float(self.tuningInput.text())
 
-        my_dict={
-                'Rull KI': 1,
-                'Rull KD': 2,
-                'Rull KP': 3,
-                'Stamp KI': 4,
-                'Stamp KD': 5,
-                'Stamp KP': 6,
-                'Dybde KI': 7,
-                'Dybde KD': 8,
-                'Dybde KP': 9,
-                'TS': 10,
-                'Alpha': 11
+        my_dict = {
+            'Rull KI': 1,
+            'Rull KD': 2,
+            'Rull KP': 3,
+            'Stamp KI': 4,
+            'Stamp KD': 5,
+            'Stamp KP': 6,
+            'Dybde KI': 7,
+            'Dybde KD': 8,
+            'Dybde KP': 9,
+            'TS': 10,
+            'Alpha': 11
         }
 
-        value = my_dict.get(reguleringDropdown, None) # None is default if key doesn't exist
+        # None is default if key doesn't exist
+        value = my_dict.get(reguleringDropdown, None)
         update_regulator_tuning = [int(value), float(input_value)]
 #        self.packets_to_send.append([42, [int(value), float(input_value)]])
         values = {"update_regulator_tuning": update_regulator_tuning}
         self.queue.put((10, values))
 #        print(self.packets_to_send)
-
 
     def toogle_regulator_all(self):
         self.angle_bit_state == 0
@@ -267,7 +267,8 @@ class Window(QMainWindow):
             toogle_regulator_byte[0] |= (1 << 0)
             self.angle_bit_state = 1
             print("Setting All Regulator To True")
-            if toogle_regulator_byte[0] & (1 << 0):  # check if bit 0 is set to 1
+            # check if bit 0 is set to 1
+            if toogle_regulator_byte[0] & (1 << 0):
                 toogle_regulator_byte[0] |= (1 << 1)  # set bit 1 to 1
                 toogle_regulator_byte[0] |= (1 << 2)  # set bit 2 to 1
                 toogle_regulator_byte[0] |= (1 << 3)  # set bit 3 to 1
@@ -315,12 +316,12 @@ class Window(QMainWindow):
             DYBDETEMP: self.dybdeTempUpdate,
             FEILKODE: self.guiFeilKodeUpdate,
             THRUST: self.guiThrustUpdate,
-            MANIPULATOR12V :self.guiManipulatorUpdate,
-            THRUSTER12V:self.thruster12VUpdate,
-            KRAFT5V:self.kraft5VUpdate,
-            REGULERINGMOTORTEMP:self.reguleringMotorTempUpdate,
-            TEMPKOMKONTROLLER:self.TempKomKontrollerUpdate
-            
+            MANIPULATOR12V: self.guiManipulatorUpdate,
+            THRUSTER12V: self.thruster12VUpdate,
+            KRAFT5V: self.kraft5VUpdate,
+            REGULERINGMOTORTEMP: self.reguleringMotorTempUpdate,
+            TEMPKOMKONTROLLER: self.TempKomKontrollerUpdate
+
             # MANIPULATOR12V :self.guiManipulatorUpdate,
 
         }
@@ -398,24 +399,23 @@ class Window(QMainWindow):
             if sensordata[0][i] == True:
                 labelIMUAlarm.setText(imuErrors[i])
                 labelIMUAlarm.setStyleSheet(self.gradient)
-                
+
         for i in range(len(sensordata[1])):
             if sensordata[1][i] == True:
                 labelTempAlarm.setText(tempErrors[i])
                 labelTempAlarm.setStyleSheet(self.gradient)
-                
+
         for i in range(len(sensordata[2])):
             if sensordata[2][i] == True:
                 labelTrykkAlarm.setText(trykkErrors[i])
-                labelTrykkAlarm.setStyleSheet(self.gradient)  
-        
-        #TODO: skru på før du pusha
+                labelTrykkAlarm.setStyleSheet(self.gradient)
+
+        # TODO: skru på før du pusha
         for i in range(len(sensordata[3])):
             if sensordata[3][i] == True:
                 labelLekkasjeAlarm.setText(lekkasjeErrors[i])
                 labelLekkasjeAlarm.setStyleSheet(self.gradient)
-                #self.play_sound()
-
+                # self.play_sound()
 
     def guiVinkelUpdate(self, sensordata):
         vinkel_liste: list[QLabel] = [
@@ -434,7 +434,7 @@ class Window(QMainWindow):
         ]
         for i, label in enumerate(temp_liste):
             label.setText(str(round(sensordata[i], 2)) + "CM")
-   
+
     def guiThrustUpdate(self, sensordata):
         thrust_liste: list[QLabel] = [
             self.thrust_label_1,
@@ -451,60 +451,61 @@ class Window(QMainWindow):
             label.setText(str(round(sensordata[i], 2)))
 
     kraftFeilkoder = [
-    "Overcurrent trip",
-    "Fuse fault",
-    "Overtemp fuse",
+        "Overcurrent trip",
+        "Fuse fault",
+        "Overtemp fuse",
     ]
-    def guiManipulatorUpdate(self,sensordata):
-        
+
+    def guiManipulatorUpdate(self, sensordata):
+
         labelKraft: QLabel = self.labelManipulatorKraft
         labelTemp: QLabel = self.labelManipulatorTemp
         labelSikring: QLabel = self.labelManipulatorSikring
 
         labelKraft.setText(str(round(sensordata[0], 2)) + "A")
         labelTemp.setText(str(round(sensordata[1], 2)) + "C")
-        
+
         for i in range(3):
             if sensordata[2][i] == True:
                 labelSikring.setText(str(self.kraftFeilkoder[i]))
                 labelSikring.setStyleSheet(self.gradient)
 
-    def thruster12VUpdate(self,sensordata):
-        
+    def thruster12VUpdate(self, sensordata):
+
         labelKraft: QLabel = self.labelThrusterKraft
         labelTemp: QLabel = self.labelThruster12VTemp
         labelSikring: QLabel = self.labelThrusterSikring
 
         labelKraft.setText(str(round(sensordata[0], 2)) + "A")
         labelTemp.setText(str(round(sensordata[1], 2)) + "C")
-        
+
         for i in range(3):
             if sensordata[2][i] == True:
                 labelSikring.setText(str(self.kraftFeilkoder[i]))
                 labelSikring.setStyleSheet(self.gradient)
-    
-    def kraft5VUpdate(self,sensordata):
-        
+
+    def kraft5VUpdate(self, sensordata):
+
         labelKraft: QLabel = self.labelKraft5V
         labelTemp: QLabel = self.labelKraft5VTemp
         labelSikring: QLabel = self.labelKraftSikring
 
         labelKraft.setText(str(round(sensordata[0], 2)) + "A")
         labelTemp.setText(str(round(sensordata[1], 2)) + "C")
-        
+
         for i in range(3):
             if sensordata[2][i] == True:
                 labelSikring.setText(str(self.kraftFeilkoder[i]))
                 labelSikring.setStyleSheet(self.gradient)
 
-    def reguleringMotorTempUpdate(self,sensordata):
+    def reguleringMotorTempUpdate(self, sensordata):
         labelRegulering: QLabel = self.labelReguleringTemp
-        labelMotor: QLabel = self.labelMotorTemp 
+        labelMotor: QLabel = self.labelMotorTemp
 
         labelRegulering.setText(str(round(sensordata[0], 2)) + "C")
         labelMotor.setText(str(round(sensordata[1], 2)) + "C")
 
-    def TempKomKontrollerUpdate(self,sensordata):
+    def TempKomKontrollerUpdate(self, sensordata):
         labelTemp: QLabel = self.labelTempKomKontroller
         labelTemp.setText(str(round(sensordata[0], 2)) + "C")
 
