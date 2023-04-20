@@ -296,24 +296,70 @@ class Rov_state:
         print("Kalibrerer IMU")
         self.packets_to_send.append([66, calibrate_IMU_byte])
 
-    def set_light_intensity(self, light_id: int, intensity: int, is_on: bool = True):
+    def front_light_on(self):
+        set_light_byte = bytearray(8)
+        set_light_byte[0] |= (1 << 1)  # bit 1 to 1
+        print("Front Light On")
+        self.packets_to_send.append((98, bytes(set_light_byte)))
 
-        byte0 = (int(is_on) << 1) | 1
-        byte1 = intensity
-        packet = [light_id, [byte0, byte1]]
-        self.packets_to_send.append(packet)
+    def bottom_light_on(self):
+        set_light_byte = bytearray(8)
+        set_light_byte[0] |= (1 << 1)  # bit 1 to 1
+        print("Bottom Light On")
+        self.packets_to_send.append((99, bytes(set_light_byte)))
 
-    def set_top_light_on(intensity: int):
-        Rov_state.set_light_intensity(FRONT_LIGHT_ID, intensity, True)
+    def front_light_intensity(self, intensity):
+        set_intensity_byte = bytearray(8)
+        set_intensity_byte[1] = intensity
+        print("Adjusting Front Light Intensity")
+        self.packets_to_send.append((98, set_intensity_byte))
 
-    def set_bottom_light_on(intensity: int):
-        Rov_state.set_light_intensity(BOTTOM_LIGHT_ID, intensity, True)
+    def bottom_light_intensity(self, intensity):
+        set_intensity_byte = bytearray(8)
+        set_intensity_byte[1] = intensity
+        print("Adjusting Bottom Light Intensity")
+        self.packets_to_send.append((99, set_intensity_byte))
 
-    def set_front_light_dimming(intensity: int):
-        Rov_state.set_light_intensity(FRONT_LIGHT_ID, intensity, True)
+    def toogle_regulator_all(self):
+        toogle_regulator_byte = [0] * 8
+        # toggle the bit
+        if self.angle_bit_state == 0:
+            toogle_regulator_byte[0] |= (1 << 0)
+            self.angle_bit_state = 1
+            print("Setting All Regulator To True")
+            # check if bit 0 is set to 1
+            if toogle_regulator_byte[0] & (1 << 0):
+                toogle_regulator_byte[0] |= (1 << 1)  # set bit 1 to 1
+                toogle_regulator_byte[0] |= (1 << 2)  # set bit 2 to 1
+                toogle_regulator_byte[0] |= (1 << 3)  # set bit 3 to 1
+        elif self.angle_bit_state == 1:
+            toogle_regulator_byte[0] |= (0 << 0)
+            self.angle_bit_state = 0
+            print("Setting All Regulators To False")
+            if toogle_regulator_byte[0] & (0 << 0):
+                toogle_regulator_byte[0] |= (0 << 1)  # set bit 1 to 1
+                toogle_regulator_byte[0] |= (0 << 2)  # set bit 2 to 1
+                toogle_regulator_byte[0] |= (0 << 3)  # set bit 3 to 1
+        self.packets_to_send.append([32, toogle_regulator_byte])
+        print(self.packets_to_send)
 
-    def set_bottom_light_dimming(intensity: int):
-        Rov_state.set_light_intensity(BOTTOM_LIGHT_ID, intensity, True)
+    def toggle_rull_reg(self):
+        toggle_rull_reg = [0] * 8
+        toggle_rull_reg[0] |= (1 << 0)
+        print("Rull Regulator På")
+        self.packets_to_send.append([66, toggle_rull_reg])
+
+    def toggle_stamp_reg(self):
+        toggle_stamp_reg = [0] * 8
+        toggle_stamp_reg[0] |= (1 << 2)
+        print("Stamp Regulator På")
+        self.packets_to_send.append([66, toggle_stamp_reg])
+
+    def toggle_dybde_reg(self):
+        toggle_dybde_reg = [0] * 8
+        toggle_dybde_reg[0] |= (1 << 3)
+        print("Dybde Regulator På")
+        self.packets_to_send.append([66, toggle_dybde_reg])
 
     def build_rov_packet(self):
         if self.data == {}:
@@ -394,7 +440,7 @@ class Rov_state:
             return
         data = [0, 0, 0, 0, 0, 0, 0, 0]
 
-        data = self.data["reset_angles"]
+        data[1] = self.data["reset_angles"][1]
 
         self.packets_to_send.append([66, data])
 
@@ -406,6 +452,91 @@ class Rov_state:
         data[2] = self.data["kalibrer_IMU"][2]
 
         self.packets_to_send.append([66, data])
+
+    def build_regulator_tuning(self):
+        if self.data == {}:
+            return
+        data = [0, 0, 0, 0, 0, 0, 0, 0, ]
+
+        data[0] = self.data["update_regulator_tuning"][0]
+        data[1] = self.data["update_regulator_tuning"][1]
+
+        self.packets_to_send.append([42, data])
+
+    def build_toggle_regulator_all(self):
+        if self.data == {}:
+            return
+        data = [0, 0, 0, 0, 0, 0, 0, 0]
+
+        data[0] = self.data["toggle_regulator_all"][0]
+        data[1] = self.data["toggle_regulator_all"][1]
+        data[2] = self.data["toggle_regulator_all"][2]
+        data[3] = self.data["toggle_regulator_all"][3]
+
+        self.packets_to_send.append([32, data])
+
+    def build_rull_regulator(self):
+        if self.data == {}:
+            return
+        data = [0, 0, 0, 0, 0, 0, 0, 0]
+
+        data[1] = self.data["toggle_rull_reg"][1]
+
+        self.packets_to_send.append([32, data])
+
+    def build_stamp_reg(self):
+        if self.data == {}:
+            return
+        data = [0, 0, 0, 0, 0, 0, 0, 0]
+
+        data[2] = self.data["toggle_stamp_reg"][2]
+
+        self.packets_to_send.append([32, data])
+
+    def build_dybde_regulator(self):
+        if self.data == {}:
+            return
+        data = [0, 0, 0, 0, 0, 0, 0, 0]
+
+        data[3] = self.data["toggle_dybde_reg"][3]
+
+        self.packets_to_send.append([32, data])
+
+    def build_front_light_on(self):
+        if self.data == {}:
+            return
+        data = [0, 0, 0, 0, 0, 0, 0, 0]
+
+        data[1] = self.data["front_light_on"][1]
+
+        self.packets_to_send.append([98, data])
+
+    def build_bottom_light_on(self):
+        if self.data == {}:
+            return
+        data = [0, 0, 0, 0, 0, 0, 0, 0]
+
+        data[1] = self.data["bottom_light_on"][1]
+
+        self.packets_to_send.append([99, data])
+
+    def build_front_light_intensity(self):
+        if self.data == {}:
+            return
+        data = [0, 0, 0, 0, 0, 0, 0, 0]
+
+        data[1] = self.data["front_light_intensity"][1]
+
+        self.packets_to_send.append([98, data])
+
+    def build_bottom_light_intensity(self):
+        if self.data == {}:
+            return
+        data = [0, 0, 0, 0, 0, 0, 0, 0]
+
+        data[1] = self.data["bottom_light_intensity"][1]
+
+        self.packets_to_send.append([99, data])
 
     def button_handling(self):
         rov_buttons = self.data.get("rov_buttons")
@@ -440,8 +571,26 @@ class Rov_state:
         elif self.packet_id == 6:
             self.build_reset_manipulator_packet()
         elif self.packet_id == 7:
-            self.reset_depth()
+            self.build_reset_depth()
         elif self.packet_id == 8:
-            self.reset_angles()
+            self.build_reset_angles()
         elif self.packet_id == 9:
-            self.calibrate_IMU()
+            self.build_calibrate_IMU()
+        elif self.packet_id == 10:
+            self.build_regulator_tuning()
+        elif self.packet_id == 11:
+            self.build_toggle_regulator_all()
+        elif self.packet_id == 12:
+            self.build_rull_regulator()
+        elif self.packet_id == 13:
+            self.build_stamp_reg()
+        elif self.packet_id == 14:
+            self.build_dybde_regulator()
+        elif self.packet_id == 15:
+            self.build_front_light_on()
+        elif self.packet_id == 16:
+            self.build_bottom_light_on()
+        elif self.packet_id == 17:
+            self.build_front_light_intensity()
+        elif self.packet_id == 18:
+            self.build_bottom_light_intensity()

@@ -7,7 +7,7 @@ from Thread_info import Threadwatcher   #For full testing with main.py
 import threading
 import os
 os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
-DPAD = 1538  # Kan også bruke pygame.JOYBUTTONDOWN hvis nødvendig
+DPAD = 1538  # Kan ogs bruke pygame.JOYBUTTONDOWN hvis nødvendig
 BUTTON_DOWN = 1539
 BUTTON_UP = 1540
 JOYSTICK = 1536
