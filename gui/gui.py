@@ -3,7 +3,7 @@ import subprocess
 from PyQt5 import QtCore, QtGui, QtWidgets, Qt, uic
 from PyQt5.QtWidgets import QMainWindow, QWidget, QCheckBox, QLabel, QMessageBox
 from PyQt5.QtMultimedia import QSound, QSoundEffect, QMediaPlayer, QMediaContent
-from PyQt5.QtCore import QUrl, QTimer
+from PyQt5.QtCore import QUrl, QTimer, QObject, pyqtSignal
 import os
 import sys
 import threading
@@ -24,10 +24,37 @@ from Kommunikasjon.packet_info import Logger
 from Thread_info import Threadwatcher
 from Controller import Controller_Handler as controller
 from main import *
+from queue import Queue
 
 global RUN_MANUAL
 os.environ['QT_LOGGING_RULES'] = 'qt.qpa.wayland.warning=false'
 
+class SoundWorker(QObject):
+    play = pyqtSignal(bool)
+
+    def __init__(self, sound_file):
+        super().__init__()
+        self.player = QMediaPlayer()
+        self.sound_file = sound_file
+
+        self.play.connect(self.on_play)
+
+    def on_play(self, should_play: bool):
+        if should_play:
+            if self.player.state() == QMediaPlayer.PlayingState:
+                self.player.stateChanged.connect(self.on_player_state_changed)
+            else:
+                self.player.setMedia(QMediaContent(QUrl.fromLocalFile(self.sound_file)))
+                self.player.play()
+        else:
+            self.player.stop()
+
+    def on_player_state_changed(self, state):
+        if state == QMediaPlayer.StoppedState:
+            self.player.stateChanged.disconnect(self.on_player_state_changed)
+            self.player.setMedia(QMediaContent(QUrl.fromLocalFile(self.sound_file)))
+            self.player.play()
+    
 
 class Window(QMainWindow):
     def __init__(self, gui_queue: multiprocessing.Queue, queue_for_rov: multiprocessing.Queue, manual_flag,  t_watch: Threadwatcher, id: int, parent=None):
@@ -41,6 +68,13 @@ class Window(QMainWindow):
         self.player = QMediaPlayer()
         self.sound_file = "martinalarm.wav"
         self.sound_file = os.path.abspath("martinalarm.wav")
+        
+        self.sound_worker = SoundWorker(self.sound_file)
+        self.sound_worker_thread = QThread()
+        self.sound_worker.moveToThread(self.sound_worker_thread)
+        self.sound_worker_thread.start()
+        
+        self.last_triggered_alarm = -1
 
         self.manual_flag = manual_flag
         # queue_for_rov is a queue that is used to send data to the rov
@@ -137,8 +171,8 @@ class Window(QMainWindow):
         # self.slider_lys_down.valueChanged.connect(
         #    lambda: self.send_current_light_intensity)
 
-#        self.toggle_frontlys.stateChanged.connect(lambda: Rov_state.current_ligth_intensity)
-#        self.toggle_havbunnslys.stateChanged.connect(self.send_current_ligth_intensity)
+        self.btnTopLys.clicked.connect(lambda: self.front_light_on())
+        self.btnBunnLys.clicked.connect(lambda: self.bottom_light_on())
 
         # Sikringer
         self.btnReset5V.clicked.connect(lambda: self.reset_5V_fuse2())
@@ -163,7 +197,7 @@ class Window(QMainWindow):
         self.btnNullpunktVinkler.clicked.connect(
             lambda: self.reset_angles())
 
-        self.btnRegTuning.clicked.connect(lambda: self.updateRegulatorTuning)
+        self.btnRegTuning.clicked.connect(lambda: self.updateRegulatorTuning())
 
         # Regulatorer
 
@@ -258,10 +292,11 @@ class Window(QMainWindow):
         # None is default if key doesn't exist
         value = my_dict.get(reguleringDropdown, None)
         update_regulator_tuning = [int(value), float(input_value)]
+        print(("Want to send", 42, update_regulator_tuning))
 #        self.packets_to_send.append([42, [int(value), float(input_value)]])
         values = {"update_regulator_tuning": update_regulator_tuning}
         self.queue.put((10, values))
-#        print(self.packets_to_send)
+        #print(("Want to send", 42, update_regulator_tuning))
 
     def toogle_regulator_all(self):
         self.angle_bit_state == 0
@@ -284,6 +319,7 @@ class Window(QMainWindow):
                 toogle_regulator_byte[0] |= (0 << 1)  # set bit 1 to 1
                 toogle_regulator_byte[0] |= (0 << 2)  # set bit 2 to 1
                 toogle_regulator_byte[0] |= (0 << 3)  # set bit 3 to 1
+        print("Want to send", 32, toogle_regulator_byte)
         values = {"toggle_regulator_all": toogle_regulator_byte}
         self.queue.put((11, values))
 #        self.packets_to_send.append([32, toogle_regulator_byte])
@@ -293,6 +329,7 @@ class Window(QMainWindow):
         toggle_rull_reg = [0] * 8
         toggle_rull_reg[0] |= (1 << 0)
         print("Rull Regulator På")
+        print(("Want to send", 32, toggle_rull_reg))
         values = {"toggle_rull_reg": toggle_rull_reg}
         self.queue.put((12, values))
 #        self.packets_to_send.append([66, toggle_rull_reg])
@@ -301,6 +338,7 @@ class Window(QMainWindow):
         toggle_stamp_reg = [0] * 8
         toggle_stamp_reg[0] |= (1 << 2)
         print("Stamp Regulator På")
+        print(("Want to send", 32, toggle_stamp_reg))
         values = {"toggle_stamp_reg": toggle_stamp_reg}
         self.queue.put((13, values))
 #        self.packets_to_send.append([66, toggle_stamp_reg])
@@ -309,6 +347,7 @@ class Window(QMainWindow):
         toggle_dybde_reg = [0] * 8
         toggle_dybde_reg[0] |= (1 << 3)
         print("Dybde Regulator På")
+        print(("Want to send", 32, toggle_dybde_reg))
         values = {"toggle_dybde_reg": toggle_dybde_reg}
         self.queue.put((14, values))
 #        self.packets_to_send.append([66, toggle_dybde_reg])
@@ -317,6 +356,7 @@ class Window(QMainWindow):
         set_light_byte = [0] * 8
         set_light_byte[0] |= (1 << 1)  # bit 1 to 1
         print("Front Light On")
+        print(("Want to send", 98, set_light_byte))
         values = {"front_light_on": set_light_byte}
         self.queue.put((15, values))
 #        self.packets_to_send.append((98, bytes(set_light_byte)))
@@ -325,6 +365,7 @@ class Window(QMainWindow):
         set_light_byte = [0] * 8
         set_light_byte[0] |= (1 << 1)  # bit 1 to 1
         print("Bottom Light On")
+        print(("Want to send", 99, set_light_byte))
         values = {"bottom_light_on": set_light_byte}
         self.queue.put((16, values))
 #        self.packets_to_send.append((99, bytes(set_light_byte)))
@@ -365,15 +406,18 @@ class Window(QMainWindow):
             if key in self.sensor_update_function:
                 self.sensor_update_function[key](sensordata[key])
 
-    def play_sound(self):
-        if self.player.state() == QMediaPlayer.PlayingState:
-            # If the player is still playing, wait until the playback is finished
-            self.player.stateChanged.connect(self.on_player_state_changed)
-        else:
-            # Otherwise, start playing the new sound
-            self.player.setMedia(QMediaContent(
-                QUrl.fromLocalFile(self.sound_file)))
-            self.player.play()
+    # def play_sound(self, should_play: bool):
+    #     if should_play:
+    #         if self.player.state() == QMediaPlayer.PlayingState:
+    #             # If the player is still playing, wait until the playback is finished
+    #             self.player.stateChanged.connect(self.on_player_state_changed)
+    #         else:
+    #             # Otherwise, start playing the new sound
+    #             self.player.setMedia(QMediaContent(
+    #                 QUrl.fromLocalFile(self.sound_file)))
+    #             self.player.play()
+    #     else:
+    #         self.player.stop()
 
     # def send_current_light_intensity(self):
     #     front_light_is_on: bool = False
@@ -384,13 +428,31 @@ class Window(QMainWindow):
     #     if self.slider_lys_down.checkState() != 0:
     #         bottom_light_is_on = True
 
+
+    def play_sound(self, should_play: bool):
+        self.sound_worker.play.emit(should_play)
+        
+    def closeEvent(self, event):
+        self.sound_worker_thread.quit()
+        self.sound_worker_thread.wait()
+        
+
+
     def on_player_state_changed(self, state):
         if state == QMediaPlayer.StoppedState:
-            # When the playback is finished, disconnect the signal and start playing the new sound
             self.player.stateChanged.disconnect(self.on_player_state_changed)
-            self.player.setMedia(QMediaContent(
-                QUrl.fromLocalFile(self.sound_file)))
+            self.player.setMedia(QMediaContent(QUrl.fromLocalFile(self.sound_file)))
             self.player.play()
+
+
+
+    # def on_player_state_changed(self, state):
+    #     if state == QMediaPlayer.StoppedState:
+    #         # When the playback is finished, disconnect the signal and start playing the new sound
+    #         self.player.stateChanged.disconnect(self.on_player_state_changed)
+    #         self.player.setMedia(QMediaContent(
+    #             QUrl.fromLocalFile(self.sound_file)))
+    #         self.player.play()
 
     def guiFeilKodeUpdate(self, sensordata):
         imuErrors = [  # Feilkoder fra IMU
@@ -451,7 +513,14 @@ class Window(QMainWindow):
             if sensordata[3][i] == True:
                 labelLekkasjeAlarm.setText(lekkasjeErrors[i])
                 labelLekkasjeAlarm.setStyleSheet(self.gradient)
-                # self.play_sound()
+                self.play_sound(True)
+                self.last_triggered_alarm = i
+            if sensordata[3][i] == False and i ==self.last_triggered_alarm:
+                labelLekkasjeAlarm.setText("Ingen feil")
+                self.play_sound(False)
+                self.last_triggered_alarm = -1
+                
+                
 
     def guiVinkelUpdate(self, sensordata):
         vinkel_liste: list[QLabel] = [

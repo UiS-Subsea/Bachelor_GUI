@@ -440,7 +440,7 @@ class Rov_state:
             return
         data = [0, 0, 0, 0, 0, 0, 0, 0]
 
-        data[1] = self.data["reset_angles"][1]
+        data[0] = self.data["reset_angles"][0]
 
         self.packets_to_send.append([66, data])
 
@@ -449,14 +449,14 @@ class Rov_state:
             return
         data = [0, 0, 0, 0, 0, 0, 0, 0]
 
-        data[2] = self.data["kalibrer_IMU"][2]
+        data[0] = self.data["kalibrer_IMU"][0]
 
         self.packets_to_send.append([66, data])
 
     def build_regulator_tuning(self):
         if self.data == {}:
             return
-        data = [0, 0, 0, 0, 0, 0, 0, 0, ]
+        data = [0, 0, 0, 0, 0, 0, 0, 0]
 
         data[0] = self.data["update_regulator_tuning"][0]
         data[1] = self.data["update_regulator_tuning"][1]
@@ -469,9 +469,9 @@ class Rov_state:
         data = [0, 0, 0, 0, 0, 0, 0, 0]
 
         data[0] = self.data["toggle_regulator_all"][0]
-        data[1] = self.data["toggle_regulator_all"][1]
-        data[2] = self.data["toggle_regulator_all"][2]
-        data[3] = self.data["toggle_regulator_all"][3]
+        data[0] = self.data["toggle_regulator_all"][0]
+        data[0] = self.data["toggle_regulator_all"][0]
+        data[0] = self.data["toggle_regulator_all"][0]
 
         self.packets_to_send.append([32, data])
 
@@ -480,7 +480,7 @@ class Rov_state:
             return
         data = [0, 0, 0, 0, 0, 0, 0, 0]
 
-        data[1] = self.data["toggle_rull_reg"][1]
+        data[0] = self.data["toggle_rull_reg"][0]
 
         self.packets_to_send.append([32, data])
 
@@ -489,7 +489,7 @@ class Rov_state:
             return
         data = [0, 0, 0, 0, 0, 0, 0, 0]
 
-        data[2] = self.data["toggle_stamp_reg"][2]
+        data[0] = self.data["toggle_stamp_reg"][0]
 
         self.packets_to_send.append([32, data])
 
@@ -498,7 +498,7 @@ class Rov_state:
             return
         data = [0, 0, 0, 0, 0, 0, 0, 0]
 
-        data[3] = self.data["toggle_dybde_reg"][3]
+        data[0] = self.data["toggle_dybde_reg"][0]
 
         self.packets_to_send.append([32, data])
 
@@ -507,7 +507,7 @@ class Rov_state:
             return
         data = [0, 0, 0, 0, 0, 0, 0, 0]
 
-        data[1] = self.data["front_light_on"][1]
+        data[0] = self.data["front_light_on"][0]
 
         self.packets_to_send.append([98, data])
 
@@ -516,7 +516,7 @@ class Rov_state:
             return
         data = [0, 0, 0, 0, 0, 0, 0, 0]
 
-        data[1] = self.data["bottom_light_on"][1]
+        data[0] = self.data["bottom_light_on"][0]
 
         self.packets_to_send.append([99, data])
 
