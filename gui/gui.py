@@ -75,6 +75,7 @@ class Window(QMainWindow):
         self.sound_worker_thread.start()
         
         self.last_triggered_alarm = -1
+        self.last_thrust_alarm = -1
 
         self.manual_flag = manual_flag
         # queue_for_rov is a queue that is used to send data to the rov
@@ -219,6 +220,7 @@ class Window(QMainWindow):
         print(("Want to send", 97, reset_fuse_byte))
         self.queue.put((4, values))
 
+
     def reset_12V_thruster_fuse(self):
         """reset_12V_thruster_fuse creates and adds
         packets for resetting a fuse on the ROV"""
@@ -228,6 +230,9 @@ class Window(QMainWindow):
         values = {"reset_controls_thruster": reset_fuse_byte}
         print(("Want to send", 98, reset_fuse_byte))
         self.queue.put((5, values))
+        #reset_fuse_byte[0] |= (0 << 0)
+        #print(f"Pakker Etter:", reset_fuse_byte)
+
 #        self.packets_to_send.append([98, reset_fuse_byte])
 
     def reset_12V_manipulator_fuse(self):
@@ -239,6 +244,8 @@ class Window(QMainWindow):
         values = {"reset_controls_manipulator": reset_fuse_byte}
         print(("Want to send", 99, reset_fuse_byte))
         self.queue.put((6, values))
+        #reset_fuse_byte[0] |= (0 << 0)
+        #print(f"Pakker Etter:", reset_fuse_byte)
 
         #self.packets_to_send.append([99, reset_fuse_byte])
 
@@ -588,6 +595,11 @@ class Window(QMainWindow):
             if sensordata[2][i] == True:
                 labelSikring.setText(str(self.kraftFeilkoder[i]))
                 labelSikring.setStyleSheet(self.gradient)
+                self.last_thrust_alarm = i
+            # if sensordata[2][i] == False and i==self.last_thrust_alarm:
+            #     labelSikring.setText("Ingen feil")
+            #     self.last_thrust_alarm = -1
+                
 
     def kraft5VUpdate(self, sensordata):
 

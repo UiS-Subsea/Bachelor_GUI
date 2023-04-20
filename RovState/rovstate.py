@@ -29,7 +29,7 @@ VALIDCOMMANDS = [THRUST, REGULERINGTEMP, VINKLER, DYBDETEMP,
 X_AXIS = 1
 Y_AXIS = 0
 Z_AXIS = 6
-ROTATION_AXIS = 2
+ROTATION_AXIS = 3 
 
 FRONT_LIGHT_ID = 98
 BOTTOM_LIGHT_ID = 99
@@ -369,7 +369,7 @@ class Rov_state:
         data[0] = self.data["rov_joysticks"][X_AXIS]
         data[1] = self.data["rov_joysticks"][Y_AXIS]
         data[2] = self.data["rov_joysticks"][Z_AXIS]
-        data[3] = self.data["rov_joysticks"][ROTATION_AXIS]
+        data[3] = -self.data["rov_joysticks"][ROTATION_AXIS]
 
         self.packets_to_send.append([40, data])
 
@@ -594,3 +594,4 @@ class Rov_state:
             self.build_front_light_intensity()
         elif self.packet_id == 18:
             self.build_bottom_light_intensity()
+        print(self.packets_to_send)
