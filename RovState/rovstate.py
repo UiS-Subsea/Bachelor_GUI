@@ -593,4 +593,4 @@ class Rov_state:
         elif self.packet_id == 17:
             self.build_front_light_intensity()
         elif self.packet_id == 18:
-            self.build
+            self.build_bottom_light_intensity()
