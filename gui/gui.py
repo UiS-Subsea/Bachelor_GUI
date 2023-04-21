@@ -599,8 +599,8 @@ class Window(QMainWindow):
         labelTemp: QLabel = self.labelManipulatorTemp
         labelSikring: QLabel = self.labelManipulatorSikring
 
-        labelKraft.setText((round(sensordata[0], 2)) + "A")
-        labelTemp.setText((round(sensordata[1], 2)) + "C")
+        labelKraft.setText(str(round(sensordata[0], 2)) + "A")
+        labelTemp.setText(str(round(sensordata[1], 2)) + "C")
 
         for i in range(3):
             if sensordata[2][i] == True:
