@@ -169,8 +169,8 @@ class Window(QMainWindow):
             lambda: self.imageprocessing("normal_camera"))
 
         # Lys
-        self.slider_lys_forward.valueChanged.connect(self.update_label_and_print_value)
-        self.slider_lys_down.valueChanged.connect(self.update_label_and_print_value_down)
+        # self.slider_lys_forward.valueChanged.connect(self.update_label_and_print_value)
+        # self.slider_lys_down.valueChanged.connect(self.update_label_and_print_value_down)
 
 
         # Lag 2 av og på knapper top&bottom
@@ -288,23 +288,23 @@ class Window(QMainWindow):
         self.queue.put((9, values))
         #self.packets_to_send.append([66, calibrate_IMU_byte])
         # print(calibrate_IMU_byte)
-    def update_label_and_print_value(self, value):
-        self.label_percentage_lys_forward.setText(f"{value}%")
-        set_light_byte = [0] * 8
-        set_light_byte[1] = value
-        values = {"slider_top_light": set_light_byte}
-        print((f"Want to send", 98, set_light_byte))
-        self.queue.put((18, values))
-        print("Slider value:", value)
+    # def update_label_and_print_value(self, value):
+    #     self.label_percentage_lys_forward.setText(f"{value}%")
+    #     set_light_byte = [0] * 8
+    #     set_light_byte[1] = value
+    #     values = {"slider_top_light": set_light_byte}
+    #     print((f"Want to send", 98, set_light_byte))
+    #     self.queue.put((18, values))
+    #     print("Slider value:", value)
         
-    def update_label_and_print_value_down(self, value):
-        self.label_percentage_lys_down.setText(f"{value}%")
-        set_light_byte = [0] * 8
-        set_light_byte[1] = value
-        values = {"slider_bottom_light": set_light_byte}
-        print((f"Want to send", 99, set_light_byte))
-        self.queue.put((19, values))
-        print(value)
+    # def update_label_and_print_value_down(self, value):
+    #     self.label_percentage_lys_down.setText(f"{value}%")
+    #     set_light_byte = [0] * 8
+    #     set_light_byte[1] = value
+    #     values = {"slider_bottom_light": set_light_byte}
+    #     print((f"Want to send", 99, set_light_byte))
+    #     self.queue.put((19, values))
+    #     print(value)
     
     def updateRegulatorTuning(self):
         reguleringDropdown = self.reguleringDropdown.currentText()
@@ -433,9 +433,9 @@ class Window(QMainWindow):
             THRUSTER12V: self.thruster12VUpdate,
             KRAFT5V: self.kraft5VUpdate,
             REGULERINGMOTORTEMP: self.reguleringMotorTempUpdate,
-            TEMPKOMKONTROLLER: self.TempKomKontrollerUpdate
+            #TEMPKOMKONTROLLER: self.TempKomKontrollerUpdate
 
-            # MANIPULATOR12V :self.guiManipulatorUpdate,
+            MANIPULATOR12V :self.guiManipulatorUpdate,
 
         }
         for key in sensordata.keys():
