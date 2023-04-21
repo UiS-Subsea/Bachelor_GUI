@@ -182,10 +182,10 @@ class Controller:
         while t_watch.should_run(id):
             if pygame.joystick.get_count() < 1:
                 self.wait_for_controller()
-
+            #tickrate
             ### ENDRE TICK TIL 20 FOR NORMAL KJØRING
             ### ENDRE TIL MINDRE FOR Å DEBUGGE LETTERE
-            self.duration = self.clock.tick(10)
+            self.duration = self.clock.tick(20)
             
             # print(duration)
             for event in pygame.event.get():
