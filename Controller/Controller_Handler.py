@@ -145,6 +145,11 @@ class Controller:
             # opp og ned på roboten har range fra 0 til 100 og 0 til -100
             return self.deadzone_adjustment(round(self.get_new_range(event.value, -self.controller_stop_point, self.controller_stop_point)))
             # return round((event.value--self.controller_stop_point)/(self.controller_stop_point--self.controller_stop_point)*100)
+            
+        if event.axis == 2:
+            # opp og ned på roboten har range fra 0 til 100 og 0 til -100
+            return self.deadzone_adjustment(round(self.get_new_range(event.value, -self.controller_stop_point, self.controller_stop_point)))
+            # return round((event.value--self.controller_stop_point)/(self.controller_stop_point--self.controller_stop_point)*100)
 
         return self.deadzone_adjustment(round((2*(event.value--self.controller_stop_point)/(self.controller_stop_point--self.controller_stop_point)-1)*100))
 
@@ -298,7 +303,7 @@ class Controller:
                 # this is "solved" by the fact that the other joystick reduces the value of the first joystick that was pressed. Since we add up the
                 # joystick values to get total trust. Example: axis 4: -50, axis 5: 100. Value we get is 50. With bug: axis 4: 0, axis 5: 50.
                 if event.type == JOYSTICK:  # joystick movement JOYSTICK
-                    if event.joy == ROV_CONTROLLER_ID:
+                    if event.joy == ROV_CONTROLLER_ID: # LT = 2, RT = 5
                         self.rov_joysticks[event.axis] = self.normalize_joysticks(
                             event)
                         self.rov_joysticks[6] = self.rov_joysticks[4] + \

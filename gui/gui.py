@@ -40,7 +40,7 @@ class Window(QMainWindow):
         self.sound_file = os.path.abspath("martinalarm.wav")
 
         self.manual_flag = manual_flag
-        self.queue: queue_for_rov  # queue_for_rov is a queue that is used to send data to the rov
+        self.queue = queue_for_rov  # queue_for_rov is a queue that is used to send data to the rov
         # queue_for_rov is a queue that is used to send data to the rov
 
         self.gui_queue = gui_queue
@@ -68,22 +68,29 @@ class Window(QMainWindow):
     def manual_kjoring(self):
         self.manual_flag.value = 1
         print("Manual flag: ", self.manual_flag.value)
-
-        id = self.threadwatcher.add_thread()
-        imageprocessing = threading.Thread(target=self.exec.stop_everything)
-        imageprocessing.start()
+        self.exec.stop_everything()
+        
+    def camera_functions(self, mode):
+        if mode == "normal_camera":
+            self.exec.stop_everything() #Run this first so that other cameras stop before starting a new one
+            self.exec.normal_camera()
+        elif mode == "screenshot":
+            self.exec.save_image()
+        elif mode == "record":
+            self.exec.record()
+        elif mode == "show_all":
+            self.exec.show_all_cameras()
 
     def imageprocessing(self, mode):
         self.manual_flag.value = 0
         print("Manual flag: ", self.manual_flag.value)
         if self.manual_flag.value == 0:
-            if mode == "normal_camera":
-                self.exec.send_data_test()
+            self.exec.stop_everything() # Run this first so that other cameras stop before starting a new one
             if mode == "transect":
                 self.exec.transect()
-            if mode == "docking":
+            elif mode == "docking":
                 self.exec.docking()
-            if mode == "testing":
+            elif mode == "testing":
                 self.exec.send_data_test()
         else:
             self.exec.stop_everything()
@@ -103,7 +110,7 @@ class Window(QMainWindow):
     def connectFunctions(self):
         # window2
         self.showNewWindowButton.clicked.connect(
-            lambda: self.imageprocessing("testing"))
+            lambda: self.camera_functions("show_all"))
 
         # Kjøremodus
         self.btnManuell.clicked.connect(lambda: self.manual_kjoring())
@@ -113,10 +120,10 @@ class Window(QMainWindow):
             lambda: self.imageprocessing("transect"))
 
         # Kamera
-        self.btnTakePic.clicked.connect(lambda: self.exec.save_image())
-        self.btnRecord.clicked.connect(lambda: self.exec.record())
+        self.btnTakePic.clicked.connect(lambda: self.camera_functions("screenshot"))
+        self.btnRecord.clicked.connect(lambda: self.camera_functions("record"))
         self.btnOpenCamera.clicked.connect(
-            lambda: self.imageprocessing("normal_camera"))
+            lambda: self.camera_functions("normal_camera"))
 
         # Lys
         # Lag 2 av og på knapper top&bottom
@@ -231,7 +238,7 @@ class Window(QMainWindow):
             THRUSTER12V:self.thruster12VUpdate,
             KRAFT5V:self.kraft5VUpdate,
             REGULERINGMOTORTEMP:self.reguleringMotorTempUpdate,
-            TEMPKOMKONTROLLER:self.TempKomKontrollerUpdate
+            # TEMPKOMKONTROLLER:self.TempKomKontrollerUpdate
             
             # MANIPULATOR12V :self.guiManipulatorUpdate,
 

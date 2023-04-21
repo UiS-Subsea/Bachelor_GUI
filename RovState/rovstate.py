@@ -445,3 +445,6 @@ class Rov_state:
             self.reset_angles()
         elif self.packet_id == 9:
             self.calibrate_IMU()
+        print(self.packets_to_send, "packets_to_send")
+    
+    
