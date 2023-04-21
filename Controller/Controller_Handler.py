@@ -185,7 +185,7 @@ class Controller:
 
             ### ENDRE TICK TIL 20 FOR NORMAL KJØRING
             ### ENDRE TIL MINDRE FOR Å DEBUGGE LETTERE
-            self.duration = self.clock.tick(20)
+            self.duration = self.clock.tick(10)
             
             # print(duration)
             for event in pygame.event.get():

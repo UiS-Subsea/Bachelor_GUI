@@ -100,10 +100,13 @@ class Window(QMainWindow):
             QComboBox, 'reguleringDropdown')
         self.tuningInput = self.findChild(QLineEdit, 'tuningInput')
         self.btnRegTuning = self.findChild(QPushButton, 'btnRegTuning')
-        # self.slider_lys_forward = self.findChild(QSlider, 'slider_lys_forward')
-        # self.label_percentage_lys_forward = self.findChild(QLabel, 'label_percentage_lys_forward')
-        # self.slider_lys_down = self.findChild(QSlider, 'slider_lys_down')
-        # self.label_percentage_lys_down = self.findChild(QLabel, 'label_percentage_lys_down')
+        self.slider_lys_forward = self.findChild(QSlider, 'slider_lys_forward')
+        self.label_percentage_lys_forward = self.findChild(QLabel, 'label_percentage_lys_forward')
+        self.slider_lys_down = self.findChild(QSlider, 'slider_lys_down')
+        self.label_percentage_lys_down = self.findChild(QLabel, 'label_percentage_lys_down')
+        self.sliderCamVinkel = self.findChild(QSlider, 'sliderCamVinkel')
+        self.labelKameraVinkel = self.findChild(QLabel, 'labelKameraVinkel')
+
 
         
 
@@ -169,8 +172,8 @@ class Window(QMainWindow):
             lambda: self.imageprocessing("normal_camera"))
 
         # Lys
-        # self.slider_lys_forward.valueChanged.connect(self.update_label_and_print_value)
-        # self.slider_lys_down.valueChanged.connect(self.update_label_and_print_value_down)
+        self.slider_lys_forward.valueChanged.connect(self.update_label_and_print_value)
+        self.slider_lys_down.valueChanged.connect(self.update_label_and_print_value_down)
 
 
         # Lag 2 av og på knapper top&bottom
@@ -288,23 +291,35 @@ class Window(QMainWindow):
         self.queue.put((9, values))
         #self.packets_to_send.append([66, calibrate_IMU_byte])
         # print(calibrate_IMU_byte)
-    # def update_label_and_print_value(self, value):
-    #     self.label_percentage_lys_forward.setText(f"{value}%")
-    #     set_light_byte = [0] * 8
-    #     set_light_byte[1] = value
-    #     values = {"slider_top_light": set_light_byte}
-    #     print((f"Want to send", 98, set_light_byte))
-    #     self.queue.put((18, values))
-    #     print("Slider value:", value)
-        
-    # def update_label_and_print_value_down(self, value):
-    #     self.label_percentage_lys_down.setText(f"{value}%")
-    #     set_light_byte = [0] * 8
-    #     set_light_byte[1] = value
-    #     values = {"slider_bottom_light": set_light_byte}
-    #     print((f"Want to send", 99, set_light_byte))
-    #     self.queue.put((19, values))
-    #     print(value)
+    
+    #TODO: Spør dominykas om alt e rett :)
+    def update_label_and_print_value_cam_vinkel(self, value):
+        self.labelKameraVinkel.setText(f"{value}°")
+        set_light_byte = [0] * 8
+        set_light_byte[1] = value
+        values = {"slider kameraVinkel": set_light_byte}
+        print((f"Want to send", 200, set_light_byte))
+        self.queue.put((200,values))
+        print("SliderCamVinkel value:", value)
+
+
+    def update_label_and_print_value(self, value):
+        self.label_percentage_lys_forward.setText(f"{value}%")
+        set_light_byte = [0] * 8
+        set_light_byte[1] = value
+        values = {"slider_top_light": set_light_byte}
+        print((f"Want to send", 98, set_light_byte))
+        self.queue.put((17, values))
+        print("Slider value:", value)
+            
+    def update_label_and_print_value_down(self, value):
+        self.label_percentage_lys_down.setText(f"{value}%")
+        set_light_byte = [0] * 8
+        set_light_byte[1] = value
+        values = {"slider_bottom_light": set_light_byte}
+        print((f"Want to send", 99, set_light_byte))
+        self.queue.put((18, values))
+        print(value)
     
     def updateRegulatorTuning(self):
         reguleringDropdown = self.reguleringDropdown.currentText()
@@ -432,7 +447,7 @@ class Window(QMainWindow):
             MANIPULATOR12V: self.guiManipulatorUpdate,
             THRUSTER12V: self.thruster12VUpdate,
             KRAFT5V: self.kraft5VUpdate,
-            REGULERINGMOTORTEMP: self.reguleringMotorTempUpdate,
+            #REGULERINGMOTORTEMP: self.reguleringMotorTempUpdate,
             #TEMPKOMKONTROLLER: self.TempKomKontrollerUpdate
 
             MANIPULATOR12V :self.guiManipulatorUpdate,
@@ -565,7 +580,7 @@ class Window(QMainWindow):
             self.labelGir
         ]
         for i, label in enumerate(vinkel_liste):
-            label.setText(str(round(sensordata[i]/1000, 2)) + "°")
+            label.setText(str(round(sensordata[i]/100, 2)) + "°")
 
     def dybdeTempUpdate(self, sensordata):
         temp_liste: list[QLabel] = [

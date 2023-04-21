@@ -2616,7 +2616,7 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
     </rect>
    </property>
    <property name="text">
-    <string>ManipulatorFuse</string>
+    <string>Right side</string>
    </property>
   </widget>
   <widget class="QLabel" name="label_12">
@@ -3439,7 +3439,7 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
     </rect>
    </property>
    <property name="text">
-    <string>ThrusterFuse</string>
+    <string>Left side</string>
    </property>
   </widget>
   <widget class="QLabel" name="label_14">
@@ -3663,71 +3663,6 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
     <string/>
    </property>
   </widget>
-  <widget class="QListWidget" name="listWidget">
-   <property name="geometry">
-    <rect>
-     <x>720</x>
-     <y>310</y>
-     <width>101</width>
-     <height>191</height>
-    </rect>
-   </property>
-   <item>
-    <property name="text">
-     <string>Rull KP</string>
-    </property>
-   </item>
-   <item>
-    <property name="text">
-     <string>Rull KI</string>
-    </property>
-   </item>
-   <item>
-    <property name="text">
-     <string>Rull KD</string>
-    </property>
-   </item>
-   <item>
-    <property name="text">
-     <string>Stamp KP</string>
-    </property>
-   </item>
-   <item>
-    <property name="text">
-     <string>Stamp KI</string>
-    </property>
-   </item>
-   <item>
-    <property name="text">
-     <string>Stamp KD</string>
-    </property>
-   </item>
-   <item>
-    <property name="text">
-     <string>Dybde KP</string>
-    </property>
-   </item>
-   <item>
-    <property name="text">
-     <string>Dybde KI</string>
-    </property>
-   </item>
-   <item>
-    <property name="text">
-     <string>Dybde KD</string>
-    </property>
-   </item>
-   <item>
-    <property name="text">
-     <string>TS</string>
-    </property>
-   </item>
-   <item>
-    <property name="text">
-     <string>Alpha</string>
-    </property>
-   </item>
-  </widget>
   <widget class="QComboBox" name="reguleringDropdown">
    <property name="geometry">
     <rect>
@@ -3792,6 +3727,63 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
      <string>Alpha</string>
     </property>
    </item>
+  </widget>
+  <widget class="QSlider" name="slider_lys_forward_2">
+   <property name="geometry">
+    <rect>
+     <x>270</x>
+     <y>610</y>
+     <width>124</width>
+     <height>68</height>
+    </rect>
+   </property>
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>0</width>
+     <height>68</height>
+    </size>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>16777215</width>
+     <height>68</height>
+    </size>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>10</pointsize>
+     <weight>50</weight>
+     <italic>false</italic>
+     <bold>false</bold>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true"/>
+   </property>
+   <property name="maximum">
+    <number>100</number>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+   <property name="invertedAppearance">
+    <bool>false</bool>
+   </property>
+   <property name="invertedControls">
+    <bool>false</bool>
+   </property>
+   <property name="tickPosition">
+    <enum>QSlider::TicksBothSides</enum>
+   </property>
+   <property name="tickInterval">
+    <number>10</number>
+   </property>
   </widget>
  </widget>
  <resources>
