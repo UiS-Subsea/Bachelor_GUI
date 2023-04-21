@@ -413,6 +413,14 @@ class Window(QMainWindow):
         self.queue.put((18, values))
 #        self.packets_to_send.append((99, set_intensity_byte))
 
+    def check_water_type(self):
+        check_water_byte = [0] * 8
+        check_water_byte[1] |= (1 << 3)
+        print("Water Check")
+        print(("Want to send", 66, check_water_byte))
+        values = {"check_water": check_water_byte}
+        self.queue.put((19, values))
+
     def decide_gui_update(self, sensordata):
         # print("Deciding with this data: ", sensordata)
         self.sensor_update_function = {
