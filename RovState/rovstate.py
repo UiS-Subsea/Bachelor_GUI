@@ -531,7 +531,7 @@ class Rov_state:
             return
         data = [0, 0, 0, 0, 0, 0, 0, 0]
 
-        data[1] = self.data["front_light_intensity"][1]
+        data[1] = self.data["slider_top_light"][1]
 
         self.packets_to_send.append([98, data])
 
@@ -540,7 +540,7 @@ class Rov_state:
             return
         data = [0, 0, 0, 0, 0, 0, 0, 0]
 
-        data[1] = self.data["bottom_light_intensity"][1]
+        data[1] = self.data["slider_bottom_light"][1]
 
         self.packets_to_send.append([99, data])
 
