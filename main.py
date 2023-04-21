@@ -63,7 +63,7 @@ if __name__ == "__main__":
         gui_queue = multiprocessing.Queue()
 
         # HUSK Å ENDRE TICK HVIS INPUT OPPDATERES SENT!
-        debug_all = True  # Sett til True om du vil se input fra controllers
+        debug_all = False  # Sett til True om du vil se input fra controllers
 
         if run_network:
             network = Network(is_server=False, port=6900, bind_addr="0.0.0.0",

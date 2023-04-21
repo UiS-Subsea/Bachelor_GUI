@@ -29,7 +29,7 @@ VALIDCOMMANDS = [THRUST, REGULERINGTEMP, VINKLER, DYBDETEMP,
 X_AXIS = 1
 Y_AXIS = 0
 Z_AXIS = 6
-ROTATION_AXIS = 2
+ROTATION_AXIS = 3 
 
 FRONT_LIGHT_ID = 98
 BOTTOM_LIGHT_ID = 99
@@ -221,6 +221,7 @@ class Rov_state:
             self.packets_to_send.append([var[0], var[1]])
 
     def send_packets_to_rov(self, t_watch: Threadwatcher, id):
+        self.controller_startup()
         while t_watch.should_run(id):
             self.get_from_queue()
 
@@ -261,6 +262,12 @@ class Rov_state:
         reset_fuse_byte[0] |= (1 << 0)  # reset bit 0
         print("Resetting 5V Fuse")
         self.packets_to_send.append([97, reset_fuse_byte])
+    
+    def controller_startup(self):
+        start_data = [1,1,100,100,0,0,0,0]
+        self.packets_to_send.append([40, start_data])
+        self.packets_to_send.append([41, start_data])
+        
 
     def reset_12V_thruster_fuse(self):
         """reset_12V_thruster_fuse creates and adds
@@ -369,7 +376,7 @@ class Rov_state:
         data[0] = self.data["rov_joysticks"][X_AXIS]
         data[1] = self.data["rov_joysticks"][Y_AXIS]
         data[2] = self.data["rov_joysticks"][Z_AXIS]
-        data[3] = self.data["rov_joysticks"][ROTATION_AXIS]
+        data[3] = -self.data["rov_joysticks"][ROTATION_AXIS]
 
         self.packets_to_send.append([40, data])
 
@@ -391,9 +398,9 @@ class Rov_state:
             return
         data = [0, 0, 0, 0, 0, 0, 0, 0]
         try:
-            data[0] = self.data["mani_buttons"][MANIPULATOR_IN_OUT]*100
+            data[0] = self.data["mani_joysticks"][1] #for vanntest
             data[1] = self.data["mani_joysticks"][MANIPULATOR_ROTATION]
-            data[2] = self.data["mani_joysticks"][MANIPULATOR_TILT]
+            data[2] = -self.data["mani_joysticks"][MANIPULATOR_TILT]
             data[3] = self.data["mani_joysticks"][MANIPULATOR_GRAB_RELEASE]
         except KeyError:
             pass
@@ -561,8 +568,8 @@ class Rov_state:
         if self.packet_id == 1 and self.manual_flag.value == 1:
             # self.button_handling()
             self.build_rov_packet()
+            self.build_manipulator_packet()
         elif self.packet_id == 2 and self.manual_flag.value == 0:
-            # self.build_manipulator_packet()
             self.build_autonom_packet()
         elif self.packet_id == 4:
             self.build_reset_packet()
@@ -594,3 +601,4 @@ class Rov_state:
             self.build_front_light_intensity()
         elif self.packet_id == 18:
             self.build_bottom_light_intensity()
+        print(self.packets_to_send)

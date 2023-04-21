@@ -185,7 +185,7 @@ class Controller:
 
             ### ENDRE TICK TIL 20 FOR NORMAL KJØRING
             ### ENDRE TIL MINDRE FOR Å DEBUGGE LETTERE
-            self.duration = self.clock.tick(50)
+            self.duration = self.clock.tick(20)
             
             # print(duration)
             for event in pygame.event.get():
@@ -301,13 +301,18 @@ class Controller:
                     if event.joy == ROV_CONTROLLER_ID:
                         self.rov_joysticks[event.axis] = self.normalize_joysticks(
                             event)
-                        self.rov_joysticks[6] = self.rov_joysticks[4] + \
-                            self.rov_joysticks[5]
+                        # print(f"{event.axis}: {event.value}")
+                        self.rov_joysticks[6] = int((100+self.rov_joysticks[5]) - \
+                            (100+self.rov_joysticks[2])/2) - 100
+                        # self.rov_joysticks[6] = (1+self.rov_joysticks[5])/2 - \
+                        #     (1-self.rov_joysticks[2])/2
                     elif event.joy == MANIPULATOR_CONTROLLER_ID:
                         self.mani_joysticks[event.axis] = self.normalize_joysticks(
                             event)
-                        self.mani_joysticks[6] = self.mani_joysticks[4] + \
-                            self.mani_joysticks[5]
+                        # self.mani_joysticks[6] = self.mani_joysticks[2] + \
+                        #     self.mani_joysticks[5]
+                        self.mani_joysticks[6] = int((100+self.mani_joysticks[5]) - \
+                            (100+self.mani_joysticks[2])/2) - 100
 
                     if debug_all:
                         deadzone = 0.07  # To prevent sensitive output in console

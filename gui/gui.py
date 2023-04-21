@@ -76,6 +76,7 @@ class Window(QMainWindow):
         self.sound_worker_thread.start()
         
         self.last_triggered_alarm = -1
+        self.last_thrust_alarm = -1
 
         self.manual_flag = manual_flag
         # queue_for_rov is a queue that is used to send data to the rov
@@ -100,6 +101,13 @@ class Window(QMainWindow):
             QComboBox, 'reguleringDropdown')
         self.tuningInput = self.findChild(QLineEdit, 'tuningInput')
         self.btnRegTuning = self.findChild(QPushButton, 'btnRegTuning')
+        self.slider_lys_forward = self.findChild(QSlider, 'slider_lys_forward')
+        self.label_percentage_lys_forward = self.findChild(QLabel, 'label_percentage_lys_forward')
+        self.slider_lys_down = self.findChild(QSlider, 'slider_lys_down')
+        self.label_percentage_lys_down = self.findChild(QLabel, 'label_percentage_lys_down')
+
+        
+
 
         # Queue and pipe
 
@@ -162,6 +170,10 @@ class Window(QMainWindow):
             lambda: self.imageprocessing("normal_camera"))
 
         # Lys
+        self.slider_lys_forward.valueChanged.connect(self.update_label_and_print_value)
+        self.slider_lys_down.valueChanged.connect(self.update_label_and_print_value_down)
+
+
         # Lag 2 av og på knapper top&bottom
 
 #        self.slider_lys_forward.valueChanged.connect(
@@ -220,6 +232,7 @@ class Window(QMainWindow):
         print(("Want to send", 97, reset_fuse_byte))
         self.queue.put((4, values))
 
+
     def reset_12V_thruster_fuse(self):
         """reset_12V_thruster_fuse creates and adds
         packets for resetting a fuse on the ROV"""
@@ -229,6 +242,9 @@ class Window(QMainWindow):
         values = {"reset_controls_thruster": reset_fuse_byte}
         print(("Want to send", 98, reset_fuse_byte))
         self.queue.put((5, values))
+        #reset_fuse_byte[0] |= (0 << 0)
+        #print(f"Pakker Etter:", reset_fuse_byte)
+
 #        self.packets_to_send.append([98, reset_fuse_byte])
 
     def reset_12V_manipulator_fuse(self):
@@ -240,6 +256,8 @@ class Window(QMainWindow):
         values = {"reset_controls_manipulator": reset_fuse_byte}
         print(("Want to send", 99, reset_fuse_byte))
         self.queue.put((6, values))
+        #reset_fuse_byte[0] |= (0 << 0)
+        #print(f"Pakker Etter:", reset_fuse_byte)
 
         #self.packets_to_send.append([99, reset_fuse_byte])
 
@@ -271,7 +289,14 @@ class Window(QMainWindow):
         self.queue.put((9, values))
         #self.packets_to_send.append([66, calibrate_IMU_byte])
         # print(calibrate_IMU_byte)
-
+    def update_label_and_print_value(self, value):
+        self.label_percentage_lys_forward.setText(f"{value}%")
+        print("Slider value:", value)
+        
+    def update_label_and_print_value_down(self, value):
+        self.label_percentage_lys_down.setText(f"{value}%")
+        print(value)
+    
     def updateRegulatorTuning(self):
         reguleringDropdown = self.reguleringDropdown.currentText()
         input_value = float(self.tuningInput.text())
@@ -298,6 +323,7 @@ class Window(QMainWindow):
         values = {"update_regulator_tuning": update_regulator_tuning}
         self.queue.put((10, values))
         #print(("Want to send", 42, update_regulator_tuning))
+    
 
     def toogle_regulator_all(self):
         self.angle_bit_state == 0
@@ -568,8 +594,8 @@ class Window(QMainWindow):
         labelTemp: QLabel = self.labelManipulatorTemp
         labelSikring: QLabel = self.labelManipulatorSikring
 
-        labelKraft.setText(str(round(sensordata[0], 2)) + "A")
-        labelTemp.setText(str(round(sensordata[1], 2)) + "C")
+        labelKraft.setText((round(sensordata[0], 2)) + "A")
+        labelTemp.setText((round(sensordata[1], 2)) + "C")
 
         for i in range(3):
             if sensordata[2][i] == True:
@@ -589,6 +615,11 @@ class Window(QMainWindow):
             if sensordata[2][i] == True:
                 labelSikring.setText(str(self.kraftFeilkoder[i]))
                 labelSikring.setStyleSheet(self.gradient)
+                self.last_thrust_alarm = i
+            # if sensordata[2][i] == False and i==self.last_thrust_alarm:
+            #     labelSikring.setText("Ingen feil")
+            #     self.last_thrust_alarm = -1
+                
 
     def kraft5VUpdate(self, sensordata):
 
@@ -608,12 +639,12 @@ class Window(QMainWindow):
         labelRegulering: QLabel = self.labelReguleringTemp
         labelMotor: QLabel = self.labelMotorTemp
 
-        labelRegulering.setText(str(round(sensordata[0], 2)) + "C")
-        labelMotor.setText(str(round(sensordata[1], 2)) + "C")
+        labelRegulering.setText((round(sensordata[0], 2)) + "C")
+        labelMotor.setText((round(sensordata[1], 2)) + "C")
 
     def TempKomKontrollerUpdate(self, sensordata):
         labelTemp: QLabel = self.labelTempKomKontroller
-        labelTemp.setText(str(round(sensordata[0], 2)) + "C")
+        labelTemp.setText((round(sensordata[0], 2)) + "C")
 
 
 def run(conn, queue_for_rov, manual_flag,  t_watch: Threadwatcher, id):
