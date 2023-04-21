@@ -137,9 +137,9 @@ class Controller:
         if event.axis == 3:
             return self.deadzone_adjustment(-round((2*(event.value--self.controller_stop_point)/(self.controller_stop_point--self.controller_stop_point)-1)*100))
 
-        if event.axis == 4:
+        if event.axis == 2:
             # opp og ned på roboten har range fra 0 til 100 og 0 til -100
-            return self.deadzone_adjustment(-round(self.get_new_range(event.value, -self.controller_stop_point, self.controller_stop_point)))
+            return self.deadzone_adjustment(round(self.get_new_range(event.value, -self.controller_stop_point, self.controller_stop_point)))
             # return round((event.value--self.controller_stop_point)/(self.controller_stop_point--self.controller_stop_point)*100)
         if event.axis == 5:
             # opp og ned på roboten har range fra 0 til 100 og 0 til -100
@@ -302,8 +302,7 @@ class Controller:
                         self.rov_joysticks[event.axis] = self.normalize_joysticks(
                             event)
                         # print(f"{event.axis}: {event.value}")
-                        self.rov_joysticks[6] = int((100+self.rov_joysticks[5]) - \
-                            (100+self.rov_joysticks[2])/2) - 100
+                        self.rov_joysticks[6] = self.rov_joysticks[5] - self.rov_joysticks[2]
                         # self.rov_joysticks[6] = (1+self.rov_joysticks[5])/2 - \
                         #     (1-self.rov_joysticks[2])/2
                     elif event.joy == MANIPULATOR_CONTROLLER_ID:
@@ -311,8 +310,7 @@ class Controller:
                             event)
                         # self.mani_joysticks[6] = self.mani_joysticks[2] + \
                         #     self.mani_joysticks[5]
-                        self.mani_joysticks[6] = int((100+self.mani_joysticks[5]) - \
-                            (100+self.mani_joysticks[2])/2) - 100
+                        self.mani_joysticks[6] = self.mani_joysticks[5] - self.mani_joysticks[2]
 
                     if debug_all:
                         deadzone = 0.07  # To prevent sensitive output in console
