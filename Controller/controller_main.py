@@ -3,7 +3,8 @@ import multiprocessing
 from multiprocessing import Process
 import threading
 import time
-from Thread_info import Threadwatcher
+# from Thread_info import Threadwatcher
+from Threadwatch import Threadwatcher
 import Controller_Handler as controller
 # from Build_data import *
 
@@ -22,11 +23,12 @@ Z_AXIS = 6   #LT/RT
 ROTATION_AXIS = 2
 
 class Rov_state:
-    def __init__(self, queue, t_watch: Threadwatcher) -> None:
+    def __init__(self, queue, manual_flag, t_watch: Threadwatcher) -> None:
         self.t_watch: Threadwatcher = t_watch
         self.data:dict = {}
         self.packets_to_send = []
         self.queue: multiprocessing.Queue = queue
+        self.manual_flag = manual_flag
 
 
     def build_rov_packet(self):
@@ -45,7 +47,7 @@ class Rov_state:
         if self.data == {}:
             return
         data = [0,0,0,0,0,0,0,0]
-        data[0] = self.data["mani_buttons"][MANIPULATOR_IN_OUT]*100
+        data[0] = self.data["mani_buttons"][1]
         data[1] = self.data["mani_joysticks"][MANIPULATOR_ROTATION]
         data[2] = self.data["mani_joysticks"][MANIPULATOR_TILT]
         data[3] = self.data["mani_joysticks"][MANIPULATOR_GRAB_RELEASE]
@@ -79,7 +81,7 @@ class Rov_state:
         print(f"{self.packets_to_send[-2]} , {self.packets_to_send[-1]}")
 
 def run(t_watch: Threadwatcher, id: int, queue_for_rov: multiprocessing.Queue):
-    rov_state = Rov_state(queue_for_rov, t_watch)
+    rov_state = Rov_state(queue_for_rov, manual_flag, t_watch)
 
     while t_watch.should_run(id):
         rov_state.get_from_queue()
@@ -98,11 +100,12 @@ if __name__ == "__main__":
         run_get_controllerdata = True
         queue_for_rov = multiprocessing.Queue()
         t_watch = Threadwatcher()
+        manual_flag = multiprocessing.Value("i", 1)
 
         if run_get_controllerdata:
             id = t_watch.add_thread()
             # takes in controller data and sends it into child_conn
-            controller_process = Process(target=controller.run, args=(queue_for_rov, t_watch, id, True, False), daemon=True)
+            controller_process = Process(target=controller.run, args=(queue_for_rov, manual_flag ,t_watch, id, True, False), daemon=True)
             controller_process.start()
             input("Press Enter to exit...")
             # controller_process.terminate()

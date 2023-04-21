@@ -2,8 +2,8 @@ import sys
 import time
 import pygame
 import multiprocessing
-from Thread_info import Threadwatcher   #For full testing with main.py
-# from Threadwatch import Threadwatcher   #For local testing on MAC
+# from Thread_info import Threadwatcher   #For full testing with main.py
+from Threadwatch import Threadwatcher   #For local testing on MAC
 import threading
 import os
 os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
@@ -195,7 +195,7 @@ class Controller:
                         self.rov_dpad = event.value # BLIR DET BRUKT ELLER ER DET KNAPP?
                     if event.joy == MANIPULATOR_CONTROLLER_ID:
                         self.mani_dpad = event.value # BLIR DET BRUKT ELLER ER DET KNAPP?
-                    self.dpad = [val*100 for val in event.value]
+                    # self.dpad = [val*100 for val in event.value]
 
                 if event.type == BUTTON_DOWN:  # button down
                     if event.joy == ROV_CONTROLLER_ID:
@@ -301,12 +301,29 @@ class Controller:
                     if event.joy == ROV_CONTROLLER_ID:
                         self.rov_joysticks[event.axis] = self.normalize_joysticks(
                             event)
-                        self.rov_joysticks[6] = self.rov_joysticks[4] + \
-                            self.rov_joysticks[5]
+                        
+                        left_trigger = self.rov_joysticks[4]
+                        right_trigger = self.rov_joysticks[5]
+                        virtual_joystick_axis = 0
+                        if left_trigger == -100:
+                            virtual_joystick_axis = -100
+                        if right_trigger == 100:
+                            virtual_joystick_axis = 100
+                        # virtual_joystick_axis = right_trigger + left_trigger
+                        self.rov_joysticks[6] = virtual_joystick_axis
+
+                        # self.rov_joysticks[6] = self.rov_joysticks[4] + \
+                        #     self.rov_joysticks[5]
+                        # self.rov_joysticks[6] = (100+self.rov_joysticks[2]) - \
+                        #     (100+self.rov_joysticks[5])/2
+                        
+                        
                     elif event.joy == MANIPULATOR_CONTROLLER_ID:
                         self.mani_joysticks[event.axis] = self.normalize_joysticks(
                             event)
-                        self.mani_joysticks[6] = self.mani_joysticks[4] + \
+                        # self.mani_joysticks[6] = self.mani_joysticks[4] + \
+                        #     self.mani_joysticks[5]
+                        self.mani_joysticks[6] = self.mani_joysticks[2] + \
                             self.mani_joysticks[5]
 
                     if debug_all:

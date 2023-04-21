@@ -29,7 +29,7 @@ VALIDCOMMANDS = [THRUST, REGULERINGTEMP, VINKLER, DYBDETEMP,
 X_AXIS = 1
 Y_AXIS = 0
 Z_AXIS = 6
-ROTATION_AXIS = 2
+ROTATION_AXIS = 3
 
 FRONT_LIGHT_ID = 98
 BOTTOM_LIGHT_ID = 99
@@ -345,7 +345,7 @@ class Rov_state:
             return
         data = [0, 0, 0, 0, 0, 0, 0, 0]
         try:
-            data[0] = self.data["mani_buttons"][MANIPULATOR_IN_OUT]*100
+            data[0] = self.data["mani_buttons"][1] #For vanntest (venstre joy opp/ned)
             data[1] = self.data["mani_joysticks"][MANIPULATOR_ROTATION]
             data[2] = self.data["mani_joysticks"][MANIPULATOR_TILT]
             data[3] = self.data["mani_joysticks"][MANIPULATOR_GRAB_RELEASE]
