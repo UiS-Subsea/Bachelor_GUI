@@ -29,6 +29,7 @@ from queue import Queue
 global RUN_MANUAL
 os.environ['QT_LOGGING_RULES'] = 'qt.qpa.wayland.warning=false'
 
+
 class SoundWorker(QObject):
     play = pyqtSignal(bool)
 
@@ -44,7 +45,8 @@ class SoundWorker(QObject):
             if self.player.state() == QMediaPlayer.PlayingState:
                 self.player.stateChanged.connect(self.on_player_state_changed)
             else:
-                self.player.setMedia(QMediaContent(QUrl.fromLocalFile(self.sound_file)))
+                self.player.setMedia(QMediaContent(
+                    QUrl.fromLocalFile(self.sound_file)))
                 self.player.play()
         else:
             self.player.stop()
@@ -52,9 +54,10 @@ class SoundWorker(QObject):
     def on_player_state_changed(self, state):
         if state == QMediaPlayer.StoppedState:
             self.player.stateChanged.disconnect(self.on_player_state_changed)
-            self.player.setMedia(QMediaContent(QUrl.fromLocalFile(self.sound_file)))
+            self.player.setMedia(QMediaContent(
+                QUrl.fromLocalFile(self.sound_file)))
             self.player.play()
-    
+
 
 class Window(QMainWindow):
     def __init__(self, gui_queue: multiprocessing.Queue, queue_for_rov: multiprocessing.Queue, manual_flag,  t_watch: Threadwatcher, id: int, parent=None):
@@ -68,12 +71,12 @@ class Window(QMainWindow):
         self.player = QMediaPlayer()
         self.sound_file = "martinalarm.wav"
         self.sound_file = os.path.abspath("martinalarm.wav")
-        
+
         self.sound_worker = SoundWorker(self.sound_file)
         self.sound_worker_thread = QThread()
         self.sound_worker.moveToThread(self.sound_worker_thread)
         self.sound_worker_thread.start()
-        
+
         self.last_triggered_alarm = -1
         self.last_thrust_alarm = -1
 
@@ -101,12 +104,11 @@ class Window(QMainWindow):
         self.tuningInput = self.findChild(QLineEdit, 'tuningInput')
         self.btnRegTuning = self.findChild(QPushButton, 'btnRegTuning')
         self.slider_lys_forward = self.findChild(QSlider, 'slider_lys_forward')
-        self.label_percentage_lys_forward = self.findChild(QLabel, 'label_percentage_lys_forward')
+        self.label_percentage_lys_forward = self.findChild(
+            QLabel, 'label_percentage_lys_forward')
         self.slider_lys_down = self.findChild(QSlider, 'slider_lys_down')
-        self.label_percentage_lys_down = self.findChild(QLabel, 'label_percentage_lys_down')
-
-        
-
+        self.label_percentage_lys_down = self.findChild(
+            QLabel, 'label_percentage_lys_down')
 
         # Queue and pipe
 
@@ -169,9 +171,10 @@ class Window(QMainWindow):
             lambda: self.imageprocessing("normal_camera"))
 
         # Lys
-        self.slider_lys_forward.valueChanged.connect(self.update_label_and_print_value)
-        self.slider_lys_down.valueChanged.connect(self.update_label_and_print_value_down)
-
+        self.slider_lys_forward.valueChanged.connect(
+            self.update_label_and_print_value)
+        self.slider_lys_down.valueChanged.connect(
+            self.update_label_and_print_value_down)
 
         # Lag 2 av og på knapper top&bottom
 
@@ -231,7 +234,6 @@ class Window(QMainWindow):
         print(("Want to send", 97, reset_fuse_byte))
         self.queue.put((4, values))
 
-
     def reset_12V_thruster_fuse(self):
         """reset_12V_thruster_fuse creates and adds
         packets for resetting a fuse on the ROV"""
@@ -288,14 +290,23 @@ class Window(QMainWindow):
         self.queue.put((9, values))
         #self.packets_to_send.append([66, calibrate_IMU_byte])
         # print(calibrate_IMU_byte)
+
     def update_label_and_print_value(self, value):
+        set_intensity_byte = bytearray(8)
+        set_intensity_byte[1] = value
+        values = {"front_light_intensity": set_intensity_byte}
         self.label_percentage_lys_forward.setText(f"{value}%")
+        self.queue.put((17, values))
         print("Slider value:", value)
-        
+
     def update_label_and_print_value_down(self, value):
-        self.label_percentage_lys_down.setText(f"{value}%")
-        print(value)
-    
+        set_intensity_byte = bytearray(8)
+        set_intensity_byte[1] = value
+        values = {"bottom_light_intensity": set_intensity_byte}
+        self.label_percentage_lys_forward.setText(f"{value}%")
+        self.queue.put((18, values))
+        print("Slider value:", value)
+
     def updateRegulatorTuning(self):
         reguleringDropdown = self.reguleringDropdown.currentText()
         input_value = float(self.tuningInput.text())
@@ -322,7 +333,6 @@ class Window(QMainWindow):
         values = {"update_regulator_tuning": update_regulator_tuning}
         self.queue.put((10, values))
         #print(("Want to send", 42, update_regulator_tuning))
-    
 
     def toogle_regulator_all(self):
         self.angle_bit_state == 0
@@ -454,23 +464,19 @@ class Window(QMainWindow):
     #     if self.slider_lys_down.checkState() != 0:
     #         bottom_light_is_on = True
 
-
     def play_sound(self, should_play: bool):
         self.sound_worker.play.emit(should_play)
-        
+
     def closeEvent(self, event):
         self.sound_worker_thread.quit()
         self.sound_worker_thread.wait()
-        
-
 
     def on_player_state_changed(self, state):
         if state == QMediaPlayer.StoppedState:
             self.player.stateChanged.disconnect(self.on_player_state_changed)
-            self.player.setMedia(QMediaContent(QUrl.fromLocalFile(self.sound_file)))
+            self.player.setMedia(QMediaContent(
+                QUrl.fromLocalFile(self.sound_file)))
             self.player.play()
-
-
 
     # def on_player_state_changed(self, state):
     #     if state == QMediaPlayer.StoppedState:
@@ -541,12 +547,10 @@ class Window(QMainWindow):
                 labelLekkasjeAlarm.setStyleSheet(self.gradient)
                 self.play_sound(True)
                 self.last_triggered_alarm = i
-            if sensordata[3][i] == False and i ==self.last_triggered_alarm:
+            if sensordata[3][i] == False and i == self.last_triggered_alarm:
                 labelLekkasjeAlarm.setText("Ingen feil")
                 self.play_sound(False)
                 self.last_triggered_alarm = -1
-                
-                
 
     def guiVinkelUpdate(self, sensordata):
         vinkel_liste: list[QLabel] = [
@@ -618,7 +622,6 @@ class Window(QMainWindow):
             # if sensordata[2][i] == False and i==self.last_thrust_alarm:
             #     labelSikring.setText("Ingen feil")
             #     self.last_thrust_alarm = -1
-                
 
     def kraft5VUpdate(self, sensordata):
 

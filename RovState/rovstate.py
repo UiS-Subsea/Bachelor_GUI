@@ -29,7 +29,7 @@ VALIDCOMMANDS = [THRUST, REGULERINGTEMP, VINKLER, DYBDETEMP,
 X_AXIS = 1
 Y_AXIS = 0
 Z_AXIS = 6
-ROTATION_AXIS = 3 
+ROTATION_AXIS = 3
 
 FRONT_LIGHT_ID = 98
 BOTTOM_LIGHT_ID = 99
@@ -262,12 +262,11 @@ class Rov_state:
         reset_fuse_byte[0] |= (1 << 0)  # reset bit 0
         print("Resetting 5V Fuse")
         self.packets_to_send.append([97, reset_fuse_byte])
-    
+
     def controller_startup(self):
-        start_data = [1,1,100,100,0,0,0,0]
+        start_data = [1, 1, 100, 100, 0, 0, 0, 0]
         self.packets_to_send.append([40, start_data])
         self.packets_to_send.append([41, start_data])
-        
 
     def reset_12V_thruster_fuse(self):
         """reset_12V_thruster_fuse creates and adds
@@ -315,17 +314,17 @@ class Rov_state:
         print("Bottom Light On")
         self.packets_to_send.append((99, bytes(set_light_byte)))
 
-    def front_light_intensity(self, intensity):
-        set_intensity_byte = bytearray(8)
-        set_intensity_byte[1] = intensity
-        print("Adjusting Front Light Intensity")
-        self.packets_to_send.append((98, set_intensity_byte))
+    # def front_light_intensity(self, intensity):
+    #     set_intensity_byte = bytearray(8)
+    #     set_intensity_byte[1] = intensity
+    #     print("Adjusting Front Light Intensity")
+    #     self.packets_to_send.append((98, set_intensity_byte))
 
-    def bottom_light_intensity(self, intensity):
-        set_intensity_byte = bytearray(8)
-        set_intensity_byte[1] = intensity
-        print("Adjusting Bottom Light Intensity")
-        self.packets_to_send.append((99, set_intensity_byte))
+    # def bottom_light_intensity(self, intensity):
+    #     set_intensity_byte = bytearray(8)
+    #     set_intensity_byte[1] = intensity
+    #     print("Adjusting Bottom Light Intensity")
+    #     self.packets_to_send.append((99, set_intensity_byte))
 
     def toogle_regulator_all(self):
         toogle_regulator_byte = [0] * 8
@@ -398,7 +397,7 @@ class Rov_state:
             return
         data = [0, 0, 0, 0, 0, 0, 0, 0]
         try:
-            data[0] = self.data["mani_joysticks"][1] #for vanntest
+            data[0] = self.data["mani_joysticks"][1]  # for vanntest
             data[1] = self.data["mani_joysticks"][MANIPULATOR_ROTATION]
             data[2] = -self.data["mani_joysticks"][MANIPULATOR_TILT]
             data[3] = self.data["mani_joysticks"][MANIPULATOR_GRAB_RELEASE]

@@ -2,7 +2,7 @@ import sys
 import time
 import pygame
 import multiprocessing
-from Thread_info import Threadwatcher   #For full testing with main.py
+from Thread_info import Threadwatcher  # For full testing with main.py
 # from Threadwatch import Threadwatcher   #For local testing on MAC
 import threading
 import os
@@ -137,9 +137,9 @@ class Controller:
         if event.axis == 3:
             return self.deadzone_adjustment(-round((2*(event.value--self.controller_stop_point)/(self.controller_stop_point--self.controller_stop_point)-1)*100))
 
-        if event.axis == 4:
+        if event.axis == 2:
             # opp og ned på roboten har range fra 0 til 100 og 0 til -100
-            return self.deadzone_adjustment(-round(self.get_new_range(event.value, -self.controller_stop_point, self.controller_stop_point)))
+            return self.deadzone_adjustment(round(self.get_new_range(event.value, -self.controller_stop_point, self.controller_stop_point)))
             # return round((event.value--self.controller_stop_point)/(self.controller_stop_point--self.controller_stop_point)*100)
         if event.axis == 5:
             # opp og ned på roboten har range fra 0 til 100 og 0 til -100
@@ -183,18 +183,18 @@ class Controller:
             if pygame.joystick.get_count() < 1:
                 self.wait_for_controller()
 
-            ### ENDRE TICK TIL 20 FOR NORMAL KJØRING
-            ### ENDRE TIL MINDRE FOR Å DEBUGGE LETTERE
+            # ENDRE TICK TIL 20 FOR NORMAL KJØRING
+            # ENDRE TIL MINDRE FOR Å DEBUGGE LETTERE
             self.duration = self.clock.tick(20)
-            
+
             # print(duration)
             for event in pygame.event.get():
                 self.manual_flag.value = 1
-                if event.type == DPAD: #dpad (both up and down)
+                if event.type == DPAD:  # dpad (both up and down)
                     if event.joy == ROV_CONTROLLER_ID:
-                        self.rov_dpad = event.value # BLIR DET BRUKT ELLER ER DET KNAPP?
+                        self.rov_dpad = event.value  # BLIR DET BRUKT ELLER ER DET KNAPP?
                     if event.joy == MANIPULATOR_CONTROLLER_ID:
-                        self.mani_dpad = event.value # BLIR DET BRUKT ELLER ER DET KNAPP?
+                        self.mani_dpad = event.value  # BLIR DET BRUKT ELLER ER DET KNAPP?
                     self.dpad = [val*100 for val in event.value]
 
                 if event.type == BUTTON_DOWN:  # button down
@@ -302,8 +302,8 @@ class Controller:
                         self.rov_joysticks[event.axis] = self.normalize_joysticks(
                             event)
                         # print(f"{event.axis}: {event.value}")
-                        self.rov_joysticks[6] = int((100+self.rov_joysticks[5]) - \
-                            (100+self.rov_joysticks[2])/2) - 100
+                        self.rov_joysticks[6] = self.rov_joysticks[5] - \
+                            self.rov_joysticks[2]
                         # self.rov_joysticks[6] = (1+self.rov_joysticks[5])/2 - \
                         #     (1-self.rov_joysticks[2])/2
                     elif event.joy == MANIPULATOR_CONTROLLER_ID:
@@ -311,8 +311,8 @@ class Controller:
                             event)
                         # self.mani_joysticks[6] = self.mani_joysticks[2] + \
                         #     self.mani_joysticks[5]
-                        self.mani_joysticks[6] = int((100+self.mani_joysticks[5]) - \
-                            (100+self.mani_joysticks[2])/2) - 100
+                        self.mani_joysticks[6] = self.mani_joysticks[5] - \
+                            self.mani_joysticks[2]
 
                     if debug_all:
                         deadzone = 0.07  # To prevent sensitive output in console
@@ -402,17 +402,19 @@ class Controller:
                 # 1 here is the id that tells main that this is from the controller and not a gui command or profile update
                 self.queue_to_rov.put((1, self.pack_controller_values()))
                 # print(self.buttons)
-                
+
                 # What the thing being sent into queue looks like:
                 # (1, {"rov_joysticks": [], "mani_joysticks": [], "buttons": []})
-                
+
             elif debug and self.connection is None:
                 self.write_controller_values(local=True)
         print("closed connection")
         # self.connection.close()
 
 # This is the entry point that main calls
-def run(queue_to_rov,manual_flag, t_watch: Threadwatcher, id, debug=True, debug_all=True):
+
+
+def run(queue_to_rov, manual_flag, t_watch: Threadwatcher, id, debug=True, debug_all=True):
     # debug_all = True
     c = Controller(queue_to_rov, manual_flag, t_watch, id)
     c.get_events_loop(t_watch, id, debug=debug, debug_all=debug_all)
