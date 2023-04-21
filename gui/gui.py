@@ -100,10 +100,10 @@ class Window(QMainWindow):
             QComboBox, 'reguleringDropdown')
         self.tuningInput = self.findChild(QLineEdit, 'tuningInput')
         self.btnRegTuning = self.findChild(QPushButton, 'btnRegTuning')
-        self.slider_lys_forward = self.findChild(QSlider, 'slider_lys_forward')
-        self.label_percentage_lys_forward = self.findChild(QLabel, 'label_percentage_lys_forward')
-        self.slider_lys_down = self.findChild(QSlider, 'slider_lys_down')
-        self.label_percentage_lys_down = self.findChild(QLabel, 'label_percentage_lys_down')
+        # self.slider_lys_forward = self.findChild(QSlider, 'slider_lys_forward')
+        # self.label_percentage_lys_forward = self.findChild(QLabel, 'label_percentage_lys_forward')
+        # self.slider_lys_down = self.findChild(QSlider, 'slider_lys_down')
+        # self.label_percentage_lys_down = self.findChild(QLabel, 'label_percentage_lys_down')
 
         
 
@@ -290,10 +290,20 @@ class Window(QMainWindow):
         # print(calibrate_IMU_byte)
     def update_label_and_print_value(self, value):
         self.label_percentage_lys_forward.setText(f"{value}%")
+        set_light_byte = [0] * 8
+        set_light_byte[1] = value
+        values = {"slider_top_light": set_light_byte}
+        print((f"Want to send", 98, set_light_byte))
+        self.queue.put((18, values))
         print("Slider value:", value)
         
     def update_label_and_print_value_down(self, value):
         self.label_percentage_lys_down.setText(f"{value}%")
+        set_light_byte = [0] * 8
+        set_light_byte[1] = value
+        values = {"slider_bottom_light": set_light_byte}
+        print((f"Want to send", 99, set_light_byte))
+        self.queue.put((19, values))
         print(value)
     
     def updateRegulatorTuning(self):
@@ -643,7 +653,7 @@ class Window(QMainWindow):
 
     def TempKomKontrollerUpdate(self, sensordata):
         labelTemp: QLabel = self.labelTempKomKontroller
-        labelTemp.setText((round(sensordata[0], 2)) + "C")
+        labelTemp.setText(((sensordata[0], 2)) + "C")
 
 
 def run(conn, queue_for_rov, manual_flag,  t_watch: Threadwatcher, id):

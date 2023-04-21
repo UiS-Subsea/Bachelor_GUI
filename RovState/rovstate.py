@@ -221,7 +221,6 @@ class Rov_state:
             self.packets_to_send.append([var[0], var[1]])
 
     def send_packets_to_rov(self, t_watch: Threadwatcher, id):
-        self.controller_startup()
         while t_watch.should_run(id):
             self.get_from_queue()
 
@@ -262,11 +261,6 @@ class Rov_state:
         reset_fuse_byte[0] |= (1 << 0)  # reset bit 0
         print("Resetting 5V Fuse")
         self.packets_to_send.append([97, reset_fuse_byte])
-    
-    def controller_startup(self):
-        start_data = [1,1,100,100,0,0,0,0]
-        self.packets_to_send.append([40, start_data])
-        self.packets_to_send.append([41, start_data])
         
 
     def reset_12V_thruster_fuse(self):
@@ -532,7 +526,7 @@ class Rov_state:
             return
         data = [0, 0, 0, 0, 0, 0, 0, 0]
 
-        data[1] = self.data["front_light_intensity"][1]
+        data[1] = self.data["slider_top_light"][1]
 
         self.packets_to_send.append([98, data])
 
@@ -541,7 +535,7 @@ class Rov_state:
             return
         data = [0, 0, 0, 0, 0, 0, 0, 0]
 
-        data[1] = self.data["bottom_light_intensity"][1]
+        data[1] = self.data["slider_bottom_light"][1]
 
         self.packets_to_send.append([99, data])
 
