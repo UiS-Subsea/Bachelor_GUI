@@ -106,6 +106,8 @@ class Window(QMainWindow):
         self.label_percentage_lys_down = self.findChild(QLabel, 'label_percentage_lys_down')
         self.sliderCamVinkel = self.findChild(QSlider, 'sliderCamVinkel')
         self.labelKameraVinkel = self.findChild(QLabel, 'labelKameraVinkel')
+        self.sliderCamVinkel.setValue(90)
+
 
 
         
@@ -174,6 +176,7 @@ class Window(QMainWindow):
         # Lys
         self.slider_lys_forward.valueChanged.connect(self.update_label_and_print_value)
         self.slider_lys_down.valueChanged.connect(self.update_label_and_print_value_down)
+        self.sliderCamVinkel.valueChanged.connect(self.camVinkelUpdate)
 
 
         # Lag 2 av og på knapper top&bottom
@@ -291,16 +294,6 @@ class Window(QMainWindow):
         self.queue.put((9, values))
         #self.packets_to_send.append([66, calibrate_IMU_byte])
         # print(calibrate_IMU_byte)
-    
-    #TODO: Spør dominykas om alt e rett :)
-    def update_label_and_print_value_cam_vinkel(self, value):
-        self.labelKameraVinkel.setText(f"{value}°")
-        set_light_byte = [0] * 8
-        set_light_byte[1] = value
-        values = {"slider kameraVinkel": set_light_byte}
-        print((f"Want to send", 200, set_light_byte))
-        self.queue.put((200,values))
-        print("SliderCamVinkel value:", value)
 
 
     def update_label_and_print_value(self, value):
@@ -421,21 +414,34 @@ class Window(QMainWindow):
         self.queue.put((16, values))
 #        self.packets_to_send.append((99, bytes(set_light_byte)))
 
-    def front_light_intensity(self, intensity):
-        set_intensity_byte = [0] * 8
-        set_intensity_byte[1] = intensity
-        print("Adjusting Front Light Intensity")
-        values = {"front_light_intensity": set_intensity_byte}
-        self.queue.put((17, values))
-#        self.packets_to_send.append((98, set_intensity_byte))
+#     def front_light_intensity(self, intensity):
+#         set_intensity_byte = [0] * 8
+#         set_intensity_byte[1] = intensity
+#         print("Adjusting Front Light Intensity")
+#         values = {"front_light_intensity": set_intensity_byte}
+#         self.queue.put((17, values))
+# #        self.packets_to_send.append((98, set_intensity_byte))
 
-    def bottom_light_intensity(self, intensity):
-        set_intensity_byte = [0] * 8
-        set_intensity_byte[1] = intensity
-        print("Adjusting Bottom Light Intensity")
-        values = {"bottom_light_intensity": set_intensity_byte}
-        self.queue.put((18, values))
-#        self.packets_to_send.append((99, set_intensity_byte))
+#     def bottom_light_intensity(self, intensity):
+#         set_intensity_byte = [0] * 8
+#         set_intensity_byte[1] = intensity
+#         print("Adjusting Bottom Light Intensity")
+#         values = {"bottom_light_intensity": set_intensity_byte}
+#         self.queue.put((18, values))
+# #        self.packets_to_send.append((99, set_intensity_byte))
+
+    #TODO: Spør dominykas om alt e rett :)
+    def camVinkelUpdate(self, value):
+        self.labelKameraVinkel.setText(f"{value}°")
+        #set_light_byte = [0] * 8
+        #set_light_byte[1] = value
+        values = {"tilt": value}
+        #print((f"Want to send", 200, values))
+        self.queue.put((19, values))
+        
+        #self.queue.put((200,values))
+        #print("SliderCamVinkel value:", value)
+
 
     def decide_gui_update(self, sensordata):
         # print("Deciding with this data: ", sensordata)
