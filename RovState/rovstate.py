@@ -6,7 +6,7 @@ from Kommunikasjon.network_handler import Network
 
 MANIPULATOR_IN_OUT = 15
 MANIPULATOR_ROTATION = 0
-MANIPULATOR_TILT = 3
+MANIPULATOR_TILT = 4
 MANIPULATOR_GRAB_RELEASE = 6
 
 
@@ -392,7 +392,8 @@ class Rov_state:
             return
         data = [0, 0, 0, 0, 0, 0, 0, 0]
         try:
-            data[0] = self.data["mani_joysticks"][1] #for vanntest
+            # data[0] = self.data["mani_joysticks"][1] #for vanntest
+            data[0] = self.data.get("mani_dpad", [0,0])[1]*100
             data[1] = self.data["mani_joysticks"][MANIPULATOR_ROTATION]
             data[2] = -self.data["mani_joysticks"][MANIPULATOR_TILT]
             data[3] = self.data["mani_joysticks"][MANIPULATOR_GRAB_RELEASE]
@@ -538,6 +539,14 @@ class Rov_state:
         data[1] = self.data["slider_bottom_light"][1]
 
         self.packets_to_send.append([99, data])
+        
+    def build_camera_tilt(self):
+        if self.data == {}:
+            return
+        data = self.data["tilt"]
+        #print(data)
+        
+        self.packets_to_send.append([200, ["tilt", data]])
 
     def button_handling(self):
         rov_buttons = self.data.get("rov_buttons")
@@ -595,4 +604,7 @@ class Rov_state:
             self.build_front_light_intensity()
         elif self.packet_id == 18:
             self.build_bottom_light_intensity()
+        elif self.packet_id == 19:
+            self.build_camera_tilt()
+            
         print(self.packets_to_send)
