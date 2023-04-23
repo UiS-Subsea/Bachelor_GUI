@@ -345,7 +345,9 @@ class Rov_state:
             return
         data = [0, 0, 0, 0, 0, 0, 0, 0]
         try:
-            data[0] = self.data["mani_buttons"][1] #For vanntest (venstre joy opp/ned)
+            # data[0] = self.data["mani_buttons"][1] #For vanntest (venstre joy opp/ned)
+            data[0] = self.data["dpad", [0,0]][1]*100
+            #data[0] = self.data.get("dpad", [0,0])[1]*100
             data[1] = self.data["mani_joysticks"][MANIPULATOR_ROTATION]
             data[2] = self.data["mani_joysticks"][MANIPULATOR_TILT]
             data[3] = self.data["mani_joysticks"][MANIPULATOR_GRAB_RELEASE]
