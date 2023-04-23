@@ -7,7 +7,7 @@ from Threadwatch import Threadwatcher   #For local testing on MAC
 import threading
 import os
 os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
-DPAD = 1538  # Kan også bruke pygame.JOYBUTTONDOWN hvis nødvendig
+DPAD = 1538  # Kan ogs bruke pygame.JOYBUTTONDOWN hvis nødvendig
 BUTTON_DOWN = 1539
 BUTTON_UP = 1540
 JOYSTICK = 1536
@@ -139,9 +139,9 @@ class Controller:
         if event.axis == 3:
             return self.deadzone_adjustment(-round((2*(event.value--self.controller_stop_point)/(self.controller_stop_point--self.controller_stop_point)-1)*100))
 
-        if event.axis == 4:
+        if event.axis == 2:
             # opp og ned på roboten har range fra 0 til 100 og 0 til -100
-            return self.deadzone_adjustment(-round(self.get_new_range(event.value, -self.controller_stop_point, self.controller_stop_point)))
+            return self.deadzone_adjustment(round(self.get_new_range(event.value, -self.controller_stop_point, self.controller_stop_point)))
             # return round((event.value--self.controller_stop_point)/(self.controller_stop_point--self.controller_stop_point)*100)
         if event.axis == 5:
             # opp og ned på roboten har range fra 0 til 100 og 0 til -100
@@ -184,10 +184,10 @@ class Controller:
         while t_watch.should_run(id):
             if pygame.joystick.get_count() < 1:
                 self.wait_for_controller()
-
+            #tickrate
             ### ENDRE TICK TIL 20 FOR NORMAL KJØRING
             ### ENDRE TIL MINDRE FOR Å DEBUGGE LETTERE
-            self.duration = self.clock.tick(50)
+            self.duration = self.clock.tick(20)
             
             # print(duration)
             for event in pygame.event.get():
@@ -303,35 +303,22 @@ class Controller:
                     if event.joy == ROV_CONTROLLER_ID:
                         self.rov_joysticks[event.axis] = self.normalize_joysticks(
                             event)
-                        
-                        left_trigger = self.rov_joysticks[4]
-                        right_trigger = self.rov_joysticks[5]
-                        virtual_joystick_axis = 0
-                        if left_trigger == -100:
-                            virtual_joystick_axis = -100
-                        if right_trigger == 100:
-                            virtual_joystick_axis = 100
-                        # virtual_joystick_axis = right_trigger + left_trigger
-                        self.rov_joysticks[6] = virtual_joystick_axis
-
-                        # self.rov_joysticks[6] = self.rov_joysticks[4] + \
-                        #     self.rov_joysticks[5]
-                        # self.rov_joysticks[6] = (100+self.rov_joysticks[2]) - \
-                        #     (100+self.rov_joysticks[5])/2
-                        
-                        
+                        # print(f"{event.axis}: {event.value}")
+                        self.rov_joysticks[6] = self.rov_joysticks[5] - self.rov_joysticks[2]
+                        # self.rov_joysticks[6] = (1+self.rov_joysticks[5])/2 - \
+                        #     (1-self.rov_joysticks[2])/2
                     elif event.joy == MANIPULATOR_CONTROLLER_ID:
                         self.mani_joysticks[event.axis] = self.normalize_joysticks(
                             event)
-                        # self.mani_joysticks[6] = self.mani_joysticks[4] + \
+                        # self.mani_joysticks[6] = self.mani_joysticks[2] + \
                         #     self.mani_joysticks[5]
-                        self.mani_joysticks[6] = self.mani_joysticks[2] + \
-                            self.mani_joysticks[5]
+                        self.mani_joysticks[6] = self.mani_joysticks[5] - self.mani_joysticks[2]
 
                     if debug_all:
                         deadzone = 0.07  # To prevent sensitive output in console
                         if event.joy == ROV_CONTROLLER_ID:
                             if event.axis == 0:
+                                print(event.axis)
                                 if event.value > deadzone:
                                     print(
                                         f"ROV til HØYRE med {self.normalize_joysticks(event)}% kraft")
@@ -340,8 +327,9 @@ class Controller:
                                         f"ROV til VENSTRE med {self.normalize_joysticks(event)}% kraft")
                             if event.axis == 4 or event.axis == 5:
                                 print(
-                                    f"{event.axis} signal: {event.value}, normalized: {self.normalize_joysticks(event)}")
+                                    f"Axis: {event.axis}. signal: {event.value}, normalized: {self.normalize_joysticks(event)}")
                             if event.axis == 1:
+                                print(event.axis)
                                 if event.value > deadzone:
                                     print(
                                         f"ROV BAKOVER med {self.normalize_joysticks(event)}% kraft")
@@ -349,6 +337,7 @@ class Controller:
                                     print(
                                         f"ROV FREMOVER med {self.normalize_joysticks(event)}% kraft")
                             elif event.axis == 2:
+                                print(event.axis)
                                 if event.value > deadzone:
                                     print(
                                         f"ROV roterer MED klokka med {self.normalize_joysticks(event)}% kraft")
@@ -356,6 +345,7 @@ class Controller:
                                     print(
                                         f"ROV roterer MOT klokka med {self.normalize_joysticks(event)}% kraft")
                             elif event.axis == 3:
+                                print(event.axis)
                                 if event.value > deadzone:
                                     print(
                                         f"ROV tilter kamera med {self.normalize_joysticks(event)}% kraft")
@@ -363,9 +353,11 @@ class Controller:
                                     print(
                                         f"ROV tilter kamera med {self.normalize_joysticks(event)}% kraft")
                             elif event.axis == 4:
+                                print(event.axis)
                                 print(
                                     f"ROV NEDOVER med {self.normalize_joysticks(event)}% kraft")
                             elif event.axis == 5:
+                                print(event.axis)
                                 print(
                                     f"ROV OPPOVER med {self.normalize_joysticks(event)}% kraft")
                         elif event.joy == MANIPULATOR_CONTROLLER_ID:
