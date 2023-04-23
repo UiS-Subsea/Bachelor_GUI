@@ -21,6 +21,7 @@ MANIPULATOR_ROTATION = 0
 MANIPULATOR_TILT = 3
 MANIPULATOR_GRAB_RELEASE = 6
 
+Bluetooth_Mac_Windows_On = False
 
 REGULERINGSKNAPPAR = "32"  # 0=All regulering deaktivert, 1=Aktiver rull reg, 2=Regulering av dybde aktivert, 3=Regulering av vinkel aktivert, 4=Regulering av dybde og vinkel aktivert
 THRUST = "129"  # HHF, #HHB, #HVB, HVF, VHF, VHB, VVB, VVF

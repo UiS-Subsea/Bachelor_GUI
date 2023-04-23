@@ -20,7 +20,7 @@ MANIPULATOR_GRAB_RELEASE = 6
 X_AXIS = 1   #LEFT JOYSTICK UP/DOWN
 Y_AXIS = 0   #LEFT JOYSTICK LEFT/RIGHT
 Z_AXIS = 6   #LT/RT
-ROTATION_AXIS = 2
+ROTATION_AXIS = 3 #RIGHT JOYSTICK LEFT/RIGHT
 
 class Rov_state:
     def __init__(self, queue, manual_flag, t_watch: Threadwatcher) -> None:
@@ -47,7 +47,7 @@ class Rov_state:
         if self.data == {}:
             return
         data = [0,0,0,0,0,0,0,0]
-        data[0] = self.data["mani_buttons"][1]
+        data[0] = self.data["mani_joysticks"][1]
         data[1] = self.data["mani_joysticks"][MANIPULATOR_ROTATION]
         data[2] = self.data["mani_joysticks"][MANIPULATOR_TILT]
         data[3] = self.data["mani_joysticks"][MANIPULATOR_GRAB_RELEASE]
