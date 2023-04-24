@@ -42,6 +42,8 @@ ID_DIRECTIONCOMMAND = 70
 ID_camera_tilt_upwards = 200
 ID_camera_tilt_downwards = 201
 
+#Global list which can be used in all packet creation
+data = [0, 0, 0, 0, 0, 0, 0, 0]
 
 class Rov_state:
     def __init__(self, queue_for_rov, network_handler, gui_queue, manual_flag,  t_watch: Threadwatcher) -> None:
@@ -364,7 +366,7 @@ class Rov_state:
     def build_rov_packet(self):
         if self.data == {}:
             return
-        data = [0, 0, 0, 0, 0, 0, 0, 0]
+        # data = [0, 0, 0, 0, 0, 0, 0, 0]
 
         data[0] = self.data["rov_joysticks"][X_AXIS]
         data[1] = self.data["rov_joysticks"][Y_AXIS]
@@ -389,15 +391,13 @@ class Rov_state:
         # Kan også endre til to indexer i data listen for mani inn og ut (f.eks 0 og 1 = btn 12 og 13)
         if self.data == {}:
             return
-        data = [0, 0, 0, 0, 0, 0, 0, 0]
-        try:
+        # data = [0, 0, 0, 0, 0, 0, 0, 0]
             # data[0] = self.data["mani_joysticks"][1] #for vanntest
-            data[0] = self.data.get("mani_dpad", [0,0])[1]*100
-            data[1] = self.data["mani_joysticks"][MANIPULATOR_ROTATION]
-            data[2] = -self.data["mani_joysticks"][MANIPULATOR_TILT]
-            data[3] = self.data["mani_joysticks"][MANIPULATOR_GRAB_RELEASE]
-        except KeyError:
-            pass
+        data[0] = self.data.get("mani_dpad", [0,0])[1]*100
+        data[1] = self.data["mani_joysticks"][MANIPULATOR_ROTATION]
+        data[2] = -self.data["mani_joysticks"][MANIPULATOR_TILT]
+        data[3] = self.data["mani_joysticks"][MANIPULATOR_GRAB_RELEASE]
+        
         self.packets_to_send.append([34, data])
 
     def build_reset_packet(self):
