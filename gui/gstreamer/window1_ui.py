@@ -1734,4 +1734,4 @@ class Ui_Form(object):
         self.labelReguleringTemp.setText(_translate("Form", "---"))
         self.labelReguleringTemp.setProperty("labelStyle", _translate("Form", "blackBg"))
         self.labelReguleringTemp.setProperty("labelStyle2", _translate("Form", "whiteBg"))
-import resources_rc
+import images.resources_rc as resources_rc

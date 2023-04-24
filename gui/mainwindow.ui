@@ -10,7 +10,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1483</width>
+    <width>1462</width>
     <height>930</height>
    </rect>
   </property>
@@ -219,7 +219,7 @@
                      <property name="currentIndex">
                       <number>0</number>
                      </property>
-                     <widget class="QWidget" name="tabWidgetPage1" native="true">
+                     <widget class="QWidget" name="tabWidgetPage1">
                       <attribute name="title">
                        <string/>
                       </attribute>
@@ -363,7 +363,7 @@ QLabel {
                               <widget class="QLabel" name="title_kjoremodus">
                                <property name="minimumSize">
                                 <size>
-                                 <width>0</width>
+                                 <width>351</width>
                                  <height>0</height>
                                 </size>
                                </property>
@@ -416,10 +416,14 @@ QLineEdit {
 QLabel {
     color: #FFFFFF;
 }
+
+QLabel {
+  qproperty-alignment: 'AlignCenter';
+}
 </string>
                                </property>
                                <property name="text">
-                                <string>Thrusterpådrag</string>
+                                <string>THRUSTERPÅDRAG</string>
                                </property>
                               </widget>
                              </item>
@@ -443,7 +447,7 @@ QLabel {
                                  <height>16777215</height>
                                 </size>
                                </property>
-                               <layout class="QVBoxLayout" name="kjoremodusLayout" stretch="0,0,0">
+                               <layout class="QVBoxLayout" name="kjoremodusLayout" stretch="0,0,0,0">
                                 <property name="spacing">
                                  <number>5</number>
                                 </property>
@@ -547,13 +551,13 @@ QLabel {
                                     <string/>
                                    </property>
                                    <property name="pixmap">
-                                    <pixmap resource="../resources.qrc">:/rov/E:/image.png</pixmap>
+                                    <pixmap resource="../images/resources.qrc">:/rov/image.png</pixmap>
                                    </property>
                                    <property name="scaledContents">
                                     <bool>true</bool>
                                    </property>
                                   </widget>
-                                  <widget class="QLabel" name="labelVVF_3">
+                                  <widget class="QLabel" name="labelVVF">
                                    <property name="geometry">
                                     <rect>
                                      <x>0</x>
@@ -609,7 +613,7 @@ QLabel {
                                     <string>------</string>
                                    </property>
                                   </widget>
-                                  <widget class="QLabel" name="labelVHF_3">
+                                  <widget class="QLabel" name="labelVHF">
                                    <property name="geometry">
                                     <rect>
                                      <x>300</x>
@@ -665,7 +669,7 @@ QLabel {
                                     <string>------</string>
                                    </property>
                                   </widget>
-                                  <widget class="QLabel" name="labelHHF_3">
+                                  <widget class="QLabel" name="labelHHF">
                                    <property name="geometry">
                                     <rect>
                                      <x>220</x>
@@ -721,7 +725,7 @@ QLabel {
                                     <string>------</string>
                                    </property>
                                   </widget>
-                                  <widget class="QLabel" name="labelHHB_3">
+                                  <widget class="QLabel" name="labelHHB">
                                    <property name="geometry">
                                     <rect>
                                      <x>220</x>
@@ -777,7 +781,7 @@ QLabel {
                                     <string>------</string>
                                    </property>
                                   </widget>
-                                  <widget class="QLabel" name="labelVHB_3">
+                                  <widget class="QLabel" name="labelVHB">
                                    <property name="geometry">
                                     <rect>
                                      <x>290</x>
@@ -833,7 +837,7 @@ QLabel {
                                     <string>------</string>
                                    </property>
                                   </widget>
-                                  <widget class="QLabel" name="labelVVB_3">
+                                  <widget class="QLabel" name="labelVVB">
                                    <property name="geometry">
                                     <rect>
                                      <x>10</x>
@@ -889,7 +893,7 @@ QLabel {
                                     <string>------</string>
                                    </property>
                                   </widget>
-                                  <widget class="QLabel" name="labelHVB_3">
+                                  <widget class="QLabel" name="labelHVB">
                                    <property name="geometry">
                                     <rect>
                                      <x>80</x>
@@ -945,7 +949,7 @@ QLabel {
                                     <string>------</string>
                                    </property>
                                   </widget>
-                                  <widget class="QLabel" name="labelHVF_3">
+                                  <widget class="QLabel" name="labelHVF">
                                    <property name="geometry">
                                     <rect>
                                      <x>80</x>
@@ -1001,6 +1005,22 @@ QLabel {
                                     <string>------</string>
                                    </property>
                                   </widget>
+                                  <zorder>label_20</zorder>
+                                  <zorder>labelHHB</zorder>
+                                  <zorder>labelVVF</zorder>
+                                  <zorder>labelHVF</zorder>
+                                  <zorder>labelHHF</zorder>
+                                  <zorder>labelVHF</zorder>
+                                  <zorder>labelVHB</zorder>
+                                  <zorder>labelHVB</zorder>
+                                  <zorder>labelVVB</zorder>
+                                 </widget>
+                                </item>
+                                <item>
+                                 <widget class="QPushButton" name="btnKalibrerIMU">
+                                  <property name="text">
+                                   <string>Kalibrer_IMU</string>
+                                  </property>
                                  </widget>
                                 </item>
                                 <item>
@@ -1066,10 +1086,13 @@ QLineEdit {
 QLabel {
     color: #FFFFFF;
 }
+QLabel {
+  qproperty-alignment: 'AlignCenter';
+}
 </string>
                                   </property>
                                   <property name="text">
-                                   <string>Temperatur</string>
+                                   <string>TEMPERATUR</string>
                                   </property>
                                  </widget>
                                 </item>
@@ -1090,7 +1113,7 @@ QLabel {
 }</string>
                                         </property>
                                         <property name="text">
-                                         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Høyre :&lt;br/&gt;&lt;br/&gt;Venstre :&lt;br/&gt;&lt;br/&gt;Vann :&lt;/p&gt;&lt;p&gt;Sensorkort :&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                                         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:16pt;&quot;&gt;Høyre :&lt;br/&gt;&lt;br/&gt;Venstre :&lt;br/&gt;&lt;br/&gt;Vann :&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:16pt;&quot;&gt;Sensorkort :&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                                         </property>
                                        </widget>
                                       </item>
@@ -1347,7 +1370,7 @@ QLabel {
 </string>
                                 </property>
                                 <property name="text">
-                                 <string>Alarm Navn                                                                              Feilkode                                           </string>
+                                 <string>        NAVN PÅ ALARM                                                  FEILKODE                                           </string>
                                 </property>
                                </widget>
                               </widget>
@@ -1782,86 +1805,7 @@ QLabel {
                                 <property name="spacing">
                                  <number>5</number>
                                 </property>
-                                <item row="1" column="0">
-                                 <layout class="QHBoxLayout" name="horizontalLayout_18">
-                                  <item>
-                                   <widget class="QPushButton" name="btnResetThruster">
-                                    <property name="text">
-                                     <string>Venstre side</string>
-                                    </property>
-                                   </widget>
-                                  </item>
-                                  <item>
-                                   <widget class="QPushButton" name="btnResetManipulator">
-                                    <property name="text">
-                                     <string>Høyre Side</string>
-                                    </property>
-                                   </widget>
-                                  </item>
-                                 </layout>
-                                </item>
-                                <item row="0" column="0">
-                                 <widget class="QLabel" name="title_start_videoopptak">
-                                  <property name="maximumSize">
-                                   <size>
-                                    <width>16777215</width>
-                                    <height>16777215</height>
-                                   </size>
-                                  </property>
-                                  <property name="font">
-                                   <font>
-                                    <pointsize>10</pointsize>
-                                    <weight>50</weight>
-                                    <italic>false</italic>
-                                    <bold>false</bold>
-                                   </font>
-                                  </property>
-                                  <property name="styleSheet">
-                                   <string notr="true">QWidget {
-    background-color: #6E6976;
-}
-
-QFrame {
-    background-color: #2E2A33;
-    border: 2px solid #1E90FF;
-    border-radius: 10px;
-}
-
-QPushButton {
-    background-color: #2E2A33;
-    border: 2px solid #1E90FF;
-    border-radius: 10px;
-    color: #FFFFFF;
-    padding: 5px;
-}
-
-QPushButton:hover {
-    background-color: #6E6976;
-    color: #FFFFFF;
-}
-
-QLineEdit {
-    background-color: #2E2A33;
-    border: 2px solid #1E90FF;
-    border-radius: 10px;
-    color: #FFFFFF;
-    padding: 5px;
-}
-
-QLabel {
-    color: #FFFFFF;
-}
-</string>
-                                  </property>
-                                  <property name="text">
-                                   <string>Reset Sikringer</string>
-                                  </property>
-                                  <property name="colorStyle" stdset="0">
-                                   <string>subTitle</string>
-                                  </property>
-                                 </widget>
-                                </item>
-                                <item row="2" column="0">
+                                <item row="7" column="0">
                                  <widget class="QLabel" name="title_start_videoopptak_2">
                                   <property name="maximumSize">
                                    <size>
@@ -1915,14 +1859,76 @@ QLabel {
 </string>
                                   </property>
                                   <property name="text">
-                                   <string>Lys Oppe                                                          Lys Nede</string>
+                                   <string>                 LYS OPPE                                   LYS NEDE</string>
                                   </property>
                                   <property name="colorStyle" stdset="0">
                                    <string>subTitle</string>
                                   </property>
                                  </widget>
                                 </item>
-                                <item row="3" column="0">
+                                <item row="4" column="0">
+                                 <layout class="QHBoxLayout" name="horizontalLayout">
+                                  <item>
+                                   <widget class="QLabel" name="labelDybde">
+                                    <property name="minimumSize">
+                                     <size>
+                                      <width>0</width>
+                                      <height>0</height>
+                                     </size>
+                                    </property>
+                                    <property name="maximumSize">
+                                     <size>
+                                      <width>16777215</width>
+                                      <height>16777215</height>
+                                     </size>
+                                    </property>
+                                    <property name="font">
+                                     <font>
+                                      <pointsize>10</pointsize>
+                                      <weight>50</weight>
+                                      <italic>false</italic>
+                                      <bold>false</bold>
+                                     </font>
+                                    </property>
+                                    <property name="frameShape">
+                                     <enum>QFrame::NoFrame</enum>
+                                    </property>
+                                    <property name="lineWidth">
+                                     <number>0</number>
+                                    </property>
+                                    <property name="midLineWidth">
+                                     <number>0</number>
+                                    </property>
+                                    <property name="text">
+                                     <string/>
+                                    </property>
+                                    <property name="alignment">
+                                     <set>Qt::AlignCenter</set>
+                                    </property>
+                                    <property name="margin">
+                                     <number>0</number>
+                                    </property>
+                                    <property name="labelStyle" stdset="0">
+                                     <string>blackBg</string>
+                                    </property>
+                                    <property name="labelStyle2" stdset="0">
+                                     <string>whiteBg</string>
+                                    </property>
+                                   </widget>
+                                  </item>
+                                  <item>
+                                   <widget class="QPushButton" name="btnNullpunktDybde">
+                                    <property name="text">
+                                     <string>Nullpunkt Dybde</string>
+                                    </property>
+                                   </widget>
+                                  </item>
+                                 </layout>
+                                </item>
+                                <item row="6" column="0">
+                                 <layout class="QHBoxLayout" name="horizontalLayout_18"/>
+                                </item>
+                                <item row="8" column="0">
                                  <layout class="QHBoxLayout" name="horizontalLayout_19">
                                   <item>
                                    <layout class="QVBoxLayout" name="verticalLayout_21">
@@ -2130,6 +2136,304 @@ QSlider::add-page:horizontal {
                                   </item>
                                  </layout>
                                 </item>
+                                <item row="3" column="0">
+                                 <widget class="QLabel" name="title_start_videoopptak_3">
+                                  <property name="maximumSize">
+                                   <size>
+                                    <width>16777215</width>
+                                    <height>16777215</height>
+                                   </size>
+                                  </property>
+                                  <property name="font">
+                                   <font>
+                                    <pointsize>10</pointsize>
+                                    <weight>50</weight>
+                                    <italic>false</italic>
+                                    <bold>false</bold>
+                                   </font>
+                                  </property>
+                                  <property name="styleSheet">
+                                   <string notr="true">QWidget {
+    background-color: #6E6976;
+}
+
+QFrame {
+    background-color: #2E2A33;
+    border: 2px solid #1E90FF;
+    border-radius: 10px;
+}
+
+QPushButton {
+    background-color: #2E2A33;
+    border: 2px solid #1E90FF;
+    border-radius: 10px;
+    color: #FFFFFF;
+    padding: 5px;
+}
+
+QPushButton:hover {
+    background-color: #6E6976;
+    color: #FFFFFF;
+}
+
+QLineEdit {
+    background-color: #2E2A33;
+    border: 2px solid #1E90FF;
+    border-radius: 10px;
+    color: #FFFFFF;
+    padding: 5px;
+}
+
+QLabel {
+    color: #FFFFFF;
+}
+</string>
+                                  </property>
+                                  <property name="text">
+                                   <string>DYBDE</string>
+                                  </property>
+                                  <property name="colorStyle" stdset="0">
+                                   <string>subTitle</string>
+                                  </property>
+                                 </widget>
+                                </item>
+                                <item row="0" column="0">
+                                 <widget class="QLabel" name="title_start_videoopptak_5">
+                                  <property name="minimumSize">
+                                   <size>
+                                    <width>0</width>
+                                    <height>20</height>
+                                   </size>
+                                  </property>
+                                  <property name="maximumSize">
+                                   <size>
+                                    <width>16777215</width>
+                                    <height>20</height>
+                                   </size>
+                                  </property>
+                                  <property name="font">
+                                   <font>
+                                    <pointsize>10</pointsize>
+                                    <weight>50</weight>
+                                    <italic>false</italic>
+                                    <bold>false</bold>
+                                   </font>
+                                  </property>
+                                  <property name="styleSheet">
+                                   <string notr="true">QWidget {
+    background-color: #6E6976;
+}
+
+QFrame {
+    background-color: #2E2A33;
+    border: 2px solid #1E90FF;
+    border-radius: 10px;
+}
+
+QPushButton {
+    background-color: #2E2A33;
+    border: 2px solid #1E90FF;
+    border-radius: 10px;
+    color: #FFFFFF;
+    padding: 5px;
+}
+
+QPushButton:hover {
+    background-color: #6E6976;
+    color: #FFFFFF;
+}
+
+QLineEdit {
+    background-color: #2E2A33;
+    border: 2px solid #1E90FF;
+    border-radius: 10px;
+    color: #FFFFFF;
+    padding: 5px;
+}
+
+QLabel {
+    color: #FFFFFF;
+}
+</string>
+                                  </property>
+                                  <property name="text">
+                                   <string>VINKLER</string>
+                                  </property>
+                                  <property name="colorStyle" stdset="0">
+                                   <string>subTitle</string>
+                                  </property>
+                                 </widget>
+                                </item>
+                                <item row="1" column="0">
+                                 <layout class="QHBoxLayout" name="horizontalLayout_9">
+                                  <item>
+                                   <layout class="QVBoxLayout" name="verticalLayout_10">
+                                    <item>
+                                     <widget class="QLabel" name="vinkel1_2">
+                                      <property name="text">
+                                       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;Rull :&lt;br/&gt;Stamp :&lt;br/&gt;Gir :&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                                      </property>
+                                     </widget>
+                                    </item>
+                                   </layout>
+                                  </item>
+                                  <item>
+                                   <layout class="QVBoxLayout" name="verticalLayout_17">
+                                    <item>
+                                     <widget class="QLabel" name="labelRull">
+                                      <property name="minimumSize">
+                                       <size>
+                                        <width>0</width>
+                                        <height>0</height>
+                                       </size>
+                                      </property>
+                                      <property name="maximumSize">
+                                       <size>
+                                        <width>16777215</width>
+                                        <height>16777215</height>
+                                       </size>
+                                      </property>
+                                      <property name="font">
+                                       <font>
+                                        <pointsize>10</pointsize>
+                                        <weight>50</weight>
+                                        <italic>false</italic>
+                                        <bold>false</bold>
+                                       </font>
+                                      </property>
+                                      <property name="frameShape">
+                                       <enum>QFrame::NoFrame</enum>
+                                      </property>
+                                      <property name="lineWidth">
+                                       <number>0</number>
+                                      </property>
+                                      <property name="midLineWidth">
+                                       <number>0</number>
+                                      </property>
+                                      <property name="text">
+                                       <string/>
+                                      </property>
+                                      <property name="alignment">
+                                       <set>Qt::AlignCenter</set>
+                                      </property>
+                                      <property name="margin">
+                                       <number>0</number>
+                                      </property>
+                                      <property name="labelStyle" stdset="0">
+                                       <string>blackBg</string>
+                                      </property>
+                                      <property name="labelStyle2" stdset="0">
+                                       <string>whiteBg</string>
+                                      </property>
+                                     </widget>
+                                    </item>
+                                    <item>
+                                     <widget class="QLabel" name="labelStamp">
+                                      <property name="minimumSize">
+                                       <size>
+                                        <width>0</width>
+                                        <height>0</height>
+                                       </size>
+                                      </property>
+                                      <property name="maximumSize">
+                                       <size>
+                                        <width>16777215</width>
+                                        <height>16777215</height>
+                                       </size>
+                                      </property>
+                                      <property name="font">
+                                       <font>
+                                        <pointsize>10</pointsize>
+                                        <weight>50</weight>
+                                        <italic>false</italic>
+                                        <bold>false</bold>
+                                       </font>
+                                      </property>
+                                      <property name="frameShape">
+                                       <enum>QFrame::NoFrame</enum>
+                                      </property>
+                                      <property name="lineWidth">
+                                       <number>0</number>
+                                      </property>
+                                      <property name="midLineWidth">
+                                       <number>0</number>
+                                      </property>
+                                      <property name="text">
+                                       <string/>
+                                      </property>
+                                      <property name="alignment">
+                                       <set>Qt::AlignCenter</set>
+                                      </property>
+                                      <property name="margin">
+                                       <number>0</number>
+                                      </property>
+                                      <property name="labelStyle" stdset="0">
+                                       <string>blackBg</string>
+                                      </property>
+                                      <property name="labelStyle2" stdset="0">
+                                       <string>whiteBg</string>
+                                      </property>
+                                     </widget>
+                                    </item>
+                                    <item>
+                                     <widget class="QLabel" name="labelGir">
+                                      <property name="minimumSize">
+                                       <size>
+                                        <width>0</width>
+                                        <height>0</height>
+                                       </size>
+                                      </property>
+                                      <property name="maximumSize">
+                                       <size>
+                                        <width>16777215</width>
+                                        <height>16777215</height>
+                                       </size>
+                                      </property>
+                                      <property name="font">
+                                       <font>
+                                        <pointsize>10</pointsize>
+                                        <weight>50</weight>
+                                        <italic>false</italic>
+                                        <bold>false</bold>
+                                       </font>
+                                      </property>
+                                      <property name="frameShape">
+                                       <enum>QFrame::NoFrame</enum>
+                                      </property>
+                                      <property name="lineWidth">
+                                       <number>0</number>
+                                      </property>
+                                      <property name="midLineWidth">
+                                       <number>0</number>
+                                      </property>
+                                      <property name="text">
+                                       <string/>
+                                      </property>
+                                      <property name="alignment">
+                                       <set>Qt::AlignCenter</set>
+                                      </property>
+                                      <property name="margin">
+                                       <number>0</number>
+                                      </property>
+                                      <property name="labelStyle" stdset="0">
+                                       <string>blackBg</string>
+                                      </property>
+                                      <property name="labelStyle2" stdset="0">
+                                       <string>whiteBg</string>
+                                      </property>
+                                     </widget>
+                                    </item>
+                                   </layout>
+                                  </item>
+                                 </layout>
+                                </item>
+                                <item row="2" column="0">
+                                 <widget class="QPushButton" name="btnNullpunktVinkler">
+                                  <property name="text">
+                                   <string>Nullpunkt Vinkler</string>
+                                  </property>
+                                 </widget>
+                                </item>
                                </layout>
                               </widget>
                              </item>
@@ -2207,6 +2511,12 @@ QLabel {
                              </property>
                              <item>
                               <widget class="QLabel" name="title_motor">
+                               <property name="minimumSize">
+                                <size>
+                                 <width>0</width>
+                                 <height>50</height>
+                                </size>
+                               </property>
                                <property name="font">
                                 <font>
                                  <pointsize>10</pointsize>
@@ -2253,7 +2563,7 @@ QLabel {
 </string>
                                </property>
                                <property name="text">
-                                <string>Kamerafunksjoner                                    Regulering</string>
+                                <string>KAMERAFUNKSJONER                                                  REGULERING</string>
                                </property>
                               </widget>
                              </item>
@@ -2301,7 +2611,7 @@ QLabel {
                                   <item>
                                    <layout class="QVBoxLayout" name="verticalLayout_15">
                                     <item>
-                                     <widget class="QPushButton" name="pushButton_22">
+                                     <widget class="QPushButton" name="btnManuell">
                                       <property name="sizePolicy">
                                        <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
                                         <horstretch>0</horstretch>
@@ -2314,7 +2624,7 @@ QLabel {
                                      </widget>
                                     </item>
                                     <item>
-                                     <widget class="QPushButton" name="pushButton_23">
+                                     <widget class="QPushButton" name="btnAutonom">
                                       <property name="sizePolicy">
                                        <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
                                         <horstretch>0</horstretch>
@@ -2327,7 +2637,7 @@ QLabel {
                                      </widget>
                                     </item>
                                     <item>
-                                     <widget class="QPushButton" name="pushButton_24">
+                                     <widget class="QPushButton" name="btnFrogCount">
                                       <property name="sizePolicy">
                                        <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
                                         <horstretch>0</horstretch>
@@ -2340,7 +2650,7 @@ QLabel {
                                      </widget>
                                     </item>
                                     <item>
-                                     <widget class="QPushButton" name="pushButton_11">
+                                     <widget class="QPushButton" name="btnOpenCamera">
                                       <property name="sizePolicy">
                                        <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
                                         <horstretch>0</horstretch>
@@ -2353,7 +2663,7 @@ QLabel {
                                      </widget>
                                     </item>
                                     <item>
-                                     <widget class="QPushButton" name="pushButton_15">
+                                     <widget class="QPushButton" name="btnTakePic">
                                       <property name="sizePolicy">
                                        <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
                                         <horstretch>0</horstretch>
@@ -2366,20 +2676,7 @@ QLabel {
                                      </widget>
                                     </item>
                                     <item>
-                                     <widget class="QPushButton" name="pushButton_17">
-                                      <property name="sizePolicy">
-                                       <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-                                        <horstretch>0</horstretch>
-                                        <verstretch>0</verstretch>
-                                       </sizepolicy>
-                                      </property>
-                                      <property name="text">
-                                       <string>Vis Bilder</string>
-                                      </property>
-                                     </widget>
-                                    </item>
-                                    <item>
-                                     <widget class="QPushButton" name="pushButton_12">
+                                     <widget class="QPushButton" name="btnRecord">
                                       <property name="sizePolicy">
                                        <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
                                         <horstretch>0</horstretch>
@@ -2388,6 +2685,19 @@ QLabel {
                                       </property>
                                       <property name="text">
                                        <string>Ta opp Video</string>
+                                      </property>
+                                     </widget>
+                                    </item>
+                                    <item>
+                                     <widget class="QPushButton" name="showNewWindowButton">
+                                      <property name="sizePolicy">
+                                       <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                                        <horstretch>0</horstretch>
+                                        <verstretch>0</verstretch>
+                                       </sizepolicy>
+                                      </property>
+                                      <property name="text">
+                                       <string>Vis Bilder</string>
                                       </property>
                                      </widget>
                                     </item>
@@ -2400,7 +2710,20 @@ QLabel {
                                       <item>
                                        <layout class="QHBoxLayout" name="horizontalLayout_15">
                                         <item>
-                                         <widget class="QPushButton" name="pushButton_14">
+                                         <widget class="QPushButton" name="btnRegOn">
+                                          <property name="sizePolicy">
+                                           <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                                            <horstretch>0</horstretch>
+                                            <verstretch>0</verstretch>
+                                           </sizepolicy>
+                                          </property>
+                                          <property name="text">
+                                           <string>All Regulering</string>
+                                          </property>
+                                         </widget>
+                                        </item>
+                                        <item>
+                                         <widget class="QPushButton" name="btnDybdeOn">
                                           <property name="sizePolicy">
                                            <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
                                             <horstretch>0</horstretch>
@@ -2413,7 +2736,7 @@ QLabel {
                                          </widget>
                                         </item>
                                         <item>
-                                         <widget class="QPushButton" name="pushButton_16">
+                                         <widget class="QPushButton" name="btnStampOn">
                                           <property name="sizePolicy">
                                            <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
                                             <horstretch>0</horstretch>
@@ -2426,7 +2749,7 @@ QLabel {
                                          </widget>
                                         </item>
                                         <item>
-                                         <widget class="QPushButton" name="pushButton_18">
+                                         <widget class="QPushButton" name="btnRullOn">
                                           <property name="sizePolicy">
                                            <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
                                             <horstretch>0</horstretch>
@@ -2435,19 +2758,6 @@ QLabel {
                                           </property>
                                           <property name="text">
                                            <string>Rull Regulering</string>
-                                          </property>
-                                         </widget>
-                                        </item>
-                                        <item>
-                                         <widget class="QPushButton" name="pushButton_13">
-                                          <property name="sizePolicy">
-                                           <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-                                            <horstretch>0</horstretch>
-                                            <verstretch>0</verstretch>
-                                           </sizepolicy>
-                                          </property>
-                                          <property name="text">
-                                           <string>All Regulering</string>
                                           </property>
                                          </widget>
                                         </item>
@@ -2508,6 +2818,9 @@ QLineEdit {
 QLabel {
     color: #FFFFFF;
 }
+QLabel {
+  qproperty-alignment: 'AlignCenter';
+}
 </string>
                                               </property>
                                               <property name="text">
@@ -2516,7 +2829,7 @@ QLabel {
                                              </widget>
                                             </item>
                                             <item>
-                                             <spacer name="verticalSpacer_2">
+                                             <spacer name="verticalSpacer">
                                               <property name="orientation">
                                                <enum>Qt::Vertical</enum>
                                               </property>
@@ -2526,23 +2839,29 @@ QLabel {
                                               <property name="sizeHint" stdset="0">
                                                <size>
                                                 <width>20</width>
-                                                <height>1</height>
+                                                <height>30</height>
                                                </size>
                                               </property>
                                              </spacer>
                                             </item>
                                             <item>
-                                             <widget class="QSlider" name="horizontalSlider_4">
+                                             <widget class="QSlider" name="sliderCamVinkel">
                                               <property name="sizePolicy">
                                                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                                                 <horstretch>5</horstretch>
                                                 <verstretch>0</verstretch>
                                                </sizepolicy>
                                               </property>
+                                              <property name="minimumSize">
+                                               <size>
+                                                <width>200</width>
+                                                <height>26</height>
+                                               </size>
+                                              </property>
                                               <property name="maximumSize">
                                                <size>
                                                 <width>16777215</width>
-                                                <height>50</height>
+                                                <height>26</height>
                                                </size>
                                               </property>
                                               <property name="styleSheet">
@@ -2626,7 +2945,7 @@ QSlider::add-page:horizontal {
                                              </widget>
                                             </item>
                                             <item>
-                                             <widget class="QLabel" name="label_9">
+                                             <widget class="QLabel" name="labelKameraVinkel">
                                               <property name="maximumSize">
                                                <size>
                                                 <width>100</width>
@@ -2641,114 +2960,12 @@ QSlider::add-page:horizontal {
                                            </layout>
                                           </item>
                                           <item>
-                                           <layout class="QVBoxLayout" name="verticalLayout_41">
-                                            <item>
-                                             <spacer name="verticalSpacer">
-                                              <property name="orientation">
-                                               <enum>Qt::Vertical</enum>
-                                              </property>
-                                              <property name="sizeType">
-                                               <enum>QSizePolicy::Fixed</enum>
-                                              </property>
-                                              <property name="sizeHint" stdset="0">
-                                               <size>
-                                                <width>20</width>
-                                                <height>3</height>
-                                               </size>
-                                              </property>
-                                             </spacer>
-                                            </item>
-                                            <item>
-                                             <widget class="QLabel" name="label_8">
-                                              <property name="minimumSize">
-                                               <size>
-                                                <width>0</width>
-                                                <height>20</height>
-                                               </size>
-                                              </property>
-                                              <property name="maximumSize">
-                                               <size>
-                                                <width>16777215</width>
-                                                <height>20</height>
-                                               </size>
-                                              </property>
-                                              <property name="styleSheet">
-                                               <string notr="true">QWidget {
-    background-color: #6E6976;
-}
-
-QFrame {
-    background-color: #2E2A33;
-    border: 2px solid #1E90FF;
-    border-radius: 10px;
-}
-
-QPushButton {
-    background-color: #2E2A33;
-    border: 2px solid #1E90FF;
-    border-radius: 10px;
-    color: #FFFFFF;
-    padding: 5px;
-}
-
-QPushButton:hover {
-    background-color: #6E6976;
-    color: #FFFFFF;
-}
-
-QLineEdit {
-    background-color: #2E2A33;
-    border: 2px solid #1E90FF;
-    border-radius: 10px;
-    color: #FFFFFF;
-    padding: 5px;
-}
-
-QLabel {
-    color: #FFFFFF;
-}
-</string>
-                                              </property>
-                                              <property name="text">
-                                               <string>Reset Sikringar</string>
-                                              </property>
-                                             </widget>
-                                            </item>
-                                            <item>
-                                             <widget class="QPushButton" name="pushButton_20">
-                                              <property name="sizePolicy">
-                                               <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-                                                <horstretch>0</horstretch>
-                                                <verstretch>0</verstretch>
-                                               </sizepolicy>
-                                              </property>
-                                              <property name="text">
-                                               <string>Reset Høgre Side</string>
-                                              </property>
-                                             </widget>
-                                            </item>
-                                            <item>
-                                             <widget class="QPushButton" name="pushButton_21">
-                                              <property name="sizePolicy">
-                                               <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-                                                <horstretch>0</horstretch>
-                                                <verstretch>0</verstretch>
-                                               </sizepolicy>
-                                              </property>
-                                              <property name="text">
-                                               <string>Reset Venstre Side</string>
-                                              </property>
-                                             </widget>
-                                            </item>
-                                           </layout>
-                                          </item>
-                                          <item>
                                            <layout class="QVBoxLayout" name="verticalLayout_40">
                                             <item>
                                              <widget class="QLabel" name="label_11">
                                               <property name="minimumSize">
                                                <size>
-                                                <width>1</width>
+                                                <width>260</width>
                                                 <height>20</height>
                                                </size>
                                               </property>
@@ -2793,7 +3010,9 @@ QLineEdit {
 QLabel {
     color: #FFFFFF;
 }
-</string>
+QLabel {
+  qproperty-alignment: 'AlignCenter';
+}</string>
                                               </property>
                                               <property name="text">
                                                <string>Regulator Tuning</string>
@@ -2942,7 +3161,7 @@ QLabel {
 }</string>
                                               </property>
                                               <property name="text">
-                                               <string>Skriv inn verdi:</string>
+                                               <string>Verdi:</string>
                                               </property>
                                              </widget>
                                             </item>
@@ -2996,6 +3215,73 @@ QLabel {
                                </property>
                                <layout class="QVBoxLayout" name="verticalLayout_3">
                                 <item>
+                                 <widget class="QLabel" name="title_start_videoopptak_4">
+                                  <property name="minimumSize">
+                                   <size>
+                                    <width>0</width>
+                                    <height>20</height>
+                                   </size>
+                                  </property>
+                                  <property name="maximumSize">
+                                   <size>
+                                    <width>16777215</width>
+                                    <height>20</height>
+                                   </size>
+                                  </property>
+                                  <property name="font">
+                                   <font>
+                                    <pointsize>10</pointsize>
+                                    <weight>50</weight>
+                                    <italic>false</italic>
+                                    <bold>false</bold>
+                                   </font>
+                                  </property>
+                                  <property name="styleSheet">
+                                   <string notr="true">QWidget {
+    background-color: #6E6976;
+}
+
+QFrame {
+    background-color: #2E2A33;
+    border: 2px solid #1E90FF;
+    border-radius: 10px;
+}
+
+QPushButton {
+    background-color: #2E2A33;
+    border: 2px solid #1E90FF;
+    border-radius: 10px;
+    color: #FFFFFF;
+    padding: 5px;
+}
+
+QPushButton:hover {
+    background-color: #6E6976;
+    color: #FFFFFF;
+}
+
+QLineEdit {
+    background-color: #2E2A33;
+    border: 2px solid #1E90FF;
+    border-radius: 10px;
+    color: #FFFFFF;
+    padding: 5px;
+}
+
+QLabel {
+    color: #FFFFFF;
+}
+</string>
+                                  </property>
+                                  <property name="text">
+                                   <string>KRAFT</string>
+                                  </property>
+                                  <property name="colorStyle" stdset="0">
+                                   <string>subTitle</string>
+                                  </property>
+                                 </widget>
+                                </item>
+                                <item>
                                  <layout class="QHBoxLayout" name="horizontalLayout_10">
                                   <item>
                                    <layout class="QVBoxLayout" name="verticalLayout_11">
@@ -3007,7 +3293,7 @@ QLabel {
 }</string>
                                       </property>
                                       <property name="text">
-                                       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:14pt;&quot;&gt;Høyre :&lt;br/&gt;&lt;br/&gt;&lt;br/&gt;Venstre :&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                                       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:16pt;&quot;&gt;Høyre :&lt;br/&gt;&lt;br/&gt;Venstre :&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                                       </property>
                                      </widget>
                                     </item>
@@ -3016,22 +3302,97 @@ QLabel {
                                   <item>
                                    <layout class="QVBoxLayout" name="verticalLayout_12">
                                     <item>
-                                     <widget class="QLabel" name="label_4">
+                                     <widget class="QLabel" name="labelManipulatorKraft">
                                       <property name="text">
-                                       <string>TextLabel</string>
+                                       <string/>
                                       </property>
                                      </widget>
                                     </item>
                                     <item>
-                                     <widget class="QLabel" name="label_2">
+                                     <widget class="QLabel" name="labelThrusterKraft">
                                       <property name="text">
-                                       <string>TextLabel</string>
+                                       <string/>
                                       </property>
                                      </widget>
                                     </item>
                                    </layout>
                                   </item>
                                  </layout>
+                                </item>
+                                <item>
+                                 <widget class="QLabel" name="title_start_videoopptak">
+                                  <property name="maximumSize">
+                                   <size>
+                                    <width>16777215</width>
+                                    <height>16777215</height>
+                                   </size>
+                                  </property>
+                                  <property name="font">
+                                   <font>
+                                    <pointsize>10</pointsize>
+                                    <weight>50</weight>
+                                    <italic>false</italic>
+                                    <bold>false</bold>
+                                   </font>
+                                  </property>
+                                  <property name="styleSheet">
+                                   <string notr="true">QWidget {
+    background-color: #6E6976;
+}
+
+QFrame {
+    background-color: #2E2A33;
+    border: 2px solid #1E90FF;
+    border-radius: 10px;
+}
+
+QPushButton {
+    background-color: #2E2A33;
+    border: 2px solid #1E90FF;
+    border-radius: 10px;
+    color: #FFFFFF;
+    padding: 5px;
+}
+
+QPushButton:hover {
+    background-color: #6E6976;
+    color: #FFFFFF;
+}
+
+QLineEdit {
+    background-color: #2E2A33;
+    border: 2px solid #1E90FF;
+    border-radius: 10px;
+    color: #FFFFFF;
+    padding: 5px;
+}
+
+QLabel {
+    color: #FFFFFF;
+}
+</string>
+                                  </property>
+                                  <property name="text">
+                                   <string>RESET SIKRINGER</string>
+                                  </property>
+                                  <property name="colorStyle" stdset="0">
+                                   <string>subTitle</string>
+                                  </property>
+                                 </widget>
+                                </item>
+                                <item>
+                                 <widget class="QPushButton" name="btnResetManipulator">
+                                  <property name="text">
+                                   <string>Høyre Side</string>
+                                  </property>
+                                 </widget>
+                                </item>
+                                <item>
+                                 <widget class="QPushButton" name="btnResetThruster">
+                                  <property name="text">
+                                   <string>Venstre side</string>
+                                  </property>
+                                 </widget>
                                 </item>
                                </layout>
                               </widget>
@@ -3158,7 +3519,7 @@ QLabel {
   </widget>
  </widget>
  <resources>
-  <include location="../resources.qrc"/>
+  <include location="../images/resources.qrc"/>
  </resources>
  <connections/>
 </ui>

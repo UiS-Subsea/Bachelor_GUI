@@ -13,7 +13,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.setWindowModality(QtCore.Qt.WindowModality.NonModal)
-        MainWindow.resize(1483, 930)
+        MainWindow.resize(1462, 930)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Preferred, QtWidgets.QSizePolicy.Policy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -169,7 +169,7 @@ class Ui_MainWindow(object):
         self.column1Layout.setSpacing(5)
         self.column1Layout.setObjectName("column1Layout")
         self.title_kjoremodus = QtWidgets.QLabel(self.column1)
-        self.title_kjoremodus.setMinimumSize(QtCore.QSize(0, 0))
+        self.title_kjoremodus.setMinimumSize(QtCore.QSize(351, 0))
         self.title_kjoremodus.setMaximumSize(QtCore.QSize(100, 50))
         font = QtGui.QFont()
         font.setPointSize(10)
@@ -210,6 +210,10 @@ class Ui_MainWindow(object):
 "\n"
 "QLabel {\n"
 "    color: #FFFFFF;\n"
+"}\n"
+"\n"
+"QLabel {\n"
+"  qproperty-alignment: \'AlignCenter\';\n"
 "}\n"
 "")
         self.title_kjoremodus.setObjectName("title_kjoremodus")
@@ -282,17 +286,17 @@ class Ui_MainWindow(object):
         self.label_20.setMinimumSize(QtCore.QSize(351, 359))
         self.label_20.setMaximumSize(QtCore.QSize(351, 359))
         self.label_20.setText("")
-        self.label_20.setPixmap(QtGui.QPixmap(":/rov/E:/image.png"))
+        self.label_20.setPixmap(QtGui.QPixmap(":/rov/image.png"))
         self.label_20.setScaledContents(True)
         self.label_20.setObjectName("label_20")
-        self.labelVVF_3 = QtWidgets.QLabel(self.frame_2)
-        self.labelVVF_3.setGeometry(QtCore.QRect(0, 20, 41, 31))
+        self.labelVVF = QtWidgets.QLabel(self.frame_2)
+        self.labelVVF.setGeometry(QtCore.QRect(0, 20, 41, 31))
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Expanding)
         sizePolicy.setHorizontalStretch(5)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.labelVVF_3.sizePolicy().hasHeightForWidth())
-        self.labelVVF_3.setSizePolicy(sizePolicy)
-        self.labelVVF_3.setStyleSheet("QWidget {\n"
+        sizePolicy.setHeightForWidth(self.labelVVF.sizePolicy().hasHeightForWidth())
+        self.labelVVF.setSizePolicy(sizePolicy)
+        self.labelVVF.setStyleSheet("QWidget {\n"
 "    background-color: #6E6976;\n"
 "}\n"
 "\n"
@@ -327,15 +331,15 @@ class Ui_MainWindow(object):
 "    color: #FFFFFF;\n"
 "}\n"
 "")
-        self.labelVVF_3.setObjectName("labelVVF_3")
-        self.labelVHF_3 = QtWidgets.QLabel(self.frame_2)
-        self.labelVHF_3.setGeometry(QtCore.QRect(300, 20, 41, 31))
+        self.labelVVF.setObjectName("labelVVF")
+        self.labelVHF = QtWidgets.QLabel(self.frame_2)
+        self.labelVHF.setGeometry(QtCore.QRect(300, 20, 41, 31))
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Expanding)
         sizePolicy.setHorizontalStretch(5)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.labelVHF_3.sizePolicy().hasHeightForWidth())
-        self.labelVHF_3.setSizePolicy(sizePolicy)
-        self.labelVHF_3.setStyleSheet("QWidget {\n"
+        sizePolicy.setHeightForWidth(self.labelVHF.sizePolicy().hasHeightForWidth())
+        self.labelVHF.setSizePolicy(sizePolicy)
+        self.labelVHF.setStyleSheet("QWidget {\n"
 "    background-color: #6E6976;\n"
 "}\n"
 "\n"
@@ -370,15 +374,15 @@ class Ui_MainWindow(object):
 "    color: #FFFFFF;\n"
 "}\n"
 "")
-        self.labelVHF_3.setObjectName("labelVHF_3")
-        self.labelHHF_3 = QtWidgets.QLabel(self.frame_2)
-        self.labelHHF_3.setGeometry(QtCore.QRect(220, 70, 41, 31))
+        self.labelVHF.setObjectName("labelVHF")
+        self.labelHHF = QtWidgets.QLabel(self.frame_2)
+        self.labelHHF.setGeometry(QtCore.QRect(220, 70, 41, 31))
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Expanding)
         sizePolicy.setHorizontalStretch(5)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.labelHHF_3.sizePolicy().hasHeightForWidth())
-        self.labelHHF_3.setSizePolicy(sizePolicy)
-        self.labelHHF_3.setStyleSheet("QWidget {\n"
+        sizePolicy.setHeightForWidth(self.labelHHF.sizePolicy().hasHeightForWidth())
+        self.labelHHF.setSizePolicy(sizePolicy)
+        self.labelHHF.setStyleSheet("QWidget {\n"
 "    background-color: #6E6976;\n"
 "}\n"
 "\n"
@@ -413,15 +417,15 @@ class Ui_MainWindow(object):
 "    color: #FFFFFF;\n"
 "}\n"
 "")
-        self.labelHHF_3.setObjectName("labelHHF_3")
-        self.labelHHB_3 = QtWidgets.QLabel(self.frame_2)
-        self.labelHHB_3.setGeometry(QtCore.QRect(220, 160, 41, 31))
+        self.labelHHF.setObjectName("labelHHF")
+        self.labelHHB = QtWidgets.QLabel(self.frame_2)
+        self.labelHHB.setGeometry(QtCore.QRect(220, 160, 41, 31))
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Expanding)
         sizePolicy.setHorizontalStretch(5)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.labelHHB_3.sizePolicy().hasHeightForWidth())
-        self.labelHHB_3.setSizePolicy(sizePolicy)
-        self.labelHHB_3.setStyleSheet("QWidget {\n"
+        sizePolicy.setHeightForWidth(self.labelHHB.sizePolicy().hasHeightForWidth())
+        self.labelHHB.setSizePolicy(sizePolicy)
+        self.labelHHB.setStyleSheet("QWidget {\n"
 "    background-color: #6E6976;\n"
 "}\n"
 "\n"
@@ -456,15 +460,15 @@ class Ui_MainWindow(object):
 "    color: #FFFFFF;\n"
 "}\n"
 "")
-        self.labelHHB_3.setObjectName("labelHHB_3")
-        self.labelVHB_3 = QtWidgets.QLabel(self.frame_2)
-        self.labelVHB_3.setGeometry(QtCore.QRect(290, 230, 41, 31))
+        self.labelHHB.setObjectName("labelHHB")
+        self.labelVHB = QtWidgets.QLabel(self.frame_2)
+        self.labelVHB.setGeometry(QtCore.QRect(290, 230, 41, 31))
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Expanding)
         sizePolicy.setHorizontalStretch(5)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.labelVHB_3.sizePolicy().hasHeightForWidth())
-        self.labelVHB_3.setSizePolicy(sizePolicy)
-        self.labelVHB_3.setStyleSheet("QWidget {\n"
+        sizePolicy.setHeightForWidth(self.labelVHB.sizePolicy().hasHeightForWidth())
+        self.labelVHB.setSizePolicy(sizePolicy)
+        self.labelVHB.setStyleSheet("QWidget {\n"
 "    background-color: #6E6976;\n"
 "}\n"
 "\n"
@@ -499,15 +503,15 @@ class Ui_MainWindow(object):
 "    color: #FFFFFF;\n"
 "}\n"
 "")
-        self.labelVHB_3.setObjectName("labelVHB_3")
-        self.labelVVB_3 = QtWidgets.QLabel(self.frame_2)
-        self.labelVVB_3.setGeometry(QtCore.QRect(10, 230, 41, 31))
+        self.labelVHB.setObjectName("labelVHB")
+        self.labelVVB = QtWidgets.QLabel(self.frame_2)
+        self.labelVVB.setGeometry(QtCore.QRect(10, 230, 41, 31))
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Expanding)
         sizePolicy.setHorizontalStretch(5)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.labelVVB_3.sizePolicy().hasHeightForWidth())
-        self.labelVVB_3.setSizePolicy(sizePolicy)
-        self.labelVVB_3.setStyleSheet("QWidget {\n"
+        sizePolicy.setHeightForWidth(self.labelVVB.sizePolicy().hasHeightForWidth())
+        self.labelVVB.setSizePolicy(sizePolicy)
+        self.labelVVB.setStyleSheet("QWidget {\n"
 "    background-color: #6E6976;\n"
 "}\n"
 "\n"
@@ -542,15 +546,15 @@ class Ui_MainWindow(object):
 "    color: #FFFFFF;\n"
 "}\n"
 "")
-        self.labelVVB_3.setObjectName("labelVVB_3")
-        self.labelHVB_3 = QtWidgets.QLabel(self.frame_2)
-        self.labelHVB_3.setGeometry(QtCore.QRect(80, 160, 41, 31))
+        self.labelVVB.setObjectName("labelVVB")
+        self.labelHVB = QtWidgets.QLabel(self.frame_2)
+        self.labelHVB.setGeometry(QtCore.QRect(80, 160, 41, 31))
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Expanding)
         sizePolicy.setHorizontalStretch(5)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.labelHVB_3.sizePolicy().hasHeightForWidth())
-        self.labelHVB_3.setSizePolicy(sizePolicy)
-        self.labelHVB_3.setStyleSheet("QWidget {\n"
+        sizePolicy.setHeightForWidth(self.labelHVB.sizePolicy().hasHeightForWidth())
+        self.labelHVB.setSizePolicy(sizePolicy)
+        self.labelHVB.setStyleSheet("QWidget {\n"
 "    background-color: #6E6976;\n"
 "}\n"
 "\n"
@@ -585,15 +589,15 @@ class Ui_MainWindow(object):
 "    color: #FFFFFF;\n"
 "}\n"
 "")
-        self.labelHVB_3.setObjectName("labelHVB_3")
-        self.labelHVF_3 = QtWidgets.QLabel(self.frame_2)
-        self.labelHVF_3.setGeometry(QtCore.QRect(80, 70, 41, 31))
+        self.labelHVB.setObjectName("labelHVB")
+        self.labelHVF = QtWidgets.QLabel(self.frame_2)
+        self.labelHVF.setGeometry(QtCore.QRect(80, 70, 41, 31))
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.Expanding)
         sizePolicy.setHorizontalStretch(5)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.labelHVF_3.sizePolicy().hasHeightForWidth())
-        self.labelHVF_3.setSizePolicy(sizePolicy)
-        self.labelHVF_3.setStyleSheet("QWidget {\n"
+        sizePolicy.setHeightForWidth(self.labelHVF.sizePolicy().hasHeightForWidth())
+        self.labelHVF.setSizePolicy(sizePolicy)
+        self.labelHVF.setStyleSheet("QWidget {\n"
 "    background-color: #6E6976;\n"
 "}\n"
 "\n"
@@ -628,8 +632,20 @@ class Ui_MainWindow(object):
 "    color: #FFFFFF;\n"
 "}\n"
 "")
-        self.labelHVF_3.setObjectName("labelHVF_3")
+        self.labelHVF.setObjectName("labelHVF")
+        self.label_20.raise_()
+        self.labelHHB.raise_()
+        self.labelVVF.raise_()
+        self.labelHVF.raise_()
+        self.labelHHF.raise_()
+        self.labelVHF.raise_()
+        self.labelVHB.raise_()
+        self.labelHVB.raise_()
+        self.labelVVB.raise_()
         self.kjoremodusLayout.addWidget(self.frame_2)
+        self.btnKalibrerIMU = QtWidgets.QPushButton(self.frame)
+        self.btnKalibrerIMU.setObjectName("btnKalibrerIMU")
+        self.kjoremodusLayout.addWidget(self.btnKalibrerIMU)
         self.title_kjoremodus_2 = QtWidgets.QLabel(self.frame)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Fixed)
         sizePolicy.setHorizontalStretch(0)
@@ -677,6 +693,9 @@ class Ui_MainWindow(object):
 "\n"
 "QLabel {\n"
 "    color: #FFFFFF;\n"
+"}\n"
+"QLabel {\n"
+"  qproperty-alignment: \'AlignCenter\';\n"
 "}\n"
 "")
         self.title_kjoremodus_2.setObjectName("title_kjoremodus_2")
@@ -1088,60 +1107,6 @@ class Ui_MainWindow(object):
         self.kameraGrid.setSizeConstraint(QtWidgets.QLayout.SizeConstraint.SetDefaultConstraint)
         self.kameraGrid.setSpacing(5)
         self.kameraGrid.setObjectName("kameraGrid")
-        self.horizontalLayout_18 = QtWidgets.QHBoxLayout()
-        self.horizontalLayout_18.setObjectName("horizontalLayout_18")
-        self.btnResetThruster = QtWidgets.QPushButton(self.videooptakFrame)
-        self.btnResetThruster.setObjectName("btnResetThruster")
-        self.horizontalLayout_18.addWidget(self.btnResetThruster)
-        self.btnResetManipulator = QtWidgets.QPushButton(self.videooptakFrame)
-        self.btnResetManipulator.setObjectName("btnResetManipulator")
-        self.horizontalLayout_18.addWidget(self.btnResetManipulator)
-        self.kameraGrid.addLayout(self.horizontalLayout_18, 1, 0, 1, 1)
-        self.title_start_videoopptak = QtWidgets.QLabel(self.videooptakFrame)
-        self.title_start_videoopptak.setMaximumSize(QtCore.QSize(16777215, 16777215))
-        font = QtGui.QFont()
-        font.setPointSize(10)
-        font.setBold(False)
-        font.setItalic(False)
-        font.setWeight(50)
-        self.title_start_videoopptak.setFont(font)
-        self.title_start_videoopptak.setStyleSheet("QWidget {\n"
-"    background-color: #6E6976;\n"
-"}\n"
-"\n"
-"QFrame {\n"
-"    background-color: #2E2A33;\n"
-"    border: 2px solid #1E90FF;\n"
-"    border-radius: 10px;\n"
-"}\n"
-"\n"
-"QPushButton {\n"
-"    background-color: #2E2A33;\n"
-"    border: 2px solid #1E90FF;\n"
-"    border-radius: 10px;\n"
-"    color: #FFFFFF;\n"
-"    padding: 5px;\n"
-"}\n"
-"\n"
-"QPushButton:hover {\n"
-"    background-color: #6E6976;\n"
-"    color: #FFFFFF;\n"
-"}\n"
-"\n"
-"QLineEdit {\n"
-"    background-color: #2E2A33;\n"
-"    border: 2px solid #1E90FF;\n"
-"    border-radius: 10px;\n"
-"    color: #FFFFFF;\n"
-"    padding: 5px;\n"
-"}\n"
-"\n"
-"QLabel {\n"
-"    color: #FFFFFF;\n"
-"}\n"
-"")
-        self.title_start_videoopptak.setObjectName("title_start_videoopptak")
-        self.kameraGrid.addWidget(self.title_start_videoopptak, 0, 0, 1, 1)
         self.title_start_videoopptak_2 = QtWidgets.QLabel(self.videooptakFrame)
         self.title_start_videoopptak_2.setMaximumSize(QtCore.QSize(16777215, 16777215))
         font = QtGui.QFont()
@@ -1186,7 +1151,32 @@ class Ui_MainWindow(object):
 "}\n"
 "")
         self.title_start_videoopptak_2.setObjectName("title_start_videoopptak_2")
-        self.kameraGrid.addWidget(self.title_start_videoopptak_2, 2, 0, 1, 1)
+        self.kameraGrid.addWidget(self.title_start_videoopptak_2, 7, 0, 1, 1)
+        self.horizontalLayout = QtWidgets.QHBoxLayout()
+        self.horizontalLayout.setObjectName("horizontalLayout")
+        self.labelDybde = QtWidgets.QLabel(self.videooptakFrame)
+        self.labelDybde.setMinimumSize(QtCore.QSize(0, 0))
+        self.labelDybde.setMaximumSize(QtCore.QSize(16777215, 16777215))
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        font.setBold(False)
+        font.setItalic(False)
+        font.setWeight(50)
+        self.labelDybde.setFont(font)
+        self.labelDybde.setFrameShape(QtWidgets.QFrame.Shape.NoFrame)
+        self.labelDybde.setLineWidth(0)
+        self.labelDybde.setMidLineWidth(0)
+        self.labelDybde.setText("")
+        self.labelDybde.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
+        self.labelDybde.setObjectName("labelDybde")
+        self.horizontalLayout.addWidget(self.labelDybde)
+        self.btnNullpunktDybde = QtWidgets.QPushButton(self.videooptakFrame)
+        self.btnNullpunktDybde.setObjectName("btnNullpunktDybde")
+        self.horizontalLayout.addWidget(self.btnNullpunktDybde)
+        self.kameraGrid.addLayout(self.horizontalLayout, 4, 0, 1, 1)
+        self.horizontalLayout_18 = QtWidgets.QHBoxLayout()
+        self.horizontalLayout_18.setObjectName("horizontalLayout_18")
+        self.kameraGrid.addLayout(self.horizontalLayout_18, 6, 0, 1, 1)
         self.horizontalLayout_19 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_19.setObjectName("horizontalLayout_19")
         self.verticalLayout_21 = QtWidgets.QVBoxLayout()
@@ -1369,7 +1359,161 @@ class Ui_MainWindow(object):
         self.slider_lys_down.setObjectName("slider_lys_down")
         self.verticalLayout_23.addWidget(self.slider_lys_down)
         self.horizontalLayout_19.addLayout(self.verticalLayout_23)
-        self.kameraGrid.addLayout(self.horizontalLayout_19, 3, 0, 1, 1)
+        self.kameraGrid.addLayout(self.horizontalLayout_19, 8, 0, 1, 1)
+        self.title_start_videoopptak_3 = QtWidgets.QLabel(self.videooptakFrame)
+        self.title_start_videoopptak_3.setMaximumSize(QtCore.QSize(16777215, 16777215))
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        font.setBold(False)
+        font.setItalic(False)
+        font.setWeight(50)
+        self.title_start_videoopptak_3.setFont(font)
+        self.title_start_videoopptak_3.setStyleSheet("QWidget {\n"
+"    background-color: #6E6976;\n"
+"}\n"
+"\n"
+"QFrame {\n"
+"    background-color: #2E2A33;\n"
+"    border: 2px solid #1E90FF;\n"
+"    border-radius: 10px;\n"
+"}\n"
+"\n"
+"QPushButton {\n"
+"    background-color: #2E2A33;\n"
+"    border: 2px solid #1E90FF;\n"
+"    border-radius: 10px;\n"
+"    color: #FFFFFF;\n"
+"    padding: 5px;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"    background-color: #6E6976;\n"
+"    color: #FFFFFF;\n"
+"}\n"
+"\n"
+"QLineEdit {\n"
+"    background-color: #2E2A33;\n"
+"    border: 2px solid #1E90FF;\n"
+"    border-radius: 10px;\n"
+"    color: #FFFFFF;\n"
+"    padding: 5px;\n"
+"}\n"
+"\n"
+"QLabel {\n"
+"    color: #FFFFFF;\n"
+"}\n"
+"")
+        self.title_start_videoopptak_3.setObjectName("title_start_videoopptak_3")
+        self.kameraGrid.addWidget(self.title_start_videoopptak_3, 3, 0, 1, 1)
+        self.title_start_videoopptak_5 = QtWidgets.QLabel(self.videooptakFrame)
+        self.title_start_videoopptak_5.setMinimumSize(QtCore.QSize(0, 20))
+        self.title_start_videoopptak_5.setMaximumSize(QtCore.QSize(16777215, 20))
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        font.setBold(False)
+        font.setItalic(False)
+        font.setWeight(50)
+        self.title_start_videoopptak_5.setFont(font)
+        self.title_start_videoopptak_5.setStyleSheet("QWidget {\n"
+"    background-color: #6E6976;\n"
+"}\n"
+"\n"
+"QFrame {\n"
+"    background-color: #2E2A33;\n"
+"    border: 2px solid #1E90FF;\n"
+"    border-radius: 10px;\n"
+"}\n"
+"\n"
+"QPushButton {\n"
+"    background-color: #2E2A33;\n"
+"    border: 2px solid #1E90FF;\n"
+"    border-radius: 10px;\n"
+"    color: #FFFFFF;\n"
+"    padding: 5px;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"    background-color: #6E6976;\n"
+"    color: #FFFFFF;\n"
+"}\n"
+"\n"
+"QLineEdit {\n"
+"    background-color: #2E2A33;\n"
+"    border: 2px solid #1E90FF;\n"
+"    border-radius: 10px;\n"
+"    color: #FFFFFF;\n"
+"    padding: 5px;\n"
+"}\n"
+"\n"
+"QLabel {\n"
+"    color: #FFFFFF;\n"
+"}\n"
+"")
+        self.title_start_videoopptak_5.setObjectName("title_start_videoopptak_5")
+        self.kameraGrid.addWidget(self.title_start_videoopptak_5, 0, 0, 1, 1)
+        self.horizontalLayout_9 = QtWidgets.QHBoxLayout()
+        self.horizontalLayout_9.setObjectName("horizontalLayout_9")
+        self.verticalLayout_10 = QtWidgets.QVBoxLayout()
+        self.verticalLayout_10.setObjectName("verticalLayout_10")
+        self.vinkel1_2 = QtWidgets.QLabel(self.videooptakFrame)
+        self.vinkel1_2.setObjectName("vinkel1_2")
+        self.verticalLayout_10.addWidget(self.vinkel1_2)
+        self.horizontalLayout_9.addLayout(self.verticalLayout_10)
+        self.verticalLayout_17 = QtWidgets.QVBoxLayout()
+        self.verticalLayout_17.setObjectName("verticalLayout_17")
+        self.labelRull = QtWidgets.QLabel(self.videooptakFrame)
+        self.labelRull.setMinimumSize(QtCore.QSize(0, 0))
+        self.labelRull.setMaximumSize(QtCore.QSize(16777215, 16777215))
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        font.setBold(False)
+        font.setItalic(False)
+        font.setWeight(50)
+        self.labelRull.setFont(font)
+        self.labelRull.setFrameShape(QtWidgets.QFrame.Shape.NoFrame)
+        self.labelRull.setLineWidth(0)
+        self.labelRull.setMidLineWidth(0)
+        self.labelRull.setText("")
+        self.labelRull.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
+        self.labelRull.setObjectName("labelRull")
+        self.verticalLayout_17.addWidget(self.labelRull)
+        self.labelStamp = QtWidgets.QLabel(self.videooptakFrame)
+        self.labelStamp.setMinimumSize(QtCore.QSize(0, 0))
+        self.labelStamp.setMaximumSize(QtCore.QSize(16777215, 16777215))
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        font.setBold(False)
+        font.setItalic(False)
+        font.setWeight(50)
+        self.labelStamp.setFont(font)
+        self.labelStamp.setFrameShape(QtWidgets.QFrame.Shape.NoFrame)
+        self.labelStamp.setLineWidth(0)
+        self.labelStamp.setMidLineWidth(0)
+        self.labelStamp.setText("")
+        self.labelStamp.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
+        self.labelStamp.setObjectName("labelStamp")
+        self.verticalLayout_17.addWidget(self.labelStamp)
+        self.labelGir = QtWidgets.QLabel(self.videooptakFrame)
+        self.labelGir.setMinimumSize(QtCore.QSize(0, 0))
+        self.labelGir.setMaximumSize(QtCore.QSize(16777215, 16777215))
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        font.setBold(False)
+        font.setItalic(False)
+        font.setWeight(50)
+        self.labelGir.setFont(font)
+        self.labelGir.setFrameShape(QtWidgets.QFrame.Shape.NoFrame)
+        self.labelGir.setLineWidth(0)
+        self.labelGir.setMidLineWidth(0)
+        self.labelGir.setText("")
+        self.labelGir.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
+        self.labelGir.setObjectName("labelGir")
+        self.verticalLayout_17.addWidget(self.labelGir)
+        self.horizontalLayout_9.addLayout(self.verticalLayout_17)
+        self.kameraGrid.addLayout(self.horizontalLayout_9, 1, 0, 1, 1)
+        self.btnNullpunktVinkler = QtWidgets.QPushButton(self.videooptakFrame)
+        self.btnNullpunktVinkler.setObjectName("btnNullpunktVinkler")
+        self.kameraGrid.addWidget(self.btnNullpunktVinkler, 2, 0, 1, 1)
         self.column3Layout.addWidget(self.videooptakFrame)
         self.horizontalLayout_6.addWidget(self.column3)
         self.column2 = QtWidgets.QFrame(self.row)
@@ -1424,6 +1568,7 @@ class Ui_MainWindow(object):
         self.column2Layout.setSpacing(5)
         self.column2Layout.setObjectName("column2Layout")
         self.title_motor = QtWidgets.QLabel(self.column2)
+        self.title_motor.setMinimumSize(QtCore.QSize(0, 50))
         font = QtGui.QFont()
         font.setPointSize(10)
         font.setBold(False)
@@ -1485,62 +1630,62 @@ class Ui_MainWindow(object):
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
         self.verticalLayout_15 = QtWidgets.QVBoxLayout()
         self.verticalLayout_15.setObjectName("verticalLayout_15")
-        self.pushButton_22 = QtWidgets.QPushButton(self.motorOuterContainer)
+        self.btnManuell = QtWidgets.QPushButton(self.motorOuterContainer)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Minimum)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.pushButton_22.sizePolicy().hasHeightForWidth())
-        self.pushButton_22.setSizePolicy(sizePolicy)
-        self.pushButton_22.setObjectName("pushButton_22")
-        self.verticalLayout_15.addWidget(self.pushButton_22)
-        self.pushButton_23 = QtWidgets.QPushButton(self.motorOuterContainer)
+        sizePolicy.setHeightForWidth(self.btnManuell.sizePolicy().hasHeightForWidth())
+        self.btnManuell.setSizePolicy(sizePolicy)
+        self.btnManuell.setObjectName("btnManuell")
+        self.verticalLayout_15.addWidget(self.btnManuell)
+        self.btnAutonom = QtWidgets.QPushButton(self.motorOuterContainer)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Minimum)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.pushButton_23.sizePolicy().hasHeightForWidth())
-        self.pushButton_23.setSizePolicy(sizePolicy)
-        self.pushButton_23.setObjectName("pushButton_23")
-        self.verticalLayout_15.addWidget(self.pushButton_23)
-        self.pushButton_24 = QtWidgets.QPushButton(self.motorOuterContainer)
+        sizePolicy.setHeightForWidth(self.btnAutonom.sizePolicy().hasHeightForWidth())
+        self.btnAutonom.setSizePolicy(sizePolicy)
+        self.btnAutonom.setObjectName("btnAutonom")
+        self.verticalLayout_15.addWidget(self.btnAutonom)
+        self.btnFrogCount = QtWidgets.QPushButton(self.motorOuterContainer)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Minimum)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.pushButton_24.sizePolicy().hasHeightForWidth())
-        self.pushButton_24.setSizePolicy(sizePolicy)
-        self.pushButton_24.setObjectName("pushButton_24")
-        self.verticalLayout_15.addWidget(self.pushButton_24)
-        self.pushButton_11 = QtWidgets.QPushButton(self.motorOuterContainer)
+        sizePolicy.setHeightForWidth(self.btnFrogCount.sizePolicy().hasHeightForWidth())
+        self.btnFrogCount.setSizePolicy(sizePolicy)
+        self.btnFrogCount.setObjectName("btnFrogCount")
+        self.verticalLayout_15.addWidget(self.btnFrogCount)
+        self.btnOpenCamera = QtWidgets.QPushButton(self.motorOuterContainer)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Minimum)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.pushButton_11.sizePolicy().hasHeightForWidth())
-        self.pushButton_11.setSizePolicy(sizePolicy)
-        self.pushButton_11.setObjectName("pushButton_11")
-        self.verticalLayout_15.addWidget(self.pushButton_11)
-        self.pushButton_15 = QtWidgets.QPushButton(self.motorOuterContainer)
+        sizePolicy.setHeightForWidth(self.btnOpenCamera.sizePolicy().hasHeightForWidth())
+        self.btnOpenCamera.setSizePolicy(sizePolicy)
+        self.btnOpenCamera.setObjectName("btnOpenCamera")
+        self.verticalLayout_15.addWidget(self.btnOpenCamera)
+        self.btnTakePic = QtWidgets.QPushButton(self.motorOuterContainer)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Minimum)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.pushButton_15.sizePolicy().hasHeightForWidth())
-        self.pushButton_15.setSizePolicy(sizePolicy)
-        self.pushButton_15.setObjectName("pushButton_15")
-        self.verticalLayout_15.addWidget(self.pushButton_15)
-        self.pushButton_17 = QtWidgets.QPushButton(self.motorOuterContainer)
+        sizePolicy.setHeightForWidth(self.btnTakePic.sizePolicy().hasHeightForWidth())
+        self.btnTakePic.setSizePolicy(sizePolicy)
+        self.btnTakePic.setObjectName("btnTakePic")
+        self.verticalLayout_15.addWidget(self.btnTakePic)
+        self.btnRecord = QtWidgets.QPushButton(self.motorOuterContainer)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Minimum)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.pushButton_17.sizePolicy().hasHeightForWidth())
-        self.pushButton_17.setSizePolicy(sizePolicy)
-        self.pushButton_17.setObjectName("pushButton_17")
-        self.verticalLayout_15.addWidget(self.pushButton_17)
-        self.pushButton_12 = QtWidgets.QPushButton(self.motorOuterContainer)
+        sizePolicy.setHeightForWidth(self.btnRecord.sizePolicy().hasHeightForWidth())
+        self.btnRecord.setSizePolicy(sizePolicy)
+        self.btnRecord.setObjectName("btnRecord")
+        self.verticalLayout_15.addWidget(self.btnRecord)
+        self.showNewWindowButton = QtWidgets.QPushButton(self.motorOuterContainer)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Minimum)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.pushButton_12.sizePolicy().hasHeightForWidth())
-        self.pushButton_12.setSizePolicy(sizePolicy)
-        self.pushButton_12.setObjectName("pushButton_12")
-        self.verticalLayout_15.addWidget(self.pushButton_12)
+        sizePolicy.setHeightForWidth(self.showNewWindowButton.sizePolicy().hasHeightForWidth())
+        self.showNewWindowButton.setSizePolicy(sizePolicy)
+        self.showNewWindowButton.setObjectName("showNewWindowButton")
+        self.verticalLayout_15.addWidget(self.showNewWindowButton)
         self.horizontalLayout_2.addLayout(self.verticalLayout_15)
         self.verticalLayout_16 = QtWidgets.QVBoxLayout()
         self.verticalLayout_16.setObjectName("verticalLayout_16")
@@ -1548,38 +1693,38 @@ class Ui_MainWindow(object):
         self.verticalLayout_34.setObjectName("verticalLayout_34")
         self.horizontalLayout_15 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_15.setObjectName("horizontalLayout_15")
-        self.pushButton_14 = QtWidgets.QPushButton(self.motorOuterContainer)
+        self.btnRegOn = QtWidgets.QPushButton(self.motorOuterContainer)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Minimum)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.pushButton_14.sizePolicy().hasHeightForWidth())
-        self.pushButton_14.setSizePolicy(sizePolicy)
-        self.pushButton_14.setObjectName("pushButton_14")
-        self.horizontalLayout_15.addWidget(self.pushButton_14)
-        self.pushButton_16 = QtWidgets.QPushButton(self.motorOuterContainer)
+        sizePolicy.setHeightForWidth(self.btnRegOn.sizePolicy().hasHeightForWidth())
+        self.btnRegOn.setSizePolicy(sizePolicy)
+        self.btnRegOn.setObjectName("btnRegOn")
+        self.horizontalLayout_15.addWidget(self.btnRegOn)
+        self.btnDybdeOn = QtWidgets.QPushButton(self.motorOuterContainer)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Minimum)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.pushButton_16.sizePolicy().hasHeightForWidth())
-        self.pushButton_16.setSizePolicy(sizePolicy)
-        self.pushButton_16.setObjectName("pushButton_16")
-        self.horizontalLayout_15.addWidget(self.pushButton_16)
-        self.pushButton_18 = QtWidgets.QPushButton(self.motorOuterContainer)
+        sizePolicy.setHeightForWidth(self.btnDybdeOn.sizePolicy().hasHeightForWidth())
+        self.btnDybdeOn.setSizePolicy(sizePolicy)
+        self.btnDybdeOn.setObjectName("btnDybdeOn")
+        self.horizontalLayout_15.addWidget(self.btnDybdeOn)
+        self.btnStampOn = QtWidgets.QPushButton(self.motorOuterContainer)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Minimum)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.pushButton_18.sizePolicy().hasHeightForWidth())
-        self.pushButton_18.setSizePolicy(sizePolicy)
-        self.pushButton_18.setObjectName("pushButton_18")
-        self.horizontalLayout_15.addWidget(self.pushButton_18)
-        self.pushButton_13 = QtWidgets.QPushButton(self.motorOuterContainer)
+        sizePolicy.setHeightForWidth(self.btnStampOn.sizePolicy().hasHeightForWidth())
+        self.btnStampOn.setSizePolicy(sizePolicy)
+        self.btnStampOn.setObjectName("btnStampOn")
+        self.horizontalLayout_15.addWidget(self.btnStampOn)
+        self.btnRullOn = QtWidgets.QPushButton(self.motorOuterContainer)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Minimum)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.pushButton_13.sizePolicy().hasHeightForWidth())
-        self.pushButton_13.setSizePolicy(sizePolicy)
-        self.pushButton_13.setObjectName("pushButton_13")
-        self.horizontalLayout_15.addWidget(self.pushButton_13)
+        sizePolicy.setHeightForWidth(self.btnRullOn.sizePolicy().hasHeightForWidth())
+        self.btnRullOn.setSizePolicy(sizePolicy)
+        self.btnRullOn.setObjectName("btnRullOn")
+        self.horizontalLayout_15.addWidget(self.btnRullOn)
         self.verticalLayout_34.addLayout(self.horizontalLayout_15)
         self.horizontalLayout_16 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_16.setObjectName("horizontalLayout_16")
@@ -1624,19 +1769,23 @@ class Ui_MainWindow(object):
 "QLabel {\n"
 "    color: #FFFFFF;\n"
 "}\n"
+"QLabel {\n"
+"  qproperty-alignment: \'AlignCenter\';\n"
+"}\n"
 "")
         self.label_10.setObjectName("label_10")
         self.verticalLayout_37.addWidget(self.label_10)
-        spacerItem = QtWidgets.QSpacerItem(20, 1, QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Fixed)
+        spacerItem = QtWidgets.QSpacerItem(20, 30, QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Fixed)
         self.verticalLayout_37.addItem(spacerItem)
-        self.horizontalSlider_4 = QtWidgets.QSlider(self.motorOuterContainer)
+        self.sliderCamVinkel = QtWidgets.QSlider(self.motorOuterContainer)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Fixed, QtWidgets.QSizePolicy.Policy.Fixed)
         sizePolicy.setHorizontalStretch(5)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.horizontalSlider_4.sizePolicy().hasHeightForWidth())
-        self.horizontalSlider_4.setSizePolicy(sizePolicy)
-        self.horizontalSlider_4.setMaximumSize(QtCore.QSize(16777215, 50))
-        self.horizontalSlider_4.setStyleSheet("QWidget {\n"
+        sizePolicy.setHeightForWidth(self.sliderCamVinkel.sizePolicy().hasHeightForWidth())
+        self.sliderCamVinkel.setSizePolicy(sizePolicy)
+        self.sliderCamVinkel.setMinimumSize(QtCore.QSize(200, 26))
+        self.sliderCamVinkel.setMaximumSize(QtCore.QSize(16777215, 26))
+        self.sliderCamVinkel.setStyleSheet("QWidget {\n"
 "    background-color: #6E6976;\n"
 "}\n"
 "\n"
@@ -1706,80 +1855,19 @@ class Ui_MainWindow(object):
 "    background: #2E2A33;\n"
 "    border-radius: 5px;\n"
 "}")
-        self.horizontalSlider_4.setMaximum(180)
-        self.horizontalSlider_4.setOrientation(QtCore.Qt.Orientation.Horizontal)
-        self.horizontalSlider_4.setObjectName("horizontalSlider_4")
-        self.verticalLayout_37.addWidget(self.horizontalSlider_4)
-        self.label_9 = QtWidgets.QLabel(self.motorOuterContainer)
-        self.label_9.setMaximumSize(QtCore.QSize(100, 25))
-        self.label_9.setObjectName("label_9")
-        self.verticalLayout_37.addWidget(self.label_9)
+        self.sliderCamVinkel.setMaximum(180)
+        self.sliderCamVinkel.setOrientation(QtCore.Qt.Orientation.Horizontal)
+        self.sliderCamVinkel.setObjectName("sliderCamVinkel")
+        self.verticalLayout_37.addWidget(self.sliderCamVinkel)
+        self.labelKameraVinkel = QtWidgets.QLabel(self.motorOuterContainer)
+        self.labelKameraVinkel.setMaximumSize(QtCore.QSize(100, 25))
+        self.labelKameraVinkel.setObjectName("labelKameraVinkel")
+        self.verticalLayout_37.addWidget(self.labelKameraVinkel)
         self.horizontalLayout_17.addLayout(self.verticalLayout_37)
-        self.verticalLayout_41 = QtWidgets.QVBoxLayout()
-        self.verticalLayout_41.setObjectName("verticalLayout_41")
-        spacerItem1 = QtWidgets.QSpacerItem(20, 3, QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Fixed)
-        self.verticalLayout_41.addItem(spacerItem1)
-        self.label_8 = QtWidgets.QLabel(self.motorOuterContainer)
-        self.label_8.setMinimumSize(QtCore.QSize(0, 20))
-        self.label_8.setMaximumSize(QtCore.QSize(16777215, 20))
-        self.label_8.setStyleSheet("QWidget {\n"
-"    background-color: #6E6976;\n"
-"}\n"
-"\n"
-"QFrame {\n"
-"    background-color: #2E2A33;\n"
-"    border: 2px solid #1E90FF;\n"
-"    border-radius: 10px;\n"
-"}\n"
-"\n"
-"QPushButton {\n"
-"    background-color: #2E2A33;\n"
-"    border: 2px solid #1E90FF;\n"
-"    border-radius: 10px;\n"
-"    color: #FFFFFF;\n"
-"    padding: 5px;\n"
-"}\n"
-"\n"
-"QPushButton:hover {\n"
-"    background-color: #6E6976;\n"
-"    color: #FFFFFF;\n"
-"}\n"
-"\n"
-"QLineEdit {\n"
-"    background-color: #2E2A33;\n"
-"    border: 2px solid #1E90FF;\n"
-"    border-radius: 10px;\n"
-"    color: #FFFFFF;\n"
-"    padding: 5px;\n"
-"}\n"
-"\n"
-"QLabel {\n"
-"    color: #FFFFFF;\n"
-"}\n"
-"")
-        self.label_8.setObjectName("label_8")
-        self.verticalLayout_41.addWidget(self.label_8)
-        self.pushButton_20 = QtWidgets.QPushButton(self.motorOuterContainer)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Minimum)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.pushButton_20.sizePolicy().hasHeightForWidth())
-        self.pushButton_20.setSizePolicy(sizePolicy)
-        self.pushButton_20.setObjectName("pushButton_20")
-        self.verticalLayout_41.addWidget(self.pushButton_20)
-        self.pushButton_21 = QtWidgets.QPushButton(self.motorOuterContainer)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Minimum)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.pushButton_21.sizePolicy().hasHeightForWidth())
-        self.pushButton_21.setSizePolicy(sizePolicy)
-        self.pushButton_21.setObjectName("pushButton_21")
-        self.verticalLayout_41.addWidget(self.pushButton_21)
-        self.horizontalLayout_17.addLayout(self.verticalLayout_41)
         self.verticalLayout_40 = QtWidgets.QVBoxLayout()
         self.verticalLayout_40.setObjectName("verticalLayout_40")
         self.label_11 = QtWidgets.QLabel(self.motorOuterContainer)
-        self.label_11.setMinimumSize(QtCore.QSize(1, 20))
+        self.label_11.setMinimumSize(QtCore.QSize(260, 20))
         self.label_11.setMaximumSize(QtCore.QSize(90, 25))
         self.label_11.setStyleSheet("QWidget {\n"
 "    background-color: #6E6976;\n"
@@ -1815,7 +1903,9 @@ class Ui_MainWindow(object):
 "QLabel {\n"
 "    color: #FFFFFF;\n"
 "}\n"
-"")
+"QLabel {\n"
+"  qproperty-alignment: \'AlignCenter\';\n"
+"}")
         self.label_11.setObjectName("label_11")
         self.verticalLayout_40.addWidget(self.label_11)
         self.reguleringDropdown = QtWidgets.QComboBox(self.motorOuterContainer)
@@ -1927,6 +2017,52 @@ class Ui_MainWindow(object):
         self.maniOuterContainer.setObjectName("maniOuterContainer")
         self.verticalLayout_3 = QtWidgets.QVBoxLayout(self.maniOuterContainer)
         self.verticalLayout_3.setObjectName("verticalLayout_3")
+        self.title_start_videoopptak_4 = QtWidgets.QLabel(self.maniOuterContainer)
+        self.title_start_videoopptak_4.setMinimumSize(QtCore.QSize(0, 20))
+        self.title_start_videoopptak_4.setMaximumSize(QtCore.QSize(16777215, 20))
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        font.setBold(False)
+        font.setItalic(False)
+        font.setWeight(50)
+        self.title_start_videoopptak_4.setFont(font)
+        self.title_start_videoopptak_4.setStyleSheet("QWidget {\n"
+"    background-color: #6E6976;\n"
+"}\n"
+"\n"
+"QFrame {\n"
+"    background-color: #2E2A33;\n"
+"    border: 2px solid #1E90FF;\n"
+"    border-radius: 10px;\n"
+"}\n"
+"\n"
+"QPushButton {\n"
+"    background-color: #2E2A33;\n"
+"    border: 2px solid #1E90FF;\n"
+"    border-radius: 10px;\n"
+"    color: #FFFFFF;\n"
+"    padding: 5px;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"    background-color: #6E6976;\n"
+"    color: #FFFFFF;\n"
+"}\n"
+"\n"
+"QLineEdit {\n"
+"    background-color: #2E2A33;\n"
+"    border: 2px solid #1E90FF;\n"
+"    border-radius: 10px;\n"
+"    color: #FFFFFF;\n"
+"    padding: 5px;\n"
+"}\n"
+"\n"
+"QLabel {\n"
+"    color: #FFFFFF;\n"
+"}\n"
+"")
+        self.title_start_videoopptak_4.setObjectName("title_start_videoopptak_4")
+        self.verticalLayout_3.addWidget(self.title_start_videoopptak_4)
         self.horizontalLayout_10 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_10.setObjectName("horizontalLayout_10")
         self.verticalLayout_11 = QtWidgets.QVBoxLayout()
@@ -1940,14 +2076,67 @@ class Ui_MainWindow(object):
         self.horizontalLayout_10.addLayout(self.verticalLayout_11)
         self.verticalLayout_12 = QtWidgets.QVBoxLayout()
         self.verticalLayout_12.setObjectName("verticalLayout_12")
-        self.label_4 = QtWidgets.QLabel(self.maniOuterContainer)
-        self.label_4.setObjectName("label_4")
-        self.verticalLayout_12.addWidget(self.label_4)
-        self.label_2 = QtWidgets.QLabel(self.maniOuterContainer)
-        self.label_2.setObjectName("label_2")
-        self.verticalLayout_12.addWidget(self.label_2)
+        self.labelManipulatorKraft = QtWidgets.QLabel(self.maniOuterContainer)
+        self.labelManipulatorKraft.setText("")
+        self.labelManipulatorKraft.setObjectName("labelManipulatorKraft")
+        self.verticalLayout_12.addWidget(self.labelManipulatorKraft)
+        self.labelThrusterKraft = QtWidgets.QLabel(self.maniOuterContainer)
+        self.labelThrusterKraft.setText("")
+        self.labelThrusterKraft.setObjectName("labelThrusterKraft")
+        self.verticalLayout_12.addWidget(self.labelThrusterKraft)
         self.horizontalLayout_10.addLayout(self.verticalLayout_12)
         self.verticalLayout_3.addLayout(self.horizontalLayout_10)
+        self.title_start_videoopptak = QtWidgets.QLabel(self.maniOuterContainer)
+        self.title_start_videoopptak.setMaximumSize(QtCore.QSize(16777215, 16777215))
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        font.setBold(False)
+        font.setItalic(False)
+        font.setWeight(50)
+        self.title_start_videoopptak.setFont(font)
+        self.title_start_videoopptak.setStyleSheet("QWidget {\n"
+"    background-color: #6E6976;\n"
+"}\n"
+"\n"
+"QFrame {\n"
+"    background-color: #2E2A33;\n"
+"    border: 2px solid #1E90FF;\n"
+"    border-radius: 10px;\n"
+"}\n"
+"\n"
+"QPushButton {\n"
+"    background-color: #2E2A33;\n"
+"    border: 2px solid #1E90FF;\n"
+"    border-radius: 10px;\n"
+"    color: #FFFFFF;\n"
+"    padding: 5px;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"    background-color: #6E6976;\n"
+"    color: #FFFFFF;\n"
+"}\n"
+"\n"
+"QLineEdit {\n"
+"    background-color: #2E2A33;\n"
+"    border: 2px solid #1E90FF;\n"
+"    border-radius: 10px;\n"
+"    color: #FFFFFF;\n"
+"    padding: 5px;\n"
+"}\n"
+"\n"
+"QLabel {\n"
+"    color: #FFFFFF;\n"
+"}\n"
+"")
+        self.title_start_videoopptak.setObjectName("title_start_videoopptak")
+        self.verticalLayout_3.addWidget(self.title_start_videoopptak)
+        self.btnResetManipulator = QtWidgets.QPushButton(self.maniOuterContainer)
+        self.btnResetManipulator.setObjectName("btnResetManipulator")
+        self.verticalLayout_3.addWidget(self.btnResetManipulator)
+        self.btnResetThruster = QtWidgets.QPushButton(self.maniOuterContainer)
+        self.btnResetThruster.setObjectName("btnResetThruster")
+        self.verticalLayout_3.addWidget(self.btnResetThruster)
         self.column2Layout.addWidget(self.maniOuterContainer)
         self.horizontalLayout_6.addWidget(self.column2)
         self.verticalLayout.addWidget(self.row, 0, QtCore.Qt.AlignmentFlag.AlignVCenter)
@@ -1997,49 +2186,58 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
-        self.title_kjoremodus.setText(_translate("MainWindow", "Thrusterpådrag"))
-        self.labelVVF_3.setText(_translate("MainWindow", "------"))
-        self.labelVHF_3.setText(_translate("MainWindow", "------"))
-        self.labelHHF_3.setText(_translate("MainWindow", "------"))
-        self.labelHHB_3.setText(_translate("MainWindow", "------"))
-        self.labelVHB_3.setText(_translate("MainWindow", "------"))
-        self.labelVVB_3.setText(_translate("MainWindow", "------"))
-        self.labelHVB_3.setText(_translate("MainWindow", "------"))
-        self.labelHVF_3.setText(_translate("MainWindow", "------"))
-        self.title_kjoremodus_2.setText(_translate("MainWindow", "Temperatur"))
-        self.label_12.setText(_translate("MainWindow", "<html><head/><body><p>Høyre :<br/><br/>Venstre :<br/><br/>Vann :</p><p>Sensorkort :</p></body></html>"))
-        self.overskrifkamera_6.setText(_translate("MainWindow", "Alarm Navn                                                                              Feilkode                                           "))
+        self.title_kjoremodus.setText(_translate("MainWindow", "THRUSTERPÅDRAG"))
+        self.labelVVF.setText(_translate("MainWindow", "------"))
+        self.labelVHF.setText(_translate("MainWindow", "------"))
+        self.labelHHF.setText(_translate("MainWindow", "------"))
+        self.labelHHB.setText(_translate("MainWindow", "------"))
+        self.labelVHB.setText(_translate("MainWindow", "------"))
+        self.labelVVB.setText(_translate("MainWindow", "------"))
+        self.labelHVB.setText(_translate("MainWindow", "------"))
+        self.labelHVF.setText(_translate("MainWindow", "------"))
+        self.btnKalibrerIMU.setText(_translate("MainWindow", "Kalibrer_IMU"))
+        self.title_kjoremodus_2.setText(_translate("MainWindow", "TEMPERATUR"))
+        self.label_12.setText(_translate("MainWindow", "<html><head/><body><p><span style=\" font-size:16pt;\">Høyre :<br/><br/>Venstre :<br/><br/>Vann :</span></p><p><span style=\" font-size:16pt;\">Sensorkort :</span></p></body></html>"))
+        self.overskrifkamera_6.setText(_translate("MainWindow", "        NAVN PÅ ALARM                                                  FEILKODE                                           "))
         self.label_25.setText(_translate("MainWindow", "Høyre side"))
         self.label_23.setText(_translate("MainWindow", "Venstre side"))
         self.label.setText(_translate("MainWindow", "Lekkasje"))
         self.label_24.setText(_translate("MainWindow", "IMU"))
         self.label_26.setText(_translate("MainWindow", "Temp"))
         self.label_22.setText(_translate("MainWindow", "Trykk"))
-        self.btnResetThruster.setText(_translate("MainWindow", "Venstre side"))
-        self.btnResetManipulator.setText(_translate("MainWindow", "Høyre Side"))
-        self.title_start_videoopptak.setText(_translate("MainWindow", "Reset Sikringer"))
-        self.title_start_videoopptak.setProperty("colorStyle", _translate("MainWindow", "subTitle"))
-        self.title_start_videoopptak_2.setText(_translate("MainWindow", "Lys Oppe                                                          Lys Nede"))
+        self.title_start_videoopptak_2.setText(_translate("MainWindow", "                 LYS OPPE                                   LYS NEDE"))
         self.title_start_videoopptak_2.setProperty("colorStyle", _translate("MainWindow", "subTitle"))
+        self.labelDybde.setProperty("labelStyle", _translate("MainWindow", "blackBg"))
+        self.labelDybde.setProperty("labelStyle2", _translate("MainWindow", "whiteBg"))
+        self.btnNullpunktDybde.setText(_translate("MainWindow", "Nullpunkt Dybde"))
         self.btnTopLys.setText(_translate("MainWindow", "På/Av"))
         self.btnBunnLys.setText(_translate("MainWindow", "På/Av"))
-        self.title_motor.setText(_translate("MainWindow", "Kamerafunksjoner                                    Regulering"))
-        self.pushButton_22.setText(_translate("MainWindow", "Manuell Kjøring"))
-        self.pushButton_23.setText(_translate("MainWindow", "Autonom Docking"))
-        self.pushButton_24.setText(_translate("MainWindow", "Start Frog Count"))
-        self.pushButton_11.setText(_translate("MainWindow", "Åpne Kamera"))
-        self.pushButton_15.setText(_translate("MainWindow", "Skjermbilde"))
-        self.pushButton_17.setText(_translate("MainWindow", "Vis Bilder"))
-        self.pushButton_12.setText(_translate("MainWindow", "Ta opp Video"))
-        self.pushButton_14.setText(_translate("MainWindow", "Dybde Regulering"))
-        self.pushButton_16.setText(_translate("MainWindow", "Stamp Regulering"))
-        self.pushButton_18.setText(_translate("MainWindow", "Rull Regulering"))
-        self.pushButton_13.setText(_translate("MainWindow", "All Regulering"))
+        self.title_start_videoopptak_3.setText(_translate("MainWindow", "DYBDE"))
+        self.title_start_videoopptak_3.setProperty("colorStyle", _translate("MainWindow", "subTitle"))
+        self.title_start_videoopptak_5.setText(_translate("MainWindow", "VINKLER"))
+        self.title_start_videoopptak_5.setProperty("colorStyle", _translate("MainWindow", "subTitle"))
+        self.vinkel1_2.setText(_translate("MainWindow", "<html><head/><body><p><span style=\" font-size:12pt;\">Rull :<br/>Stamp :<br/>Gir :</span></p></body></html>"))
+        self.labelRull.setProperty("labelStyle", _translate("MainWindow", "blackBg"))
+        self.labelRull.setProperty("labelStyle2", _translate("MainWindow", "whiteBg"))
+        self.labelStamp.setProperty("labelStyle", _translate("MainWindow", "blackBg"))
+        self.labelStamp.setProperty("labelStyle2", _translate("MainWindow", "whiteBg"))
+        self.labelGir.setProperty("labelStyle", _translate("MainWindow", "blackBg"))
+        self.labelGir.setProperty("labelStyle2", _translate("MainWindow", "whiteBg"))
+        self.btnNullpunktVinkler.setText(_translate("MainWindow", "Nullpunkt Vinkler"))
+        self.title_motor.setText(_translate("MainWindow", "KAMERAFUNKSJONER                                                  REGULERING"))
+        self.btnManuell.setText(_translate("MainWindow", "Manuell Kjøring"))
+        self.btnAutonom.setText(_translate("MainWindow", "Autonom Docking"))
+        self.btnFrogCount.setText(_translate("MainWindow", "Start Frog Count"))
+        self.btnOpenCamera.setText(_translate("MainWindow", "Åpne Kamera"))
+        self.btnTakePic.setText(_translate("MainWindow", "Skjermbilde"))
+        self.btnRecord.setText(_translate("MainWindow", "Ta opp Video"))
+        self.showNewWindowButton.setText(_translate("MainWindow", "Vis Bilder"))
+        self.btnRegOn.setText(_translate("MainWindow", "All Regulering"))
+        self.btnDybdeOn.setText(_translate("MainWindow", "Dybde Regulering"))
+        self.btnStampOn.setText(_translate("MainWindow", "Stamp Regulering"))
+        self.btnRullOn.setText(_translate("MainWindow", "Rull Regulering"))
         self.label_10.setText(_translate("MainWindow", "Endre Kameravinkel"))
-        self.label_9.setText(_translate("MainWindow", "Kameravinkel"))
-        self.label_8.setText(_translate("MainWindow", "Reset Sikringar"))
-        self.pushButton_20.setText(_translate("MainWindow", "Reset Høgre Side"))
-        self.pushButton_21.setText(_translate("MainWindow", "Reset Venstre Side"))
+        self.labelKameraVinkel.setText(_translate("MainWindow", "Kameravinkel"))
         self.label_11.setText(_translate("MainWindow", "Regulator Tuning"))
         self.reguleringDropdown.setItemText(0, _translate("MainWindow", "Rull KI"))
         self.reguleringDropdown.setItemText(1, _translate("MainWindow", "Rull KD"))
@@ -2052,8 +2250,12 @@ class Ui_MainWindow(object):
         self.reguleringDropdown.setItemText(8, _translate("MainWindow", "Dybde KP"))
         self.reguleringDropdown.setItemText(9, _translate("MainWindow", "TS"))
         self.reguleringDropdown.setItemText(10, _translate("MainWindow", "Alpha"))
-        self.tuningInput_2.setText(_translate("MainWindow", "Skriv inn verdi:"))
+        self.tuningInput_2.setText(_translate("MainWindow", "Verdi:"))
         self.btnRegTuning.setText(_translate("MainWindow", "Submit"))
-        self.label_5.setText(_translate("MainWindow", "<html><head/><body><p><span style=\" font-size:14pt;\">Høyre :<br/><br/><br/>Venstre :</span></p></body></html>"))
-        self.label_4.setText(_translate("MainWindow", "TextLabel"))
-        self.label_2.setText(_translate("MainWindow", "TextLabel"))
+        self.title_start_videoopptak_4.setText(_translate("MainWindow", "KRAFT"))
+        self.title_start_videoopptak_4.setProperty("colorStyle", _translate("MainWindow", "subTitle"))
+        self.label_5.setText(_translate("MainWindow", "<html><head/><body><p><span style=\" font-size:16pt;\">Høyre :<br/><br/>Venstre :</span></p></body></html>"))
+        self.title_start_videoopptak.setText(_translate("MainWindow", "RESET SIKRINGER"))
+        self.title_start_videoopptak.setProperty("colorStyle", _translate("MainWindow", "subTitle"))
+        self.btnResetManipulator.setText(_translate("MainWindow", "Høyre Side"))
+        self.btnResetThruster.setText(_translate("MainWindow", "Venstre side"))

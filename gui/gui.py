@@ -9,6 +9,7 @@ import sys
 import threading
 from pyqtgraph import *
 from RovState.send_fake_sensordata import REGULERINGMOTORTEMP
+from images import resources_rc
 
 # from main import Vinkeldata
 from main import Rov_state
@@ -46,7 +47,7 @@ class Window(QMainWindow):
         self.angle_bit_state = 0
 
         super().__init__(parent)
-        uic.loadUi("gui/window.ui", self)
+        uic.loadUi("gui/mainwindow.ui", self)
         self.connectFunctions()
         self.player = QMediaPlayer()
         self.sound_file = "martinalarm.wav"
@@ -181,7 +182,7 @@ class Window(QMainWindow):
         self.btnBunnLys.clicked.connect(lambda: self.bottom_light_on())
 
         # Sikringer
-        self.btnReset5V.clicked.connect(lambda: self.reset_5V_fuse2())
+        # self.btnReset5V.clicked.connect(lambda: self.reset_5V_fuse2())
         self.btnResetThruster.clicked.connect(lambda: self.reset_12V_thruster_fuse())
         self.btnResetManipulator.clicked.connect(
             lambda: self.reset_12V_manipulator_fuse()
@@ -436,7 +437,7 @@ class Window(QMainWindow):
             VINKLER: self.guiVinkelUpdate,
             DYBDETEMP: self.dybdeTempUpdate,
             FEILKODE: self.guiFeilKodeUpdate,
-            # THRUST: self.guiThrustUpdate,
+            THRUST: self.guiThrustUpdate,
             MANIPULATOR12V: self.guiManipulatorUpdate,
             THRUSTER12V: self.thruster12VUpdate,
             # KRAFT5V: self.kraft5VUpdate,
@@ -577,27 +578,46 @@ class Window(QMainWindow):
             label.setText(str(round(sensordata[i] / 100, 2)) + "°")
 
     def dybdeTempUpdate(self, sensordata):
-        temp_liste: list[QLabel] = [
-            self.labelDybde,
-            self.labelTempVann,
-            self.labelTempSensorkort,
-        ]
-        for i, label in enumerate(temp_liste):
-            label.setText(str(round(sensordata[i], 2)) + "CM")
+        labelDybde: QLabel = self.labelDybde
+
+        labelVann: QLabel = self.labelTempVann
+        labelSensor: QLabel = self.labelTempSensorkort
+
+        labelDybde.setText(str(round(sensordata[0], 2)) + "m")
+        labelVann.setText(str(round(sensordata[1], 2)) + "°C")
+        labelSensor.setText(str(round(sensordata[2], 2)) + "°C")
 
     def guiThrustUpdate(self, sensordata):
-        thrust_liste: list[QLabel] = [
-            self.labelHHF,
-            self.labelHHB,
-            self.labelHVB,
-            self.labelHVF,
-            self.labelVHF,
-            self.labelVHB,
-            self.labelVVB,
-            self.VVF,
-        ]
-        for i, label in enumerate(thrust_liste):
-            label.setText(str(round(sensordata[i], 2)))
+        labelHHF: QLabel = self.labelHHF
+        labelHHB: QLabel = self.labelHHB
+        labelHVB: QLabel = self.labelHVB
+        labelHVF: QLabel = self.labelHVF
+        labelVHF: QLabel = self.labelVHF
+        labelVHB: QLabel = self.labelVHB
+        labelVVB: QLabel = self.labelVVB
+        labelVVF: QLabel = self.labelVVF
+
+        labelHHF.setText(str(round(sensordata[0], 2)))
+        labelHHB.setText(str(round(sensordata[1], 2)))
+        labelHVB.setText(str(round(sensordata[2], 2)))
+        labelHVF.setText(str(round(sensordata[3], 2)))
+        labelVHF.setText(str(round(sensordata[4], 2)))
+        labelVHB.setText(str(round(sensordata[5], 2)))
+        labelVVB.setText(str(round(sensordata[6], 2)))
+        labelVVF.setText(str(round(sensordata[7], 2)))
+
+        # thrust_liste: list[QLabel] = [
+        #     self.labelHHF,
+        #     self.labelHHB,
+        #     self.labelHVB,
+        #     self.labelHVF,
+        #     self.labelVHF,
+        #     self.labelVHB,
+        #     self.labelVVB,
+        #     self.labelVVF,
+        # ]
+        # for i, label in enumerate(thrust_liste):
+        #     label.setText(str(round(sensordata[i], 2)))
 
     kraftFeilkoder = [
         "Overcurrent trip",
