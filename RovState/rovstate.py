@@ -4,7 +4,6 @@ from RovState.network_formatter import network_format
 from Thread_info import Threadwatcher
 from Kommunikasjon.network_handler import Network
 
-MANIPULATOR_IN_OUT = 15
 MANIPULATOR_ROTATION = 0
 MANIPULATOR_TILT = 4
 MANIPULATOR_GRAB_RELEASE = 6
