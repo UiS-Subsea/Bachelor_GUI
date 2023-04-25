@@ -45,6 +45,9 @@ class Ui_MainWindow(object):
         self.bgApp = QtWidgets.QFrame(self.styleSheet)
         font = QtGui.QFont()
         font.setPointSize(10)
+        font.setBold(False)
+        font.setItalic(False)
+        font.setWeight(50)
         self.bgApp.setFont(font)
         self.bgApp.setFrameShape(QtWidgets.QFrame.NoFrame)
         self.bgApp.setFrameShadow(QtWidgets.QFrame.Raised)
@@ -1916,7 +1919,7 @@ class Ui_MainWindow(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.reguleringDropdown.sizePolicy().hasHeightForWidth())
         self.reguleringDropdown.setSizePolicy(sizePolicy)
-        self.reguleringDropdown.setMinimumSize(QtCore.QSize(92, 0))
+        self.reguleringDropdown.setMinimumSize(QtCore.QSize(116, 0))
         self.reguleringDropdown.setStyleSheet("QComboBox {\n"
 "    background-color: #2E2A33;\n"
 "    border: 2px solid #6E6976;\n"
@@ -1960,8 +1963,8 @@ class Ui_MainWindow(object):
         self.reguleringDropdown.addItem("")
         self.reguleringDropdown.addItem("")
         self.verticalLayout_40.addWidget(self.reguleringDropdown)
-        self.tuningInput_2 = QtWidgets.QLineEdit(self.motorOuterContainer)
-        self.tuningInput_2.setStyleSheet("QWidget {\n"
+        self.tuningInput = QtWidgets.QLineEdit(self.motorOuterContainer)
+        self.tuningInput.setStyleSheet("QWidget {\n"
 "    background-color: #6E6976;\n"
 "}\n"
 "\n"
@@ -1995,8 +1998,9 @@ class Ui_MainWindow(object):
 "QLabel {\n"
 "    color: #FFFFFF;\n"
 "}")
-        self.tuningInput_2.setObjectName("tuningInput_2")
-        self.verticalLayout_40.addWidget(self.tuningInput_2)
+        self.tuningInput.setText("")
+        self.tuningInput.setObjectName("tuningInput")
+        self.verticalLayout_40.addWidget(self.tuningInput)
         self.btnRegTuning = QtWidgets.QPushButton(self.motorOuterContainer)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
@@ -2252,7 +2256,6 @@ class Ui_MainWindow(object):
         self.reguleringDropdown.setItemText(8, _translate("MainWindow", "Dybde KP"))
         self.reguleringDropdown.setItemText(9, _translate("MainWindow", "TS"))
         self.reguleringDropdown.setItemText(10, _translate("MainWindow", "Alpha"))
-        self.tuningInput_2.setText(_translate("MainWindow", "Verdi:"))
         self.btnRegTuning.setText(_translate("MainWindow", "Submit"))
         self.title_start_videoopptak_4.setText(_translate("MainWindow", "KRAFT"))
         self.title_start_videoopptak_4.setProperty("colorStyle", _translate("MainWindow", "subTitle"))
