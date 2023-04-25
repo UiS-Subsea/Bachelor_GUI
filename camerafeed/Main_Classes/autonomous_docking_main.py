@@ -106,10 +106,11 @@ class AutonomousDocking:
         return center_point, radius
         
             
-    def find_grouts(self): # TODO should mabye dilate
+    def find_grouts(self):
         lower_bound, upper_bound = (0, 0, 0), (100, 100, 100)
         grouts = cv2.inRange(self.down_frame, lower_bound, upper_bound)
-        canny = cv2.Canny(grouts, 100, 200)
+        grouts_dilated = cv2.dilate(grouts, None, iterations=10)
+        canny = cv2.Canny(grouts_dilated, 100, 200)
         blurred = cv2.GaussianBlur(canny, (11, 13), 0)
         grout_contours, _ = cv2.findContours(blurred, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
         if self.draw_grouts:
@@ -117,7 +118,6 @@ class AutonomousDocking:
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 self.draw_grouts = False
         
-
         return grout_contours
     
     def find_relative_angle(self):
