@@ -366,7 +366,7 @@ class Rov_state:
     def build_rov_packet(self):
         if self.data == {}:
             return
-        # data = [0, 0, 0, 0, 0, 0, 0, 0]
+        data = [0, 0, 0, 0, 0, 0, 0, 0]
 
         data[0] = self.data["rov_joysticks"][X_AXIS]
         data[1] = self.data["rov_joysticks"][Y_AXIS]
@@ -388,16 +388,15 @@ class Rov_state:
         self.packets_to_send.append([33, data])
 
     def build_manipulator_packet(self):
-        # Kan også endre til to indexer i data listen for mani inn og ut (f.eks 0 og 1 = btn 12 og 13)
         if self.data == {}:
             return
-        # data = [0, 0, 0, 0, 0, 0, 0, 0]
-            # data[0] = self.data["mani_joysticks"][1] #for vanntest
+        data = [0, 0, 0, 0, 0, 0, 0, 0]
+        
         data[0] = self.data.get("mani_dpad", [0,0])[1]*100
         data[1] = self.data["mani_joysticks"][MANIPULATOR_ROTATION]
         data[2] = -self.data["mani_joysticks"][MANIPULATOR_TILT]
         data[3] = self.data["mani_joysticks"][MANIPULATOR_GRAB_RELEASE]
-        
+
         self.packets_to_send.append([34, data])
 
     def build_reset_packet(self):
@@ -559,11 +558,8 @@ class Rov_state:
         packet = ""
         try:
             self.packet_id, packet = self.queue_for_rov.get()
-            # self.packets_to_send.append(packet[0], packet[1])
-            # return packet
         except Exception as e:
             return
-
         self.data = packet
 
     def build_packets(self):
