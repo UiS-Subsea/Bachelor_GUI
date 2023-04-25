@@ -15,7 +15,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.setWindowModality(QtCore.Qt.NonModal)
-        MainWindow.resize(1462, 930)
+        MainWindow.resize(1578, 930)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -229,8 +229,8 @@ class Ui_MainWindow(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.frame.sizePolicy().hasHeightForWidth())
         self.frame.setSizePolicy(sizePolicy)
-        self.frame.setMinimumSize(QtCore.QSize(0, 0))
-        self.frame.setMaximumSize(QtCore.QSize(16777215, 16777215))
+        self.frame.setMinimumSize(QtCore.QSize(0, 100))
+        self.frame.setMaximumSize(QtCore.QSize(16777215, 550))
         self.frame.setObjectName("frame")
         self.kjoremodusLayout = QtWidgets.QVBoxLayout(self.frame)
         self.kjoremodusLayout.setContentsMargins(0, 0, 0, 0)
@@ -242,6 +242,7 @@ class Ui_MainWindow(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.frame_2.sizePolicy().hasHeightForWidth())
         self.frame_2.setSizePolicy(sizePolicy)
+        self.frame_2.setMinimumSize(QtCore.QSize(500, 500))
         self.frame_2.setMaximumSize(QtCore.QSize(351, 359))
         self.frame_2.setStyleSheet("QWidget {\n"
 "    background-color: #6E6976;\n"
@@ -282,20 +283,20 @@ class Ui_MainWindow(object):
         self.frame_2.setFrameShadow(QtWidgets.QFrame.Raised)
         self.frame_2.setObjectName("frame_2")
         self.label_20 = QtWidgets.QLabel(self.frame_2)
-        self.label_20.setGeometry(QtCore.QRect(-1, 1, 351, 359))
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.Expanding)
+        self.label_20.setGeometry(QtCore.QRect(-1, 1, 500, 460))
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(5)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.label_20.sizePolicy().hasHeightForWidth())
         self.label_20.setSizePolicy(sizePolicy)
-        self.label_20.setMinimumSize(QtCore.QSize(351, 359))
-        self.label_20.setMaximumSize(QtCore.QSize(351, 359))
+        self.label_20.setMinimumSize(QtCore.QSize(500, 450))
+        self.label_20.setMaximumSize(QtCore.QSize(500, 460))
         self.label_20.setText("")
         self.label_20.setPixmap(QtGui.QPixmap(":/rov/image.png"))
         self.label_20.setScaledContents(True)
         self.label_20.setObjectName("label_20")
         self.labelVVF = QtWidgets.QLabel(self.frame_2)
-        self.labelVVF.setGeometry(QtCore.QRect(0, 20, 41, 31))
+        self.labelVVF.setGeometry(QtCore.QRect(10, 20, 41, 31))
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(5)
         sizePolicy.setVerticalStretch(0)
@@ -338,7 +339,7 @@ class Ui_MainWindow(object):
 "")
         self.labelVVF.setObjectName("labelVVF")
         self.labelVHF = QtWidgets.QLabel(self.frame_2)
-        self.labelVHF.setGeometry(QtCore.QRect(300, 20, 41, 31))
+        self.labelVHF.setGeometry(QtCore.QRect(450, 20, 41, 31))
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(5)
         sizePolicy.setVerticalStretch(0)
@@ -381,7 +382,7 @@ class Ui_MainWindow(object):
 "")
         self.labelVHF.setObjectName("labelVHF")
         self.labelHHF = QtWidgets.QLabel(self.frame_2)
-        self.labelHHF.setGeometry(QtCore.QRect(220, 70, 41, 31))
+        self.labelHHF.setGeometry(QtCore.QRect(350, 140, 41, 31))
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(5)
         sizePolicy.setVerticalStretch(0)
@@ -424,7 +425,7 @@ class Ui_MainWindow(object):
 "")
         self.labelHHF.setObjectName("labelHHF")
         self.labelHHB = QtWidgets.QLabel(self.frame_2)
-        self.labelHHB.setGeometry(QtCore.QRect(220, 160, 41, 31))
+        self.labelHHB.setGeometry(QtCore.QRect(350, 330, 41, 31))
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(5)
         sizePolicy.setVerticalStretch(0)
@@ -467,7 +468,7 @@ class Ui_MainWindow(object):
 "")
         self.labelHHB.setObjectName("labelHHB")
         self.labelVHB = QtWidgets.QLabel(self.frame_2)
-        self.labelVHB.setGeometry(QtCore.QRect(290, 230, 41, 31))
+        self.labelVHB.setGeometry(QtCore.QRect(450, 400, 41, 31))
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(5)
         sizePolicy.setVerticalStretch(0)
@@ -510,7 +511,7 @@ class Ui_MainWindow(object):
 "")
         self.labelVHB.setObjectName("labelVHB")
         self.labelVVB = QtWidgets.QLabel(self.frame_2)
-        self.labelVVB.setGeometry(QtCore.QRect(10, 230, 41, 31))
+        self.labelVVB.setGeometry(QtCore.QRect(0, 400, 41, 31))
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(5)
         sizePolicy.setVerticalStretch(0)
@@ -553,7 +554,7 @@ class Ui_MainWindow(object):
 "")
         self.labelVVB.setObjectName("labelVVB")
         self.labelHVB = QtWidgets.QLabel(self.frame_2)
-        self.labelHVB.setGeometry(QtCore.QRect(80, 160, 41, 31))
+        self.labelHVB.setGeometry(QtCore.QRect(110, 340, 41, 31))
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(5)
         sizePolicy.setVerticalStretch(0)
@@ -596,7 +597,7 @@ class Ui_MainWindow(object):
 "")
         self.labelHVB.setObjectName("labelHVB")
         self.labelHVF = QtWidgets.QLabel(self.frame_2)
-        self.labelHVF.setGeometry(QtCore.QRect(80, 70, 41, 31))
+        self.labelHVF.setGeometry(QtCore.QRect(120, 140, 41, 31))
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(5)
         sizePolicy.setVerticalStretch(0)
@@ -638,34 +639,14 @@ class Ui_MainWindow(object):
 "}\n"
 "")
         self.labelHVF.setObjectName("labelHVF")
-        self.label_20.raise_()
-        self.labelHHB.raise_()
-        self.labelVVF.raise_()
-        self.labelHVF.raise_()
-        self.labelHHF.raise_()
-        self.labelVHF.raise_()
-        self.labelVHB.raise_()
-        self.labelHVB.raise_()
-        self.labelVVB.raise_()
-        self.kjoremodusLayout.addWidget(self.frame_2)
-        self.btnKalibrerIMU = QtWidgets.QPushButton(self.frame)
-        self.btnKalibrerIMU.setObjectName("btnKalibrerIMU")
-        self.kjoremodusLayout.addWidget(self.btnKalibrerIMU)
-        self.title_kjoremodus_2 = QtWidgets.QLabel(self.frame)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
+        self.labelTempKomKontroller = QtWidgets.QLabel(self.frame_2)
+        self.labelTempKomKontroller.setGeometry(QtCore.QRect(200, 100, 81, 31))
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.Expanding)
+        sizePolicy.setHorizontalStretch(5)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.title_kjoremodus_2.sizePolicy().hasHeightForWidth())
-        self.title_kjoremodus_2.setSizePolicy(sizePolicy)
-        self.title_kjoremodus_2.setMinimumSize(QtCore.QSize(351, 0))
-        self.title_kjoremodus_2.setMaximumSize(QtCore.QSize(90, 50))
-        font = QtGui.QFont()
-        font.setPointSize(10)
-        font.setBold(False)
-        font.setItalic(False)
-        font.setWeight(50)
-        self.title_kjoremodus_2.setFont(font)
-        self.title_kjoremodus_2.setStyleSheet("QWidget {\n"
+        sizePolicy.setHeightForWidth(self.labelTempKomKontroller.sizePolicy().hasHeightForWidth())
+        self.labelTempKomKontroller.setSizePolicy(sizePolicy)
+        self.labelTempKomKontroller.setStyleSheet("QWidget {\n"
 "    background-color: #6E6976;\n"
 "}\n"
 "\n"
@@ -699,60 +680,351 @@ class Ui_MainWindow(object):
 "QLabel {\n"
 "    color: #FFFFFF;\n"
 "}\n"
+"")
+        self.labelTempKomKontroller.setObjectName("labelTempKomKontroller")
+        self.labelTempSensorkort = QtWidgets.QLabel(self.frame_2)
+        self.labelTempSensorkort.setGeometry(QtCore.QRect(200, 140, 81, 31))
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.Expanding)
+        sizePolicy.setHorizontalStretch(5)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.labelTempSensorkort.sizePolicy().hasHeightForWidth())
+        self.labelTempSensorkort.setSizePolicy(sizePolicy)
+        self.labelTempSensorkort.setStyleSheet("QWidget {\n"
+"    background-color: #6E6976;\n"
+"}\n"
+"\n"
+"QFrame {\n"
+"    background-color: #2E2A33;\n"
+"    border: 2px solid #1E90FF;\n"
+"    border-radius: 10px;\n"
+"}\n"
+"\n"
+"QPushButton {\n"
+"    background-color: #2E2A33;\n"
+"    border: 2px solid #1E90FF;\n"
+"    border-radius: 10px;\n"
+"    color: #FFFFFF;\n"
+"    padding: 5px;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"    background-color: #6E6976;\n"
+"    color: #FFFFFF;\n"
+"}\n"
+"\n"
+"QLineEdit {\n"
+"    background-color: #2E2A33;\n"
+"    border: 2px solid #1E90FF;\n"
+"    border-radius: 10px;\n"
+"    color: #FFFFFF;\n"
+"    padding: 5px;\n"
+"}\n"
+"\n"
 "QLabel {\n"
-"  qproperty-alignment: \'AlignCenter\';\n"
+"    color: #FFFFFF;\n"
 "}\n"
 "")
-        self.title_kjoremodus_2.setObjectName("title_kjoremodus_2")
-        self.kjoremodusLayout.addWidget(self.title_kjoremodus_2)
+        self.labelTempSensorkort.setObjectName("labelTempSensorkort")
+        self.labelReguleringTemp = QtWidgets.QLabel(self.frame_2)
+        self.labelReguleringTemp.setGeometry(QtCore.QRect(200, 180, 81, 31))
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.Expanding)
+        sizePolicy.setHorizontalStretch(5)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.labelReguleringTemp.sizePolicy().hasHeightForWidth())
+        self.labelReguleringTemp.setSizePolicy(sizePolicy)
+        self.labelReguleringTemp.setStyleSheet("QWidget {\n"
+"    background-color: #6E6976;\n"
+"}\n"
+"\n"
+"QFrame {\n"
+"    background-color: #2E2A33;\n"
+"    border: 2px solid #1E90FF;\n"
+"    border-radius: 10px;\n"
+"}\n"
+"\n"
+"QPushButton {\n"
+"    background-color: #2E2A33;\n"
+"    border: 2px solid #1E90FF;\n"
+"    border-radius: 10px;\n"
+"    color: #FFFFFF;\n"
+"    padding: 5px;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"    background-color: #6E6976;\n"
+"    color: #FFFFFF;\n"
+"}\n"
+"\n"
+"QLineEdit {\n"
+"    background-color: #2E2A33;\n"
+"    border: 2px solid #1E90FF;\n"
+"    border-radius: 10px;\n"
+"    color: #FFFFFF;\n"
+"    padding: 5px;\n"
+"}\n"
+"\n"
+"QLabel {\n"
+"    color: #FFFFFF;\n"
+"}\n"
+"")
+        self.labelReguleringTemp.setObjectName("labelReguleringTemp")
+        self.labelMotorTemp = QtWidgets.QLabel(self.frame_2)
+        self.labelMotorTemp.setGeometry(QtCore.QRect(200, 220, 81, 31))
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.Expanding)
+        sizePolicy.setHorizontalStretch(5)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.labelMotorTemp.sizePolicy().hasHeightForWidth())
+        self.labelMotorTemp.setSizePolicy(sizePolicy)
+        self.labelMotorTemp.setStyleSheet("QWidget {\n"
+"    background-color: #6E6976;\n"
+"}\n"
+"\n"
+"QFrame {\n"
+"    background-color: #2E2A33;\n"
+"    border: 2px solid #1E90FF;\n"
+"    border-radius: 10px;\n"
+"}\n"
+"\n"
+"QPushButton {\n"
+"    background-color: #2E2A33;\n"
+"    border: 2px solid #1E90FF;\n"
+"    border-radius: 10px;\n"
+"    color: #FFFFFF;\n"
+"    padding: 5px;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"    background-color: #6E6976;\n"
+"    color: #FFFFFF;\n"
+"}\n"
+"\n"
+"QLineEdit {\n"
+"    background-color: #2E2A33;\n"
+"    border: 2px solid #1E90FF;\n"
+"    border-radius: 10px;\n"
+"    color: #FFFFFF;\n"
+"    padding: 5px;\n"
+"}\n"
+"\n"
+"QLabel {\n"
+"    color: #FFFFFF;\n"
+"}\n"
+"")
+        self.labelMotorTemp.setObjectName("labelMotorTemp")
+        self.labelManipulatorTemp = QtWidgets.QLabel(self.frame_2)
+        self.labelManipulatorTemp.setGeometry(QtCore.QRect(200, 260, 81, 31))
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.Expanding)
+        sizePolicy.setHorizontalStretch(5)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.labelManipulatorTemp.sizePolicy().hasHeightForWidth())
+        self.labelManipulatorTemp.setSizePolicy(sizePolicy)
+        self.labelManipulatorTemp.setStyleSheet("QWidget {\n"
+"    background-color: #6E6976;\n"
+"}\n"
+"\n"
+"QFrame {\n"
+"    background-color: #2E2A33;\n"
+"    border: 2px solid #1E90FF;\n"
+"    border-radius: 10px;\n"
+"}\n"
+"\n"
+"QPushButton {\n"
+"    background-color: #2E2A33;\n"
+"    border: 2px solid #1E90FF;\n"
+"    border-radius: 10px;\n"
+"    color: #FFFFFF;\n"
+"    padding: 5px;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"    background-color: #6E6976;\n"
+"    color: #FFFFFF;\n"
+"}\n"
+"\n"
+"QLineEdit {\n"
+"    background-color: #2E2A33;\n"
+"    border: 2px solid #1E90FF;\n"
+"    border-radius: 10px;\n"
+"    color: #FFFFFF;\n"
+"    padding: 5px;\n"
+"}\n"
+"\n"
+"QLabel {\n"
+"    color: #FFFFFF;\n"
+"}\n"
+"")
+        self.labelManipulatorTemp.setObjectName("labelManipulatorTemp")
+        self.labelThruster12VTemp = QtWidgets.QLabel(self.frame_2)
+        self.labelThruster12VTemp.setGeometry(QtCore.QRect(200, 300, 81, 31))
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.Expanding)
+        sizePolicy.setHorizontalStretch(5)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.labelThruster12VTemp.sizePolicy().hasHeightForWidth())
+        self.labelThruster12VTemp.setSizePolicy(sizePolicy)
+        self.labelThruster12VTemp.setStyleSheet("QWidget {\n"
+"    background-color: #6E6976;\n"
+"}\n"
+"\n"
+"QFrame {\n"
+"    background-color: #2E2A33;\n"
+"    border: 2px solid #1E90FF;\n"
+"    border-radius: 10px;\n"
+"}\n"
+"\n"
+"QPushButton {\n"
+"    background-color: #2E2A33;\n"
+"    border: 2px solid #1E90FF;\n"
+"    border-radius: 10px;\n"
+"    color: #FFFFFF;\n"
+"    padding: 5px;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"    background-color: #6E6976;\n"
+"    color: #FFFFFF;\n"
+"}\n"
+"\n"
+"QLineEdit {\n"
+"    background-color: #2E2A33;\n"
+"    border: 2px solid #1E90FF;\n"
+"    border-radius: 10px;\n"
+"    color: #FFFFFF;\n"
+"    padding: 5px;\n"
+"}\n"
+"\n"
+"QLabel {\n"
+"    color: #FFFFFF;\n"
+"}\n"
+"")
+        self.labelThruster12VTemp.setObjectName("labelThruster12VTemp")
+        self.labelKraft5VTemp = QtWidgets.QLabel(self.frame_2)
+        self.labelKraft5VTemp.setGeometry(QtCore.QRect(200, 340, 81, 31))
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.Expanding)
+        sizePolicy.setHorizontalStretch(5)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.labelKraft5VTemp.sizePolicy().hasHeightForWidth())
+        self.labelKraft5VTemp.setSizePolicy(sizePolicy)
+        self.labelKraft5VTemp.setStyleSheet("QWidget {\n"
+"    background-color: #6E6976;\n"
+"}\n"
+"\n"
+"QFrame {\n"
+"    background-color: #2E2A33;\n"
+"    border: 2px solid #1E90FF;\n"
+"    border-radius: 10px;\n"
+"}\n"
+"\n"
+"QPushButton {\n"
+"    background-color: #2E2A33;\n"
+"    border: 2px solid #1E90FF;\n"
+"    border-radius: 10px;\n"
+"    color: #FFFFFF;\n"
+"    padding: 5px;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"    background-color: #6E6976;\n"
+"    color: #FFFFFF;\n"
+"}\n"
+"\n"
+"QLineEdit {\n"
+"    background-color: #2E2A33;\n"
+"    border: 2px solid #1E90FF;\n"
+"    border-radius: 10px;\n"
+"    color: #FFFFFF;\n"
+"    padding: 5px;\n"
+"}\n"
+"\n"
+"QLabel {\n"
+"    color: #FFFFFF;\n"
+"}\n"
+"")
+        self.labelKraft5VTemp.setObjectName("labelKraft5VTemp")
+        self.labelManipulatorKraft = QtWidgets.QLabel(self.frame_2)
+        self.labelManipulatorKraft.setGeometry(QtCore.QRect(320, 230, 171, 35))
+        self.labelManipulatorKraft.setText("")
+        self.labelManipulatorKraft.setObjectName("labelManipulatorKraft")
+        self.labelThrusterKraft = QtWidgets.QLabel(self.frame_2)
+        self.labelThrusterKraft.setGeometry(QtCore.QRect(10, 230, 151, 41))
+        self.labelThrusterKraft.setText("")
+        self.labelThrusterKraft.setObjectName("labelThrusterKraft")
+        self.label_20.raise_()
+        self.labelHHB.raise_()
+        self.labelVVF.raise_()
+        self.labelHVF.raise_()
+        self.labelHHF.raise_()
+        self.labelVHF.raise_()
+        self.labelVHB.raise_()
+        self.labelHVB.raise_()
+        self.labelVVB.raise_()
+        self.labelTempKomKontroller.raise_()
+        self.labelTempSensorkort.raise_()
+        self.labelReguleringTemp.raise_()
+        self.labelMotorTemp.raise_()
+        self.labelManipulatorTemp.raise_()
+        self.labelThruster12VTemp.raise_()
+        self.labelKraft5VTemp.raise_()
+        self.labelManipulatorKraft.raise_()
+        self.labelThrusterKraft.raise_()
+        self.kjoremodusLayout.addWidget(self.frame_2)
         self.horizontalLayout_3 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_3.setObjectName("horizontalLayout_3")
-        self.horizontalLayout_7 = QtWidgets.QHBoxLayout()
-        self.horizontalLayout_7.setSpacing(10)
-        self.horizontalLayout_7.setObjectName("horizontalLayout_7")
-        self.verticalLayout_38 = QtWidgets.QVBoxLayout()
-        self.verticalLayout_38.setObjectName("verticalLayout_38")
-        self.label_12 = QtWidgets.QLabel(self.frame)
-        self.label_12.setStyleSheet("QLabel {\n"
-"  qproperty-alignment: \'AlignCenter\';\n"
-"}")
-        self.label_12.setObjectName("label_12")
-        self.verticalLayout_38.addWidget(self.label_12)
-        self.horizontalLayout_7.addLayout(self.verticalLayout_38)
-        self.verticalLayout_39 = QtWidgets.QVBoxLayout()
-        self.verticalLayout_39.setObjectName("verticalLayout_39")
-        self.labelManipulatorTemp = QtWidgets.QLabel(self.frame)
-        self.labelManipulatorTemp.setStyleSheet("QLabel {\n"
-"  qproperty-alignment: \'AlignCenter\';\n"
-"}")
-        self.labelManipulatorTemp.setText("")
-        self.labelManipulatorTemp.setObjectName("labelManipulatorTemp")
-        self.verticalLayout_39.addWidget(self.labelManipulatorTemp)
-        self.labelThruster12VTemp = QtWidgets.QLabel(self.frame)
-        self.labelThruster12VTemp.setStyleSheet("QLabel {\n"
-"  qproperty-alignment: \'AlignCenter\';\n"
-"}")
-        self.labelThruster12VTemp.setText("")
-        self.labelThruster12VTemp.setObjectName("labelThruster12VTemp")
-        self.verticalLayout_39.addWidget(self.labelThruster12VTemp)
-        self.labelTempVann = QtWidgets.QLabel(self.frame)
-        self.labelTempVann.setStyleSheet("QLabel {\n"
-"  qproperty-alignment: \'AlignCenter\';\n"
-"}")
-        self.labelTempVann.setText("")
-        self.labelTempVann.setObjectName("labelTempVann")
-        self.verticalLayout_39.addWidget(self.labelTempVann)
-        self.labelTempSensorkort = QtWidgets.QLabel(self.frame)
-        self.labelTempSensorkort.setStyleSheet("QLabel {\n"
-"  qproperty-alignment: \'AlignCenter\';\n"
-"}")
-        self.labelTempSensorkort.setText("")
-        self.labelTempSensorkort.setObjectName("labelTempSensorkort")
-        self.verticalLayout_39.addWidget(self.labelTempSensorkort)
-        self.horizontalLayout_7.addLayout(self.verticalLayout_39)
-        self.horizontalLayout_3.addLayout(self.horizontalLayout_7)
         self.kjoremodusLayout.addLayout(self.horizontalLayout_3)
         self.column1Layout.addWidget(self.frame)
+        self.btnKalibrerIMU = QtWidgets.QPushButton(self.column1)
+        self.btnKalibrerIMU.setObjectName("btnKalibrerIMU")
+        self.column1Layout.addWidget(self.btnKalibrerIMU)
+        self.title_start_videoopptak = QtWidgets.QLabel(self.column1)
+        self.title_start_videoopptak.setMaximumSize(QtCore.QSize(16777215, 16777215))
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        font.setBold(False)
+        font.setItalic(False)
+        font.setWeight(50)
+        self.title_start_videoopptak.setFont(font)
+        self.title_start_videoopptak.setStyleSheet("QWidget {\n"
+"    background-color: #6E6976;\n"
+"}\n"
+"\n"
+"QFrame {\n"
+"    background-color: #2E2A33;\n"
+"    border: 2px solid #1E90FF;\n"
+"    border-radius: 10px;\n"
+"}\n"
+"\n"
+"QPushButton {\n"
+"    background-color: #2E2A33;\n"
+"    border: 2px solid #1E90FF;\n"
+"    border-radius: 10px;\n"
+"    color: #FFFFFF;\n"
+"    padding: 5px;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"    background-color: #6E6976;\n"
+"    color: #FFFFFF;\n"
+"}\n"
+"\n"
+"QLineEdit {\n"
+"    background-color: #2E2A33;\n"
+"    border: 2px solid #1E90FF;\n"
+"    border-radius: 10px;\n"
+"    color: #FFFFFF;\n"
+"    padding: 5px;\n"
+"}\n"
+"\n"
+"QLabel {\n"
+"    color: #FFFFFF;\n"
+"}\n"
+"")
+        self.title_start_videoopptak.setObjectName("title_start_videoopptak")
+        self.column1Layout.addWidget(self.title_start_videoopptak)
+        self.btnResetManipulator = QtWidgets.QPushButton(self.column1)
+        self.btnResetManipulator.setObjectName("btnResetManipulator")
+        self.column1Layout.addWidget(self.btnResetManipulator)
+        self.btnResetThruster = QtWidgets.QPushButton(self.column1)
+        self.btnResetThruster.setObjectName("btnResetThruster")
+        self.column1Layout.addWidget(self.btnResetThruster)
         self.horizontalLayout_6.addWidget(self.column1)
         self.column3 = QtWidgets.QFrame(self.row)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
@@ -2023,126 +2295,9 @@ class Ui_MainWindow(object):
         self.maniOuterContainer.setObjectName("maniOuterContainer")
         self.verticalLayout_3 = QtWidgets.QVBoxLayout(self.maniOuterContainer)
         self.verticalLayout_3.setObjectName("verticalLayout_3")
-        self.title_start_videoopptak_4 = QtWidgets.QLabel(self.maniOuterContainer)
-        self.title_start_videoopptak_4.setMinimumSize(QtCore.QSize(0, 20))
-        self.title_start_videoopptak_4.setMaximumSize(QtCore.QSize(16777215, 20))
-        font = QtGui.QFont()
-        font.setPointSize(10)
-        font.setBold(False)
-        font.setItalic(False)
-        font.setWeight(50)
-        self.title_start_videoopptak_4.setFont(font)
-        self.title_start_videoopptak_4.setStyleSheet("QWidget {\n"
-"    background-color: #6E6976;\n"
-"}\n"
-"\n"
-"QFrame {\n"
-"    background-color: #2E2A33;\n"
-"    border: 2px solid #1E90FF;\n"
-"    border-radius: 10px;\n"
-"}\n"
-"\n"
-"QPushButton {\n"
-"    background-color: #2E2A33;\n"
-"    border: 2px solid #1E90FF;\n"
-"    border-radius: 10px;\n"
-"    color: #FFFFFF;\n"
-"    padding: 5px;\n"
-"}\n"
-"\n"
-"QPushButton:hover {\n"
-"    background-color: #6E6976;\n"
-"    color: #FFFFFF;\n"
-"}\n"
-"\n"
-"QLineEdit {\n"
-"    background-color: #2E2A33;\n"
-"    border: 2px solid #1E90FF;\n"
-"    border-radius: 10px;\n"
-"    color: #FFFFFF;\n"
-"    padding: 5px;\n"
-"}\n"
-"\n"
-"QLabel {\n"
-"    color: #FFFFFF;\n"
-"}\n"
-"")
-        self.title_start_videoopptak_4.setObjectName("title_start_videoopptak_4")
-        self.verticalLayout_3.addWidget(self.title_start_videoopptak_4)
         self.horizontalLayout_10 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_10.setObjectName("horizontalLayout_10")
-        self.verticalLayout_11 = QtWidgets.QVBoxLayout()
-        self.verticalLayout_11.setObjectName("verticalLayout_11")
-        self.label_5 = QtWidgets.QLabel(self.maniOuterContainer)
-        self.label_5.setStyleSheet("QLabel {\n"
-"  qproperty-alignment: \'AlignCenter\';\n"
-"}")
-        self.label_5.setObjectName("label_5")
-        self.verticalLayout_11.addWidget(self.label_5)
-        self.horizontalLayout_10.addLayout(self.verticalLayout_11)
-        self.verticalLayout_12 = QtWidgets.QVBoxLayout()
-        self.verticalLayout_12.setObjectName("verticalLayout_12")
-        self.labelManipulatorKraft = QtWidgets.QLabel(self.maniOuterContainer)
-        self.labelManipulatorKraft.setText("")
-        self.labelManipulatorKraft.setObjectName("labelManipulatorKraft")
-        self.verticalLayout_12.addWidget(self.labelManipulatorKraft)
-        self.labelThrusterKraft = QtWidgets.QLabel(self.maniOuterContainer)
-        self.labelThrusterKraft.setText("")
-        self.labelThrusterKraft.setObjectName("labelThrusterKraft")
-        self.verticalLayout_12.addWidget(self.labelThrusterKraft)
-        self.horizontalLayout_10.addLayout(self.verticalLayout_12)
         self.verticalLayout_3.addLayout(self.horizontalLayout_10)
-        self.title_start_videoopptak = QtWidgets.QLabel(self.maniOuterContainer)
-        self.title_start_videoopptak.setMaximumSize(QtCore.QSize(16777215, 16777215))
-        font = QtGui.QFont()
-        font.setPointSize(10)
-        font.setBold(False)
-        font.setItalic(False)
-        font.setWeight(50)
-        self.title_start_videoopptak.setFont(font)
-        self.title_start_videoopptak.setStyleSheet("QWidget {\n"
-"    background-color: #6E6976;\n"
-"}\n"
-"\n"
-"QFrame {\n"
-"    background-color: #2E2A33;\n"
-"    border: 2px solid #1E90FF;\n"
-"    border-radius: 10px;\n"
-"}\n"
-"\n"
-"QPushButton {\n"
-"    background-color: #2E2A33;\n"
-"    border: 2px solid #1E90FF;\n"
-"    border-radius: 10px;\n"
-"    color: #FFFFFF;\n"
-"    padding: 5px;\n"
-"}\n"
-"\n"
-"QPushButton:hover {\n"
-"    background-color: #6E6976;\n"
-"    color: #FFFFFF;\n"
-"}\n"
-"\n"
-"QLineEdit {\n"
-"    background-color: #2E2A33;\n"
-"    border: 2px solid #1E90FF;\n"
-"    border-radius: 10px;\n"
-"    color: #FFFFFF;\n"
-"    padding: 5px;\n"
-"}\n"
-"\n"
-"QLabel {\n"
-"    color: #FFFFFF;\n"
-"}\n"
-"")
-        self.title_start_videoopptak.setObjectName("title_start_videoopptak")
-        self.verticalLayout_3.addWidget(self.title_start_videoopptak)
-        self.btnResetManipulator = QtWidgets.QPushButton(self.maniOuterContainer)
-        self.btnResetManipulator.setObjectName("btnResetManipulator")
-        self.verticalLayout_3.addWidget(self.btnResetManipulator)
-        self.btnResetThruster = QtWidgets.QPushButton(self.maniOuterContainer)
-        self.btnResetThruster.setObjectName("btnResetThruster")
-        self.verticalLayout_3.addWidget(self.btnResetThruster)
         self.column2Layout.addWidget(self.maniOuterContainer)
         self.horizontalLayout_6.addWidget(self.column2)
         self.verticalLayout.addWidget(self.row, 0, QtCore.Qt.AlignVCenter)
@@ -2192,7 +2347,7 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
-        self.title_kjoremodus.setText(_translate("MainWindow", "THRUSTERPÅDRAG"))
+        self.title_kjoremodus.setText(_translate("MainWindow", "THRUSTERPÅDRAG TEMPERATUR OG KRAFT"))
         self.labelVVF.setText(_translate("MainWindow", "------"))
         self.labelVHF.setText(_translate("MainWindow", "------"))
         self.labelHHF.setText(_translate("MainWindow", "------"))
@@ -2201,9 +2356,18 @@ class Ui_MainWindow(object):
         self.labelVVB.setText(_translate("MainWindow", "------"))
         self.labelHVB.setText(_translate("MainWindow", "------"))
         self.labelHVF.setText(_translate("MainWindow", "------"))
+        self.labelTempKomKontroller.setText(_translate("MainWindow", "------"))
+        self.labelTempSensorkort.setText(_translate("MainWindow", "------"))
+        self.labelReguleringTemp.setText(_translate("MainWindow", "------"))
+        self.labelMotorTemp.setText(_translate("MainWindow", "------"))
+        self.labelManipulatorTemp.setText(_translate("MainWindow", "------"))
+        self.labelThruster12VTemp.setText(_translate("MainWindow", "------"))
+        self.labelKraft5VTemp.setText(_translate("MainWindow", "------"))
         self.btnKalibrerIMU.setText(_translate("MainWindow", "Kalibrer_IMU"))
-        self.title_kjoremodus_2.setText(_translate("MainWindow", "TEMPERATUR"))
-        self.label_12.setText(_translate("MainWindow", "<html><head/><body><p><span style=\" font-size:16pt;\">Høyre :<br/><br/>Venstre :<br/><br/>Vann :</span></p><p><span style=\" font-size:16pt;\">Sensorkort :</span></p></body></html>"))
+        self.title_start_videoopptak.setText(_translate("MainWindow", "RESET SIKRINGER"))
+        self.title_start_videoopptak.setProperty("colorStyle", _translate("MainWindow", "subTitle"))
+        self.btnResetManipulator.setText(_translate("MainWindow", "Høyre Side"))
+        self.btnResetThruster.setText(_translate("MainWindow", "Venstre side"))
         self.overskrifkamera_6.setText(_translate("MainWindow", "        NAVN PÅ ALARM                                                  FEILKODE                                           "))
         self.label_25.setText(_translate("MainWindow", "Høyre side"))
         self.label_23.setText(_translate("MainWindow", "Venstre side"))
@@ -2238,10 +2402,14 @@ class Ui_MainWindow(object):
         self.btnTakePic.setText(_translate("MainWindow", "Skjermbilde"))
         self.btnRecord.setText(_translate("MainWindow", "Ta opp Video"))
         self.showNewWindowButton.setText(_translate("MainWindow", "Vis Bilder"))
-        self.btnRegOn.setText(_translate("MainWindow", "All Regulering"))
-        self.btnDybdeOn.setText(_translate("MainWindow", "Dybde Regulering"))
-        self.btnStampOn.setText(_translate("MainWindow", "Stamp Regulering"))
-        self.btnRullOn.setText(_translate("MainWindow", "Rull Regulering"))
+        self.btnRegOn.setText(_translate("MainWindow", "All \n"
+"Regulering"))
+        self.btnDybdeOn.setText(_translate("MainWindow", "Dybde \n"
+"Regulering"))
+        self.btnStampOn.setText(_translate("MainWindow", "Stamp\n"
+"Regulering"))
+        self.btnRullOn.setText(_translate("MainWindow", "Rull\n"
+"Regulering"))
         self.label_10.setText(_translate("MainWindow", "Endre Kameravinkel"))
         self.labelKameraVinkel.setText(_translate("MainWindow", "Kameravinkel"))
         self.label_11.setText(_translate("MainWindow", "Regulator Tuning"))
@@ -2257,11 +2425,4 @@ class Ui_MainWindow(object):
         self.reguleringDropdown.setItemText(9, _translate("MainWindow", "TS"))
         self.reguleringDropdown.setItemText(10, _translate("MainWindow", "Alpha"))
         self.btnRegTuning.setText(_translate("MainWindow", "Submit"))
-        self.title_start_videoopptak_4.setText(_translate("MainWindow", "KRAFT"))
-        self.title_start_videoopptak_4.setProperty("colorStyle", _translate("MainWindow", "subTitle"))
-        self.label_5.setText(_translate("MainWindow", "<html><head/><body><p><span style=\" font-size:16pt;\">Høyre :<br/><br/>Venstre :</span></p></body></html>"))
-        self.title_start_videoopptak.setText(_translate("MainWindow", "RESET SIKRINGER"))
-        self.title_start_videoopptak.setProperty("colorStyle", _translate("MainWindow", "subTitle"))
-        self.btnResetManipulator.setText(_translate("MainWindow", "Høyre Side"))
-        self.btnResetThruster.setText(_translate("MainWindow", "Venstre side"))
 import resources_rc

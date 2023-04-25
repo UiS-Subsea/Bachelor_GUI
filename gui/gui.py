@@ -98,7 +98,7 @@ class Window(QMainWindow):
         )
         self.sliderCamVinkel = self.findChild(QSlider, "sliderCamVinkel")
         self.labelKameraVinkel = self.findChild(QLabel, "labelKameraVinkel")
-        self.sliderCamVinkel.setValue(90)
+        # self.sliderCamVinkel.setValue(90)
 
         # Queue and pipe
 
@@ -441,9 +441,8 @@ class Window(QMainWindow):
             MANIPULATOR12V: self.guiManipulatorUpdate,
             THRUSTER12V: self.thruster12VUpdate,
             # KRAFT5V: self.kraft5VUpdate,
-            # REGULERINGMOTORTEMP: self.reguleringMotorTempUpdate,
-            # TEMPKOMKONTROLLER: self.TempKomKontrollerUpdate
-            MANIPULATOR12V: self.guiManipulatorUpdate,
+            REGULERINGMOTORTEMP: self.reguleringMotorTempUpdate,
+            TEMPKOMKONTROLLER: self.TempKomKontrollerUpdate,
         }
         for key in sensordata.keys():
             if key in self.sensor_update_function:
@@ -580,12 +579,12 @@ class Window(QMainWindow):
     def dybdeTempUpdate(self, sensordata):
         labelDybde: QLabel = self.labelDybde
 
-        labelVann: QLabel = self.labelTempVann
+        # labelVann: QLabel = self.labelTempVann
         labelSensor: QLabel = self.labelTempSensorkort
 
         labelDybde.setText(str(round(sensordata[0], 2)) + "m")
-        labelVann.setText(str(round(sensordata[1], 2)) + "°C")
-        labelSensor.setText(str(round(sensordata[2], 2)) + "°C")
+        # labelVann.setText(str(round(sensordata[1], 2)) + "°C")
+        labelSensor.setText(str(round(sensordata[2] / 100, 2)) + "°C")
 
     def guiThrustUpdate(self, sensordata):
         labelHHF: QLabel = self.labelHHF
@@ -630,8 +629,8 @@ class Window(QMainWindow):
         labelTemp: QLabel = self.labelManipulatorTemp
         labelSikring: QLabel = self.labelManipulatorSikring
 
-        labelKraft.setText(str(round(sensordata[0]/1000, 2)) + "A")
-        labelTemp.setText(str(round(sensordata[1]/1000, 2)) + "C")
+        labelKraft.setText(str(round(sensordata[0] / 1000, 2)) + "A")
+        labelTemp.setText(str(round(sensordata[1] / 100, 2)) + "C")
 
         for i in range(3):
             if sensordata[2][i] == True:
@@ -647,9 +646,10 @@ class Window(QMainWindow):
         labelKraft: QLabel = self.labelThrusterKraft
         labelTemp: QLabel = self.labelThruster12VTemp
         labelSikring: QLabel = self.labelThrusterSikring
+        #print(sensordata)
 
-        labelKraft.setText(str(round(sensordata[0], 2)) + "A")
-        labelTemp.setText(str(round(sensordata[1], 2)) + "C")
+        labelKraft.setText(str(round(sensordata[0] / 1000, 2)) + "A")
+        labelTemp.setText(str(round(sensordata[1] / 100, 2)) + "C")
 
         for i in range(3):
             if sensordata[2][i] == True:
@@ -660,16 +660,20 @@ class Window(QMainWindow):
                 labelSikring.setText("Ingen feil")
                 self.lastThrusterAlarm = -1
 
+    def kraft5VUpdate(self, sensordata):
+        pass
+
     def reguleringMotorTempUpdate(self, sensordata):
         labelRegulering: QLabel = self.labelReguleringTemp
         labelMotor: QLabel = self.labelMotorTemp
 
-        labelRegulering.setText((round(sensordata[0], 2)) + "C")
-        labelMotor.setText((round(sensordata[1], 2)) + "C")
+        labelRegulering.setText(str(round(sensordata[0] / 100, 2)) + "°C")
+        labelMotor.setText(str(round(sensordata[1] / 100, 2)) + "°C")
 
     def TempKomKontrollerUpdate(self, sensordata):
         labelTemp: QLabel = self.labelTempKomKontroller
-        labelTemp.setText(((sensordata[0], 2)) + "C")
+        # print(sensordata)
+        labelTemp.setText(str(round(sensordata, 2)) + "°C")
 
 
 def run(conn, queue_for_rov, manual_flag, t_watch: Threadwatcher, id):

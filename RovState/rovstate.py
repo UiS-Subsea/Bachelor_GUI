@@ -607,4 +607,4 @@ class Rov_state:
         elif self.packet_id == 19:
             self.build_camera_tilt()
             
-        print(self.packets_to_send)
+        #print(self.packets_to_send)
