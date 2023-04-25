@@ -372,7 +372,7 @@ class Rov_state:
         data[2] = self.data["rov_joysticks"][Z_AXIS]
         data[3] = -self.data["rov_joysticks"][ROTATION_AXIS]
 
-        self.packets_to_send.append([40, data])
+        self.packets_to_send.append([33, data])
 
     def build_autonom_packet(self):
         if self.data == {}:
@@ -384,7 +384,7 @@ class Rov_state:
         data[1] = self.data["autonomdata"][1]
         data[2] = self.data["autonomdata"][2]
         data[3] = self.data["autonomdata"][3]
-        self.packets_to_send.append([40, data])
+        self.packets_to_send.append([33, data])
 
     def build_manipulator_packet(self):
         # Kan også endre til to indexer i data listen for mani inn og ut (f.eks 0 og 1 = btn 12 og 13)
@@ -399,7 +399,7 @@ class Rov_state:
             data[3] = self.data["mani_joysticks"][MANIPULATOR_GRAB_RELEASE]
         except KeyError:
             pass
-        self.packets_to_send.append([41, data])
+        self.packets_to_send.append([34, data])
 
     def build_reset_packet(self):
         if self.data == {}:
@@ -527,6 +527,8 @@ class Rov_state:
             return
         data = [0, 0, 0, 0, 0, 0, 0, 0]
 
+        data[0] = self.data["slider_top_light"][0]
+
         data[1] = self.data["slider_top_light"][1]
 
         self.packets_to_send.append([98, data])
@@ -536,6 +538,8 @@ class Rov_state:
             return
         data = [0, 0, 0, 0, 0, 0, 0, 0]
 
+
+        data[0] = self.data["slider_bottom_light"][0]
         data[1] = self.data["slider_bottom_light"][1]
 
         self.packets_to_send.append([99, data])

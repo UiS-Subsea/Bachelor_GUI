@@ -29,6 +29,9 @@ from queue import Queue
 global RUN_MANUAL
 os.environ['QT_LOGGING_RULES'] = 'qt.qpa.wayland.warning=false'
 
+set_light_bytefront = [0,0,0,0,0,0,0,0]
+set_light_bytebottom = [0,0,0,0,0,0,0,0]
+
 class SoundWorker(QObject):
     play = pyqtSignal(bool)
 
@@ -296,21 +299,20 @@ class Window(QMainWindow):
         # print(calibrate_IMU_byte)
 
 
-    def update_label_and_print_value(self, value):
+    def  update_label_and_print_value(self, value):
         self.label_percentage_lys_forward.setText(f"{value}%")
-        set_light_byte = [0] * 8
-        set_light_byte[1] = value
-        values = {"slider_top_light": set_light_byte}
-        print((f"Want to send", 98, set_light_byte))
+        #set_light_byte = [0] * 8
+        set_light_bytefront[1] = value
+        values = {"slider_top_light": set_light_bytefront}
+        print((f"Want to send", 98, set_light_bytefront))
         self.queue.put((17, values))
-        print("Slider value:", value)
+        print("Slider value:", set_light_bytefront)
             
     def update_label_and_print_value_down(self, value):
         self.label_percentage_lys_down.setText(f"{value}%")
-        set_light_byte = [0] * 8
-        set_light_byte[1] = value
-        values = {"slider_bottom_light": set_light_byte}
-        print((f"Want to send", 99, set_light_byte))
+        set_light_bytebottom[1] = value
+        values = {"slider_bottom_light": set_light_bytebottom}
+        print((f"Want to send", 99, set_light_bytebottom))
         self.queue.put((18, values))
         print(value)
     
@@ -397,20 +399,20 @@ class Window(QMainWindow):
 #        self.packets_to_send.append([66, toggle_dybde_reg])
 
     def front_light_on(self):
-        set_light_byte = [0] * 8
-        set_light_byte[0] |= (1 << 1)  # bit 1 to 1
+        #set_light_byte = [0] * 8
+        set_light_bytefront[0] ^= (1 << 1)  # bit 1 to 1
         print("Front Light On")
-        print(("Want to send", 98, set_light_byte))
-        values = {"front_light_on": set_light_byte}
+        print(("Want to send", 98, set_light_bytefront))
+        values = {"front_light_on": set_light_bytefront}
         self.queue.put((15, values))
 #        self.packets_to_send.append((98, bytes(set_light_byte)))
 
     def bottom_light_on(self):
-        set_light_byte = [0] * 8
-        set_light_byte[0] |= (1 << 1)  # bit 1 to 1
+        #set_light_byte = [0] * 8
+        set_light_bytebottom[0] ^= (1 << 1)  # bit 1 to 1
         print("Bottom Light On")
-        print(("Want to send", 99, set_light_byte))
-        values = {"bottom_light_on": set_light_byte}
+        print(("Want to send", 99, set_light_bytebottom))
+        values = {"bottom_light_on": set_light_bytebottom}
         self.queue.put((16, values))
 #        self.packets_to_send.append((99, bytes(set_light_byte)))
 

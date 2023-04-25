@@ -46,7 +46,7 @@ def build_rov_packet_test():
     rov_data[1] = [Y_AXIS]
     rov_data[2] = [Z_AXIS]
     rov_data[3] = [ROTATION_AXIS]
-    full_rov_data = [[40], rov_data]
+    full_rov_data = [[33], rov_data]
     # self.packets_to_send.append([40, data])
     print(full_rov_data)
     return full_rov_data
