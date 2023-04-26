@@ -646,7 +646,7 @@ class Window(QMainWindow):
         labelKraft: QLabel = self.labelThrusterKraft
         labelTemp: QLabel = self.labelThruster12VTemp
         labelSikring: QLabel = self.labelThrusterSikring
-        #print(sensordata)
+        # print(sensordata)
 
         labelKraft.setText(str(round(sensordata[0] / 1000, 2)) + "A")
         labelTemp.setText(str(round(sensordata[1] / 100, 2)) + "C")
@@ -661,7 +661,8 @@ class Window(QMainWindow):
                 self.lastThrusterAlarm = -1
 
     def kraft5VUpdate(self, sensordata):
-        pass
+        labelTemp: QLabel = self.labelKraft5VTemp
+        labelTemp.setText(str(round(sensordata[1] / 100, 2)) + "C")
 
     def reguleringMotorTempUpdate(self, sensordata):
         labelRegulering: QLabel = self.labelReguleringTemp
@@ -672,7 +673,6 @@ class Window(QMainWindow):
 
     def TempKomKontrollerUpdate(self, sensordata):
         labelTemp: QLabel = self.labelTempKomKontroller
-        # print(sensordata)
         labelTemp.setText(str(round(sensordata, 2)) + "°C")
 
 
