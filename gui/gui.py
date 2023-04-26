@@ -587,36 +587,36 @@ class Window(QMainWindow):
         labelSensor.setText(str(round(sensordata[2] / 100, 2)) + "°C")
 
     def guiThrustUpdate(self, sensordata):
-        labelHHF: QLabel = self.labelHHF
-        labelHHB: QLabel = self.labelHHB
-        labelHVB: QLabel = self.labelHVB
-        labelHVF: QLabel = self.labelHVF
-        labelVHF: QLabel = self.labelVHF
-        labelVHB: QLabel = self.labelVHB
-        labelVVB: QLabel = self.labelVVB
-        labelVVF: QLabel = self.labelVVF
+        # labelHHF: QLabel = self.labelHHF
+        # labelHHB: QLabel = self.labelHHB
+        # labelHVB: QLabel = self.labelHVB
+        # labelHVF: QLabel = self.labelHVF
+        # labelVHF: QLabel = self.labelVHF
+        # labelVHB: QLabel = self.labelVHB
+        # labelVVB: QLabel = self.labelVVB
+        # labelVVF: QLabel = self.labelVVF
 
-        labelHHF.setText(str(round(sensordata[0], 2)))
-        labelHHB.setText(str(round(sensordata[1], 2)))
-        labelHVB.setText(str(round(sensordata[2], 2)))
-        labelHVF.setText(str(round(sensordata[3], 2)))
-        labelVHF.setText(str(round(sensordata[4], 2)))
-        labelVHB.setText(str(round(sensordata[5], 2)))
-        labelVVB.setText(str(round(sensordata[6], 2)))
-        labelVVF.setText(str(round(sensordata[7], 2)))
+        # labelHHF.setText(str(round(sensordata[0], 2)))
+        # labelHHB.setText(str(round(sensordata[1], 2)))
+        # labelHVB.setText(str(round(sensordata[2], 2)))
+        # labelHVF.setText(str(round(sensordata[3], 2)))
+        # labelVHF.setText(str(round(sensordata[4], 2)))
+        # labelVHB.setText(str(round(sensordata[5], 2)))
+        # labelVVB.setText(str(round(sensordata[6], 2)))
+        # labelVVF.setText(str(round(sensordata[7], 2)))
 
-        # thrust_liste: list[QLabel] = [
-        #     self.labelHHF,
-        #     self.labelHHB,
-        #     self.labelHVB,
-        #     self.labelHVF,
-        #     self.labelVHF,
-        #     self.labelVHB,
-        #     self.labelVVB,
-        #     self.labelVVF,
-        # ]
-        # for i, label in enumerate(thrust_liste):
-        #     label.setText(str(round(sensordata[i], 2)))
+        thrust_liste: list[QLabel] = [
+            self.labelHHF,
+            self.labelHHB,
+            self.labelHVB,
+            self.labelHVF,
+            self.labelVHF,
+            self.labelVHB,
+            self.labelVVB,
+            self.labelVVF,
+        ]
+        for i, label in enumerate(thrust_liste):
+            label.setText(str(round(sensordata[i], 2)))
 
     kraftFeilkoder = [
         "Overcurrent trip",
