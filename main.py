@@ -14,6 +14,7 @@ from RovState.send_fake_sensordata import send_fake_sensordata
 from RovState.rovstate import Rov_state
 import gui
 from gui import guiFunctions as f
+
 # VALUES: (0-7) -> index i: [0,0,0,0,0,0,0,0]
 # MANIPULATOR
 MANIPULATOR_IN_OUT = 15
@@ -40,7 +41,6 @@ _tilt_downwards = 201
 
 
 if __name__ == "__main__":
-
     try:
         global run_gui
         global run_network
@@ -53,10 +53,10 @@ if __name__ == "__main__":
         manual_flag = multiprocessing.Value("i", 1)
         run_gui = True
         run_craft_packet = False
-        run_network = True # Bytt t True når du ska prøva å connecte.
-        run_get_controllerdata = True
+        run_network = False  # Bytt t True når du ska prøva å connecte.
+        run_get_controllerdata = False
         # Sett til True om du vil sende fake sensordata til gui
-        run_send_fake_sensordata = False
+        run_send_fake_sensordata = True
 
         t_watch = Threadwatcher()
         queue_for_rov = multiprocessing.Queue()
@@ -66,30 +66,37 @@ if __name__ == "__main__":
         debug_all = False  # Sett til True om du vil se input fra controllers
 
         if run_network:
-            network = Network(is_server=False, port=6900, bind_addr="0.0.0.0",
-                              connect_addr="10.0.0.2")
+            network = Network(
+                is_server=False, port=6900, bind_addr="0.0.0.0", connect_addr="10.0.0.2"
+            )
             # id = t_watch.add_thread()
             # main_driver_loop = threading.Thread(target=run, args=(network, t_watch, id, queue_for_rov, gui_parent_queue), daemon=True)
             # main_driver_loop.start()
 
-            rovstate = Rov_state(queue_for_rov, network,
-                                 gui_queue, manual_flag,  t_watch)
+            rovstate = Rov_state(
+                queue_for_rov, network, gui_queue, manual_flag, t_watch
+            )
 
             id = t_watch.add_thread()
             rov_state_recv_loop = threading.Thread(
-                target=rovstate.receive_data_from_rov, args=(t_watch, id), daemon=True)
+                target=rovstate.receive_data_from_rov, args=(t_watch, id), daemon=True
+            )
             rov_state_recv_loop.start()
 
             id = t_watch.add_thread()
             rov_state_send_loop = threading.Thread(
-                target=rovstate.send_packets_to_rov, args=(t_watch, id), daemon=True)
+                target=rovstate.send_packets_to_rov, args=(t_watch, id), daemon=True
+            )
             rov_state_send_loop.start()
 
         if run_get_controllerdata:
             id = t_watch.add_thread()
             # takes in controller data and sends it into child_conn
-            controller_process = Process(target=controller.run, args=(
-                queue_for_rov, manual_flag, t_watch, id, True, debug_all), daemon=True)
+            controller_process = Process(
+                target=controller.run,
+                args=(queue_for_rov, manual_flag, t_watch, id, True, debug_all),
+                daemon=True,
+            )
             controller_process.start()
             # controller_process.terminate()
 
@@ -97,7 +104,7 @@ if __name__ == "__main__":
             id = t_watch.add_thread()
             gui_loop = Process(
                 target=gui.run,
-                args=(gui_queue, queue_for_rov, manual_flag,  t_watch, id),
+                args=(gui_queue, queue_for_rov, manual_flag, t_watch, id),
                 daemon=True,
             )  # should recieve commands from the gui
             gui_loop.start()
