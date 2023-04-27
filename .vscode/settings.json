@@ -1,5 +1,7 @@
 {
-    "python.analysis.extraPaths": [
-        "./Kommunikasjon"
-    ]
+  "python.analysis.extraPaths": ["./Kommunikasjon"],
+  "[python]": {
+    "editor.defaultFormatter": "ms-python.black-formatter"
+  },
+  "python.formatting.provider": "none"
 }
