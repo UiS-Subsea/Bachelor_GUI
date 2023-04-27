@@ -67,12 +67,7 @@ class Window(QMainWindow):
         self.lastPressureAlarm = -1
 
         self.manual_flag = manual_flag
-<<<<<<< HEAD
         self.queue = queue_for_rov  # queue_for_rov is a queue that is used to send data to the rov
-=======
-        # queue_for_rov is a queue that is used to send data to the rov
-        self.queue = queue_for_rov
->>>>>>> 652648a8695ce97a4c7a9868802bf25f82b30627
         # queue_for_rov is a queue that is used to send data to the rov
 
         self.gui_queue = gui_queue
@@ -157,12 +152,7 @@ class Window(QMainWindow):
     def connectFunctions(self):
         # window2
         self.showNewWindowButton.clicked.connect(
-<<<<<<< HEAD
             lambda: self.camera_functions("show_all"))
-=======
-            lambda: self.imageprocessing("testing")
-        )
->>>>>>> 652648a8695ce97a4c7a9868802bf25f82b30627
 
         # Kjøremodus
         self.btnManuell.clicked.connect(lambda: self.manual_kjoring())
@@ -173,12 +163,7 @@ class Window(QMainWindow):
         self.btnTakePic.clicked.connect(lambda: self.camera_functions("screenshot"))
         self.btnRecord.clicked.connect(lambda: self.camera_functions("record"))
         self.btnOpenCamera.clicked.connect(
-<<<<<<< HEAD
             lambda: self.camera_functions("normal_camera"))
-=======
-            lambda: self.imageprocessing("normal_camera")
-        )
->>>>>>> 652648a8695ce97a4c7a9868802bf25f82b30627
 
         # Lys
         self.slider_lys_forward.valueChanged.connect(self.update_label_and_print_value)
@@ -457,7 +442,6 @@ class Window(QMainWindow):
             DYBDETEMP: self.dybdeTempUpdate,
             FEILKODE: self.guiFeilKodeUpdate,
             THRUST: self.guiThrustUpdate,
-<<<<<<< HEAD
             MANIPULATOR12V :self.guiManipulatorUpdate,
             THRUSTER12V:self.thruster12VUpdate,
             KRAFT5V:self.kraft5VUpdate,
@@ -466,13 +450,6 @@ class Window(QMainWindow):
             
             # MANIPULATOR12V :self.guiManipulatorUpdate,
 
-=======
-            MANIPULATOR12V: self.guiManipulatorUpdate,
-            THRUSTER12V: self.thruster12VUpdate,
-            # KRAFT5V: self.kraft5VUpdate,
-            REGULERINGMOTORTEMP: self.reguleringMotorTempUpdate,
-            TEMPKOMKONTROLLER: self.TempKomKontrollerUpdate,
->>>>>>> 652648a8695ce97a4c7a9868802bf25f82b30627
         }
         for key in sensordata.keys():
             if key in self.sensor_update_function:
