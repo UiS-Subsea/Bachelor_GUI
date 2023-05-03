@@ -440,7 +440,7 @@ class Window(QMainWindow):
             THRUST: self.guiThrustUpdate,
             MANIPULATOR12V: self.guiManipulatorUpdate,
             THRUSTER12V: self.thruster12VUpdate,
-            # KRAFT5V: self.kraft5VUpdate,
+            KRAFT5V: self.kraft5VUpdate,
             REGULERINGMOTORTEMP: self.reguleringMotorTempUpdate,
             TEMPKOMKONTROLLER: self.TempKomKontrollerUpdate,
         }

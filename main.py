@@ -14,7 +14,7 @@ from RovState.send_fake_sensordata import send_fake_sensordata
 from RovState.rovstate import Rov_state
 import gui
 from gui import guiFunctions as f
-
+import os
 # VALUES: (0-7) -> index i: [0,0,0,0,0,0,0,0]
 # MANIPULATOR
 MANIPULATOR_IN_OUT = 15
@@ -42,6 +42,7 @@ _tilt_downwards = 201
 
 if __name__ == "__main__":
     try:
+        os.environ['QT_QPA_PLATFORM'] = 'xcb'
         global run_gui
         global run_network
         global network
@@ -53,10 +54,10 @@ if __name__ == "__main__":
         manual_flag = multiprocessing.Value("i", 1)
         run_gui = True
         run_craft_packet = False
-        run_network = False  # Bytt t True når du ska prøva å connecte.
-        run_get_controllerdata = False
+        run_network = True # Bytt t True når du ska prøva å connecte.
+        run_get_controllerdata = True
         # Sett til True om du vil sende fake sensordata til gui
-        run_send_fake_sensordata = True
+        run_send_fake_sensordata = False
 
         t_watch = Threadwatcher()
         queue_for_rov = multiprocessing.Queue()
