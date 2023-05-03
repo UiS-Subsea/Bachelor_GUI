@@ -450,7 +450,7 @@ QLabel {
                                  <height>550</height>
                                 </size>
                                </property>
-                               <layout class="QVBoxLayout" name="kjoremodusLayout" stretch="0,0">
+                               <layout class="QVBoxLayout" name="kjoremodusLayout" stretch="0,0,0,0">
                                 <property name="spacing">
                                  <number>5</number>
                                 </property>
@@ -466,6 +466,20 @@ QLabel {
                                 <property name="bottomMargin">
                                  <number>0</number>
                                 </property>
+                                <item>
+                                 <widget class="QPushButton" name="btnTestSound">
+                                  <property name="text">
+                                   <string>Start Soundtest</string>
+                                  </property>
+                                 </widget>
+                                </item>
+                                <item>
+                                 <widget class="QPushButton" name="btnStopSound">
+                                  <property name="text">
+                                   <string>Stop Soundtest</string>
+                                  </property>
+                                 </widget>
+                                </item>
                                 <item>
                                  <widget class="QFrame" name="frame_2">
                                   <property name="sizePolicy">
@@ -3395,7 +3409,7 @@ QLabel {
                                               </property>
                                               <property name="minimumSize">
                                                <size>
-                                                <width>116</width>
+                                                <width>110</width>
                                                 <height>0</height>
                                                </size>
                                               </property>

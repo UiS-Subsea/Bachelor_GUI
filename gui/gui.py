@@ -10,6 +10,7 @@ import threading
 from pyqtgraph import *
 from RovState.send_fake_sensordata import REGULERINGMOTORTEMP
 from images import resources_rc
+from main import *
 
 # from main import Vinkeldata
 from main import Rov_state
@@ -209,6 +210,10 @@ class Window(QMainWindow):
         self.btnRullOn.clicked.connect(lambda: self.toggle_rull_reg())
         self.btnStampOn.clicked.connect(lambda: self.toggle_stamp_reg())
         self.btnDybdeOn.clicked.connect(lambda: self.toggle_dybde_reg())
+
+        # Lyd
+        self.btnTestSound.clicked.connect(lambda: self.play_sound(True))
+        self.btnStopSound.clicked.connect(lambda: self.play_sound(False))
 
     def gui_manipulator_state_update(self, sensordata):
         self.toggle_mani.setChecked(sensordata[0])
@@ -440,7 +445,7 @@ class Window(QMainWindow):
             THRUST: self.guiThrustUpdate,
             MANIPULATOR12V: self.guiManipulatorUpdate,
             THRUSTER12V: self.thruster12VUpdate,
-            # KRAFT5V: self.kraft5VUpdate,
+            KRAFT5V: self.kraft5VUpdate,
             REGULERINGMOTORTEMP: self.reguleringMotorTempUpdate,
             TEMPKOMKONTROLLER: self.TempKomKontrollerUpdate,
         }
@@ -587,24 +592,6 @@ class Window(QMainWindow):
         labelSensor.setText(str(round(sensordata[2] / 100, 2)) + "°C")
 
     def guiThrustUpdate(self, sensordata):
-        # labelHHF: QLabel = self.labelHHF
-        # labelHHB: QLabel = self.labelHHB
-        # labelHVB: QLabel = self.labelHVB
-        # labelHVF: QLabel = self.labelHVF
-        # labelVHF: QLabel = self.labelVHF
-        # labelVHB: QLabel = self.labelVHB
-        # labelVVB: QLabel = self.labelVVB
-        # labelVVF: QLabel = self.labelVVF
-
-        # labelHHF.setText(str(round(sensordata[0], 2)))
-        # labelHHB.setText(str(round(sensordata[1], 2)))
-        # labelHVB.setText(str(round(sensordata[2], 2)))
-        # labelHVF.setText(str(round(sensordata[3], 2)))
-        # labelVHF.setText(str(round(sensordata[4], 2)))
-        # labelVHB.setText(str(round(sensordata[5], 2)))
-        # labelVVB.setText(str(round(sensordata[6], 2)))
-        # labelVVF.setText(str(round(sensordata[7], 2)))
-
         thrust_liste: list[QLabel] = [
             self.labelHHF,
             self.labelHHB,

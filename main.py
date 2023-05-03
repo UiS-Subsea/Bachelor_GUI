@@ -14,6 +14,7 @@ from RovState.send_fake_sensordata import send_fake_sensordata
 from RovState.rovstate import Rov_state
 import gui
 from gui import guiFunctions as f
+from gui import *
 
 # VALUES: (0-7) -> index i: [0,0,0,0,0,0,0,0]
 # MANIPULATOR
@@ -56,7 +57,7 @@ if __name__ == "__main__":
         run_network = False  # Bytt t True når du ska prøva å connecte.
         run_get_controllerdata = False
         # Sett til True om du vil sende fake sensordata til gui
-        run_send_fake_sensordata = True
+        run_send_fake_sensordata = False
 
         t_watch = Threadwatcher()
         queue_for_rov = multiprocessing.Queue()
@@ -102,7 +103,7 @@ if __name__ == "__main__":
 
         if run_gui:
             id = t_watch.add_thread()
-            gui_loop = Process(
+            gui_loop = Process(  # Create a new process seperate from the main program
                 target=gui.run,
                 args=(gui_queue, queue_for_rov, manual_flag, t_watch, id),
                 daemon=True,
@@ -111,10 +112,12 @@ if __name__ == "__main__":
 
         if run_send_fake_sensordata:
             id = t_watch.add_thread()
-            datafaker = threading.Thread(
-                target=send_fake_sensordata,
-                args=(t_watch, gui_queue),
-                daemon=True,
+            datafaker = (
+                threading.Thread(  # Create a new process seperate from the main program
+                    target=send_fake_sensordata,
+                    args=(t_watch, gui_queue),
+                    daemon=True,
+                )
             )
             datafaker.start()
 
