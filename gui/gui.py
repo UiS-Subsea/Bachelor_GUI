@@ -45,6 +45,8 @@ class Window(QMainWindow):
         #        self.send_current_light_intensity()
         self.packets_to_send = []
         self.angle_bit_state = 0
+        self.toggle_felles_regulator = [0] * 8
+
 
         super().__init__(parent)
         uic.loadUi("gui/mainwindow.ui", self)
@@ -354,34 +356,49 @@ class Window(QMainWindow):
     #        print(self.packets_to_send)
 
     def toggle_rull_reg(self):
-        toggle_rull_reg = [0] * 8
-        toggle_rull_reg[0] |= 1 << 0
-        print("Rull Regulator På")
-        print(("Want to send", 32, toggle_rull_reg))
-        values = {"toggle_rull_reg": toggle_rull_reg}
+        self.toggle_felles_regulator[0] ^= (1 << 0)
+        if self.toggle_felles_regulator[0] == (1 << 0):
+            print("rull på")
+        elif self.toggle_felles_regulator[0] == (0 << 0):
+            print("rull av")
+        print(("Want to send", 32, self.toggle_felles_regulator))
+        values = {"toggle_rull_reg": self.toggle_felles_regulator}
         self.queue.put((12, values))
+        # if self.angle_bit_state == 0:
+        #     self.toggle_felles_regulator[0] |= (1 << 0)
+        #     self.angle_bit_state = 1
+        #     print("Rull på")
+        # elif self.angle_bit_state == 1:
+        #     self.toggle_felles_regulator[0] |= (0 << 0)
+        #     self.angle_bit_state == 0
+        #     print("Rull av")
+        # print(("Want to send", 32, self.toggle_felles_regulator))
+        # values = {"toggle_rull_reg": self.toggle_felles_regulator}
+        # self.queue.put((12, values))
 
     #        self.packets_to_send.append([66, toggle_rull_reg])
 
     def toggle_stamp_reg(self):
-        toggle_stamp_reg = [0] * 8
-        toggle_stamp_reg[0] |= 1 << 2
-        print("Stamp Regulator På")
-        print(("Want to send", 32, toggle_stamp_reg))
-        values = {"toggle_stamp_reg": toggle_stamp_reg}
-        self.queue.put((13, values))
+        self.toggle_felles_regulator[0] ^= (1 << 2)
+        if self.toggle_felles_regulator[0] == (1 << 2):
+            print("stamp på")
+        elif self.toggle_felles_regulator[0] == (0 << 2):
+            print("stamp av")
+        print(("Want to send", 32, self.toggle_felles_regulator))
+        values = {"toggle_rull_reg": self.toggle_felles_regulator}
+        self.queue.put((12, values))
 
-    #        self.packets_to_send.append([66, toggle_stamp_reg])
 
     def toggle_dybde_reg(self):
-        toggle_dybde_reg = [0] * 8
-        toggle_dybde_reg[0] |= 1 << 3
-        print("Dybde Regulator På")
-        print(("Want to send", 32, toggle_dybde_reg))
-        values = {"toggle_dybde_reg": toggle_dybde_reg}
-        self.queue.put((14, values))
+        self.toggle_felles_regulator[0] ^= (1 << 3)
+        if self.toggle_felles_regulator[0] == (1 << 3):
+            print("dybde på")
+        elif self.toggle_felles_regulator[0] == (0 << 3):
+            print("dybde av")
+        print(("Want to send", 32, self.toggle_felles_regulator))
+        values = {"toggle_rull_reg": self.toggle_felles_regulator}
+        self.queue.put((12, values))
 
-    #        self.packets_to_send.append([66, toggle_dybde_reg])
 
     def front_light_on(self):
         set_light_byte = [0] * 8
@@ -391,7 +408,6 @@ class Window(QMainWindow):
         values = {"front_light_on": set_light_byte}
         self.queue.put((15, values))
 
-    #        self.packets_to_send.append((98, bytes(set_light_byte)))
 
     def bottom_light_on(self):
         set_light_byte = [0] * 8
@@ -401,23 +417,7 @@ class Window(QMainWindow):
         values = {"bottom_light_on": set_light_byte}
         self.queue.put((16, values))
 
-    #        self.packets_to_send.append((99, bytes(set_light_byte)))
 
-    #     def front_light_intensity(self, intensity):
-    #         set_intensity_byte = [0] * 8
-    #         set_intensity_byte[1] = intensity
-    #         print("Adjusting Front Light Intensity")
-    #         values = {"front_light_intensity": set_intensity_byte}
-    #         self.queue.put((17, values))
-    # #        self.packets_to_send.append((98, set_intensity_byte))
-
-    #     def bottom_light_intensity(self, intensity):
-    #         set_intensity_byte = [0] * 8
-    #         set_intensity_byte[1] = intensity
-    #         print("Adjusting Bottom Light Intensity")
-    #         values = {"bottom_light_intensity": set_intensity_byte}
-    #         self.queue.put((18, values))
-    # #        self.packets_to_send.append((99, set_intensity_byte))
 
     # TODO: Spør dominykas om alt e rett :)
     def camVinkelUpdate(self, value):
@@ -440,7 +440,7 @@ class Window(QMainWindow):
             THRUST: self.guiThrustUpdate,
             MANIPULATOR12V: self.guiManipulatorUpdate,
             THRUSTER12V: self.thruster12VUpdate,
-            # KRAFT5V: self.kraft5VUpdate,
+            KRAFT5V: self.kraft5VUpdate,
             REGULERINGMOTORTEMP: self.reguleringMotorTempUpdate,
             TEMPKOMKONTROLLER: self.TempKomKontrollerUpdate,
         }
@@ -587,36 +587,36 @@ class Window(QMainWindow):
         labelSensor.setText(str(round(sensordata[2] / 100, 2)) + "°C")
 
     def guiThrustUpdate(self, sensordata):
-        labelHHF: QLabel = self.labelHHF
-        labelHHB: QLabel = self.labelHHB
-        labelHVB: QLabel = self.labelHVB
-        labelHVF: QLabel = self.labelHVF
-        labelVHF: QLabel = self.labelVHF
-        labelVHB: QLabel = self.labelVHB
-        labelVVB: QLabel = self.labelVVB
-        labelVVF: QLabel = self.labelVVF
+        # labelHHF: QLabel = self.labelHHF
+        # labelHHB: QLabel = self.labelHHB
+        # labelHVB: QLabel = self.labelHVB
+        # labelHVF: QLabel = self.labelHVF
+        # labelVHF: QLabel = self.labelVHF
+        # labelVHB: QLabel = self.labelVHB
+        # labelVVB: QLabel = self.labelVVB
+        # labelVVF: QLabel = self.labelVVF
 
-        labelHHF.setText(str(round(sensordata[0], 2)))
-        labelHHB.setText(str(round(sensordata[1], 2)))
-        labelHVB.setText(str(round(sensordata[2], 2)))
-        labelHVF.setText(str(round(sensordata[3], 2)))
-        labelVHF.setText(str(round(sensordata[4], 2)))
-        labelVHB.setText(str(round(sensordata[5], 2)))
-        labelVVB.setText(str(round(sensordata[6], 2)))
-        labelVVF.setText(str(round(sensordata[7], 2)))
+        # labelHHF.setText(str(round(sensordata[0], 2)))
+        # labelHHB.setText(str(round(sensordata[1], 2)))
+        # labelHVB.setText(str(round(sensordata[2], 2)))
+        # labelHVF.setText(str(round(sensordata[3], 2)))
+        # labelVHF.setText(str(round(sensordata[4], 2)))
+        # labelVHB.setText(str(round(sensordata[5], 2)))
+        # labelVVB.setText(str(round(sensordata[6], 2)))
+        # labelVVF.setText(str(round(sensordata[7], 2)))
 
-        # thrust_liste: list[QLabel] = [
-        #     self.labelHHF,
-        #     self.labelHHB,
-        #     self.labelHVB,
-        #     self.labelHVF,
-        #     self.labelVHF,
-        #     self.labelVHB,
-        #     self.labelVVB,
-        #     self.labelVVF,
-        # ]
-        # for i, label in enumerate(thrust_liste):
-        #     label.setText(str(round(sensordata[i], 2)))
+        thrust_liste: list[QLabel] = [
+            self.labelHHF,
+            self.labelHHB,
+            self.labelHVB,
+            self.labelHVF,
+            self.labelVHF,
+            self.labelVHB,
+            self.labelVVB,
+            self.labelVVF,
+        ]
+        for i, label in enumerate(thrust_liste):
+            label.setText(str(round(sensordata[i], 2)))
 
     kraftFeilkoder = [
         "Overcurrent trip",
@@ -646,7 +646,7 @@ class Window(QMainWindow):
         labelKraft: QLabel = self.labelThrusterKraft
         labelTemp: QLabel = self.labelThruster12VTemp
         labelSikring: QLabel = self.labelThrusterSikring
-        #print(sensordata)
+        # print(sensordata)
 
         labelKraft.setText(str(round(sensordata[0] / 1000, 2)) + "A")
         labelTemp.setText(str(round(sensordata[1] / 100, 2)) + "C")
@@ -661,7 +661,8 @@ class Window(QMainWindow):
                 self.lastThrusterAlarm = -1
 
     def kraft5VUpdate(self, sensordata):
-        pass
+        labelTemp: QLabel = self.labelKraft5VTemp
+        labelTemp.setText(str(round(sensordata[1] / 100, 2)) + "C")
 
     def reguleringMotorTempUpdate(self, sensordata):
         labelRegulering: QLabel = self.labelReguleringTemp
@@ -672,7 +673,6 @@ class Window(QMainWindow):
 
     def TempKomKontrollerUpdate(self, sensordata):
         labelTemp: QLabel = self.labelTempKomKontroller
-        # print(sensordata)
         labelTemp.setText(str(round(sensordata, 2)) + "°C")
 
 
