@@ -372,6 +372,8 @@ class Rov_state:
         data[2] = self.data["rov_joysticks"][Z_AXIS]
         data[3] = -self.data["rov_joysticks"][ROTATION_AXIS]
 
+        #data[4] = self.data["rov_joysticks"][4] # TEST FOR TILT
+
         self.packets_to_send.append([33, data])
 
     def build_autonom_packet(self):
