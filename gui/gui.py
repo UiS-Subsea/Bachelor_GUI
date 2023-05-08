@@ -75,7 +75,6 @@ class Window(QMainWindow):
         self.id = id
 
         self.exec = ExecutionClass(queue_for_rov, manual_flag)
-        self.camera = CameraClass()
         self.w = None  # SecondWindow()
         self.gir_verdier = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
