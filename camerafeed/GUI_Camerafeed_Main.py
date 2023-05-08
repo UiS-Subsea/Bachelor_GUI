@@ -24,8 +24,8 @@ GST_FEED_MANIPULATOR = "-v udpsrc multicast-group=224.1.1.1 auto-multicast=true 
 
 class Camera:
     def __init__(self, name, gst_feed = None):
-        self.name = name
-        self.gst = gst_feed
+        self.name = name # Name of camera
+        self.gst = gst_feed # Gstreamer feed
 
     def get_frame(self):
         ret, frame = self.cam.read()
@@ -57,7 +57,7 @@ class Camera:
     def isOpened(self):
         return self.cam.isOpened()
             
-class CameraClass:
+class CameraManager:
     def __init__(self) -> None:
         self.frame_manipulator = None
         self.frame_stereoR = None
@@ -225,10 +225,9 @@ class ExecutionClass:
         self.AutonomousTransect = AutonomousTransect()
         self.Docking = AutonomousDocking()
         self.Seagrass = SeagrassMonitor()
-        self.Camera = CameraClass()
+        self.Camera = CameraManager()
         self.counter = 0
         self.done = False
-        # self.Camera.start()
         self.manual_flag = manual_flag
         self.driving_queue = driving_queue
 
@@ -399,7 +398,7 @@ class ExecutionClass:
         
 
 if __name__ == "__main__":
-    cam = CameraClass()
+    cam = CameraManager()
     execution = ExecutionClass()
     while True:
         execution.update_stereo()
