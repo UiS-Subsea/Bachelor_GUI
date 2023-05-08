@@ -17,155 +17,217 @@ Y_AKSE = 0
 Z_AKSE = 6
 R_AKSE = 2
 
-class CameraClass:
+GST_FEED_STEREO_L = "-v udpsrc multicast-group=224.1.1.1 auto-multicast=true port=5000 ! application/x-rtp, media=video, clock-rate=90000, encoding-name=H264, payload=96 ! rtph264depay ! h264parse ! decodebin ! videoconvert ! appsink sync=false"
+GST_FEED_STEREO_R = "-v udpsrc multicast-group=224.1.1.1 auto-multicast=true port=5001 ! application/x-rtp, media=video, clock-rate=90000, encoding-name=H264, payload=96 ! rtph264depay ! h264parse ! decodebin ! videoconvert ! appsink sync=false"
+GST_FEED_DOWN = "-v udpsrc multicast-group=224.1.1.1 auto-multicast=true port=5002 ! application/x-rtp, media=video, clock-rate=90000, encoding-name=H264, payload=96 ! rtph264depay ! h264parse ! decodebin ! videoconvert ! appsink sync=false"
+GST_FEED_MANIPULATOR = "-v udpsrc multicast-group=224.1.1.1 auto-multicast=true port=5003 ! application/x-rtp, media=video, clock-rate=90000, encoding-name=H264, payload=96 ! rtph264depay ! h264parse ! decodebin ! videoconvert ! appsink sync=false"
+
+class Camera:
+    def __init__(self, name, gst_feed = None):
+        self.name = name # Name of camera
+        self.gst = gst_feed # Gstreamer feed
+
+    def get_frame(self):
+        ret, frame = self.cam.read()
+        if not ret:
+            print("Error reading frame")
+            return
+        return frame
+    
+    def open_cam(self):
+        if self.gst is None:
+            self.cam = cv2.VideoCapture(0)
+            if not self.isOpened:
+                print(f"Error opening camera {self.name}")
+                return False
+            print(f"{self.name} Camera opened")
+            return True
+        else:
+            self.cam = cv2.VideoCapture(self.gst, cv2.CAP_GSTREAMER)
+            if not self.isOpened:
+                print("Error opening camera")
+                return False
+            print(f"{self.name} Camera opened")
+            return True
+            
+    def release_cam(self):
+        self.cam.release()
+        
+    @property
+    def isOpened(self):
+        return self.cam.isOpened()
+            
+class CameraManager:
     def __init__(self) -> None:
-        self.frame_down = None
-        self.frame_manip = None
-        self.frame_stereoL = None
+        self.frame_manipulator = None
         self.frame_stereoR = None
+        self.frame_down = None
+        self.frame_stereoL = None
         self.frame_manual = None
         self.frame_test = None
         
-        self.cam_down = None
         self.cam_stereoL = None
         self.cam_stereoR = None
-        self.cam_manip = None
-        self.cam_test = None
+        self.cam_down = None
+        self.cam_manipulator = None
         self.cam_manual = None
+        self.cam_test = None
+        
+        
         self.recording = False
         
+        self.active_cameras = []
+        
 
-    def get_frame_down(self):
-        _, self.frame_down = self.cam_down.read()
-        
-        return self.frame_down
-        
-    def get_frame_manip(self):
-        _, self.frame_manip = self.cam_manip.read()
-        
-        return self.frame_manip
     
     def get_frame_stereo_L(self):
-        _, self.frame_stereoL = self.cam_stereoL.read()
-        
+        self.frame_stereoL = self.cam_stereoL.get_frame()
         return self.frame_stereoL
 
     def get_frame_stereo_R(self):
-        _, self.frame_stereoR = self.cam_stereoR.read()
+        self.frame_stereoR = self.cam_stereoR.get_frame()
         return self.frame_stereoR
         
-    def get_frame_manual(self):
-        _, self.frame_manual = self.cam_manual.read()
+    def get_frame_down(self):
+        self.frame_down = self.cam_down.get_frame()
+        return self.frame_down
         
+    def get_frame_manipulator(self):
+        self.frame_manipulator = self.cam_manipulator.get_frame()
+        return self.frame_manipulator
+    
+    def get_frame_manual(self):
+        self.frame_manual = self.cam_manual.get_frame()
         return self.frame_manual
     
     def get_frame_test(self):
-        _, self.frame_test = self.cam_test.read()
-        
+        self.frame_test = self.cam_test.get_frame()
         return self.frame_test
-        
-    def start_down_cam(self):
-        print("Starting down camera")
-        gst_feed_down = "-v udpsrc multicast-group=224.1.1.1 auto-multicast=true port=5002 ! application/x-rtp, media=video, clock-rate=90000, encoding-name=H264, payload=96 ! rtph264depay ! h264parse ! decodebin ! videoconvert ! appsink sync=false"
-        self.cam_down = cv2.VideoCapture(gst_feed_down, cv2.CAP_GSTREAMER)
-        if self.cam_down.isOpened():
-            print("Down camera started")
-        _, self.frame_down = self.cam_down.read()
+    
+    def get_frame_from_cam(self, cam: Camera):
+        frame = cam.get_frame()
+        return frame
         
     def start_stereo_cam_L(self):
-        print("Starting stereo camera L")
-        gst_feed_stereoL = "-v udpsrc multicast-group=224.1.1.1 auto-multicast=true port=5000 ! application/x-rtp, media=video, clock-rate=90000, encoding-name=H264, payload=96 ! rtph264depay ! h264parse ! decodebin ! videoconvert ! appsink sync=false"
-        self.cam_stereoL = cv2.VideoCapture(gst_feed_stereoL, cv2.CAP_GSTREAMER)
-        if self.cam_stereoL.isOpened():
-            print("StereoL camera started")
-            
-        _, self.frame_stereoL = self.cam_stereoL.read()
+        self.cam_stereoL = Camera("StereoL", GST_FEED_STEREO_L)
+        print("Starting camera: StereoL")
+        success = self.cam_stereoL.open_cam()
+        if success:
+            self.active_cameras.append(self.cam_stereoL)
+        
         
     def start_stereo_cam_R(self):
-        print("Starting stereo camera R")
-        gst_feed_stereoR = "-v udpsrc multicast-group=224.1.1.1 auto-multicast=true port=5001 ! application/x-rtp, media=video, clock-rate=90000, encoding-name=H264, payload=96 ! rtph264depay ! h264parse ! decodebin ! videoconvert ! appsink sync=false"
-        self.cam_stereoR = cv2.VideoCapture(gst_feed_stereoR, cv2.CAP_GSTREAMER)
-        if self.cam_stereoR.isOpened():
-            print("StereoR camera started")
+        self.cam_stereoR = Camera("StereoR", GST_FEED_STEREO_R)
+        print("Starting camera: StereoR")
+        success = self.cam_stereoR.open_cam()
+        if success:
+            self.active_cameras.append(self.cam_stereoR)
         
-        _, self.frame_stereoR = self.cam_stereoR.read()
+    def start_down_cam(self):
+        self.cam_down = Camera("Down", GST_FEED_DOWN)
+        print("Starting camera: Down")
+        success = self.cam_down.open_cam()
+        if success:
+            self.active_cameras.append(self.cam_down)
         
-    def start_manip_cam(self):
-        print("Starting manip camera")
-        gst_feed_manip = "-v udpsrc multicast-group=224.1.1.1 auto-multicast=true port=5003 ! application/x-rtp, media=video, clock-rate=90000, encoding-name=H264, payload=96 ! rtph264depay ! h264parse ! decodebin ! videoconvert ! appsink sync=false"
-
-        self.cam_manip = cv2.VideoCapture(gst_feed_manip, cv2.CAP_GSTREAMER)
-        if self.cam_manip.isOpened():
-            print("Manip camera started")
-        _, self.frame_manip = self.cam_manip.read()
-        
+    def start_manipulator_cam(self):
+        self.cam_manipulator = Camera("Manipulator", GST_FEED_MANIPULATOR)
+        print("Starting camera: Manipulator")
+        success = self.cam_manipulator.open_cam()
+        if success:
+            self.active_cameras.append(self.cam_manipulator)
         
     def start_manual_cam(self):
-        print("Starting manual camera")
-        self.cam_manual = cv2.VideoCapture(0)
-        if self.cam_manual.isOpened():
-            print("Manual camera started")
+        self.cam_manual = Camera("Manual")
+        print("Starting camera: Manual")
+        success = self.cam_manual.open_cam()
+        if success:
+            self.active_cameras.append(self.cam_manual)
         
     def start_test_cam(self):
-        print("Starting test camera")
-        self.cam_test = cv2.VideoCapture(0)
-        if self.cam_test.isOpened():
-            print("Test camera started")
+        self.cam_test = Camera("Test")
+        print("Starting camera: Test")
+        success = self.cam_test.open_cam()
+        if success:
+            self.active_cameras.append(self.cam_test)
         
     def start(self):
         # self.start_down_cam()
         # self.start_stereo_cam_L()
         # self.start_stereo_cam_R()
-        # self.start_manip_cam()
+        # self.start_manipulator_cam()
         # self.start_manual_cam()
         pass
 
     def close_all(self):
-        if self.cam_down is not None and self.cam_down.isOpened():
-            self.cam_down.release()
+        if self.cam_down is not None and self.cam_down.isOpened:
+            self.cam_down.release_cam()
             
-        if self.cam_stereoL is not None and self.cam_stereoL.isOpened():
-            self.cam_stereoL.release()
+        if self.cam_stereoL is not None and self.cam_stereoL.isOpened:
+            self.cam_stereoL.release_cam()
             
-        if self.cam_stereoR is not None and self.cam_stereoR.isOpened():
-            self.cam_stereoR.release()
+        if self.cam_stereoR is not None and self.cam_stereoR.isOpened:
+            self.cam_stereoR.release_cam()
             
-        if self.cam_manip is not None and self.cam_manip.isOpened():
-            self.cam_manip.release()
+        if self.cam_manipulator is not None and self.cam_manipulator.isOpened:
+            self.cam_manipulator.release_cam()
             
-        if self.cam_manual is not None and self.cam_manual.isOpened():
-            self.cam_manual.release()
+        if self.cam_manual is not None and self.cam_manual.isOpened:
+            self.cam_manual.release_cam()
             
-        if self.cam_test is not None and self.cam_test.isOpened():
-            self.cam_test.release()
+        if self.cam_test is not None and self.cam_test.isOpened:
+            self.cam_test.release_cam()
         
     def setup_video(self, name):
         self.videoresult = cv2.VideoWriter(f'camerafeed/output/{name}.avi', cv2.VideoWriter_fourcc(
-            *'MJPG'), 10, (int(self.cam_manual.get(3)), int(self.cam_manual.get(4))))
+            *'MJPG'), 10, (int(self.active_cameras[0].cam.get(3)), int(self.active_cameras[0].cam.get(4))))
 
     # Run this to start recording, and do a keyboard interrupt (ctrl + c) to stop recording
-
-    def record_video(self, frame):
-        if not self.recording:
-            self.setup_video(f"MyCam{datetime.datetime.now()}")
+    
+    
+    #TODO make it so that it can record from multiple cameras at the same time
+    #TODO MAKE IT WORK (Only reord if there is a camera selected) <<<<<<<<<<
+    def record_video(self):
+        # if self.recording == False:
+        #     if len(self.active_cameras) == 0:
+        #         print("No camera selected")
+    
+        # else:
+        #     # Makes a new videofile if it is not already recording (Default)
+        if self.recording == False:
+            self.setup_video(f"Video{self.active_cameras[0].name}{datetime.datetime.now()}")
             self.recording = True
-        if self.recording:
+            
+        # While recording, it will write the frames to the videofile
+        if self.recording == True:
+            cur_cam = self.active_cameras[0]
+
+            frame = self.get_frame_from_cam(cur_cam)
             self.videoresult.write(frame)
+            return frame
         else:
             self.videoresult.release()
-    
-    def save_image(self, frame):
-        cv2.imwrite(f"camerafeed/output/Img{datetime.datetime.now()}.jpg", frame)
-        
+            
+            
+    def save_image(self):
+        if len(self.active_cameras) == 0:
+            print("No camera selected")
+        else:
+            print("Cameras detected, amount: ", len(self.active_cameras))
+            for i in range(len(self.active_cameras)):
+                cur_cam = self.active_cameras[i]
+                frame_to_save = self.get_frame_from_cam(cur_cam)
+                cv2.imwrite(f"camerafeed/output/Img_Cam_{cur_cam.name}{datetime.datetime.now()}.jpg", frame_to_save)
+            print("Image(s) saved")
+            
 class ExecutionClass:
     def __init__(self, driving_queue, manual_flag):
         self.AutonomousTransect = AutonomousTransect()
         self.Docking = AutonomousDocking()
         self.Seagrass = SeagrassMonitor()
-        self.Camera = CameraClass()
+        self.Camera = CameraManager()
         self.counter = 0
         self.done = False
-        # self.Camera.start()
         self.manual_flag = manual_flag
         self.driving_queue = driving_queue
 
@@ -178,8 +240,8 @@ class ExecutionClass:
     def update_stereo_R(self):
         self.frame_stereoR = self.Camera.get_frame_stereo_R()
         
-    def update_manip(self):
-        self.frame_manip = self.Camera.get_frame_manip()
+    def update_manipulator(self):
+        self.frame_manipulator = self.Camera.get_frame_manipulator()
         
     def update_manual(self):
         self.frame_manual = self.Camera.get_frame_manual()
@@ -213,11 +275,8 @@ class ExecutionClass:
             # self.show(self.frame_manual, "Manual")
             self.show(self.frame_stereoL, "StereoL")
             # self.show(self.frame_stereoR, "StereoR")
-            # self.show(self.frame_manip, "Manip")
+            # self.show(self.frame_manipulator, "Manip")
             QApplication.processEvents()
-
-    def save_image(self):
-        cv2.imwrite("camerafeed/output/output_image.jpg", self.frame.copy())
         
     def send_data_test(self):
         self.done = False
@@ -279,40 +338,71 @@ class ExecutionClass:
             self.show(self.frame_manual, "Manual")
             QApplication.processEvents()
             
+    def show_all_cameras(self):
+        self.done = False
+        self.Camera.start_stereo_cam_L()
+        self.Camera.start_stereo_cam_R()
+        self.Camera.start_down_cam()
+        # self.Camera.start_manipulator_cam()
+        while not self.done:
+            self.update_stereo_L()
+            self.update_stereo_R()
+            self.update_down()
+            self.show(self.frame_stereoL, "StereoL")
+            self.show(self.frame_stereoR, "StereoR")
+            self.show(self.frame_down, "Down")
+            # self.show(self.frame_manipulator, "Manip")
+            
     def stop_everything(self):
         print("Stopping other processes, returning to manual control")
-        self.done = True
-        cv2.destroyAllWindows()
-        self.Camera.close_all()
+        try:
+            self.done = True
+            cv2.destroyAllWindows()
+            self.Camera.close_all()
+            self.Camera.active_cameras = []
+        except:
+            pass
 
     def transect_test(self):
         print("Running Transect!")
         
     def record(self):
         self.done = False
+        
+        # If the amera is already recording, then this stops it
         if self.Camera.recording:
             self.Camera.recording = False
-            cv2.destroyWindow("Recording...")
             print("Recording stopped")
             self.done = True
 
-        while not self.done:
-            self.update_manual()
-            self.show(self.frame_manual.copy(), "Recording...")
-            self.Camera.record_video(self.frame_manual.copy())
+        
+        active_cams = self.Camera.active_cameras
+        if len(active_cams) >= 1:
+            print("Cameras deteced, amount: ", len(active_cams))
+        else:
+            print("No active cameras")
+            self.done = True
+            
+        while not self.done and len(self.Camera.active_cameras) >= 1:
+            frame = self.Camera.record_video()
+            self.show(frame, "Recording")
             QApplication.processEvents()
-    
+        else:
+            self.Camera.recording = False
+            cv2.destroyWindow("Recording")
+            print("Recording stopped or no active cameras")
+            QApplication.processEvents()
+        
     def save_image(self):
-        self.Camera.save_image(self.frame_manual.copy())
-        print("Image saved")
+        self.Camera.save_image()
         
 
 if __name__ == "__main__":
-    cam = CameraClass()
+    cam = CameraManager()
     execution = ExecutionClass()
     while True:
         execution.update_stereo()
         # execution.show(execution.frame_down, "Down")
         execution.show(execution.frame_stereoL, "StereoL")
         execution.show(execution.frame_stereoR, "StereoR")
-        # execution.show(execution.frame_manip, "Manip")
+        # execution.show(execution.frame_manipulator, "Manip")
