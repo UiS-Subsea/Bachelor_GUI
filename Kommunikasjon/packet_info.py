@@ -34,28 +34,79 @@ class Logger:
         self.data_logger.addHandler(data_handler)
         self.data_logger.setLevel(logging.INFO)
 
-        id_135_handler = logging.FileHandler(
-            f"{self.packet_folder}{packet_date} id_135.log")
-        id_136_handler = logging.FileHandler(
-            f"{self.packet_folder}{packet_date} id_136.log")
-        id_137_handler = logging.FileHandler(
-            f"{self.packet_folder}{packet_date} id_137.log")
+        #id_135_handler = logging.FileHandler(
+        #    f"{self.packet_folder}{packet_date} id_135.log")
+        #id_136_handler = logging.FileHandler(
+        #    f"{self.packet_folder}{packet_date} id_136.log")
+        #id_137_handler = logging.FileHandler(
+        #    f"{self.packet_folder}{packet_date} id_137.log")
+        
+        id_139_handler = logging.FileHandler(
+            f"{self.packet_folder}{packet_date} id_139.log")
+        id_138_handler = logging.FileHandler(
+            f"{self.packet_folder}{packet_date} id_138.log")
+        id_34_handler = logging.FileHandler(
+            f"{self.packet_folder}{packet_date} id_34.log")
+        id_33_handler = logging.FileHandler(
+            f"{self.packet_folder}{packet_date} id_33.log")
+        
 
-        id_135_handler.setFormatter(log_format)
-        id_136_handler.setFormatter(log_format)
-        id_137_handler.setFormatter(log_format)
+        id_42_handler = logging.FileHandler(
+            f"{self.packet_folder}{packet_date} id_42.log")
+        id_32_handler = logging.FileHandler(
+            f"{self.packet_folder}{packet_date} id_32.log")
 
-        self.id_135_logger = logging.getLogger("id_135_logger")
-        self.id_136_logger = logging.getLogger("id_136_logger")
-        self.id_137_logger = logging.getLogger("id_137_logger")
 
-        self.id_135_logger.addHandler(id_135_handler)
-        self.id_136_logger.addHandler(id_136_handler)
-        self.id_137_logger.addHandler(id_137_handler)
+        #id_135_handler.setFormatter(log_format)
+        #id_136_handler.setFormatter(log_format)
+        #id_137_handler.setFormatter(log_format)
+        id_138_handler.setFormatter(log_format)
+        id_139_handler.setFormatter(log_format)
+        id_34_handler.setFormatter(log_format)
+        id_33_handler.setFormatter(log_format)
+        id_32_handler.setFormatter(log_format)
+        id_42_handler.setFormatter(log_format)
 
-        self.id_135_logger.setLevel(logging.INFO)
-        self.id_136_logger.setLevel(logging.INFO)
-        self.id_137_logger.setLevel(logging.INFO)
+
+
+        #self.id_135_logger = logging.getLogger("id_135_logger")
+        #self.id_136_logger = logging.getLogger("id_136_logger")
+        #self.id_137_logger = logging.getLogger("id_137_logger")
+        self.id_138_logger = logging.getLogger("id_138_logger")
+        self.id_139_logger = logging.getLogger("id_139_logger")
+        self.id_34_logger = logging.getLogger("id_34_logger")
+        self.id_33_logger = logging.getLogger("id_33_logger")
+        self.id_32_logger = logging.getLogger("id_32_logger")
+        self.id_42_logger = logging.getLogger("id_42_logger")
+
+
+
+
+
+        #self.id_135_logger.addHandler(id_135_handler)
+        #self.id_136_logger.addHandler(id_136_handler)
+        #self.id_137_logger.addHandler(id_137_handler)
+        self.id_138_logger.addHandler(id_138_handler)
+        self.id_139_logger.addHandler(id_139_handler)
+        self.id_34_logger.addHandler(id_34_handler)
+        self.id_33_logger.addHandler(id_33_handler)
+        self.id_32_logger.addHandler(id_32_handler)
+        self.id_42_logger.addHandler(id_42_handler)
+
+
+
+#        self.id_135_logger.setLevel(logging.INFO)
+#        self.id_136_logger.setLevel(logging.INFO)
+#        self.id_137_logger.setLevel(logging.INFO)
+
+        self.id_138_logger.setLevel(logging.INFO)
+        self.id_139_logger.setLevel(logging.INFO)
+        self.id_34_logger.setLevel(logging.INFO)
+        self.id_33_logger.setLevel(logging.INFO)
+        self.id_32_logger.setLevel(logging.INFO)
+        self.id_42_logger.setLevel(logging.INFO)
+
+
 
 
 if __name__ == "__main__":
@@ -65,6 +116,15 @@ if __name__ == "__main__":
     #logger.debug("Debug message")
     #logger.info("info message")
     #logger.critical("critical message")
-    logger.id_135_logger.info("Data for packet with ID 135")
-    logger.id_136_logger.info("Data for packet with ID 136")
-    logger.id_137_logger.info("Data for packet with ID 137")
+    #logger.id_135_logger.info("Data for packet with ID 135")
+    #logger.id_136_logger.info("Data for packet with ID 136")
+    #logger.id_137_logger.info("Data for packet with ID 137")
+    logger.id_138_logger.info("Data for packet with ID 138")
+    logger.id_139_logger.info("Data for packet with ID 139")
+    logger.id_34_logger.info("Data for packet with ID 34")
+    logger.id_33_logger.info("Data for packet with ID 33")
+    logger.id_32_logger.info("Data for packet with ID 32")
+    logger.id_42_logger.info("Data for packet with ID 42")
+
+
+

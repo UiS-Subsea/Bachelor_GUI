@@ -12,7 +12,7 @@ MANIPULATOR_GRAB_RELEASE = 6
 
 REGULERINGSKNAPPAR = "32"  # 0=All regulering deaktivert, 1=Aktiver rull reg, 2=Regulering av dybde aktivert, 3=Regulering av vinkel aktivert, 4=Regulering av dybde og vinkel aktivert
 THRUST = "129"  # HHF, #HHB, #HVB, HVF, VHF, VHB, VVB, VVF
-REGULERINGTEMP = "130"  # 0Reguleringskort, 1=Motordriverkort
+REGULERINGTEMP = "130"  # 0Reguleringskort, 1=Motordriverkort 2= Dybde SP
 VINKLER = "138"  # 0=roll, 1=stamp, 2=gir?
 DYBDETEMP = "139"  # 0=dybde, 2=vanntemp, 4=sensorkorttemp
 FEILKODE = "140"  # 0=IMU Error, 1=Temp Error, 2=Trykk Error, 3=Lekkasje
@@ -171,6 +171,7 @@ class Rov_state:
         return decoded_items, end_not_complete_packet
 
     def handle_data_from_rov(self, message: dict):
+        # print(message)
         self.logger.data_logger.info(message)
         message_name = ""
         if not isinstance(message, dict):
@@ -189,6 +190,11 @@ class Rov_state:
             return
         if message_name in self.valid_gui_commands:
             self.send_sensordata_to_gui(message)
+            #if '129' in message:
+            #    print("Packet with id 130:", message)
+            #elif '129' in message:
+            #    print("packet with id 129", message)
+
         else:
             pass
 
