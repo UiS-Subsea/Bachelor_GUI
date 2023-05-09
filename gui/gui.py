@@ -654,7 +654,7 @@ class Window(QMainWindow):
 
         labelRegulering.setText(str(round(sensordata[0] / 100, 2)) + "°C")
         labelMotor.setText(str(round(sensordata[1] / 100, 2)) + "°C")
-        print([130, sensordata[2]])
+        #print([130, sensordata[2]])
 
 
     def TempKomKontrollerUpdate(self, sensordata):
