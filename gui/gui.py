@@ -69,7 +69,8 @@ class Window(QMainWindow):
         self.lastPressureAlarm = -1
 
         self.manual_flag = manual_flag
-        self.queue = queue_for_rov  # queue_for_rov is a queue that is used to send data to the rov
+        # queue_for_rov is a queue that is used to send data to the rov
+        self.queue = queue_for_rov
         # queue_for_rov is a queue that is used to send data to the rov
 
         self.gui_queue = gui_queue
@@ -77,6 +78,7 @@ class Window(QMainWindow):
         self.id = id
 
         self.exec = ExecutionClass(queue_for_rov, manual_flag)
+        self.camera = CameraManager()
         self.w = None  # SecondWindow()
         self.gir_verdier = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
@@ -111,29 +113,22 @@ class Window(QMainWindow):
     def manual_kjoring(self):
         self.manual_flag.value = 1
         print("Manual flag: ", self.manual_flag.value)
-        self.exec.stop_everything()
-        
-    def camera_functions(self, mode):
-        if mode == "normal_camera":
-            self.exec.stop_everything() #Run this first so that other cameras stop before starting a new one
-            self.exec.normal_camera()
-        elif mode == "screenshot":
-            self.exec.save_image()
-        elif mode == "record":
-            self.exec.record()
-        elif mode == "show_all":
-            self.exec.show_all_cameras()
+
+        id = self.threadwatcher.add_thread()
+        imageprocessing = threading.Thread(target=self.exec.stop_everything)
+        imageprocessing.start()
 
     def imageprocessing(self, mode):
         self.manual_flag.value = 0
         print("Manual flag: ", self.manual_flag.value)
         if self.manual_flag.value == 0:
-            self.exec.stop_everything() # Run this first so that other cameras stop before starting a new one
+            if mode == "normal_camera":
+                self.exec.show_all_cameras()
             if mode == "transect":
                 self.exec.transect()
-            elif mode == "docking":
+            if mode == "docking":
                 self.exec.docking()
-            elif mode == "testing":
+            if mode == "testing":
                 self.exec.send_data_test()
         else:
             self.exec.stop_everything()
@@ -153,7 +148,8 @@ class Window(QMainWindow):
     def connectFunctions(self):
         # window2
         self.showNewWindowButton.clicked.connect(
-            lambda: self.camera_functions("show_all"))
+            lambda: self.imageprocessing("testing")
+        )
 
         # Kjøremodus
         self.btnManuell.clicked.connect(lambda: self.manual_kjoring())
@@ -161,10 +157,11 @@ class Window(QMainWindow):
         self.btnFrogCount.clicked.connect(lambda: self.imageprocessing("transect"))
 
         # Kamera
-        self.btnTakePic.clicked.connect(lambda: self.camera_functions("screenshot"))
-        self.btnRecord.clicked.connect(lambda: self.camera_functions("record"))
+        self.btnTakePic.clicked.connect(lambda: self.exec.save_image())
+        self.btnRecord.clicked.connect(lambda: self.exec.record())
         self.btnOpenCamera.clicked.connect(
-            lambda: self.camera_functions("normal_camera"))
+            lambda: self.imageprocessing("normal_camera")
+        )
 
         # Lys
         self.slider_lys_forward.valueChanged.connect(self.update_label_and_print_value)
@@ -590,23 +587,7 @@ class Window(QMainWindow):
         labelSensor.setText(str(round(sensordata[2] / 100, 2)) + "°C")
 
     def guiThrustUpdate(self, sensordata):
-        # labelHHF: QLabel = self.labelHHF
-        # labelHHB: QLabel = self.labelHHB
-        # labelHVB: QLabel = self.labelHVB
-        # labelHVF: QLabel = self.labelHVF
-        # labelVHF: QLabel = self.labelVHF
-        # labelVHB: QLabel = self.labelVHB
-        # labelVVB: QLabel = self.labelVVB
-        # labelVVF: QLabel = self.labelVVF
 
-        # labelHHF.setText(str(round(sensordata[0], 2)))
-        # labelHHB.setText(str(round(sensordata[1], 2)))
-        # labelHVB.setText(str(round(sensordata[2], 2)))
-        # labelHVF.setText(str(round(sensordata[3], 2)))
-        # labelVHF.setText(str(round(sensordata[4], 2)))
-        # labelVHB.setText(str(round(sensordata[5], 2)))
-        # labelVVB.setText(str(round(sensordata[6], 2)))
-        # labelVVF.setText(str(round(sensordata[7], 2)))
 
         thrust_liste: list[QLabel] = [
             self.labelHHF,
@@ -673,6 +654,8 @@ class Window(QMainWindow):
 
         labelRegulering.setText(str(round(sensordata[0] / 100, 2)) + "°C")
         labelMotor.setText(str(round(sensordata[1] / 100, 2)) + "°C")
+        print([130, sensordata[2]])
+
 
     def TempKomKontrollerUpdate(self, sensordata):
         labelTemp: QLabel = self.labelTempKomKontroller
