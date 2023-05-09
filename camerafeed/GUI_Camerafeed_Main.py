@@ -343,15 +343,16 @@ class ExecutionClass:
         self.Camera.start_stereo_cam_L()
         self.Camera.start_stereo_cam_R()
         self.Camera.start_down_cam()
-        # self.Camera.start_manipulator_cam()
+        self.Camera.start_manipulator_cam()
         while not self.done:
             self.update_stereo_L()
             self.update_stereo_R()
             self.update_down()
+            self.update_manipulator()
             self.show(self.frame_stereoL, "StereoL")
             self.show(self.frame_stereoR, "StereoR")
             self.show(self.frame_down, "Down")
-            # self.show(self.frame_manipulator, "Manip")
+            self.show(self.frame_manipulator, "Manip")
             
     def stop_everything(self):
         print("Stopping other processes, returning to manual control")

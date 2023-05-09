@@ -378,6 +378,7 @@ class Rov_state:
         data[2] = self.data["rov_joysticks"][Z_AXIS]
         data[3] = -self.data["rov_joysticks"][ROTATION_AXIS]
 
+        #data[4] = self.data.get("rov_dpad", [0,0])[1]*100
         #data[4] = self.data["rov_joysticks"][4] # TEST FOR TILT
 
         self.packets_to_send.append([33, data])
@@ -400,7 +401,6 @@ class Rov_state:
             return
         data = [0, 0, 0, 0, 0, 0, 0, 0]
         try:
-            # data[0] = self.data["mani_joysticks"][1] #for vanntest
             data[0] = self.data.get("mani_dpad", [0,0])[1]*100
             data[1] = self.data["mani_joysticks"][MANIPULATOR_ROTATION]
             data[2] = -self.data["mani_joysticks"][MANIPULATOR_TILT]
