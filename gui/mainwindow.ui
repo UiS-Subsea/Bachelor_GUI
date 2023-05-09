@@ -450,7 +450,7 @@ QLabel {
                                  <height>550</height>
                                 </size>
                                </property>
-                               <layout class="QVBoxLayout" name="kjoremodusLayout" stretch="0,0">
+                               <layout class="QVBoxLayout" name="kjoremodusLayout" stretch="0,0,0,0">
                                 <property name="spacing">
                                  <number>5</number>
                                 </property>
@@ -466,6 +466,20 @@ QLabel {
                                 <property name="bottomMargin">
                                  <number>0</number>
                                 </property>
+                                <item>
+                                 <widget class="QPushButton" name="btnTestSound">
+                                  <property name="text">
+                                   <string>Alarm Test On</string>
+                                  </property>
+                                 </widget>
+                                </item>
+                                <item>
+                                 <widget class="QPushButton" name="btnStopSound">
+                                  <property name="text">
+                                   <string>Alarm Test Off</string>
+                                  </property>
+                                 </widget>
+                                </item>
                                 <item>
                                  <widget class="QFrame" name="frame_2">
                                   <property name="sizePolicy">
@@ -1412,7 +1426,7 @@ QLabel {
                                      <x>320</x>
                                      <y>230</y>
                                      <width>171</width>
-                                     <height>35</height>
+                                     <height>41</height>
                                     </rect>
                                    </property>
                                    <property name="text">
@@ -1427,6 +1441,59 @@ QLabel {
                                      <width>151</width>
                                      <height>41</height>
                                     </rect>
+                                   </property>
+                                   <property name="text">
+                                    <string/>
+                                   </property>
+                                  </widget>
+                                  <widget class="QLabel" name="labelTempVann">
+                                   <property name="geometry">
+                                    <rect>
+                                     <x>200</x>
+                                     <y>10</y>
+                                     <width>91</width>
+                                     <height>21</height>
+                                    </rect>
+                                   </property>
+                                   <property name="toolTip">
+                                    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Vanntemperatur&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                                   </property>
+                                   <property name="styleSheet">
+                                    <string notr="true">QWidget {
+    background-color: #6E6976;
+}
+
+QFrame {
+    background-color: #2E2A33;
+    border: 2px solid #1E90FF;
+    border-radius: 10px;
+}
+
+QPushButton {
+    background-color: #2E2A33;
+    border: 2px solid #1E90FF;
+    border-radius: 10px;
+    color: #FFFFFF;
+    padding: 5px;
+}
+
+QPushButton:hover {
+    background-color: #6E6976;
+    color: #FFFFFF;
+}
+
+QLineEdit {
+    background-color: #2E2A33;
+    border: 2px solid #1E90FF;
+    border-radius: 10px;
+    color: #FFFFFF;
+    padding: 5px;
+}
+
+QLabel {
+    color: #FFFFFF;
+}
+</string>
                                    </property>
                                    <property name="text">
                                     <string/>
@@ -1450,6 +1517,7 @@ QLabel {
                                   <zorder>labelKraft5VTemp</zorder>
                                   <zorder>labelManipulatorKraft</zorder>
                                   <zorder>labelThrusterKraft</zorder>
+                                  <zorder>labelTempVann</zorder>
                                  </widget>
                                 </item>
                                 <item>
@@ -3581,7 +3649,68 @@ QLabel {
                                </property>
                                <layout class="QVBoxLayout" name="verticalLayout_3">
                                 <item>
-                                 <layout class="QHBoxLayout" name="horizontalLayout_10"/>
+                                 <widget class="QLabel" name="label_3">
+                                  <property name="styleSheet">
+                                   <string notr="true">QWidget {
+    background-color: #6E6976;
+}
+
+QFrame {
+    background-color: #2E2A33;
+    border: 2px solid #1E90FF;
+    border-radius: 10px;
+}
+
+QPushButton {
+    background-color: #2E2A33;
+    border: 2px solid #1E90FF;
+    border-radius: 10px;
+    color: #FFFFFF;
+    padding: 5px;
+}
+
+QPushButton:hover {
+    background-color: #6E6976;
+    color: #FFFFFF;
+}
+
+QLineEdit {
+    background-color: #2E2A33;
+    border: 2px solid #1E90FF;
+    border-radius: 10px;
+    color: #FFFFFF;
+    padding: 5px;
+}
+
+QLabel {
+    color: #FFFFFF;
+}
+
+QLabel {
+  qproperty-alignment: 'AlignCenter';
+}
+</string>
+                                  </property>
+                                  <property name="text">
+                                   <string>Dybdesettpunkt</string>
+                                  </property>
+                                 </widget>
+                                </item>
+                                <item>
+                                 <layout class="QHBoxLayout" name="horizontalLayout_10">
+                                  <item>
+                                   <widget class="QLabel" name="labelDybdeSettpunkt">
+                                    <property name="styleSheet">
+                                     <string notr="true">QLabel {
+  qproperty-alignment: 'AlignCenter';
+}</string>
+                                    </property>
+                                    <property name="text">
+                                     <string>---</string>
+                                    </property>
+                                   </widget>
+                                  </item>
+                                 </layout>
                                 </item>
                                </layout>
                               </widget>

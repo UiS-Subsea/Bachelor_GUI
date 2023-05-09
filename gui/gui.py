@@ -212,6 +212,10 @@ class Window(QMainWindow):
         self.btnStampOn.clicked.connect(lambda: self.toggle_stamp_reg())
         self.btnDybdeOn.clicked.connect(lambda: self.toggle_dybde_reg())
 
+        #Lyd
+        self.btnTestSound.clicked.connect(lambda: self.play_sound(True))
+        self.btnStopSound.clicked.connect(lambda: self.play_sound(False))
+
     def gui_manipulator_state_update(self, sensordata):
         self.toggle_mani.setChecked(sensordata[0])
 
@@ -536,7 +540,7 @@ class Window(QMainWindow):
                 self.lastIMUAlarm = i
 
             if sensordata[0][i] == False and i == self.lastIMUAlarm:
-                labelIMUAlarm.setText("Ingen feil")
+                labelIMUAlarm.setText("")
                 self.lastIMUAlarm = -1
 
         for i in range(len(sensordata[1])):
@@ -546,7 +550,7 @@ class Window(QMainWindow):
                 self.lastTempAlarm = i
 
             if sensordata[1][i] == False and i == self.lastTempAlarm:
-                labelIMUAlarm.setText("Ingen feil")
+                labelIMUAlarm.setText("")
                 self.lastTempAlarm = -1
 
         for i in range(len(sensordata[2])):
@@ -556,7 +560,7 @@ class Window(QMainWindow):
                 self.lastIMUAlarm = i
 
             if sensordata[2][i] == False and i == self.lastIMUAlarm:
-                labelIMUAlarm.setText("Ingen feil")
+                labelIMUAlarm.setText("")
                 self.lastIMUAlarm = -1
 
         # TODO: skru på før du pusha
@@ -567,7 +571,7 @@ class Window(QMainWindow):
                 self.play_sound(True)
                 self.lastBigAlarm = i
             if sensordata[3][i] == False and i == self.lastBigAlarm:
-                labelLekkasjeAlarm.setText("Ingen feil")
+                labelLekkasjeAlarm.setText("")
                 self.play_sound(False)
                 self.lastBigAlarm = -1
 
@@ -579,11 +583,11 @@ class Window(QMainWindow):
     def dybdeTempUpdate(self, sensordata):
         labelDybde: QLabel = self.labelDybde
 
-        # labelVann: QLabel = self.labelTempVann
+        labelVann: QLabel = self.labelTempVann
         labelSensor: QLabel = self.labelTempSensorkort
 
-        labelDybde.setText(str(round(sensordata[0], 2)) + "m")
-        # labelVann.setText(str(round(sensordata[1], 2)) + "°C")
+        labelDybde.setText(str(round(sensordata[0], 2)) + "cm")
+        labelVann.setText(str(round(sensordata[1], 2)) + "°C")
         labelSensor.setText(str(round(sensordata[2] / 100, 2)) + "°C")
 
     def guiThrustUpdate(self, sensordata):
@@ -623,7 +627,7 @@ class Window(QMainWindow):
                 self.lastManipulatorAlarm = i
 
             if sensordata[2][i] == False and i == self.lastManipulatorAlarm:
-                labelSikring.setText("Ingen feil")
+                labelSikring.setText("")
                 self.lastManipulatorAlarm = -1
 
     def thruster12VUpdate(self, sensordata):
@@ -641,7 +645,7 @@ class Window(QMainWindow):
                 labelSikring.setStyleSheet(self.errorGradient)
                 self.lastThrusterAlarm = i
             if sensordata[2][i] == False and i == self.lastThrusterAlarm:
-                labelSikring.setText("Ingen feil")
+                labelSikring.setText("")
                 self.lastThrusterAlarm = -1
 
     def kraft5VUpdate(self, sensordata):
@@ -651,10 +655,12 @@ class Window(QMainWindow):
     def reguleringMotorTempUpdate(self, sensordata):
         labelRegulering: QLabel = self.labelReguleringTemp
         labelMotor: QLabel = self.labelMotorTemp
+        labelDybde: QLabel = self.labelDybdeSettpunkt
+
 
         labelRegulering.setText(str(round(sensordata[0] / 100, 2)) + "°C")
         labelMotor.setText(str(round(sensordata[1] / 100, 2)) + "°C")
-        #print([130, sensordata[2]])
+        labelDybde.setText(str(round(sensordata[2] / 100, 2)) + "cm")
 
 
     def TempKomKontrollerUpdate(self, sensordata):
