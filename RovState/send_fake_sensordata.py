@@ -123,6 +123,7 @@ def send_fake_sensordata(t_watch: Threadwatcher, gui_queue: multiprocessing.Queu
         sensordata[REGULERINGMOTORTEMP] = [
             power_list[count % 101] * 13,
             power_list[count % 101] * 2.4,
+            power_list[count % 101] * 2.1,
         ]
         sensordata[TEMPKOMKONTROLLER] = [power_list[count % 101] * 13]
 

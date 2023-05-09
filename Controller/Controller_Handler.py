@@ -45,7 +45,7 @@ class Controller:
         self.mani_joysticks = [0]*7
         self.autonom_data = [0]*8
         # tuple for dpad controll. Goes from -1 to 1 on both first and second variable
-        # self.rov_dpad = (0, 0)
+        self.rov_dpad = (0, 0)
 
         self.mani_dpad = (0, 0)
         # This is the max value that the controller gives out. Used for normalizing the axis to 1.
@@ -73,7 +73,7 @@ class Controller:
         values = {"rov_joysticks": self.rov_joysticks, "mani_joysticks": self.mani_joysticks,
                   "rov_buttons": self.rov_buttons, "mani_buttons": self.mani_buttons,
                   "camera_to_control": self.camera_motor, "camera_movement": self.rov_joysticks[3], 
-                  "autonomdata": self.autonom_data, "mani_dpad": self.mani_dpad}
+                  "autonomdata": self.autonom_data, "mani_dpad": self.mani_dpad, "rov_dpad": self.rov_dpad}
         # "camera_to_control": self.camera_motor,
         # "camera_movement": self.rov_joysticks[3] #Kan endres til annen akse!
         # , "time_between_updates": self.duration}
@@ -143,6 +143,11 @@ class Controller:
             return self.deadzone_adjustment(round(self.get_new_range(event.value, -self.controller_stop_point, self.controller_stop_point)))
             # return round((event.value--self.controller_stop_point)/(self.controller_stop_point--self.controller_stop_point)*100)
         if event.axis == 5:
+            # opp og ned på roboten har range fra 0 til 100 og 0 til -100
+            return self.deadzone_adjustment(round(self.get_new_range(event.value, -self.controller_stop_point, self.controller_stop_point)))
+            # return round((event.value--self.controller_stop_point)/(self.controller_stop_point--self.controller_stop_point)*100)
+            
+        if event.axis == 2:
             # opp og ned på roboten har range fra 0 til 100 og 0 til -100
             return self.deadzone_adjustment(round(self.get_new_range(event.value, -self.controller_stop_point, self.controller_stop_point)))
             # return round((event.value--self.controller_stop_point)/(self.controller_stop_point--self.controller_stop_point)*100)
@@ -299,7 +304,7 @@ class Controller:
                 # this is "solved" by the fact that the other joystick reduces the value of the first joystick that was pressed. Since we add up the
                 # joystick values to get total trust. Example: axis 4: -50, axis 5: 100. Value we get is 50. With bug: axis 4: 0, axis 5: 50.
                 if event.type == JOYSTICK:  # joystick movement JOYSTICK
-                    if event.joy == ROV_CONTROLLER_ID:
+                    if event.joy == ROV_CONTROLLER_ID: # LT = 2, RT = 5
                         self.rov_joysticks[event.axis] = self.normalize_joysticks(
                             event)
                         # print(f"{event.axis}: {event.value}")

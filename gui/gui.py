@@ -78,7 +78,7 @@ class Window(QMainWindow):
         self.id = id
 
         self.exec = ExecutionClass(queue_for_rov, manual_flag)
-        self.camera = CameraClass()
+        self.camera = CameraManager()
         self.w = None  # SecondWindow()
         self.gir_verdier = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
@@ -123,7 +123,7 @@ class Window(QMainWindow):
         print("Manual flag: ", self.manual_flag.value)
         if self.manual_flag.value == 0:
             if mode == "normal_camera":
-                self.exec.send_data_test()
+                self.exec.show_all_cameras()
             if mode == "transect":
                 self.exec.transect()
             if mode == "docking":
@@ -211,6 +211,10 @@ class Window(QMainWindow):
         self.btnRullOn.clicked.connect(lambda: self.toggle_rull_reg())
         self.btnStampOn.clicked.connect(lambda: self.toggle_stamp_reg())
         self.btnDybdeOn.clicked.connect(lambda: self.toggle_dybde_reg())
+
+        #Lyd
+        self.btnTestSound.clicked.connect(lambda: self.play_sound(True))
+        self.btnStopSound.clicked.connect(lambda: self.play_sound(False))
 
     def gui_manipulator_state_update(self, sensordata):
         self.toggle_mani.setChecked(sensordata[0])
@@ -536,7 +540,7 @@ class Window(QMainWindow):
                 self.lastIMUAlarm = i
 
             if sensordata[0][i] == False and i == self.lastIMUAlarm:
-                labelIMUAlarm.setText("Ingen feil")
+                labelIMUAlarm.setText("")
                 self.lastIMUAlarm = -1
 
         for i in range(len(sensordata[1])):
@@ -546,7 +550,7 @@ class Window(QMainWindow):
                 self.lastTempAlarm = i
 
             if sensordata[1][i] == False and i == self.lastTempAlarm:
-                labelIMUAlarm.setText("Ingen feil")
+                labelIMUAlarm.setText("")
                 self.lastTempAlarm = -1
 
         for i in range(len(sensordata[2])):
@@ -556,7 +560,7 @@ class Window(QMainWindow):
                 self.lastIMUAlarm = i
 
             if sensordata[2][i] == False and i == self.lastIMUAlarm:
-                labelIMUAlarm.setText("Ingen feil")
+                labelIMUAlarm.setText("")
                 self.lastIMUAlarm = -1
 
         # TODO: skru på før du pusha
@@ -567,7 +571,7 @@ class Window(QMainWindow):
                 self.play_sound(True)
                 self.lastBigAlarm = i
             if sensordata[3][i] == False and i == self.lastBigAlarm:
-                labelLekkasjeAlarm.setText("Ingen feil")
+                labelLekkasjeAlarm.setText("")
                 self.play_sound(False)
                 self.lastBigAlarm = -1
 
@@ -579,31 +583,15 @@ class Window(QMainWindow):
     def dybdeTempUpdate(self, sensordata):
         labelDybde: QLabel = self.labelDybde
 
-        # labelVann: QLabel = self.labelTempVann
+        labelVann: QLabel = self.labelTempVann
         labelSensor: QLabel = self.labelTempSensorkort
 
-        labelDybde.setText(str(round(sensordata[0], 2)) + "m")
-        # labelVann.setText(str(round(sensordata[1], 2)) + "°C")
+        labelDybde.setText(str(round(sensordata[0], 2)) + "cm")
+        labelVann.setText(str(round(sensordata[1], 2)) + "°C")
         labelSensor.setText(str(round(sensordata[2] / 100, 2)) + "°C")
 
     def guiThrustUpdate(self, sensordata):
-        # labelHHF: QLabel = self.labelHHF
-        # labelHHB: QLabel = self.labelHHB
-        # labelHVB: QLabel = self.labelHVB
-        # labelHVF: QLabel = self.labelHVF
-        # labelVHF: QLabel = self.labelVHF
-        # labelVHB: QLabel = self.labelVHB
-        # labelVVB: QLabel = self.labelVVB
-        # labelVVF: QLabel = self.labelVVF
 
-        # labelHHF.setText(str(round(sensordata[0], 2)))
-        # labelHHB.setText(str(round(sensordata[1], 2)))
-        # labelHVB.setText(str(round(sensordata[2], 2)))
-        # labelHVF.setText(str(round(sensordata[3], 2)))
-        # labelVHF.setText(str(round(sensordata[4], 2)))
-        # labelVHB.setText(str(round(sensordata[5], 2)))
-        # labelVVB.setText(str(round(sensordata[6], 2)))
-        # labelVVF.setText(str(round(sensordata[7], 2)))
 
         thrust_liste: list[QLabel] = [
             self.labelHHF,
@@ -639,7 +627,7 @@ class Window(QMainWindow):
                 self.lastManipulatorAlarm = i
 
             if sensordata[2][i] == False and i == self.lastManipulatorAlarm:
-                labelSikring.setText("Ingen feil")
+                labelSikring.setText("")
                 self.lastManipulatorAlarm = -1
 
     def thruster12VUpdate(self, sensordata):
@@ -657,7 +645,7 @@ class Window(QMainWindow):
                 labelSikring.setStyleSheet(self.errorGradient)
                 self.lastThrusterAlarm = i
             if sensordata[2][i] == False and i == self.lastThrusterAlarm:
-                labelSikring.setText("Ingen feil")
+                labelSikring.setText("")
                 self.lastThrusterAlarm = -1
 
     def kraft5VUpdate(self, sensordata):
@@ -667,9 +655,13 @@ class Window(QMainWindow):
     def reguleringMotorTempUpdate(self, sensordata):
         labelRegulering: QLabel = self.labelReguleringTemp
         labelMotor: QLabel = self.labelMotorTemp
+        labelDybde: QLabel = self.labelDybdeSettpunkt
+
 
         labelRegulering.setText(str(round(sensordata[0] / 100, 2)) + "°C")
         labelMotor.setText(str(round(sensordata[1] / 100, 2)) + "°C")
+        labelDybde.setText(str(round(sensordata[2] / 100, 2)) + "cm")
+
 
     def TempKomKontrollerUpdate(self, sensordata):
         labelTemp: QLabel = self.labelTempKomKontroller
