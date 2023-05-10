@@ -1534,6 +1534,13 @@ QLabel {
                               </widget>
                              </item>
                              <item>
+                              <widget class="QPushButton" name="showNewWindow">
+                               <property name="text">
+                                <string>Åpne Bilder</string>
+                               </property>
+                              </widget>
+                             </item>
+                             <item>
                               <widget class="QLabel" name="title_start_videoopptak">
                                <property name="maximumSize">
                                 <size>
