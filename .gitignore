@@ -130,3 +130,7 @@ dmypy.json
 
 # Base.exe.stackdump
 bash.exe.stackdump
+
+#Images and recordings from ROV
+camerafeed/output
+Bachelor_GUI/camerafeed/output/

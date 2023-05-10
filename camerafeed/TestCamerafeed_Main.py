@@ -59,124 +59,44 @@ class Camera:
             
 class CameraManager:
     def __init__(self) -> None:
-        self.frame_manipulator = None
-        self.frame_stereoR = None
-        self.frame_down = None
-        self.frame_stereoL = None
-        self.frame_manual = None
-        self.frame_test = None
-        
-        self.cam_stereoL = None
-        self.cam_stereoR = None
-        self.cam_down = None
-        self.cam_manipulator = None
-        self.cam_manual = None
-        self.cam_test = None
-        
-        
         self.recording = False
-        
+        self.frames = {"StereoL": None, "StereoR": None, "Down": None, "Manipulator": None, "Manual": None, "Test": None}
         self.active_cameras = []
         
+    def add_cameras(self, *camera_names):
+        for name in camera_names:
+            if name == "StereoL":
+                cam = Camera("StereoL", GST_FEED_STEREO_L)
+                self.active_cameras.append(cam)
+            elif name == "StereoR":
+                cam = Camera("StereoR", GST_FEED_STEREO_R)
+                self.active_cameras.append(cam)
+            elif name == "Down":
+                cam = Camera("Down", GST_FEED_DOWN)
+                self.active_cameras.append(cam)
+            elif name == "Manip":
+                cam = Camera("Manip", GST_FEED_MANIPULATOR)
+                self.active_cameras.append(cam)
+            elif name == "Manual":
+                cam = Camera("Manual")
+                self.active_cameras.append(cam)
 
+    def open_cameras(self):
+        for cam in self.active_cameras:
+            cam.open_cam()
+            
+    def get_frames(self):
+        for cam in self.active_cameras:
+            self.frames[cam.name] = cam.get_frame()
     
-    def get_frame_stereo_L(self):
-        self.frame_stereoL = self.cam_stereoL.get_frame()
-        return self.frame_stereoL
 
-    def get_frame_stereo_R(self):
-        self.frame_stereoR = self.cam_stereoR.get_frame()
-        return self.frame_stereoR
-        
-    def get_frame_down(self):
-        self.frame_down = self.cam_down.get_frame()
-        return self.frame_down
-        
-    def get_frame_manipulator(self):
-        self.frame_manipulator = self.cam_manipulator.get_frame()
-        return self.frame_manipulator
-    
-    def get_frame_manual(self):
-        self.frame_manual = self.cam_manual.get_frame()
-        return self.frame_manual
-    
-    def get_frame_test(self):
-        self.frame_test = self.cam_test.get_frame()
-        return self.frame_test
-    
-    def get_frame_from_cam(self, cam: Camera):
-        frame = cam.get_frame()
-        return frame
-        
-    def start_stereo_cam_L(self):
-        self.cam_stereoL = Camera("StereoL", GST_FEED_STEREO_L)
-        print("Starting camera: StereoL")
-        success = self.cam_stereoL.open_cam()
-        if success:
-            self.active_cameras.append(self.cam_stereoL)
-        
-        
-    def start_stereo_cam_R(self):
-        self.cam_stereoR = Camera("StereoR", GST_FEED_STEREO_R)
-        print("Starting camera: StereoR")
-        success = self.cam_stereoR.open_cam()
-        if success:
-            self.active_cameras.append(self.cam_stereoR)
-        
-    def start_down_cam(self):
-        self.cam_down = Camera("Down", GST_FEED_DOWN)
-        print("Starting camera: Down")
-        success = self.cam_down.open_cam()
-        if success:
-            self.active_cameras.append(self.cam_down)
-        
-    def start_manipulator_cam(self):
-        self.cam_manipulator = Camera("Manipulator", GST_FEED_MANIPULATOR)
-        print("Starting camera: Manipulator")
-        success = self.cam_manipulator.open_cam()
-        if success:
-            self.active_cameras.append(self.cam_manipulator)
-        
-    def start_manual_cam(self):
-        self.cam_manual = Camera("Manual")
-        print("Starting camera: Manual")
-        success = self.cam_manual.open_cam()
-        if success:
-            self.active_cameras.append(self.cam_manual)
-        
-    def start_test_cam(self):
-        self.cam_test = Camera("Test")
-        print("Starting camera: Test")
-        success = self.cam_test.open_cam()
-        if success:
-            self.active_cameras.append(self.cam_test)
-        
-    def start(self):
-        # self.start_down_cam()
-        # self.start_stereo_cam_L()
-        # self.start_stereo_cam_R()
-        # self.start_manipulator_cam()
-        # self.start_manual_cam()
-        pass
 
     def close_all(self):
-        if self.cam_down is not None and self.cam_down.isOpened:
-            self.cam_down.release_cam()
-            
-        if self.cam_stereoL is not None and self.cam_stereoL.isOpened:
-            self.cam_stereoL.release_cam()
-            
-        if self.cam_stereoR is not None and self.cam_stereoR.isOpened:
-            self.cam_stereoR.release_cam()
-            
-        if self.cam_manipulator is not None and self.cam_manipulator.isOpened:
-            self.cam_manipulator.release_cam()
-            
-        if self.cam_manual is not None and self.cam_manual.isOpened:
-            self.cam_manual.release_cam()
-            
-        if self.cam_test is not None and self.cam_test.isOpened:
-            self.cam_test.release_cam()
+        for cam in self.active_cameras:
+            try:
+                cam.release_cam()
+            except:
+                pass
         
     def setup_video(self, name):
         self.videoresult = cv2.VideoWriter(f'camerafeed/output/{name}.avi', cv2.VideoWriter_fourcc(
@@ -343,16 +263,15 @@ class ExecutionClass:
         self.Camera.start_stereo_cam_L()
         self.Camera.start_stereo_cam_R()
         self.Camera.start_down_cam()
-        self.Camera.start_manipulator_cam()
+        # self.Camera.start_manipulator_cam()
         while not self.done:
             self.update_stereo_L()
             self.update_stereo_R()
             self.update_down()
-            self.update_manipulator()
             self.show(self.frame_stereoL, "StereoL")
             self.show(self.frame_stereoR, "StereoR")
             self.show(self.frame_down, "Down")
-            self.show(self.frame_manipulator, "Manip")
+            # self.show(self.frame_manipulator, "Manip")
             
     def stop_everything(self):
         print("Stopping other processes, returning to manual control")

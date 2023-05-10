@@ -54,7 +54,7 @@ class Controller:
         self.mani_joysticks = [0] * 7
         self.autonom_data = [0] * 8
         # tuple for dpad controll. Goes from -1 to 1 on both first and second variable
-        # self.rov_dpad = (0, 0)
+        self.rov_dpad = (0, 0)
 
         self.mani_dpad = (0, 0)
         # This is the max value that the controller gives out. Used for normalizing the axis to 1.
@@ -89,16 +89,10 @@ class Controller:
 
     # Creates the default data packet that is sent to main
     def pack_controller_values(self):
-        values = {
-            "rov_joysticks": self.rov_joysticks,
-            "mani_joysticks": self.mani_joysticks,
-            "rov_buttons": self.rov_buttons,
-            "mani_buttons": self.mani_buttons,
-            "camera_to_control": self.camera_motor,
-            "camera_movement": self.rov_joysticks[3],
-            "autonomdata": self.autonom_data,
-            "mani_dpad": self.mani_dpad,
-        }
+        values = {"rov_joysticks": self.rov_joysticks, "mani_joysticks": self.mani_joysticks,
+                  "rov_buttons": self.rov_buttons, "mani_buttons": self.mani_buttons,
+                  "camera_to_control": self.camera_motor, "camera_movement": self.rov_joysticks[3], 
+                  "autonomdata": self.autonom_data, "mani_dpad": self.mani_dpad, "rov_dpad": self.rov_dpad}
         # "camera_to_control": self.camera_motor,
         # "camera_movement": self.rov_joysticks[3] #Kan endres til annen akse!
         # , "time_between_updates": self.duration}
