@@ -7,19 +7,25 @@ The purpose of this program is to enable communication between the topside syste
 To connect to the Jetson and run the program, follow these steps:
 
 SSH into the Jetson using the command ssh jetson@10.0.0.2.
+
 Enter the password, which is jetson.
+
 Run the command canup.
+
 Run the command sudo route add -net 224.0.0.0 netmask 224.0.0.0 eth0.
+
 Navigate to the Kommunikasjon-2023/ directory using the command cd Kommunikasjon-2023/.
+
 Finally, run the command python3 main.py to execute the program.
-Running the Project from Your PC
-To run the project from your PC, follow these steps:
 
 # Program Setup on main pc
 Install the required packages by running the command pip install -r requirements.txt.
+
 Run the command sudo route add -net 224.0.0.0 netmask 224.0.0.0 enp2s0.
+
 Finally, run the command python3 main.py to execute the program.
-Camera Streaming
+
+# Camera Streaming
 To stream the camera, use the command:
 
 gst-launch-1.0 udpsrc multicast-group=224.1.1.1 auto-multicast=true port=5000 ! application/x-rtp, media=video, clock-rate=90000, encoding-name=H264, payload=96 ! rtph264depay ! h264parse ! decodebin ! videoconvert ! autovideosink sync=false
