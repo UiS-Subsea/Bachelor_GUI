@@ -47,7 +47,6 @@ class Window(QMainWindow):
         self.angle_bit_state = 0
         self.toggle_felles_regulator = [0] * 8
 
-
         super().__init__(parent)
         uic.loadUi("gui/mainwindow.ui", self)
         self.connectFunctions()
@@ -147,9 +146,7 @@ class Window(QMainWindow):
 
     def connectFunctions(self):
         # window2
-        self.showNewWindowButton.clicked.connect(
-            lambda: self.imageprocessing("testing")
-        )
+        self.showNewWindow.clicked.connect(self.show_new_window)
 
         # Kjøremodus
         self.btnManuell.clicked.connect(lambda: self.manual_kjoring())
@@ -212,7 +209,7 @@ class Window(QMainWindow):
         self.btnStampOn.clicked.connect(lambda: self.toggle_stamp_reg())
         self.btnDybdeOn.clicked.connect(lambda: self.toggle_dybde_reg())
 
-        #Lyd
+        # Lyd
         self.btnTestSound.clicked.connect(lambda: self.play_sound(True))
         self.btnStopSound.clicked.connect(lambda: self.play_sound(False))
 
@@ -360,7 +357,7 @@ class Window(QMainWindow):
     #        print(self.packets_to_send)
 
     def toggle_rull_reg(self):
-        self.toggle_felles_regulator[0] ^= (1 << 0)
+        self.toggle_felles_regulator[0] ^= 1 << 0
         if self.toggle_felles_regulator[0] == (1 << 0):
             print("rull på")
         elif self.toggle_felles_regulator[0] == (0 << 0):
@@ -383,7 +380,7 @@ class Window(QMainWindow):
     #        self.packets_to_send.append([66, toggle_rull_reg])
 
     def toggle_stamp_reg(self):
-        self.toggle_felles_regulator[0] ^= (1 << 2)
+        self.toggle_felles_regulator[0] ^= 1 << 2
         if self.toggle_felles_regulator[0] == (1 << 2):
             print("stamp på")
         elif self.toggle_felles_regulator[0] == (0 << 2):
@@ -392,9 +389,8 @@ class Window(QMainWindow):
         values = {"toggle_rull_reg": self.toggle_felles_regulator}
         self.queue.put((12, values))
 
-
     def toggle_dybde_reg(self):
-        self.toggle_felles_regulator[0] ^= (1 << 3)
+        self.toggle_felles_regulator[0] ^= 1 << 3
         if self.toggle_felles_regulator[0] == (1 << 3):
             print("dybde på")
         elif self.toggle_felles_regulator[0] == (0 << 3):
@@ -402,7 +398,6 @@ class Window(QMainWindow):
         print(("Want to send", 32, self.toggle_felles_regulator))
         values = {"toggle_rull_reg": self.toggle_felles_regulator}
         self.queue.put((12, values))
-
 
     def front_light_on(self):
         set_light_byte = [0] * 8
@@ -412,7 +407,6 @@ class Window(QMainWindow):
         values = {"front_light_on": set_light_byte}
         self.queue.put((15, values))
 
-
     def bottom_light_on(self):
         set_light_byte = [0] * 8
         set_light_byte[0] |= 1 << 1  # bit 1 to 1
@@ -420,8 +414,6 @@ class Window(QMainWindow):
         print(("Want to send", 99, set_light_byte))
         values = {"bottom_light_on": set_light_byte}
         self.queue.put((16, values))
-
-
 
     # TODO: Spør dominykas om alt e rett :)
     def camVinkelUpdate(self, value):
@@ -591,8 +583,6 @@ class Window(QMainWindow):
         labelSensor.setText(str(round(sensordata[2] / 100, 2)) + "°C")
 
     def guiThrustUpdate(self, sensordata):
-
-
         thrust_liste: list[QLabel] = [
             self.labelHHF,
             self.labelHHB,
@@ -657,11 +647,9 @@ class Window(QMainWindow):
         labelMotor: QLabel = self.labelMotorTemp
         labelDybde: QLabel = self.labelDybdeSettpunkt
 
-
         labelRegulering.setText(str(round(sensordata[0] / 100, 2)) + "°C")
         labelMotor.setText(str(round(sensordata[1] / 100, 2)) + "°C")
         labelDybde.setText(str(round(sensordata[2] / 100, 2)) + "cm")
-
 
     def TempKomKontrollerUpdate(self, sensordata):
         labelTemp: QLabel = self.labelTempKomKontroller
@@ -682,6 +670,12 @@ def run(conn, queue_for_rov, manual_flag, t_watch: Threadwatcher, id):
     # sys.exit(app.exec())
 
 
+from PyQt5.QtWidgets import QWidget, QLabel, QPushButton
+from PyQt5.QtGui import QPixmap
+from PyQt5 import uic
+import os
+
+
 class SecondWindow(QWidget):
     def __init__(
         self,
@@ -692,6 +686,20 @@ class SecondWindow(QWidget):
         uic.loadUi("gui/window2.ui", self)
         self.label = QLabel("Camera Window")
         self.main_window = main_window
+
+        self.image_directory = "camerafeed/output"
+        self.image_files = sorted(
+            [
+                f
+                for f in os.listdir(self.image_directory)
+                if f.lower().endswith((".png", ".jpg", ".jpeg", ".gif", ".bmp"))
+            ]
+        )
+        self.current_image_index = 0
+
+        self.update_image()
+
+        # Call connectFunctions() after initializing all the necessary attributes
         self.connectFunctions()
 
     def closeEvent(self, event):
@@ -699,9 +707,32 @@ class SecondWindow(QWidget):
         event.accept()
 
     def connectFunctions(self):
-        # Kamera
-        self.btnTiltUp.clicked.connect(lambda: f.tiltUp(self))
-        self.btnTiltDown.clicked.connect(lambda: f.tiltDown(self))
+        self.lastPic.clicked.connect(self.load_previous_image)
+        self.nextPic.clicked.connect(self.load_next_image)
+
+    def load_previous_image(self):
+        self.current_image_index -= 1
+        if self.current_image_index < 0:
+            self.current_image_index = len(self.image_files) - 1
+        self.update_image()
+
+    def load_next_image(self):
+        self.current_image_index += 1
+        if self.current_image_index >= len(self.image_files):
+            self.current_image_index = 0
+        self.update_image()
+
+    def update_image(self):
+        current_image_path = os.path.join(
+            self.image_directory, self.image_files[self.current_image_index]
+        )
+        pixmap = QPixmap(current_image_path)
+        window_size = self.size()  # Get the size of the window
+        scaled_pixmap = pixmap.scaled(
+            window_size, Qt.KeepAspectRatio, Qt.SmoothTransformation
+        )
+        self.pic.setPixmap(scaled_pixmap)
+        self.pic.setFixedSize(scaled_pixmap.size())
 
 
 # A class for playing sound in a separate thread
