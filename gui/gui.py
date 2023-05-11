@@ -51,21 +51,28 @@ class Window(QMainWindow):
         uic.loadUi("gui/mainwindow.ui", self)
         self.connectFunctions()
         self.player = QMediaPlayer()
-        self.sound_file = "martinalarm.wav"
-        self.sound_file = os.path.abspath("martinalarm.wav")
+        self.lydFil = "martinalarm.wav"
+        self.lydFil = os.path.abspath("martinalarm.wav")
 
-        self.sound_worker = SoundWorker(self.sound_file)
+        self.sound_worker = SoundWorker(self.lydFil)
         self.sound_worker_thread = QThread()
         self.sound_worker.moveToThread(self.sound_worker_thread)
         self.sound_worker_thread.start()
 
         # Verdier for resetting av alarm
         self.lastBigAlarm = -1
-        self.lastThrusterAlarm = -1
-        self.lastManipulatorAlarm = -1
-        self.lastIMUAlarm = -1
-        self.lastTempAlarm = -1
-        self.lastPressureAlarm = -1
+        # self.lastThrusterAlarm = -1
+        # self.lastManipulatorAlarm = -1
+        self.currentManipulatorAlarms = set()
+        self.currentThrusterAlarms = set()
+        self.currentIMUAlarms = set()
+        self.currentTempAlarms = set()
+        self.currentTrykkAlarms = set()
+        self.currentLekkasjeAlarms = set()
+
+        # self.lastIMUAlarm = -1
+        # self.lastTempAlarm = -1
+        # self.lastPressureAlarm = -1
 
         self.manual_flag = manual_flag
         # queue_for_rov is a queue that is used to send data to the rov
@@ -107,7 +114,7 @@ class Window(QMainWindow):
 
     Gradient = "background-color: #444444; color: #FFFFFF; border-radius: 10px;"
 
-    errorGradient = "background-color: #444444; color: #FF0000; border-radius: 10px;"
+    errorGradient = "background-color: #FF9999; color: #FF0000; border: 1px solid #FF0000; border-radius: 10px;"
 
     def manual_kjoring(self):
         self.manual_flag.value = 1
@@ -452,7 +459,7 @@ class Window(QMainWindow):
     #         else:
     #             # Otherwise, start playing the new sound
     #             self.player.setMedia(QMediaContent(
-    #                 QUrl.fromLocalFile(self.sound_file)))
+    #                 QUrl.fromLocalFile(self.lydFil)))
     #             self.player.play()
     #     else:
     #         self.player.stop()
@@ -476,7 +483,7 @@ class Window(QMainWindow):
     def on_player_state_changed(self, state):
         if state == QMediaPlayer.StoppedState:
             self.player.stateChanged.disconnect(self.on_player_state_changed)
-            self.player.setMedia(QMediaContent(QUrl.fromLocalFile(self.sound_file)))
+            self.player.setMedia(QMediaContent(QUrl.fromLocalFile(self.lydFil)))
             self.player.play()
 
     # def on_player_state_changed(self, state):
@@ -484,7 +491,7 @@ class Window(QMainWindow):
     #         # When the playback is finished, disconnect the signal and start playing the new sound
     #         self.player.stateChanged.disconnect(self.on_player_state_changed)
     #         self.player.setMedia(QMediaContent(
-    #             QUrl.fromLocalFile(self.sound_file)))
+    #             QUrl.fromLocalFile(self.lydFil)))
     #         self.player.play()
 
     def guiFeilKodeUpdate(self, sensordata):
@@ -522,53 +529,73 @@ class Window(QMainWindow):
         labelLekkasjeAlarm: QLabel = self.labelLekkasjeAlarm
         labelTempAlarm: QLabel = self.labelTempAlarm
         labelTrykkAlarm: QLabel = self.labelTrykkAlarm
-
-        # TODO: kanskje legge til ekstra oppdatering seinare
-        # Sjekker om det er feil i sensordataene
+        alarmTextsIMU = []
         for i in range(len(sensordata[0])):
             if sensordata[0][i] == True:
-                labelIMUAlarm.setText(imuErrors[i])
-                labelIMUAlarm.setStyleSheet(self.errorGradient)
-                self.lastIMUAlarm = i
+                self.currentIMUAlarms.add(i)
+                alarmTextsIMU.append(imuErrors[i])
+            elif sensordata[0][i] == False and i in self.currentIMUAlarms:
+                self.currentIMUAlarms.remove(i)
+        if alarmTextsIMU:
+            labelIMUAlarm.setText(", ".join(alarmTextsIMU))
+            labelIMUAlarm.setStyleSheet(self.errorGradient)
+        else:
+            labelIMUAlarm.setText("")
+            labelIMUAlarm.setStyleSheet("")  # Reset style
 
-            if sensordata[0][i] == False and i == self.lastIMUAlarm:
-                labelIMUAlarm.setText("")
-                self.lastIMUAlarm = -1
-
+        # Update Temp alarms
+        alarmTextsTemp = []
         for i in range(len(sensordata[1])):
             if sensordata[1][i] == True:
-                labelTempAlarm.setText(tempErrors[i])
-                labelTempAlarm.setStyleSheet(self.errorGradient)
-                self.lastTempAlarm = i
+                self.currentTempAlarms.add(i)
+                alarmTextsTemp.append(tempErrors[i])
+            elif sensordata[1][i] == False and i in self.currentTempAlarms:
+                self.currentTempAlarms.remove(i)
+        if alarmTextsTemp:
+            labelTempAlarm.setText(", ".join(alarmTextsTemp))
+            labelTempAlarm.setStyleSheet(self.errorGradient)
+        else:
+            labelTempAlarm.setText("")
+            labelTempAlarm.setStyleSheet("")  # Reset style
 
-            if sensordata[1][i] == False and i == self.lastTempAlarm:
-                labelIMUAlarm.setText("")
-                self.lastTempAlarm = -1
-
+        # Update Trykk alarms
+        alarmTextsTrykk = []
         for i in range(len(sensordata[2])):
             if sensordata[2][i] == True:
-                labelTrykkAlarm.setText(trykkErrors[i])
-                labelTrykkAlarm.setStyleSheet(self.errorGradient)
-                self.lastIMUAlarm = i
+                self.currentTrykkAlarms.add(i)
+                alarmTextsTrykk.append(trykkErrors[i])
+            elif sensordata[2][i] == False and i in self.currentTrykkAlarms:
+                self.currentTrykkAlarms.remove(i)
+        if alarmTextsTrykk:
+            labelTrykkAlarm.setText(", ".join(alarmTextsTrykk))
+            labelTrykkAlarm.setStyleSheet(self.errorGradient)
+        else:
+            labelTrykkAlarm.setText("")
+            labelTrykkAlarm.setStyleSheet("")  # Reset style
 
-            if sensordata[2][i] == False and i == self.lastIMUAlarm:
-                labelIMUAlarm.setText("")
-                self.lastIMUAlarm = -1
-
-        # TODO: skru på før du pusha
+        # Update Lekkasje alarms
+        alarmTextsLekkasje = []
         for i in range(len(sensordata[3])):
             if sensordata[3][i] == True:
-                labelLekkasjeAlarm.setText(lekkasjeErrors[i])
-                labelLekkasjeAlarm.setStyleSheet(self.errorGradient)
+                self.currentLekkasjeAlarms.add(i)
+                alarmTextsLekkasje.append(lekkasjeErrors[i])
                 self.play_sound(True)
-                self.lastBigAlarm = i
-            if sensordata[3][i] == False and i == self.lastBigAlarm:
-                labelLekkasjeAlarm.setText("")
+            elif sensordata[3][i] == False and i in self.currentLekkasjeAlarms:
+                self.currentLekkasjeAlarms.remove(i)
                 self.play_sound(False)
-                self.lastBigAlarm = -1
+        if alarmTextsLekkasje:
+            labelLekkasjeAlarm.setText(", ".join(alarmTextsLekkasje))
+            labelLekkasjeAlarm.setStyleSheet(self.errorGradient)
+        else:
+            labelLekkasjeAlarm.setText("")
+            labelLekkasjeAlarm.setStyleSheet("")  # Reset style
 
     def guiVinkelUpdate(self, sensordata):
-        vinkel_liste: list[QLabel] = [self.labelRull, self.labelStamp, self.labelGir]
+        vinkel_liste: list[QLabel] = [
+            self.labelRull,
+            self.labelStamp,
+            self.labelGir,
+        ]
         for i, label in enumerate(vinkel_liste):
             label.setText(str(round(sensordata[i] / 100, 2)) + "°")
 
@@ -610,33 +637,41 @@ class Window(QMainWindow):
         labelKraft.setText(str(round(sensordata[0] / 1000, 2)) + "A")
         labelTemp.setText(str(round(sensordata[1] / 100, 2)) + "C")
 
+        alarmTexts = []
         for i in range(3):
             if sensordata[2][i] == True:
-                labelSikring.setText(str(self.kraftFeilkoder[i]))
-                labelSikring.setStyleSheet(self.errorGradient)
-                self.lastManipulatorAlarm = i
+                self.currentManipulatorAlarms.add(i)
+                alarmTexts.append(self.kraftFeilkoder[i])
+            elif sensordata[2][i] == False and i in self.currentManipulatorAlarms:
+                self.currentManipulatorAlarms.remove(i)
 
-            if sensordata[2][i] == False and i == self.lastManipulatorAlarm:
-                labelSikring.setText("")
-                self.lastManipulatorAlarm = -1
+        if alarmTexts:
+            labelSikring.setText(", ".join(alarmTexts))
+            labelSikring.setStyleSheet(self.errorGradient)
+        else:
+            labelSikring.setText("")
 
     def thruster12VUpdate(self, sensordata):
         labelKraft: QLabel = self.labelThrusterKraft
         labelTemp: QLabel = self.labelThruster12VTemp
         labelSikring: QLabel = self.labelThrusterSikring
-        # print(sensordata)
 
         labelKraft.setText(str(round(sensordata[0] / 1000, 2)) + "A")
         labelTemp.setText(str(round(sensordata[1] / 100, 2)) + "C")
 
+        alarmTexts = []
         for i in range(3):
             if sensordata[2][i] == True:
-                labelSikring.setText(str(self.kraftFeilkoder[i]))
-                labelSikring.setStyleSheet(self.errorGradient)
-                self.lastThrusterAlarm = i
-            if sensordata[2][i] == False and i == self.lastThrusterAlarm:
-                labelSikring.setText("")
-                self.lastThrusterAlarm = -1
+                self.currentThrusterAlarms.add(i)
+                alarmTexts.append(self.kraftFeilkoder[i])
+            elif sensordata[2][i] == False and i in self.currentThrusterAlarms:
+                self.currentThrusterAlarms.remove(i)
+
+        if alarmTexts:
+            labelSikring.setText(", ".join(alarmTexts))
+            labelSikring.setStyleSheet(self.errorGradient)
+        else:
+            labelSikring.setText("")
 
     def kraft5VUpdate(self, sensordata):
         labelTemp: QLabel = self.labelKraft5VTemp
@@ -739,10 +774,10 @@ class SecondWindow(QWidget):
 class SoundWorker(QObject):
     play = pyqtSignal(bool)
 
-    def __init__(self, sound_file):
+    def __init__(self, lydFil):
         super().__init__()
         self.player = QMediaPlayer()
-        self.sound_file = sound_file
+        self.lydFil = lydFil
 
         self.play.connect(self.on_play)
 
@@ -751,7 +786,7 @@ class SoundWorker(QObject):
             if self.player.state() == QMediaPlayer.PlayingState:
                 self.player.stateChanged.connect(self.on_player_state_changed)
             else:
-                self.player.setMedia(QMediaContent(QUrl.fromLocalFile(self.sound_file)))
+                self.player.setMedia(QMediaContent(QUrl.fromLocalFile(self.lydFil)))
                 self.player.play()
         else:
             self.player.stop()
@@ -759,7 +794,7 @@ class SoundWorker(QObject):
     def on_player_state_changed(self, state):
         if state == QMediaPlayer.StoppedState:
             self.player.stateChanged.disconnect(self.on_player_state_changed)
-            self.player.setMedia(QMediaContent(QUrl.fromLocalFile(self.sound_file)))
+            self.player.setMedia(QMediaContent(QUrl.fromLocalFile(self.lydFil)))
             self.player.play()
 
 

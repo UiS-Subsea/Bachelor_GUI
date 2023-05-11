@@ -1,6 +1,7 @@
 import multiprocessing
 import time
 from Thread_info import Threadwatcher
+import random
 
 MANIPULATOR_IN_OUT = 15
 MANIPULATOR_ROTATION = 0
@@ -59,11 +60,11 @@ def send_fake_sensordata(t_watch: Threadwatcher, gui_queue: multiprocessing.Queu
     dybde_list = [num for num in range(50, 20000)]
 
     # Errors
-    imuErrors = [True, False, False, False, False, False, False, False]
+    imuErrors = [True, False, False, True, False, False, True, False]
     tempErrors = [False, True, False, False]
     pressureErrors = [True, False, True, False]
     leakageAlarms = [True, False, False, False]
-    ManipulatorSikring = [False, False, True]
+    ManipulatorSikring = [True, False, True]
     ThrusterSikring = [False, True, False]
     KraftSikring = [False, False, True]
 
@@ -125,7 +126,7 @@ def send_fake_sensordata(t_watch: Threadwatcher, gui_queue: multiprocessing.Queu
             power_list[count % 101] * 2.4,
             power_list[count % 101] * 2.1,
         ]
-        sensordata[TEMPKOMKONTROLLER] = [power_list[count % 101] * 13]
+        sensordata[TEMPKOMKONTROLLER] = random.randint(0, 100)
 
         gui_queue.put(sensordata)
         time.sleep(0.5)
