@@ -300,7 +300,12 @@ class Window(QMainWindow):
 
     def updateRegulatorTuning(self):
         reguleringDropdown = self.reguleringDropdown.currentText()
-        input_value = float(self.tuningInput.text())
+
+        try:
+            input_value = float(self.tuningInput.text())
+        except ValueError:
+            self.lastSent.setText("Input value must be a number")
+            return
 
         my_dict = {
             "Rull KI": 1,
@@ -317,10 +322,14 @@ class Window(QMainWindow):
         }
 
         value = my_dict.get(reguleringDropdown, None)
-        update_regulator_tuning = [int(value), float(input_value)]
+        update_regulator_tuning = [int(value), input_value]
         print(("Want to send", 42, update_regulator_tuning))
         values = {"update_regulator_tuning": update_regulator_tuning}
         self.queue.put((10, values))
+
+        self.lastSent.setText(
+            f" Values : ({reguleringDropdown} {input_value}) was sent to ROV"
+        )
 
     def toogle_regulator_all(self):
         self.angle_bit_state == 0

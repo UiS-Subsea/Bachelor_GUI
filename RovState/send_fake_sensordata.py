@@ -65,8 +65,8 @@ def send_fake_sensordata(t_watch: Threadwatcher, gui_queue: multiprocessing.Queu
     pressureErrors = [True, False, True, False]
     leakageAlarms = [True, False, False, False]
     ManipulatorSikring = [True, False, True]
-    ThrusterSikring = [False, True, False]
-    KraftSikring = [False, False, True]
+    ThrusterSikring = [False, False, False]
+    KraftSikring = [False, False, False]
 
     count = -1
     sensordata = {}
