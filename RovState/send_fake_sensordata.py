@@ -54,9 +54,9 @@ ID_camera_tilt_downwards = 201
 
 def send_fake_sensordata(t_watch: Threadwatcher, gui_queue: multiprocessing.Queue):
     thrust_list = [num for num in range(-100, 101)]
-    manipulator_list = [num for num in range(-100, 101)]
+    manipulator_list = [num for num in range(500, 100000)]
     power_list = [num for num in range(0, 101)]
-    vinkel_list = [num for num in range(-360, 360)]
+    vinkel_list = [num for num in range(30, 71)]
     dybde_list = [num for num in range(50, 20000)]
 
     # Errors
@@ -82,9 +82,9 @@ def send_fake_sensordata(t_watch: Threadwatcher, gui_queue: multiprocessing.Queu
             dybde_list[(60 + count)],
         ]
         sensordata[DYBDETEMP] = [
-            vinkel_list[(0 + count)],  # dybde
-            vinkel_list[(12 + count)],  # vanntemp
-            vinkel_list[(45 + count) % 201],  # sensorkorttemp
+            vinkel_list[(2 + count) % len(vinkel_list)],  # dybde
+            vinkel_list[(50 + count) % len(vinkel_list)],  # vanntemp
+            vinkel_list[(30 + count) % len(vinkel_list)],  # sensorkorttemp
         ]
 
         sensordata[FEILKODE] = [
@@ -107,12 +107,12 @@ def send_fake_sensordata(t_watch: Threadwatcher, gui_queue: multiprocessing.Queu
         ]
         sensordata[MANIPULATOR12V] = [
             manipulator_list[(0 + count)],  # Strømtrekk
-            manipulator_list[(5 + count)],  # Temperatur
+            manipulator_list[(40 * 100 + count)],  # Temperatur
             ManipulatorSikring,  # Sikringsstatus
         ]
         sensordata[THRUSTER12V] = [
             thrust_list[(0 + count)],  # Strømtrekk
-            manipulator_list[(5 + count)],  # Temperatur
+            manipulator_list[(50 * 100 + count)],  # Temperatur
             ThrusterSikring,
         ]
 
