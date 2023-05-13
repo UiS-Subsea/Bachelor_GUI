@@ -53,19 +53,19 @@ ID_camera_tilt_downwards = 201
 
 
 def send_fake_sensordata(t_watch: Threadwatcher, gui_queue: multiprocessing.Queue):
-    thrust_list = [num for num in range(-100, 101)]
-    power_list = [num for num in range(0, 31)]
+    thrust_list = [num for num in range(0, 101)]
+    power_list = [num for num in range(0, 7)]
     vinkel_list = [num for num in range(30, 71)]
     dybde_list = [num for num in range(0, 101)]
-    temperature_list = [num for num in range(0, 101)]
+    temperature_list = [num for num in range(0, 70)]
     vinkel_list = [num for num in range(0, 360)]
 
     # Errors
     imuErrors = [True, False, False, False, False, False, False, False]
-    tempErrors = [True, False, False, False]
-    pressureErrors = [True, False, False, False]
-    leakageAlarms = [True, False, False, False]
-    ManipulatorSikring = [True, False, True]
+    tempErrors = [False, True, False, False]
+    pressureErrors = [False, False, True, False]
+    leakageAlarms = [False, True, False, False]
+    ManipulatorSikring = [False, False, False]
     ThrusterSikring = [False, False, False]
     KraftSikring = [False, False, False]
 
