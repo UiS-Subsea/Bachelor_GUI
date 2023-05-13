@@ -61,11 +61,11 @@ def send_fake_sensordata(t_watch: Threadwatcher, gui_queue: multiprocessing.Queu
     vinkel_list = [num for num in range(0, 360)]
 
     # Errors
-    imuErrors = [True, False, False, False, False, False, False, False]
-    tempErrors = [False, True, False, False]
-    pressureErrors = [False, False, True, False]
-    leakageAlarms = [False, True, False, False]
-    ManipulatorSikring = [False, False, False]
+    imuErrors = [False, False, True, True, False, False, False, False]
+    tempErrors = [True, True, False, False]
+    pressureErrors = [False, True, True, False]
+    leakageAlarms = [False, True, True, False]
+    ManipulatorSikring = [False, False, True]
     ThrusterSikring = [False, False, False]
     KraftSikring = [False, False, False]
 
