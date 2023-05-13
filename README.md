@@ -1,68 +1,34 @@
-# Bachelor_GUI
+# UiS-Subsea Topside System
+This repository contains information on how to connect to the Jetson and run the program, as well as how to run the project from your PC.
 
-Repo for alle koselige gutter i GUI seksjonen i UiS-Subsea
+# Project Details
+The purpose of this program is to enable communication between the topside system and the underwater vehicle. It utilizes a graphical user interface (GUI) to display important information and control the vehicle. The code structure and organization follow standard programming practices.
+# Jetson Connection
+To connect to the Jetson and run the program, follow these steps:
 
-# Viktige ting om installasjon
+SSH into the Jetson using the command ssh jetson@10.0.0.2.
 
-QT Designer
-Python 3.9
-Pyqt5
+Enter the password, which is jetson.
 
-# Formatering av filer
+Run the command canup.
 
-black {source_file_or_directory}
+Run the command sudo route add -net 224.0.0.0 netmask 224.0.0.0 eth0.
 
-eksempel:
-black D:\Bachelor_GUI
+Navigate to the Kommunikasjon-2023/ directory using the command cd Kommunikasjon-2023/.
 
-mest sannsynlig berre å bytte ut D med C p diskane dokka <3
+Finally, run the command python3 main.py to execute the program.
 
-# Måten prosjektet skal bli såtte opp
+# Program Setup on main pc
+Install the required packages by running the command pip install -r requirements.txt.
 
-GUI python fil som impoerterer ei UI fil fra QT Designer
+Run the command sudo route add -net 224.0.0.0 netmask 224.0.0.0 enp2s0.
 
-# Requirements !
+Finally, run the command python3 main.py to execute the program.
 
-pip install -r requirements.txt
+# Camera Streaming
+To stream the camera, use the command:
 
-for å oppdatere requirements om du he installert ei ny python pakke i virtual environment (venv)
-
-pip freeze > requirements.txt
-
-# Venv
-
-Powershell:
-venv\Scripts\Activate
-
-Mac/Linux:
-source venv/bin/activate
-
-# Mac
-
-For å endre venv versjon:
-virtualenv -p /path/to/python3.9.6 venv
-Brukte:
-pip install virtualenv
-virtualenv -p /usr/bin/python3 venv
-
-
-
-# Koble til jetson og kjøre programmet
-ssh jetson@10.0.0.2
-canup
-(PW: jetson)
-sudo route add -net 224.0.0.0 netmask 224.0.0.0 eth0
-cd Kommunikasjon-2023/
-python3 main.py
-
-# Kjøre på pcen
-python3 main.py
-
-
-
-#Kjøre kamera
 gst-launch-1.0 udpsrc multicast-group=224.1.1.1 auto-multicast=true port=5000 ! application/x-rtp, media=video, clock-rate=90000, encoding-name=H264, payload=96 ! rtph264depay ! h264parse ! decodebin ! videoconvert ! autovideosink sync=false
 
-#Sette route på pcen
+You can use ports 5000, 5001, 5002, or 5003.
 
-sudo route add -net 224.0.0.0 netmask 224.0.0.0 enp2s0

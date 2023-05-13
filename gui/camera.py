@@ -1,10 +1,15 @@
 from threading import Thread
 import gi, time
+
 gi.require_version("Gst", "1.0")
 from gi.repository import Gst, GLib
 
+
 def create_pipeline(multicast_group, port):
-  return Gst.parse_launch(f"udpsrc multicast-group={multicast_group} auto-multicast=true port={port} ! application/x-rtp, media=video, clock-rate=90000, encoding-name=H264, payload=96 ! rtph264depay ! h264parse ! decodebin ! videoconvert ! autovideosink sync=false")
+    return Gst.parse_launch(
+        f"udpsrc multicast-group={multicast_group} auto-multicast=true port={port} ! application/x-rtp, media=video, clock-rate=90000, encoding-name=H264, payload=96 ! rtph264depay ! h264parse ! decodebin ! videoconvert ! autovideosink sync=false"
+    )
+
 
 def run_pipeline(pipeline, main_loop):
     pipeline.set_state(Gst.State.PLAYING)
@@ -17,6 +22,7 @@ def run_pipeline(pipeline, main_loop):
         pipeline.set_state(Gst.State.NULL)
         main_loop.quit()
 
+
 def run_camera_stream(multicast_group, port):
     Gst.init([])
     main_loop = GLib.MainLoop()
@@ -24,6 +30,7 @@ def run_camera_stream(multicast_group, port):
     thread = Thread(target=main_loop.run)
     thread.start()
     run_pipeline(pipeline, main_loop)
+
 
 camera1_info = ("224.1.1.1", 5000)
 camera2_info = ("224.1.1.1", 5001)
