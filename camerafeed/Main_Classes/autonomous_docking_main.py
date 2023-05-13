@@ -129,14 +129,16 @@ class AutonomousDocking:
         
         for c in grout_contours:
             rect = cv2.minAreaRect(c)
-            area = cv2.contourArea(c)
             _, (width, height), angle = rect
+            area = width * height
             
             # These max values depend on how far away the ROV is from the bottom
-            # MAX_AREA = 5000 # TODO may need to change
-            # MIN_AREA = 500 # TODO may need to change
-            # if (area > MAX_AREA) or (area < MIN_AREA): 
-            #     continue
+            frame_height, frame_width = self.frame.shape
+            
+            MAX_AREA = (frame_height * frame_width) * 0.30
+            MIN_AREA = (frame_height * frame_width) * 0.05
+            if (area > MAX_AREA) or (area < MIN_AREA): 
+               continue
             
             if width < height:
                 angle = 90 - angle
