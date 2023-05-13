@@ -147,7 +147,7 @@ class Window(QMainWindow):
     def update_gui_data(self):
         while not self.gui_queue.empty():
             sensordata = self.gui_queue.get()
-            self.decide_gui_update(sensordata)
+            self.decideGUIUpdate(sensordata)
 
     def show_new_window(self, checked):
         if self.w is None:
@@ -306,8 +306,7 @@ class Window(QMainWindow):
         except ValueError:
             self.lastSent.setText("Input value must be a number")
             return
-
-        my_dict = {
+        regulatorValues = {
             "Rull KI": 1,
             "Rull KD": 2,
             "Rull KP": 3,
@@ -321,7 +320,7 @@ class Window(QMainWindow):
             "Alpha": 11,
         }
 
-        value = my_dict.get(reguleringDropdown, None)
+        value = regulatorValues.get(reguleringDropdown, None)
         update_regulator_tuning = [int(value), input_value]
         print(("Want to send", 42, update_regulator_tuning))
         values = {"update_regulator_tuning": update_regulator_tuning}
@@ -429,8 +428,7 @@ class Window(QMainWindow):
         # self.queue.put((200,values))
         # print("SliderCamVinkel value:", value)
 
-    def decide_gui_update(self, sensordata):
-        # print("Deciding with this data: ", sensordata)
+    def decideGUIUpdate(self, sensordata):
         self.sensor_update_function = {
             VINKLER: self.guiVinkelUpdate,
             DYBDETEMP: self.dybdeTempUpdate,
