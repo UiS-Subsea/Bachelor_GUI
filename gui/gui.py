@@ -822,12 +822,11 @@ class SoundWorker(QObject):
         self.lydFil = lydFil
 
         self.play.connect(self.on_play)
+        self.player.stateChanged.connect(self.on_player_state_changed)
 
     def on_play(self, should_play: bool):
         if should_play:
-            if self.player.state() == QMediaPlayer.PlayingState:
-                self.player.stateChanged.connect(self.on_player_state_changed)
-            else:
+            if self.player.state() != QMediaPlayer.PlayingState:
                 self.player.setMedia(QMediaContent(QUrl.fromLocalFile(self.lydFil)))
                 self.player.play()
         else:
@@ -835,7 +834,6 @@ class SoundWorker(QObject):
 
     def on_player_state_changed(self, state):
         if state == QMediaPlayer.StoppedState:
-            self.player.stateChanged.disconnect(self.on_player_state_changed)
             self.player.setMedia(QMediaContent(QUrl.fromLocalFile(self.lydFil)))
             self.player.play()
 

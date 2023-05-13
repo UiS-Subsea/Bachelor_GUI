@@ -54,15 +54,16 @@ ID_camera_tilt_downwards = 201
 
 def send_fake_sensordata(t_watch: Threadwatcher, gui_queue: multiprocessing.Queue):
     thrust_list = [num for num in range(-100, 101)]
-    manipulator_list = [num for num in range(500, 100000)]
-    power_list = [num for num in range(0, 101)]
+    power_list = [num for num in range(0, 31)]
     vinkel_list = [num for num in range(30, 71)]
-    dybde_list = [num for num in range(50, 20000)]
+    dybde_list = [num for num in range(0, 101)]
+    temperature_list = [num for num in range(0, 101)]
+    vinkel_list = [num for num in range(0, 360)]
 
     # Errors
-    imuErrors = [True, False, False, True, False, False, True, False]
-    tempErrors = [False, True, False, False]
-    pressureErrors = [True, False, True, False]
+    imuErrors = [True, False, False, False, False, False, False, False]
+    tempErrors = [True, False, False, False]
+    pressureErrors = [True, False, False, False]
     leakageAlarms = [True, False, False, False]
     ManipulatorSikring = [True, False, True]
     ThrusterSikring = [False, False, False]
@@ -73,18 +74,14 @@ def send_fake_sensordata(t_watch: Threadwatcher, gui_queue: multiprocessing.Queu
     while t_watch.should_run(0):
         count += 1
         sensordata[VINKLER] = [
-            dybde_list[(0 + count)],
-            dybde_list[(10 + count)],
-            dybde_list[(20 + count)],
-            dybde_list[(30 + count)],
-            dybde_list[(40 + count)],
-            dybde_list[(50 + count)],
-            dybde_list[(60 + count)],
+            vinkel_list[(0 + count) % len(vinkel_list)],
+            vinkel_list[(10 + count) % len(vinkel_list)],
+            vinkel_list[(20 + count) % len(vinkel_list)],
         ]
         sensordata[DYBDETEMP] = [
-            vinkel_list[(2 + count) % len(vinkel_list)],  # dybde
-            vinkel_list[(50 + count) % len(vinkel_list)],  # vanntemp
-            vinkel_list[(30 + count) % len(vinkel_list)],  # sensorkorttemp
+            dybde_list[(2 + count) % len(dybde_list)],  # dybde
+            temperature_list[(50 + count) % len(temperature_list)],  # vanntemp
+            temperature_list[(30 + count) % len(temperature_list)],  # sensorkorttemp
         ]
 
         sensordata[FEILKODE] = [
@@ -95,38 +92,38 @@ def send_fake_sensordata(t_watch: Threadwatcher, gui_queue: multiprocessing.Queu
         ]
 
         sensordata[THRUST] = [
-            thrust_list[(0 + count) % 201],
-            thrust_list[(13 + count) % 201],
-            thrust_list[(25 + count) % 201],
-            thrust_list[(38 + count) % 201],
-            thrust_list[(37 + count) % 201],
-            thrust_list[(50 + count) % 201],
-            thrust_list[(63 + count) % 201],
-            thrust_list[(75 + count) % 201],
-            thrust_list[(88 + count) % 201],
+            thrust_list[(0 + count) % len(thrust_list)],
+            thrust_list[(13 + count) % len(thrust_list)],
+            thrust_list[(25 + count) % len(thrust_list)],
+            thrust_list[(38 + count) % len(thrust_list)],
+            thrust_list[(37 + count) % len(thrust_list)],
+            thrust_list[(50 + count) % len(thrust_list)],
+            thrust_list[(63 + count) % len(thrust_list)],
+            thrust_list[(75 + count) % len(thrust_list)],
+            thrust_list[(88 + count) % len(thrust_list)],
         ]
         sensordata[MANIPULATOR12V] = [
-            manipulator_list[(0 + count)],  # Strømtrekk
-            manipulator_list[(40 * 100 + count)],  # Temperatur
+            power_list[(0 + count) % len(power_list)],  # Strømtrekk
+            temperature_list[(40 * 100 + count) % len(temperature_list)],  # Temperatur
             ManipulatorSikring,  # Sikringsstatus
         ]
         sensordata[THRUSTER12V] = [
-            thrust_list[(0 + count)],  # Strømtrekk
-            manipulator_list[(50 * 100 + count)],  # Temperatur
+            power_list[(0 + count) % len(power_list)],  # Strømtrekk
+            temperature_list[(50 * 100 + count) % len(temperature_list)],  # Temperatur
             ThrusterSikring,
         ]
 
         sensordata[KRAFT5V] = [
-            power_list[count % 101] * 13,
-            power_list[count % 101] * 2.4,
+            power_list[count % len(power_list)] % len(power_list),
+            temperature_list[count % len(temperature_list)],
             KraftSikring,
         ]
         sensordata[REGULERINGMOTORTEMP] = [
-            power_list[count % 101] * 13,
-            power_list[count % 101] * 2.4,
-            power_list[count % 101] * 2.1,
+            temperature_list[count % len(temperature_list)],
+            temperature_list[count % len(temperature_list)],
+            dybde_list[count % len(dybde_list)],
         ]
-        sensordata[TEMPKOMKONTROLLER] = random.randint(0, 100)
+        sensordata[TEMPKOMKONTROLLER] = random.randint(30, 60)
 
         gui_queue.put(sensordata)
         time.sleep(0.5)
