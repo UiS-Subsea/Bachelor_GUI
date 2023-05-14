@@ -39,7 +39,9 @@ class AutonomousDocking:
                 # print("No docking station found!")
                 return "No docking station found!"
             
-            width_diff, height_diff = frame_centerpoint[0] - red_centerpoint[0], frame_centerpoint[1] - red_centerpoint[1] #x, y values
+            width_diff, height_diff = frame_centerpoint[0] - red_centerpoint[0], frame_centerpoint[1] - red_centerpoint[1] 
+            percent_width_diff = (width_diff / frame_width) * 100
+            percent_height_diff = (height_diff / frame_height) * 100
             
             red_to_frame_ratio = ((math.pi * red_radius ** 2) / (frame_width * frame_height)) * 100
             
@@ -49,28 +51,28 @@ class AutonomousDocking:
                 self.driving_data = [40, [0, 0, 0, 0, 0, 0, 0, 0]]
                 raise SystemExit # stops ALL running code, since docking is done.
             else:
-                self.driving_data = self.regulate_position(width_diff, height_diff)
+                self.driving_data = self.regulate_position(percent_width_diff, percent_height_diff)
 
-    def regulate_position(self, displacement_x, displacement_y):
+    def regulate_position(self, displacement_y, displacement_z):
         drive_command = ""
-        if displacement_x > 10:
+        if displacement_y > 2:
             #drive_command = "GO LEFT"
-            drive_command = [-10, 0, 0, 0, 0, 0, 0, 0]
+            drive_command = [0, -displacement_y, 0, 0, 0, 0, 0, 0]
         
-        elif displacement_x < -10:
+        elif displacement_y < -2:
             #drive_command = "GO RIGHT"
-            drive_command = [10, 0, 0, 0, 0, 0, 0, 0]
+            drive_command = [0, displacement_y, 0, 0, 0, 0, 0, 0]
 
-        elif displacement_y > 10:
+        elif displacement_z > 2:
             #drive_command = "GO DOWN"
-            drive_command = [0, 0, -10, 0, 0, 0, 0, 0]
+            drive_command = [0, 0, -displacement_z, 0, 0, 0, 0, 0]
 
-        elif displacement_y < -10:
+        elif displacement_z < -2:
             #drive_command = "GO UP"
-            drive_command = [0, 0, 10, 0, 0, 0, 0, 0]
+            drive_command = [0, 0, displacement_y, 0, 0, 0, 0, 0]
         else:
             # drive_command = "GO FORWARD"
-            drive_command = [0, 10, 0, 0, 0, 0, 0, 0]
+            drive_command = [10, 0, 0, 0, 0, 0, 0, 0]
             
         return drive_command
 
