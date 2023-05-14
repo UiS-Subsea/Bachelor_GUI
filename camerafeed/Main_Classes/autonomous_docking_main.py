@@ -43,41 +43,39 @@ class AutonomousDocking:
             
             red_to_frame_ratio = ((math.pi * red_radius ** 2) / (frame_width * frame_height)) * 100
             
-            max_red_ratio = 30 # TODO change value, maybe remove entirely. if the red dot is more than 30% of the frame, stop
-            if red_to_frame_ratio > max_red_ratio:
+            max_red_to_frame_ratio = 30 # TODO change value, maybe remove entirely. if the red dot is more than 30% of the frame, stop
+            if red_to_frame_ratio > max_red_to_frame_ratio:
                 # print("Stop! Docking station is close enough!")
-                self.driving_data = [40, [0, 0, 0, 0, 0, 0, 0, 0]]
+                self.driving_data = [0, 0, 0, 0, 0, 0, 0, 0]
                 raise SystemExit # stops ALL running code, since docking is done.
             else:
                 self.driving_data = self.regulate_position(width_diff, height_diff)
 
+
     def regulate_position(self, displacement_x, displacement_y):
-        drive_command = ""
         if displacement_x > 10:
             #drive_command = "GO LEFT"
-            drive_command = [-10, 0, 0, 0, 0, 0, 0, 0]
+            self.driving_data = [0, displacement_x, 0, 0, 0, 0, 0, 0]
         
         elif displacement_x < -10:
             #drive_command = "GO RIGHT"
-            drive_command = [10, 0, 0, 0, 0, 0, 0, 0]
+            self.driving_data = [0, displacement_x, 0, 0, 0, 0, 0, 0]
 
         elif displacement_y > 10:
             #drive_command = "GO DOWN"
-            drive_command = [0, 0, -10, 0, 0, 0, 0, 0]
+            self.driving_data = [displacement_y, 0, 0, 0, 0, 0, 0, 0]
 
         elif displacement_y < -10:
             #drive_command = "GO UP"
-            drive_command = [0, 0, 10, 0, 0, 0, 0, 0]
+            self.driving_data = [displacement_y, 0, 0, 0, 0, 0, 0, 0]
         else:
             # drive_command = "GO FORWARD"
-            drive_command = [0, 10, 0, 0, 0, 0, 0, 0]
-            
-        return drive_command
+            self.driving_data = [10, 0, 0, 0, 0, 0, 0, 0]
 
         
     def get_driving_data(self):
         data = self.driving_data.copy()
-        self.driving_data = [40, [0, 0, 0, 0, 0, 0, 0, 0]]
+        self.driving_data = [0, 0, 0, 0, 0, 0, 0, 0]
         return data
     
     def find_red(self):
