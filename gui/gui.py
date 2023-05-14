@@ -13,7 +13,6 @@ from images import resources_rc
 
 # from main import Vinkeldata
 from main import Rov_state
-from . import guiFunctions as f
 from Thread_info import Threadwatcher
 import time
 from camerafeed.GUI_Camerafeed_Main import *
@@ -42,7 +41,6 @@ class Window(QMainWindow):
         id: int,
         parent=None,
     ):
-        #        self.send_current_light_intensity()
         self.packets_to_send = []
         self.angle_bit_state = 0
         self.toggle_felles_regulator = [0] * 8
@@ -50,19 +48,17 @@ class Window(QMainWindow):
         super().__init__(parent)
         uic.loadUi("gui/mainwindow.ui", self)
         self.connectFunctions()
+
+        # Sound
         self.player = QMediaPlayer()
         self.lydFil = "martinalarm.wav"
         self.lydFil = os.path.abspath("martinalarm.wav")
-
         self.sound_worker = SoundWorker(self.lydFil)
         self.sound_worker_thread = QThread()
         self.sound_worker.moveToThread(self.sound_worker_thread)
         self.sound_worker_thread.start()
 
-        # Verdier for resetting av alarm
-        self.lastBigAlarm = -1
-        # self.lastThrusterAlarm = -1
-        # self.lastManipulatorAlarm = -1
+        # Alarm managers
         self.currentManipulatorAlarms = set()
         self.currentThrusterAlarms = set()
         self.currentIMUAlarms = set()
@@ -70,29 +66,27 @@ class Window(QMainWindow):
         self.currentTrykkAlarms = set()
         self.currentLekkasjeAlarms = set()
 
-        # self.lastIMUAlarm = -1
-        # self.lastTempAlarm = -1
-        # self.lastPressureAlarm = -1
-
+        # For going back to manual driving
         self.manual_flag = manual_flag
-        # queue_for_rov is a queue that is used to send data to the rov
-        self.queue = queue_for_rov
-        # queue_for_rov is a queue that is used to send data to the rov
 
-        self.gui_queue = gui_queue
+        self.queue = queue_for_rov  # Sending data
+        self.gui_queue = gui_queue  # Receiving data
         self.threadwatcher = t_watch
         self.id = id
 
-        self.exec = ExecutionClass(queue_for_rov, manual_flag)
+        self.exec = ExecutionClass(queue_for_rov, manual_flag)  # For manual driving
         self.camera = CameraManager()
         self.w = None  # SecondWindow()
-        self.gir_verdier = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        # self.gir_verdier = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0] #Might be used for later
 
         self.timer = QTimer()  # Create a timer
-        # Connect timer to update_gui_data
-        self.timer.timeout.connect(self.update_gui_data)
+        self.timer.timeout.connect(
+            self.update_gui_data
+        )  # Connect the timer to the function that updates the gui
         self.timer.start(100)  # Adjust the interval to your needs
-        self.manual = True
+        self.manual = True  # For manual driving
+
+        # Getting values from the gui
         self.reguleringDropdown = self.findChild(QComboBox, "reguleringDropdown")
         self.tuningInput = self.findChild(QLineEdit, "tuningInput")
         self.btnRegTuning = self.findChild(QPushButton, "btnRegTuning")
@@ -106,16 +100,10 @@ class Window(QMainWindow):
         )
         self.sliderCamVinkel = self.findChild(QSlider, "sliderCamVinkel")
         self.labelKameraVinkel = self.findChild(QLabel, "labelKameraVinkel")
-        # self.sliderCamVinkel.setValue(90)
-
-        # Queue and pipe
-
-    # Buttons
 
     # Css styling used for cases
     Gradient = "background-color: #444444; color: #FFFFFF; border-radius: 10px;"
     errorGradient = "background-color: #FF9999; color: #FF0000; border: 1px solid #FF0000; border-radius: 10px;"
-
     over60 = "border: 2px solid red;"
     over50 = "border: 2px solid orange;"
     over40 = "border: 2px solid yellow;"
@@ -171,14 +159,13 @@ class Window(QMainWindow):
         self.btnOpenCamera.clicked.connect(
             lambda: self.imageprocessing("normal_camera")
         )
+        self.sliderCamVinkel.valueChanged.connect(self.camVinkelUpdate)
 
         # Lys
         self.slider_lys_forward.valueChanged.connect(self.update_label_and_print_value)
         self.slider_lys_down.valueChanged.connect(
             self.update_label_and_print_value_down
         )
-        self.sliderCamVinkel.valueChanged.connect(self.camVinkelUpdate)
-
         self.btnTopLys.clicked.connect(lambda: self.front_light_on())
         self.btnBunnLys.clicked.connect(lambda: self.bottom_light_on())
 
@@ -197,10 +184,8 @@ class Window(QMainWindow):
         # Vinkler
         self.btnNullpunktVinkler.clicked.connect(lambda: self.reset_angles())
 
+        # Regulation
         self.btnRegTuning.clicked.connect(lambda: self.updateRegulatorTuning())
-
-        # Regulatorer
-
         self.btnRegOn.clicked.connect(lambda: self.toogle_regulator_all())
         self.btnRullOn.clicked.connect(lambda: self.toggle_rull_reg())
         self.btnStampOn.clicked.connect(lambda: self.toggle_stamp_reg())
@@ -214,8 +199,6 @@ class Window(QMainWindow):
         self.toggle_mani.setChecked(sensordata[0])
 
     def reset_5V_fuse2(self):
-        """reset_5V_fuse creates and adds
-        packets for resetting a fuse on the ROV"""
         reset_fuse_byte = [0] * 8
         reset_fuse_byte[0] |= 1 << 0  # reset bit 0
         print("Resetting 5V Fuse")
@@ -224,32 +207,20 @@ class Window(QMainWindow):
         self.queue.put((4, values))
 
     def reset_12V_thruster_fuse(self):
-        """reset_12V_thruster_fuse creates and adds
-        packets for resetting a fuse on the ROV"""
         reset_fuse_byte = [0] * 8
         reset_fuse_byte[0] |= 1 << 0  # reset bit 0
         print("Resetting 12V Thruster Fuse")
         values = {"reset_controls_thruster": reset_fuse_byte}
         print(("Want to send", 98, reset_fuse_byte))
         self.queue.put((5, values))
-        # reset_fuse_byte[0] |= (0 << 0)
-        # print(f"Pakker Etter:", reset_fuse_byte)
-
-    #        self.packets_to_send.append([98, reset_fuse_byte])
 
     def reset_12V_manipulator_fuse(self):
-        """reset_12V_manipulator_fuse creates and adds
-        packets for resetting a fuse on the ROV"""
         reset_fuse_byte = [0] * 8
         reset_fuse_byte[0] |= 1 << 0  # reset bit 0
         print("Resetting 12V Manipulator Fuse")
         values = {"reset_controls_manipulator": reset_fuse_byte}
         print(("Want to send", 99, reset_fuse_byte))
         self.queue.put((6, values))
-        # reset_fuse_byte[0] |= (0 << 0)
-        # print(f"Pakker Etter:", reset_fuse_byte)
-
-        # self.packets_to_send.append([99, reset_fuse_byte])
 
     def reset_depth(self):
         reset_depth_byte = [0] * 8
@@ -258,7 +229,6 @@ class Window(QMainWindow):
         values = {"reset_depth": reset_depth_byte}
         self.queue.put((7, values))
         print(("Want to send", 66, reset_depth_byte))
-        # self.packets_to_send.append([66, reset_depth_byte])
 
     def reset_angles(self):
         reset_angles_byte = [0] * 8
@@ -267,8 +237,6 @@ class Window(QMainWindow):
         values = {"reset_angles": reset_angles_byte}
         print(("Want to send", 66, reset_angles_byte))
         self.queue.put((8, values))
-        # self.packets_to_send.append([66, reset_angles_byte])
-        # print(reset_angles_byte)
 
     def calibrate_IMU(self):
         calibrate_IMU_byte = [0] * 8
@@ -277,11 +245,8 @@ class Window(QMainWindow):
         values = {"kalibrer_IMU": calibrate_IMU_byte}
         print(("Want to send", 66, calibrate_IMU_byte))
         self.queue.put((9, values))
-        # self.packets_to_send.append([66, calibrate_IMU_byte])
-        # print(calibrate_IMU_byte)
 
     def update_label_and_print_value(self, value):
-        self.label_percentage_lys_forward.setText(f"{value}%")
         set_light_byte = [0] * 8
         set_light_byte[1] = value
         values = {"slider_top_light": set_light_byte}
@@ -290,7 +255,6 @@ class Window(QMainWindow):
         print("Slider value:", value)
 
     def update_label_and_print_value_down(self, value):
-        self.label_percentage_lys_down.setText(f"{value}%")
         set_light_byte = [0] * 8
         set_light_byte[1] = value
         values = {"slider_bottom_light": set_light_byte}
@@ -355,9 +319,6 @@ class Window(QMainWindow):
         values = {"toggle_regulator_all": toogle_regulator_byte}
         self.queue.put((11, values))
 
-    #        self.packets_to_send.append([32, toogle_regulator_byte])
-    #        print(self.packets_to_send)
-
     def toggle_rull_reg(self):
         self.toggle_felles_regulator[0] ^= 1 << 0
         if self.toggle_felles_regulator[0] == (1 << 0):
@@ -367,19 +328,6 @@ class Window(QMainWindow):
         print(("Want to send", 32, self.toggle_felles_regulator))
         values = {"toggle_rull_reg": self.toggle_felles_regulator}
         self.queue.put((12, values))
-        # if self.angle_bit_state == 0:
-        #     self.toggle_felles_regulator[0] |= (1 << 0)
-        #     self.angle_bit_state = 1
-        #     print("Rull på")
-        # elif self.angle_bit_state == 1:
-        #     self.toggle_felles_regulator[0] |= (0 << 0)
-        #     self.angle_bit_state == 0
-        #     print("Rull av")
-        # print(("Want to send", 32, self.toggle_felles_regulator))
-        # values = {"toggle_rull_reg": self.toggle_felles_regulator}
-        # self.queue.put((12, values))
-
-    #        self.packets_to_send.append([66, toggle_rull_reg])
 
     def toggle_stamp_reg(self):
         self.toggle_felles_regulator[0] ^= 1 << 2
@@ -419,14 +367,8 @@ class Window(QMainWindow):
 
     def camVinkelUpdate(self, value):
         self.labelKameraVinkel.setText(f"{value}°")
-        # set_light_byte = [0] * 8
-        # set_light_byte[1] = value
         values = {"tilt": value}
-        # print((f"Want to send", 200, values))
         self.queue.put((19, values))
-
-        # self.queue.put((200,values))
-        # print("SliderCamVinkel value:", value)
 
     def decideGUIUpdate(self, sensordata):
         self.sensor_update_function = {
@@ -742,7 +684,6 @@ def run(conn, queue_for_rov, manual_flag, t_watch: Threadwatcher, id):
     win.show()  # Show the form
 
     app.exec()
-    # sys.exit(app.exec())
 
 
 from PyQt5.QtWidgets import QWidget, QLabel, QPushButton
