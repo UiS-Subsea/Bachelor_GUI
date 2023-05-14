@@ -177,17 +177,8 @@ class SeagrassMonitor:
         return squares
     
     def calculate_seagrass(self, squares_before, squares_after):
-        grass_difference = squares_after - squares_before
-        print("Grass before: ", squares_before, "\nGrass after: ", squares_after)
-        if grass_difference > 0:
-            print("There is positive growth of seagrass")
-            print(f"Percent change:")
-        elif grass_difference < 0:
-            print("There is negative growth of seagrass")
-        else:
-            print("There is no change in amount of seagrass")
-            print("Percent change: 0% \n")
-        return grass_difference
+        percentage_difference = (squares_after / squares_before) * 100
+        return percentage_difference
                 
 
 if __name__ == "__main__":
