@@ -54,7 +54,7 @@ if __name__ == "__main__":
         run_gui = True
         run_craft_packet = False
         run_network = True  # Bytt t True når du ska prøva å connecte.
-        run_get_controllerdata = True
+        run_get_controllerdata = False
         # Sett til True om du vil sende fake sensordata til gui
         run_send_fake_sensordata = False
 
@@ -67,7 +67,7 @@ if __name__ == "__main__":
 
         if run_network:
             network = Network(is_server=False, port=6900, bind_addr="0.0.0.0",
-                              connect_addr="10.0.0.2")
+                              connect_addr="10.0.0.186")
             # id = t_watch.add_thread()
             # main_driver_loop = threading.Thread(target=run, args=(network, t_watch, id, queue_for_rov, gui_parent_queue), daemon=True)
             # main_driver_loop.start()
